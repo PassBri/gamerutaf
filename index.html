@@ -240,6 +240,14 @@ table.cur td{padding:8px;border-bottom:1px dashed var(--line);vertical-align:top
 .trev b{display:block;font-size:14px}.trev p{margin:3px 0 0;font-size:13.5px}
 .trev .tw{color:#F4A79D;text-decoration:line-through;text-decoration-thickness:1px}.trev .ta{color:#A7E3BC}.trev .tx{color:var(--muted)}
 .trev .tw2{display:inline-block;margin-top:6px;font:700 11.5px var(--f-body);background:rgba(255,255,255,.06);border-radius:999px;padding:3px 9px}
+
+.reg{border:1px solid var(--line);border-radius:14px;padding:4px 14px 12px;margin:10px 0 2px;background:rgba(242,179,61,.05)}
+.reg legend{font:800 11px var(--f-body);letter-spacing:.12em;text-transform:uppercase;color:var(--gold);padding:0 6px}
+.reg-n{margin:0 0 4px!important;font-size:12.5px;color:var(--muted)!important}
+.reg-g{display:grid;grid-template-columns:1fr 1fr;gap:0 12px}.reg-g .full{grid-column:1/-1}
+.reg select{font:600 16px var(--f-body);background:var(--bg);color:var(--ink);border:1px solid var(--line);border-radius:10px;padding:9px 10px;width:100%}
+.reg select:focus-visible{outline:2px solid var(--gold);outline-offset:2px}
+@media (max-width:420px){.reg-g{grid-template-columns:1fr}}
 .imenu-h{font:800 10.5px var(--f-body);letter-spacing:.14em;text-transform:uppercase;color:var(--muted);padding:10px 10px 6px}
 .imenu [role=menuitemradio]{display:flex;align-items:center;gap:12px;width:100%;text-align:left;background:transparent;border:0;border-radius:12px;padding:9px 10px;color:var(--ink);cursor:pointer;font:inherit;min-height:52px}
 .imenu [role=menuitemradio]:hover{background:rgba(255,255,255,.05)}
@@ -355,6 +363,7 @@ table.cur td{padding:8px;border-bottom:1px dashed var(--line);vertical-align:top
     <svg width="34" height="34" viewBox="0 0 100 100" aria-hidden="true"><path d="M50 4c6 0 9 5 15 6s11-1 14 4 1 10 4 15 9 7 9 13-6 8-6 14 5 10 2 15-9 4-13 8-4 10-10 12-10-3-15-3-9 5-15 3-6-8-10-12-11-3-13-8 2-10 2-15-6-8-6-14 7-8 9-13-1-10 4-15 9-2 14-4 9-6 15-6z" fill="#C9475B"/><path d="M27 64 L43 40 L50 50 L58 34 L74 64 Z" fill="#F4E9E1"/><path d="M27 70 Q38 66 50 70 T74 70" fill="none" stroke="#F4E9E1" stroke-width="3" stroke-linecap="round"/></svg>
     <h1>Ruta Financiera</h1>
     <span class="sp"></span>
+    <button class="ibtn" id="bPerfil" type="button">Perfil</button>
     <button class="ibtn" id="bMute" type="button">Sonido</button>
     <button class="ibtn" id="bPause" type="button">Pausa</button>
   </div>
@@ -600,7 +609,11 @@ const TIPS={
  banco:{t:'Costos del banco',g:'Guía 3 y 5',x:'Los bancos vigilados por la Superfinanciera son legales, pero cobran: cuota de manejo, comisiones, seguros e intereses. Compara la tasa E.A. y los costos antes de abrir un producto.'},
  cobrador:{t:'El cobro del gota a gota',g:'Guía 3 y 5',x:'El gota a gota es ilegal: cobra intereses altísimos y presiona con amenazas. Si ya caíste, busca ayuda en una cooperativa o entidad vigilada y págalo primero.'},
  frasco:{t:'El ahorro te impulsa',g:'Guía 2',x:'Los frascos de ahorro te lanzan más alto: con reservas puedes dar saltos más grandes, como estudiar, invertir o emprender. Cada frasco suma 1 a tu alcancía.'},
- cajaInv:{t:'Interés compuesto',g:'Guía 6',x:'Las cajas de inversión crecen cada quincena que esperas: cuanto más tiempo dejas tu dinero trabajando, más rinde. Párate encima para cobrar lo acumulado.'},
+ cajaInv:{t:'CDT e intereses',g:'Guía 2 y 6',x:'Un CDT (certificado de depósito a término) te paga intereses por dejar tu dinero quieto un tiempo. Cada quincena que esperas, la ganancia crece. Párate encima para cobrar capital más intereses.'},
+ frascoRoto:{t:'El ahorro en casa es frágil',g:'Guía 2 y 5',x:'Un frasco o una alcancía en la casa se rompen, se pierden o se “toman prestados”. Úsalos para empezar, pero lleva tu ahorro a una cuenta o a un CDT vigilado por la Superfinanciera.'},
+ alcRota:{t:'Alcancía rota',g:'Guía 2 y 5',x:'Cada golpe que paga tu alcancía la agrieta. Si se rompe, pierdes parte del ahorro. Una alcancía nueva en el siguiente punto de control la reemplaza; un seguro o un fondo en el banco protegen mejor.'},
+ carroGastos:{t:'Lo que cuesta tener carro',g:'Guía 3',x:'Además de comprarlo, el carro cobra: SOAT, revisión técnico-mecánica, impuesto vehicular, repuestos, aceite, gasolina y parqueadero. Por eso, si no produce dinero, es un pasivo.'},
+ casaGastos:{t:'Un activo también tiene costos',g:'Guía 1 y 6',x:'Una casa en arriendo te paga renta, pero también cobra impuesto predial y reparaciones. Sigue siendo un activo porque deja más de lo que cuesta.'},
  inv:{t:'Bloque de inversión',g:'Guía 1',x:'Invertir es sembrar una semilla: pones tu dinero a trabajar para que dé frutos cada quincena.'},
 };
 function learn(k){ if(!eco||!TIPS[k]) return; eco.seen=eco.seen||{}; if(eco.seen[k]) return; eco.seen[k]=1; const t=TIPS[k]; toast('Nuevo concepto · '+t.t+' · '+t.g,t.x); }
@@ -704,7 +717,7 @@ function nextQ(){
   return all[pick];
 }
 
-function newEco(name,color,o={}){ return {grupo:o.grupo||'',name,color,skin:o.skin??1,head:o.head||'gorra',diff:o.diff||'sen',hand:0,emb:0,salario:0,assets:[],debts:[],fijos:[],gear:o.diff==='exp'?['brujula']:[],shield:false,
+function newEco(name,color,o={}){ return {grupo:o.grupo||'',colegio:o.colegio||'',grado:o.grado||'',pais:o.pais||'',ciudad:o.ciudad||'',name,color,skin:o.skin??1,head:o.head||'gorra',diff:o.diff||'sen',hand:0,emb:0,salario:0,assets:[],debts:[],fijos:[],gear:o.diff==='exp'?['brujula']:[],shield:false,
   pages:[0,0,0,0,0,0,0,0],stars:[0,0,0,0,0,0,0,0],pre:null,post:null,lujos:[],suenos:[],diario:[],seen:{},
   stats:{deaths:0,drops:0,quizOk:0,quizN:0,frames:0,stomps:0,traps:0,saved:0,invested:0}}; }
 const renta=()=>eco.assets.reduce((s,a)=>s+a.renta,0);
@@ -833,8 +846,8 @@ function startLevel(li){
   closeOv();
 }
 function hazardAt(c,r){ const t=tileAt(c,r); return t==='v'||t==='x'; }
-function solid(c,r){ if(c<0||c>=S.L.w) return true; if(r<0||r>=S.L.rows) return false; const t=S.L.g[r][c]; return t==='#'||t==='='||t==='I'||t==='U'||t==='|'; }
-function oneway(c,r){ if(c<0||c>=S.L.w||r<0||r>=S.L.rows) return false; return S.L.g[r][c]==='-'; }
+function solid(c,r){ if(c<0||c>=S.L.w) return true; if(r<0||r>=S.L.rows) return false; const t=S.L.g[r][c]; return t==='#'||t==='I'||t==='U'||t==='|'; }
+function oneway(c,r){ if(c<0||c>=S.L.w||r<0||r>=S.L.rows) return false; const t=S.L.g[r][c]; return t==='-'||t==='='; } // casas, carros, frascos y cajas se atraviesan desde abajo y se pisan desde arriba
 function tileAt(c,r){ if(c<0||c>=S.L.w||r<0||r>=S.L.rows) return ' '; return S.L.g[r][c]; }
 function overlap(a,b){ return a.x<b.x+b.w && a.x+a.w>b.x && a.y<b.y+b.h && a.y+a.h>b.y; }
 
@@ -868,7 +881,7 @@ function moveY(e){
   return null;
 }
 
-function addText(x,y,txt,col){ S.texts.push({x,y,txt,col:col||'#fff',life:70}); }
+function addText(x,y,txt,col){ let k=0; while(k<6&&(S.texts||[]).some(t=>t.life>30&&Math.abs(t.y-y)<12&&Math.abs(t.x-x)<170)){ y-=13; k++; } S.texts.push({x,y,txt,col:col||'#fff',life:70}); }
 function toast(title,text){ S.toast={title,text,life:440}; }
 let tipShown=null;
 function syncTip(){ const el=document.getElementById('tip'); if(!el) return; const t=S.toast, show=S.mode==='play'&&t&&t.life>0; if(show&&tipShown!==t){ el.querySelector('.tt').textContent=t.title; el.querySelector('.tx').textContent=t.text; el.classList.add('on'); tipShown=t; } else if(!show&&tipShown){ el.classList.remove('on'); tipShown=null; } }
@@ -890,7 +903,11 @@ function hurt(n,why,cat){
   if(take) addText(p.x,p.y-12,'−'+take+' '+why,'#FF9A8C');
   if(rest>0){
     const fromE=Math.min(rest,eco.emb); eco.emb-=fromE; rest-=fromE;
-    if(fromE) addText(p.x,p.y-26,'Fondo de emergencia −'+fromE,'#9FD3FF');
+    if(fromE){ addText(p.x,p.y-26,'Fondo de emergencia −'+fromE,'#9FD3FF');
+      eco.embCrack=(eco.embCrack||0)+1;
+      if(eco.embCrack>=3){ eco.embCrack=0; const lost=Math.min(eco.emb,Math.max(1,Math.floor(eco.emb/4))); eco.emb-=lost; if(S.ws) S.ws.lost.alcancia=(S.ws.lost.alcancia||0)+lost;
+        for(let j=0;j<8;j++) debris(p.x+7,p.y-20,'vidrio'); addText(p.x-50,p.y-44,'¡Se rompió la alcancía!'+(lost?' −'+lost:'')+' Busca una nueva','#FFC7BF'); logD('Pérdida','Se rompió la alcancía',-lost); learn('alcRota'); }
+      else { addText(p.x-30,p.y-40,'La alcancía se agrieta ('+eco.embCrack+'/3)','#FFE18A'); learn('alcRota'); } }
     if(rest>0) sequia();
   }
   return true;
@@ -917,7 +934,7 @@ function addDebt(name,saldo,cuota,kind){ const d=eco.debts.find(x=>x.kind===kind
 
 function doPulse(){
   const p=S.p, ws=S.ws;
-  if(S.L&&S.L.plats) S.L.plats.forEach(q=>{ if(q.type==='inversion'&&!q.paid) q.acc=Math.min(6,q.acc+1); });
+  if(S.L&&S.L.plats) S.L.plats.forEach(q=>{ if(q.type==='inversion'&&!q.paid){ q.q=(q.q||0)+1; if(q.acc<6){ q.acc++; q.grow=40; const qx=q.c0*T, qy=q.r*T; if(qx>S.cam-20&&qx<S.cam+W+20) addText(qx-10,qy-34-q.acc*2.2,'+1 interés CDT','#9BF0B8'); } } });
   const sal=eco.salario, ren=renta(); const inc=sal+ren; eco.hand+=inc;
   if(ws){ ws.salary+=sal; ws.rent+=ren; }
   let cost=costo(), cu=0, pr=primas(), fj=fijos();
@@ -1118,7 +1135,7 @@ function update(){
     else if(e.t==='scroll'){ if(overlap(p,e)){ e.dead=true; eco.shield=true; addText(e.x-40,e.y-12,'Educación financiera: te protege de un golpe','#B9C0FF'); snd('save'); } }
     else if(e.t==='prima'){ if(overlap(p,e)){ e.dead=true; eco.hand=Math.min(cap(),eco.hand+5); if(S.ws) S.ws.coins+=5; addText(e.x-10,e.y-12,'Prima de servicios +5','#FFE18A'); snd('buy'); burst(e.x+10,e.y+8,'#FFE18A',10); } }
     else if(e.t==='job'){ if(overlap(p,e)){ e.dead=true; if(eco.salario<1){ eco.salario=1; addText(e.x-50,e.y-14,'¡Empleo! Salario +1 en cada quincena','#BFF5CF'); } else { eco.hand+=3; addText(e.x,e.y-12,'+3','#BFF5CF'); } snd('gate'); burst(e.x+9,e.y+8,'#F2B33D',14); } }
-    else if(e.t==='emb'){ if(overlap(p,e)&&!e.used){ e.used=true; S.check={x:e.x+8,y:e.y+e.h-28}; const dep=Math.floor(eco.hand/2); eco.hand-=dep; eco.emb+=dep; eco.stats.saved+=dep; if(S.ws) S.ws.saved+=dep; if(dep) logD('Ahorro','Págate primero: a la alcancía',dep); learn('emb'); addText(e.x-30,e.y-14,dep?'Págate primero: +'+dep+' a la alcancía':'Punto de control','#9FD3FF'); snd('save'); } }
+    else if(e.t==='emb'){ if(overlap(p,e)&&!e.used){ e.used=true; if(eco.embCrack){ eco.embCrack=0; addText(e.x-30,e.y-26,'Alcancía nueva: sin grietas','#9FD3FF'); } S.check={x:e.x+8,y:e.y+e.h-28}; const dep=Math.floor(eco.hand/2); eco.hand-=dep; eco.emb+=dep; eco.stats.saved+=dep; if(S.ws) S.ws.saved+=dep; if(dep) logD('Ahorro','Págate primero: a la alcancía',dep); learn('emb'); addText(e.x-30,e.y-14,dep?'Págate primero: +'+dep+' a la alcancía':'Punto de control','#9FD3FF'); snd('save'); } }
     else if(e.t==='camp'){ if(p.x+p.w>e.x+12){ enterCamp(); return; } }
     else if(e.t==='bill'){ if(overlap(p,e)){ if(eco.hand>=cap()){ if(!S.fullMsg||S.t-S.fullMsg>120){ S.fullMsg=S.t; addText(p.x-30,p.y-20,'Mochila llena: ahorra o invierte','#FFE18A'); } } else { e.dead=true; const v=Math.min(e.v,cap()-eco.hand); eco.hand+=v; if(S.ws) S.ws.coins+=v; snd('buy'); burst(e.x+11,e.y+6,'#7FD39A',8); addText(e.x-6,e.y-8,'+'+v+' billete','#9BF0B8'); S.hudPop=12; logD('Ingreso','Billete de '+e.v,v); learn('bill'); } } }
     else if(e.t==='offer'){ if(e.cd>0) e.cd--; if(overlap(p,e)&&e.cd<=0) takeOffer(e); }
@@ -1145,6 +1162,8 @@ function update(){
   S.loose.forEach(d=>{ d.vy=Math.min(d.vy+0.4,8); d.vx*=0.98; const ovx=d.vx; if(moveX(d)) d.vx=-ovx*0.5; if(moveY(d)===null && d.onGround) d.vx*=0.8; d.life--; if(d.wait>0) d.wait--; else if(overlap(p,d)&&eco.hand<cap()){ d.dead=true; eco.hand++; snd('drop'); if(S.ws&&S.ws.lost.golpes) S.ws.lost.golpes--; } if(d.life<=0||d.y>L.rows*T) d.dead=true; });
   S.loose=S.loose.filter(d=>!d.dead);
   // partículas
+  if(S.L&&S.L.plats) for(const q of S.L.plats) if(q.broken&&--q.brokenT<=0){ q.broken=false; q.hits=0; q.paid=true; q.rebuilt=40; for(let c=q.c0;c<=q.c1;c++) S.L.g[q.r][c]='='; const ii=S.L.plats.indexOf(q); for(let c=q.c0;c<=q.c1;c++) S.L.pmap[q.r*S.L.w+c]=ii; if(q.c0*T>S.cam-20&&q.c0*T<S.cam+W) addText(q.c0*T-20,q.r*T-24,'Frasco nuevo: vuelve a ahorrar','#9FD3FF'); }
+  if(S.debris&&S.debris.length){ S.debris.forEach(d=>{ d.x+=d.vx; d.y+=d.vy; d.vy+=0.28; d.rot+=d.vr+d.vx*.05; d.life--; }); S.debris=S.debris.filter(d=>d.life>0); }
   S.parts.forEach(q=>{ q.x+=q.vx; q.y+=q.vy; q.vy+=q.conf?0.08:0.15; if(q.conf) q.vx*=0.98; q.life--; }); S.parts=S.parts.filter(q=>q.life>0); if(S.parts.length>220) S.parts.splice(0,S.parts.length-220);
   S.texts.forEach(q=>{ q.y-=0.45; q.life--; }); S.texts=S.texts.filter(q=>q.life>0);
   S.pops.forEach(q=>q.life--); S.pops=S.pops.filter(q=>q.life>0);
@@ -1161,16 +1180,38 @@ function update(){
 const PLAT_W=[[2,4,3,1],[3,3,3,1],[2,2,4,2],[3,2,2,3],[3,2,2,3],[2,3,2,3],[3,2,2,3],[3,1,2,4]]; // casa, carro, frasco, inversión
 const PLAT_T=['casa','carro','frasco','inversion'];
 function platType(li,len,h){ const w=PLAT_W[li].slice(); if(len>=5) w[2]=0; if(len<=1){ w[0]*=.3; w[1]*=.3; } if(len===2) w[0]*=.5; const tot=w.reduce((a,b)=>a+b,0); let r=h*tot; for(let i=0;i<4;i++){ if(r<w[i]) return PLAT_T[i]; r-=w[i]; } return 'inversion'; }
-function platUnder(p){ const L=S.L; if(!L||!L.pmap) return null; const c=Math.floor((p.x+p.w/2)/T), r=Math.floor((p.y+p.h+1)/T); if(r<0||r>=L.rows||c<0||c>=L.w) return null; const i=L.pmap[r*L.w+c]; return i>=0?L.plats[i]:null; }
+function platUnder(p){ const L=S.L; if(!L||!L.pmap) return null; const c=Math.floor((p.x+p.w/2)/T), r=Math.floor((p.y+p.h+1)/T); if(r<0||r>=L.rows||c<0||c>=L.w) return null; const i=L.pmap[r*L.w+c]; return i>=0&&!L.plats[i].broken?L.plats[i]:null; }
+const CAR_COSTS=[['SOAT',2,'papel'],['Tecnomecánica',1,'papel'],['Impuesto vehicular',2,'papel'],['Repuesto: llanta',1,'llanta'],['Repuesto: batería',1,'bateria'],['Cambio de aceite',1,'gota'],['Gasolina',1,'gota'],['Repuesto: espejo',1,'espejo'],['Parqueadero',1,'papel']];
+const CASA_EV=[['Arriendo',1],['Arriendo',1],['Impuesto predial',-1],['Arriendo',1],['Reparación del techo',-1]];
+function carNext(pl){ return CAR_COSTS[((pl.c0||0)+(pl.n||0)*2)%CAR_COSTS.length]; }
+function casaNext(pl){ return CASA_EV[(pl.n||0)%CASA_EV.length]; }
+function debris(x,y,k){ S.debris=S.debris||[]; S.debris.push({x,y,vx:(Math.random()<.5?-1:1)*(1.2+Math.random()*1.6),vy:-4-Math.random()*2,rot:0,vr:(Math.random()-.5)*.4,k,life:120}); }
 function platLand(wasAir){
   const p=S.p, pl=platUnder(p); if(!pl) return; const x=p.x, y=p.y;
-  if(pl.type==='frasco'&&wasAir){ p.vy=-13.2; p.onGround=false; p.squash=1.32; snd('jump'); burst(x+7,y+p.h,'#8EC8F0',10);
+  if(pl.type==='frasco'&&wasAir){ pl.hits=(pl.hits||0)+1;
+    if(pl.hits>=3){ // el frasco se rompe
+      pl.broken=true; pl.brokenT=360; for(let c=pl.c0;c<=pl.c1;c++){ S.L.g[pl.r][c]='.'; if(S.L.pmap) S.L.pmap[pl.r*S.L.w+c]=-1; }
+      const lost=pl.lostOnce?0:Math.min(2,eco.emb); pl.lostOnce=true; eco.emb-=lost; if(S.ws) S.ws.lost.frasco=(S.ws.lost.frasco||0)+lost;
+      for(let c=pl.c0;c<=pl.c1;c++) for(let j=0;j<4;j++) debris(c*T+T/2,pl.r*T+8,'vidrio');
+      burst(x+7,y+p.h,'#BFE3FF',16); snd('hit'); p.onGround=false; p.vy=1;
+      addText(x-50,y-18,'¡Se rompió el frasco!'+(lost?' −'+lost+' alcancía':'')+' El ahorro en casa es frágil','#FFC7BF');
+      logD('Pérdida','Se rompió un frasco de ahorro (ahorro en casa)',-lost); learn('frascoRoto'); return; }
+    p.vy=-13.2; p.onGround=false; p.squash=1.32; snd('jump'); burst(x+7,y+p.h,'#8EC8F0',10);
+    if(pl.hits===2) addText(x-40,y-30,'El frasco se agrieta: uno más y se rompe','#FFE18A');
     if(!pl.paid){ pl.paid=true; eco.emb+=1; eco.stats.saved+=1; if(S.ws) S.ws.saved+=1; logD('Ahorro','Frasco de ahorro: te impulsa',1); addText(x-30,y-16,'El ahorro te impulsa ↑ +1 alcancía','#9FD3FF'); }
     learn('frasco'); return; }
-  if(pl.type==='casa'&&!pl.paid){ pl.paid=true; const v=Math.min(1,cap()-eco.hand); eco.hand+=v; if(S.ws) S.ws.rent+=1; logD('Ingreso','Renta de un activo (casa en arriendo)',1); addText(x-30,y-16,'+1 renta: la casa es un activo','#9BF0B8'); snd('drop'); burst(x+7,y+p.h,'#62C98A',8); learn('activo'); }
-  else if(pl.type==='inversion'&&!pl.paid){ pl.paid=true; const v=Math.min(pl.acc,cap()-eco.hand); eco.hand+=v; eco.stats.invested+=0; logD('Inversión','Rendimiento acumulado de una caja de inversión',v); addText(x-40,y-16,'+'+pl.acc+' rendimiento acumulado (esperar paga)','#9BF0B8'); snd('buy'); confetti(x+7,y+p.h,10); learn('cajaInv'); }
-  else if(pl.type==='carro'&&wasAir){ pl.wob=20; if(!pl.charged){ pl.charged=1; const v=Math.min(1,eco.hand); eco.hand-=v; if(S.ws) S.ws.lost.pasivos=(S.ws.lost.pasivos||0)+1; logD('Gasto','Mantenimiento de un pasivo (carro)',-1); addText(x-34,y-16,(v?'−1 ':'')+'mantenimiento: el carro es un pasivo','#FFC7BF'); snd('bad'); learn('pasivo'); } }
+  if(pl.type==='casa'||pl.type==='carro'){ pl.stand=wasAir?0:(pl.stand||0)+1; }
+  if(pl.type==='casa'&&(pl.n||0)<CASA_EV.length&&((wasAir&&!pl.n)||pl.stand===150)){ pl.stand=0; const ev=casaNext(pl); pl.n=(pl.n||0)+1; pl.lastT=S.t; pl.paid=pl.n>=CASA_EV.length;
+    if(ev[1]>0){ const v=Math.min(ev[1],cap()-eco.hand); eco.hand+=v; if(S.ws) S.ws.rent+=ev[1]; logD('Ingreso',ev[0]+' de una casa (activo)',ev[1]); addText(x-30,y-16,'+'+ev[1]+' '+ev[0].toLowerCase()+': la casa es un activo','#9BF0B8'); snd('drop'); burst(x+7,y+p.h,'#62C98A',8); learn('activo'); }
+    else { const v=Math.min(-ev[1],eco.hand); eco.hand-=v; if(S.ws) S.ws.lost.casa=(S.ws.lost.casa||0)+(-ev[1]); logD('Gasto',ev[0]+' de la casa',ev[1]); addText(x-50,y-16,'−'+(-ev[1])+' '+ev[0]+': un activo también tiene costos','#FFE18A'); snd('bad'); if(ev[0].startsWith('Rep')) debris(x+7,y+4,'teja'); learn('casaGastos'); } }
+  else if(pl.type==='inversion'&&!pl.paid){ pl.paid=true; const v=Math.min(pl.acc,cap()-eco.hand); eco.hand+=v; eco.stats.invested+=0; logD('Inversión','CDT: capital más intereses de '+(pl.q||0)+' quincenas',v); addText(x-50,y-16,'+'+pl.acc+' CDT cobrado: '+(pl.q||0)+' quincenas de intereses','#9BF0B8'); snd('buy'); confetti(x+7,y+p.h,10); learn('cajaInv'); }
+  else if(pl.type==='carro'&&(wasAir||pl.stand===150)){ if(wasAir) pl.wob=20; if((pl.n||0)<3&&((wasAir&&!pl.n)||pl.stand===150)){ pl.stand=0; pl.wob=14; const cst=carNext(pl); pl.n=(pl.n||0)+1; pl.lastT=S.t; pl.charged=pl.n>=3;
+      const v=Math.min(cst[1],eco.hand); eco.hand-=v; if(S.ws) S.ws.lost.pasivos=(S.ws.lost.pasivos||0)+cst[1];
+      logD('Gasto',cst[0]+' del carro (pasivo)',-cst[1]); addText(x-44,y-16,'−'+cst[1]+' '+cst[0]+(v<cst[1]?' (no te alcanzó)':'')+': el carro es un pasivo','#FFC7BF');
+      debris(x+7,y+10,cst[2]); snd('bad'); learn(pl.n>1?'carroGastos':'pasivo'); } }
 }
+function plab(fn){ if(S.plabels){ S.plabels.push([fn,ctx.getTransform()]); } else fn(); }
+function drawPlatLabels(){ const L=S.plabels; S.plabels=null; if(!L) return; for(const [fn,m] of L){ ctx.save(); ctx.setTransform(m); try{ fn(); }catch(e){} ctx.restore(); } }
 function drawPlatObj(type,x,y,len,bodyH,pl,o){
   // x,y: esquina superior izquierda de la superficie que se pisa; len en baldosas; bodyH: alto del cuerpo hasta el suelo
   o=o||{}; const wpx=len*T, dark=o.dark, snow=o.snow, t=S.t||0;
@@ -1190,7 +1231,8 @@ function drawPlatObj(type,x,y,len,bodyH,pl,o){
     ctx.strokeStyle='rgba(60,20,10,.45)'; ctx.lineWidth=1; for(let r2=1;r2<4;r2++){ ctx.beginPath(); ctx.moveTo(x-4+r2*1.4,y+r2*6); ctx.lineTo(x+wpx+4-r2*1.4,y+r2*6); ctx.stroke(); }
     for(let k=0;k<wpx;k+=5){ ctx.fillStyle='rgba(255,200,170,.18)'; ctx.fillRect(x+k,y+1,2.5,T-4); }
     ctx.fillStyle=snow?'#F4F8FC':'#C9603F'; ctx.fillRect(x,y-1,wpx,3);
-    ctx.fillStyle=pl&&pl.paid?'#62C98A':'#2F8A55'; rr(x+wpx/2-15,y-12,30,9,3); ctx.fill(); ctx.fillStyle='#fff'; ctx.font='800 6.5px Figtree, sans-serif'; ctx.textAlign='center'; ctx.fillText(pl&&pl.paid?'✓ RENTA':'ACTIVO +1',x+wpx/2,y-5.6); ctx.textAlign='left';
+plab(()=>{    { const done=pl&&pl.n>=CASA_EV.length, ev=pl?casaNext(pl):CASA_EV[0], txt=done?'✓ ACTIVO':'ACTIVO · '+(ev[1]>0?'+':'−')+Math.abs(ev[1])+' '+ev[0].replace('Impuesto ','').replace(' del techo',''); ctx.font='800 6.5px Figtree, sans-serif'; const tw=ctx.measureText(txt).width+10;
+      ctx.fillStyle=done?'#2F5E4C':ev[1]>0?'#2F8A55':'#B07A1E'; rr(x+wpx/2-tw/2,y-12,tw,9,3); ctx.fill(); ctx.fillStyle='#fff'; ctx.textAlign='center'; ctx.fillText(txt,x+wpx/2,y-5.6); ctx.textAlign='left'; }});
   }
   else if(type==='carro'){
     const wob=pl&&pl.wob?Math.sin(pl.wob*1.3)*pl.wob*.012:0; const cols=['#B8323C','#E0B030','#1E2A3A','#7A3FA0','#C8CDD2'];
@@ -1205,9 +1247,12 @@ function drawPlatObj(type,x,y,len,bodyH,pl,o){
       ctx.fillStyle='rgba(255,255,255,.55)'; ctx.fillRect(cx+6,y+10,cw*.45,1.4);
       ctx.fillStyle='#111'; ctx.beginPath(); ctx.arc(cx+7,y+21,4,0,7); ctx.arc(cx+cw-7,y+21,4,0,7); ctx.fill(); ctx.fillStyle='#8C8C8C'; ctx.beginPath(); ctx.arc(cx+7,y+21,1.6,0,7); ctx.arc(cx+cw-7,y+21,1.6,0,7); ctx.fill();
       ctx.fillStyle='#FFE7A0'; ctx.fillRect(cx+cw-3,y+11,2,3);
+      if(pl&&pl.n>=1){ ctx.strokeStyle='rgba(30,20,15,.7)'; ctx.lineWidth=.8; ctx.beginPath(); ctx.moveTo(cx+cw*.6,y+9); ctx.lineTo(cx+cw*.66,y+13); ctx.lineTo(cx+cw*.62,y+16); ctx.stroke(); }
+      if(pl&&pl.n>=2){ ctx.fillStyle='#3A3A3A'; ctx.beginPath(); ctx.arc(cx+cw-7,y+21,4,0,7); ctx.fill(); ctx.fillStyle='rgba(120,120,120,.5)'; ctx.beginPath(); ctx.arc(cx+cw-4,y+2-((S.t||0)%40)*.3,2+((S.t||0)%40)*.06,0,7); ctx.fill(); }
       if(snow){ ctx.fillStyle='#F4F8FC'; rr(cx+9,y-1.5,cw-18,3,1.5); ctx.fill(); }
       ctx.restore(); }
-    ctx.fillStyle=pl&&pl.charged?'#8A4A3A':'#E07A2A'; rr(x+wpx/2-17,y-12,34,9,3); ctx.fill(); ctx.fillStyle='#fff'; ctx.font='800 6.5px Figtree, sans-serif'; ctx.textAlign='center'; ctx.fillText('PASIVO −1',x+wpx/2,y-5.6); ctx.textAlign='left';
+plab(()=>{    { const done=pl&&pl.n>=3, c2=pl?carNext(pl):CAR_COSTS[0], txt=done?'PASIVO · ya pagaste':'PASIVO · '+c2[0].replace('Repuesto: ','')+' −'+c2[1]; ctx.font='800 6.5px Figtree, sans-serif'; const tw=ctx.measureText(txt).width+10;
+      ctx.fillStyle=done?'#8A4A3A':'#E07A2A'; rr(x+wpx/2-tw/2,y-12,tw,9,3); ctx.fill(); ctx.fillStyle='#fff'; ctx.textAlign='center'; ctx.fillText(txt,x+wpx/2,y-5.6); ctx.textAlign='left'; }});
   }
   else if(type==='frasco'){
     // cajones de madera debajo
@@ -1217,28 +1262,43 @@ function drawPlatObj(type,x,y,len,bodyH,pl,o){
       ctx.fillStyle='#C98A1A'; for(let j=0;j<5;j++){ ctx.beginPath(); ctx.ellipse(jx+5+((j*7)%13),y+T+4-j*2.6,4,2,0,0,7); ctx.fill(); } ctx.fillStyle='#F2B33D'; for(let j=0;j<5;j++){ ctx.beginPath(); ctx.ellipse(jx+5+((j*7)%13),y+T+3-j*2.6,3.6,1.6,0,0,7); ctx.fill(); }
       ctx.strokeStyle='rgba(200,230,250,.7)'; ctx.lineWidth=1.2; rr(jx,y+5,jw,T+3,5); ctx.stroke(); ctx.fillStyle='rgba(255,255,255,.5)'; ctx.fillRect(jx+3,y+8,2,T-6);
       ctx.fillStyle='#8C98A2'; rr(jx-1,y,jw+2,6,2); ctx.fill(); ctx.fillStyle='#C9D3DA'; ctx.fillRect(jx,y,jw,2);
+      const hits=pl&&pl.hits||0; if(hits>=1){ ctx.strokeStyle='rgba(255,255,255,.9)'; ctx.lineWidth=.9; ctx.beginPath(); ctx.moveTo(jx+jw*.55,y+7); ctx.lineTo(jx+jw*.4,y+12); ctx.lineTo(jx+jw*.6,y+16); if(hits>=2){ ctx.lineTo(jx+jw*.35,y+22); ctx.moveTo(jx+jw*.4,y+12); ctx.lineTo(jx+jw*.2,y+15); ctx.moveTo(jx+jw*.6,y+16); ctx.lineTo(jx+jw*.85,y+19); } ctx.stroke(); }
       if(snow){ ctx.fillStyle='#F4F8FC'; ctx.fillRect(jx,y-1.5,jw,2.5); } }
-    const pulse=pl&&!pl.paid?.6+.4*Math.sin(t*.12):.4; ctx.fillStyle='rgba(74,143,211,'+pulse+')'; rr(x+wpx/2-16,y-12,32,9,3); ctx.fill(); ctx.fillStyle='#fff'; ctx.font='800 6.5px Figtree, sans-serif'; ctx.textAlign='center'; ctx.fillText('AHORRO ↑',x+wpx/2,y-5.6); ctx.textAlign='left';
+    plab(()=>{const pulse=pl&&!pl.paid?.6+.4*Math.sin(t*.12):.4; ctx.fillStyle=pl&&pl.hits>=2?'rgba(224,122,42,.95)':'rgba(74,143,211,'+pulse+')'; rr(x+wpx/2-22,y-12,44,9,3); ctx.fill(); ctx.fillStyle='#fff'; ctx.font='800 6.5px Figtree, sans-serif'; ctx.textAlign='center'; ctx.fillText(pl&&pl.hits>=2?'¡SE AGRIETA!':pl&&pl.hits?'AHORRO ↑ · frágil':'AHORRO ↑',x+wpx/2,y-5.6); ctx.textAlign='left';});
   }
   else { // inversión: cajas fuertes apiladas con una planta que crece cada quincena
     let yy=y+T; while(yy<y+T+bodyH-4){ for(let k=0;k<len;k++){ const bx=x+k*T+1; ctx.fillStyle='#24453A'; ctx.fillRect(bx,yy,T-2,T-2); ctx.fillStyle='#2F5E4C'; ctx.fillRect(bx+1,yy+1,T-5,T-5); } yy+=T-2; }
     for(let k=0;k<len;k++){ const bx=x+k*T+1;
       ctx.fillStyle='#1F3D33'; rr(bx,y,T-2,T,3); ctx.fill(); ctx.fillStyle='#3A7A60'; rr(bx+1,y+1,T-5,T-4,3); ctx.fill();
-      ctx.fillStyle='#C9D3DA'; ctx.beginPath(); ctx.arc(bx+T/2-1,y+T/2+1,4,0,7); ctx.fill(); ctx.fillStyle='#1F3D33'; ctx.fillRect(bx+T/2-1.6,y+T/2-2,1.2,6); ctx.fillStyle='rgba(255,255,255,.3)'; ctx.fillRect(bx+2,y+2,T-8,1.5);
+      ctx.fillStyle='#E9F7EC'; ctx.font='800 7px Figtree, sans-serif'; ctx.textAlign='center'; ctx.fillText('CDT',bx+T/2-1,y+T/2+3); ctx.textAlign='left'; ctx.fillStyle='rgba(255,255,255,.3)'; ctx.fillRect(bx+2,y+2,T-8,1.5);
       if(snow){ ctx.fillStyle='#F4F8FC'; ctx.fillRect(bx,y-1.5,T-2,2.5); } }
     const acc=pl?pl.acc:3, paid=pl&&pl.paid, cxp=x+wpx/2;
     if(!paid){ ctx.strokeStyle='#4E8A30'; ctx.lineWidth=1.4; ctx.beginPath(); ctx.moveTo(cxp,y); ctx.lineTo(cxp,y-4-acc*2.2); ctx.stroke(); for(let j=0;j<acc;j++){ const ly=y-3-j*2.2, sd=j%2?1:-1; ctx.fillStyle=j%2?'#62C98A':'#8BE0A8'; ctx.beginPath(); ctx.ellipse(cxp+sd*3,ly,3,1.5,sd*.5,0,7); ctx.fill(); } drop(cxp,y-8-acc*2.2,.45); }
-    ctx.fillStyle=paid?'#2F5E4C':'#1F6B40'; rr(cxp-18,y-12-(paid?0:acc*2.2+4),36,9,3); ctx.fill(); ctx.fillStyle='#fff'; ctx.font='800 6.5px Figtree, sans-serif'; ctx.textAlign='center'; ctx.fillText(paid?'✓ COBRADO':'INVERSIÓN +'+acc,cxp,y-5.6-(paid?0:acc*2.2+4)); ctx.textAlign='left';
+    { const gp=pl&&pl.grow>0?(pl.grow--,1+pl.grow/60):1, txt=paid?'✓ CDT COBRADO':'Ganancia +'+acc, sub=paid?'':((pl&&pl.q)||0)+' quincenas'; ctx.font='800 7px Figtree, sans-serif'; const tw=Math.max(ctx.measureText(txt).width+12,40), ty=y+T+6;
+      ctx.save(); ctx.translate(cxp,ty); ctx.scale(gp,gp); ctx.fillStyle=paid?'rgba(20,50,40,.9)':'rgba(16,70,42,.95)'; rr(-tw/2,-6,tw,sub?19:12,3); ctx.fill(); ctx.strokeStyle=paid?'#3A7A60':'#62C98A'; ctx.lineWidth=1; rr(-tw/2,-6,tw,sub?19:12,3); ctx.stroke();
+      ctx.fillStyle=pl&&pl.grow>0?'#FFE18A':'#E9F7EC'; ctx.textAlign='center'; ctx.fillText(txt,0,2.4); if(sub){ ctx.fillStyle='#9FD9B4'; ctx.font='700 5.5px Figtree, sans-serif'; ctx.fillText(sub,0,10); } ctx.textAlign='left'; ctx.restore(); }
   }
   ctx.restore();
 }
 function drawPlats(th){
   const L=S.L; if(!L.plats) return; const dark=S.li<=1, snow=th.deco==='nieve';
-  for(const pl of L.plats){ const x=pl.c0*T-S.cam, wpx=(pl.c1-pl.c0+1)*T; if(x>W+40||x+wpx<-40) continue; const y=pl.r*T; if(y>S.camY+H+60||y<S.camY-200) continue;
+  for(const pl of L.plats){ if(pl.broken) continue; const x=pl.c0*T-S.cam, wpx=(pl.c1-pl.c0+1)*T; if(x>W+40||x+wpx<-40) continue; const y=pl.r*T; if(y>S.camY+H+60||y<S.camY-200) continue;
     if(pl.wob>0) pl.wob--;
     const bodyH=pl.ground>=0?Math.min(T*6,(pl.ground-pl.r-1)*T):T*1.2;
     if(pl.ground<0||(pl.ground-pl.r)>7){ ctx.strokeStyle=dark?'rgba(150,160,170,.55)':'rgba(70,60,50,.6)'; ctx.lineWidth=1.2; ctx.beginPath(); ctx.moveTo(x+6,y-14); ctx.lineTo(x+6,S.camY-10); ctx.moveTo(x+wpx-6,y-14); ctx.lineTo(x+wpx-6,S.camY-10); ctx.stroke(); ctx.fillStyle='#5A5048'; ctx.fillRect(x+4,y-16,4,3); ctx.fillRect(x+wpx-8,y-16,4,3); }
     drawPlatObj(pl.type,Math.round(x),y,pl.c1-pl.c0+1,Math.max(0,bodyH),pl,{dark,snow}); }
+  drawDebris();
+}
+function drawDebris(){
+  for(const d of (S.debris||[])){ const x=d.x-S.cam, y=d.y; ctx.save(); ctx.translate(x,y); ctx.rotate(d.rot); ctx.globalAlpha=Math.min(1,d.life/25);
+    if(d.k==='llanta'){ ctx.fillStyle='#151515'; ctx.beginPath(); ctx.arc(0,0,5,0,7); ctx.fill(); ctx.fillStyle='#8C8C8C'; ctx.beginPath(); ctx.arc(0,0,2,0,7); ctx.fill(); }
+    else if(d.k==='bateria'){ ctx.fillStyle='#2B3440'; ctx.fillRect(-5,-3.5,10,7); ctx.fillStyle='#E04A4A'; ctx.fillRect(-4,-5,2,1.5); ctx.fillStyle='#C9D3DA'; ctx.fillRect(2,-5,2,1.5); }
+    else if(d.k==='espejo'){ ctx.fillStyle='#1E2A3A'; ctx.fillRect(-3,-2,6,4); ctx.fillStyle='#9FC6DC'; ctx.fillRect(-2,-1.2,4,2.4); }
+    else if(d.k==='gota'){ ctx.fillStyle='#2A2016'; ctx.beginPath(); ctx.ellipse(0,0,2.4,3.4,0,0,7); ctx.fill(); }
+    else if(d.k==='teja'){ ctx.fillStyle='#A8452E'; ctx.fillRect(-4,-1.5,8,3); }
+    else if(d.k==='vidrio'){ ctx.fillStyle='rgba(200,230,250,.85)'; ctx.beginPath(); ctx.moveTo(-2,-3); ctx.lineTo(3,0); ctx.lineTo(-1,3); ctx.fill(); }
+    else { ctx.fillStyle='#F2EBDD'; ctx.fillRect(-4,-3,8,6); ctx.fillStyle='#C9475B'; ctx.fillRect(-3,-1.5,6,1); ctx.fillStyle='#9DB0B8'; ctx.fillRect(-3,.5,5,.8); }
+    ctx.restore(); }
 }
 
 /* ================= DIBUJO ================= */
@@ -2047,7 +2107,9 @@ function drawHud(){
   ctx.font='600 15px "IBM Plex Mono", monospace'; ctx.textBaseline='middle';
   const hp=1+(S.hudPop>0?S.hudPop/10*0.25:0); drop(24,30,1.1*hp); ctx.save(); ctx.translate(36,30); ctx.scale(hp,hp); ctx.fillStyle=eco.hand>=cap()?'#FFE18A':'#fff'; ctx.fillText(eco.hand,0,0); const hw=ctx.measureText(String(eco.hand)).width; ctx.font='600 9px "IBM Plex Mono", monospace'; ctx.fillStyle='rgba(255,255,255,.55)'; ctx.fillText('/'+cap(),hw+1,4); ctx.restore(); ctx.font='600 15px "IBM Plex Mono", monospace';
   // alcancía
-  ctx.fillStyle='#4A8FD3'; ctx.beginPath(); ctx.ellipse(94,30,9,7,0,0,7); ctx.fill(); ctx.fillStyle='#2E6FB0'; ctx.fillRect(101,28,3,4); ctx.fillStyle='#10304F'; ctx.fillRect(91,24,6,1.5); ctx.fillStyle='#fff'; ctx.fillText(eco.emb,108,30);
+  ctx.fillStyle='#4A8FD3'; ctx.beginPath(); ctx.ellipse(94,30,9,7,0,0,7); ctx.fill(); ctx.fillStyle='#2E6FB0'; ctx.fillRect(101,28,3,4); ctx.fillStyle='#10304F'; ctx.fillRect(91,24,6,1.5);
+  if(eco.embCrack){ ctx.strokeStyle='#fff'; ctx.lineWidth=1; ctx.beginPath(); ctx.moveTo(92,24); ctx.lineTo(95,29); ctx.lineTo(92,33); if(eco.embCrack>=2){ ctx.moveTo(95,29); ctx.lineTo(100,31); ctx.moveTo(92,33); ctx.lineTo(96,37); } ctx.stroke(); }
+  ctx.fillStyle='#fff'; ctx.fillText(eco.emb,108,30);
   // flujo y quincena
   const f=flujo(); ctx.fillStyle=f>0?'#8BF0AE':f<0?'#FF9A8C':'#FFD36B'; ctx.fillText((f>0?'+':'')+f,140,30);
   ctx.strokeStyle='rgba(255,255,255,.25)'; ctx.lineWidth=3; ctx.beginPath(); ctx.arc(186,30,9,0,7); ctx.stroke();
@@ -2110,7 +2172,7 @@ function draw(){
   ctx.save();
   const sh=S.shake&&!reduced?S.shake:0;
   ctx.translate(sh?(Math.random()-.5)*sh:0, -Math.round(S.camY)+(sh?(Math.random()-.5)*sh:0));
-  drawDeco(th); drawPlats(th); drawTiles(th); drawEnts(); drawHiker(); drawFront();
+  drawDeco(th); S.plabels=[]; drawPlats(th); drawTiles(th); drawEnts(); drawPlatLabels(); drawHiker(); drawFront();
   S.pops.forEach(q=>{ const k=1-q.life/14; ctx.globalAlpha=1-k; ctx.save(); ctx.globalCompositeOperation='lighter'; drop(q.x-S.cam,q.y-k*10,1+k*0.8,'#8EE0FF'); ctx.restore(); }); ctx.globalAlpha=1;
   S.parts.forEach(q=>{ ctx.globalAlpha=Math.min(1,q.life/20); ctx.fillStyle=q.col; if(q.conf){ ctx.save(); ctx.translate(q.x-S.cam,q.y); ctx.rotate(q.rot+=0.2); ctx.fillRect(-2,-1,4,2.4); ctx.restore(); } else if(q.dust){ ctx.beginPath(); ctx.arc(q.x-S.cam,q.y,q.r*(1.4-q.life/40),0,7); ctx.fill(); } else ctx.fillRect(q.x-S.cam,q.y,3,3); }); ctx.globalAlpha=1;
   ctx.font='800 11px Figtree, sans-serif'; ctx.textAlign='center';
@@ -2180,6 +2242,41 @@ const ov=document.getElementById('ov'), box=document.getElementById('ovBox');
 function openOv(html,wide){ box.className='box'+(wide?' wide':''); box.innerHTML=html; ov.hidden=false; const f=box.querySelector('.btn:not([disabled])'); if(f&&!wide&&!f.closest('.qopts')&&!document.body.classList.contains('has-touch')) try{f.focus({preventScroll:true})}catch(e){} }
 function closeOv(){ ov.hidden=true; keys={left:false,right:false,jump:false}; try{cv.focus({preventScroll:true})}catch(e){} }
 
+
+/* ================= REGISTRO DEL SENDERISTA ================= */
+const GRADOS=['','4°','5°','6°','7°','8°','9°','10°','11°','Técnico o tecnólogo','Universidad','Docente','Otro'];
+const PAISES=['Colombia','Argentina','Bolivia','Chile','Costa Rica','Cuba','Ecuador','El Salvador','España','Estados Unidos','Guatemala','Honduras','México','Nicaragua','Panamá','Paraguay','Perú','Puerto Rico','República Dominicana','Uruguay','Venezuela','Otro'];
+function profLoad(){ let p={}; try{ p=JSON.parse(localStorage.getItem('rac-perfil')||'{}')||{}; }catch(e){} if(!p.grupo){ try{ p.grupo=localStorage.getItem('rac-grupo')||''; }catch(e){} } return Object.assign({name:'',colegio:'',grado:'',grupo:'',pais:'Colombia',ciudad:''},p); }
+function profSave(p){ try{ localStorage.setItem('rac-perfil',JSON.stringify(p)); localStorage.setItem('rac-grupo',p.grupo||''); }catch(e){} }
+function profileForm(p){
+  const opt=(arr,v)=>arr.map(x=>`<option value="${esc(x)}"${x===v?' selected':''}>${esc(x||'Elige…')}</option>`).join('');
+  return `<fieldset class="reg"><legend>Registro del senderista</legend>
+   <p class="reg-n">Así apareces en el ranking y en el informe para tu docente. Usa un apodo, no tu nombre completo: lo ven tus compañeros.</p>
+   <div class="reg-g">
+    <div class="full"><label class="lb" for="nm">Nombre o apodo *</label><input type="text" id="nm" maxlength="16" required value="${esc(p.name||'')}" placeholder="Ej. Sendero Ana" autocomplete="nickname"></div>
+    <div class="full"><label class="lb" for="pcol">Colegio o institución</label><input type="text" id="pcol" maxlength="40" value="${esc(p.colegio||'')}" placeholder="Ej. I. E. San Bernardo" autocomplete="organization"></div>
+    <div><label class="lb" for="pgrd">Grado</label><select id="pgrd">${opt(GRADOS,p.grado||'')}</select></div>
+    <div><label class="lb" for="gr">Grupo o curso</label><input type="text" id="gr" maxlength="12" value="${esc(p.grupo||'')}" placeholder="Ej. 10-2"></div>
+    <div><label class="lb" for="ppais">País</label><select id="ppais">${opt(PAISES,p.pais||'Colombia')}</select></div>
+    <div><label class="lb" for="pciu">Ciudad o municipio</label><input type="text" id="pciu" maxlength="30" value="${esc(p.ciudad||'')}" placeholder="Ej. Floridablanca" autocomplete="address-level2"></div>
+   </div></fieldset>`;
+}
+function profRead(){
+  const v=id=>{ const el=document.getElementById(id); return el?String(el.value||'').trim():''; };
+  const p={name:(v('nm')||'Senderista').slice(0,16),colegio:v('pcol').slice(0,40),grado:v('pgrd'),grupo:v('gr').slice(0,12),pais:v('ppais')||'Colombia',ciudad:v('pciu').slice(0,30)};
+  profSave(p); return p;
+}
+function profLine(e){ e=e||eco||profLoad(); return [e.colegio,[e.grado,e.grupo].filter(Boolean).join(' · '),[e.ciudad,e.pais].filter(Boolean).join(', ')].filter(Boolean).join(' · '); }
+function openProfile(){
+  const m=S.mode; if(!['title','map','play','pause','intro'].includes(m)){ const b=document.getElementById('bPerfil'); b.textContent='Termina esta pantalla'; setTimeout(()=>b.textContent='Perfil',1500); return; }
+  if(m==='play') togglePause();
+  const pl0=profLoad(), p=eco?Object.assign(pl0,{name:eco.name||pl0.name,colegio:eco.colegio||pl0.colegio,grado:eco.grado||pl0.grado,grupo:eco.grupo||pl0.grupo,pais:eco.pais||pl0.pais,ciudad:eco.ciudad||pl0.ciudad}):pl0;
+  openOv(`<div class="eyebrow">Ruta Financiera</div><h2>Tu perfil</h2>${profileForm(p)}<div class="row"><button class="btn gold" id="bPfSave" type="button">Guardar</button><button class="btn alt" id="bPfX" type="button">Cancelar</button></div>`);
+  const back=()=>{ if(m==='title') titleScreen(); else if(m==='play') togglePause(); else if(m==='pause'){ S.mode='play'; togglePause(); } else if(m==='intro') levelIntro(S.li); else closeOv(); };
+  document.getElementById('bPfSave').onclick=()=>{ const f=profRead(); if(eco){ Object.assign(eco,f); try{ if(S.li!=null&&m!=='title') save(S.li); }catch(e){} } back(); };
+  document.getElementById('bPfX').onclick=back;
+  try{ document.getElementById('nm').focus({preventScroll:true}); }catch(e){}
+}
 function titleScreen(){
   S={mode:'title'}; S.L=null; document.getElementById('mapBar').hidden=true;
   const sv=loadSave();
@@ -2187,11 +2284,7 @@ function titleScreen(){
   openOv(`<img class="hero" src="art/cima.jpg" alt="" onerror="this.remove()"><div class="eyebrow">Un juego de educación financiera de Ruta a la Cima · basado en sus 7 guías</div>
   <h2>Ruta Financiera</h2>
   <p>Sube del Valle a la Cordillera con tu mochila y tus bastones. Gana tu dinero, ahórralo, inviértelo y no te dejes encadenar por las deudas. Cada campamento solo se abre si tus finanzas están listas.</p>
-  <div class="icards" style="margin:6px 0 0">
-    <div><label class="lb" for="nm" style="margin-top:0">Tu nombre o apodo</label><input type="text" id="nm" maxlength="16" value="${esc(sv?sv.eco.name:'Senderista')}" autocomplete="nickname"></div>
-    <div><label class="lb" for="gr" style="margin-top:0">Curso o grupo</label><input type="text" id="gr" maxlength="12" placeholder="Ej. 10-2" value="${esc(sv&&sv.eco.grupo?sv.eco.grupo:(()=>{try{return localStorage.getItem('rac-grupo')||''}catch(e){return ''}})())}"></div>
-  </div>
-  <p class="muted" style="margin:6px 0 0;font-size:12.5px">Así apareces en el ranking. Usa un apodo, no tu nombre completo: lo ven tus compañeros.</p>
+  ${profileForm(sv?Object.assign({},profLoad(),{name:sv.eco.name,colegio:sv.eco.colegio||profLoad().colegio,grado:sv.eco.grado||profLoad().grado,grupo:sv.eco.grupo||profLoad().grupo,pais:sv.eco.pais||profLoad().pais,ciudad:sv.eco.ciudad||profLoad().ciudad}):profLoad())}
   <label class="lb">Color de la chaqueta</label><div class="swatches" data-g="color">${COLORS.map((c,i)=>`<button type="button" class="sw" style="background:${c}" data-v="${c}" aria-label="Chaqueta ${i+1}" aria-pressed="${c===color}"></button>`).join('')}</div>
   <label class="lb">Tono de piel</label><div class="swatches" data-g="skin">${SKINS.map((c,i)=>`<button type="button" class="sw" style="background:${c}" data-v="${i}" aria-label="Tono de piel ${i+1}" aria-pressed="${i===skin}"></button>`).join('')}</div>
   <label class="lb">En la cabeza</label><div class="row" data-g="head"><button type="button" class="btn sm alt" data-v="gorra" aria-pressed="${head==='gorra'}">Gorra</button><button type="button" class="btn sm alt" data-v="gorro" aria-pressed="${head==='gorro'}">Gorro de lana</button></div>
@@ -2201,11 +2294,10 @@ function titleScreen(){
   box.querySelectorAll('[data-g]').forEach(gr=>gr.querySelectorAll('[data-v]').forEach(b=>b.onclick=()=>{
     const g=gr.dataset.g, v=b.dataset.v; if(g==='color') color=v; if(g==='skin') skin=+v; if(g==='head') head=v; if(g==='diff') diff=v;
     gr.querySelectorAll('[data-v]').forEach(x=>x.setAttribute('aria-pressed',x===b)); }));
-  const nm=()=>(document.getElementById('nm').value.trim()||'Senderista').slice(0,16);
-  const gr=()=>{ const v=(document.getElementById('gr').value||'').trim().slice(0,12); try{ localStorage.setItem('rac-grupo',v); }catch(e){} return v; };
-  document.getElementById('bNew').onclick=()=>{ eco=newEco(nm(),color,{skin,head,diff,grupo:gr()}); preTest(); };
+  const pf=()=>profRead();
+  document.getElementById('bNew').onclick=()=>{ const f=pf(); eco=newEco(f.name,color,Object.assign({skin,head,diff},f)); preTest(); };
   document.getElementById('bRank').onclick=()=>showRanking(titleScreen);
-  if(sv) document.getElementById('bCont').onclick=()=>{ eco=sv.eco; Object.assign(eco,{name:nm(),color,skin,head,diff,grupo:gr()}); showMap(sv.li,{reveal:true}); };
+  if(sv) document.getElementById('bCont').onclick=()=>{ eco=sv.eco; Object.assign(eco,pf(),{color,skin,head,diff}); showMap(sv.li,{reveal:true}); };
 }
 function preTest(){
   openOv(`<div class="eyebrow">Antes de subir</div><h2>¿Cuánto sabes hoy?</h2>
@@ -2492,7 +2584,7 @@ function ending(){
   eco.logros=eco.logros||[]; try{ eco.logros[7]=CURR[7].ok()?2:Math.max(1,eco.logros[7]||0); }catch(err){}
   const nLog=()=>(eco.logros||[]).filter(v=>v===2).length;
   const show=()=>{
-    const report=`Ruta Financiera · ${eco.name}${eco.grupo?' ('+eco.grupo+')':''} · ${Dif().n}\nTiempo: ${mins}:${String(secs).padStart(2,'0')} · Estrellas: ${totalStars}/24 · Páginas del Cuaderno: ${totalPages}/24\nPatrimonio final: ${patrimonio()} · Ingreso pasivo: ${renta()} por quincena · Activos: ${eco.assets.length}\nAhorrado: ${st.saved} · Invertido: ${st.invested} · Trampas: ${st.traps} · Quiebras y caídas: ${st.deaths}\nSueños cumplidos: ${(eco.suenos||[]).join(', ')||'ninguno'} · Pasivos: ${(eco.lujos||[]).map(l=>l.n).join(', ')||'ninguno'} · Conceptos: ${Object.keys(eco.seen||{}).length}/${Object.keys(TIPS).length}\nPreguntas acertadas en la ruta: ${st.quizOk}/${st.quizN}`+(eco.pre!=null?`\nPrueba inicial: ${eco.pre}/5`:'')+(eco.post!=null?` · Prueba final: ${eco.post}/5`:'')+`\nAyudas recibidas: ${eco.stats.helps||0} · Peso que carga al final: ${peso()}\n\nResultados de aprendizaje (competencias de educación económica y financiera: decidir, administrar, planear, gestionar):\n`+CURR.map((c,i)=>`M${i+1} · ${c.comp} · ${c.g}: ${c.ra} → ${logro(i)}`).join('\n');
+    const report=`Ruta Financiera · ${eco.name}${eco.grupo?' ('+eco.grupo+')':''} · ${Dif().n}${profLine()?'\n'+profLine():''}\nTiempo: ${mins}:${String(secs).padStart(2,'0')} · Estrellas: ${totalStars}/24 · Páginas del Cuaderno: ${totalPages}/24\nPatrimonio final: ${patrimonio()} · Ingreso pasivo: ${renta()} por quincena · Activos: ${eco.assets.length}\nAhorrado: ${st.saved} · Invertido: ${st.invested} · Trampas: ${st.traps} · Quiebras y caídas: ${st.deaths}\nSueños cumplidos: ${(eco.suenos||[]).join(', ')||'ninguno'} · Pasivos: ${(eco.lujos||[]).map(l=>l.n).join(', ')||'ninguno'} · Conceptos: ${Object.keys(eco.seen||{}).length}/${Object.keys(TIPS).length}\nPreguntas acertadas en la ruta: ${st.quizOk}/${st.quizN}`+(eco.pre!=null?`\nPrueba inicial: ${eco.pre}/5`:'')+(eco.post!=null?` · Prueba final: ${eco.post}/5`:'')+`\nAyudas recibidas: ${eco.stats.helps||0} · Peso que carga al final: ${peso()}\n\nResultados de aprendizaje (competencias de educación económica y financiera: decidir, administrar, planear, gestionar):\n`+CURR.map((c,i)=>`M${i+1} · ${c.comp} · ${c.g}: ${c.ra} → ${logro(i)}`).join('\n');
     openOv(`<div class="eyebrow">Libertad financiera</div>
     <h2>${esc(eco.name)} es Mentor de la Cordillera</h2>
     <p>Tu dinero ahora trabaja por ti: el ingreso pasivo cubre el costo de vida. Llegaste a la fase de impacto y legado: el mentor transforma su éxito personal en impacto colectivo. La vida es una serie de montañas; desde aquí te toca enseñarle el camino a otros. ${eco.mentorOk?'Y ya empezaste: tu consejo ayudó a otra persona a subir.':''}</p>
@@ -2547,7 +2639,7 @@ async function rkInit(){
 }
 function rkRows(){ if(RK.shared&&RK.ready) return RK.rows; const me=eco?String(eco.name||'').toLowerCase()+'|'+String(eco.grupo||'').toLowerCase():null; return rkLocal().filter(rkValid).map(r=>Object.assign({},r,{own:me!==null&&(String(r.a).toLowerCase()+'|'+String(r.g||'').toLowerCase())===me})); }
 async function rkSubmit(w,secs){
-  const run={a:String(eco.name||'Senderista').slice(0,16),g:String(eco.grupo||'').slice(0,12),w,t:Math.round(secs*10)/10,d:eco.diff,p:patrimonio(),f:new Date().toISOString().slice(0,10)};
+  const run={a:String(eco.name||'Senderista').slice(0,16),g:String(eco.grupo||'').slice(0,12),c:String(eco.colegio||'').slice(0,40),gr:String(eco.grado||'').slice(0,20),pa:String(eco.pais||'').slice(0,24),w,t:Math.round(secs*10)/10,d:eco.diff,p:patrimonio(),f:new Date().toISOString().slice(0,10)};
   const loc=rkLocal(); const best=rkMerge(loc,run); rkSaveLocal(loc);
   if(RK.shared&&RK.db&&RK.uid&&RK.canWrite){ const mine=RK.mine.slice(); if(rkMerge(mine,run)){ try{ await RK.db.doc('ranking/'+RK.uid).set({runs:mine.slice(-80)}); RK.mine=mine; }catch(e){ if(e&&(e.code==='invalid_argument'||e.code==='not_granted')) RK.canWrite=false; } } }
   return {run,best};
@@ -2558,16 +2650,16 @@ function renderRanking(el){
   if(!el) return;
   const sel=(id,opts,v)=>`<select data-rk="${id}" style="font:600 13px var(--f-body);background:var(--bg);color:var(--ink);border:1px solid var(--line);border-radius:9px;padding:6px 8px">${opts.map(([k,n])=>`<option value="${k}" ${String(v)===String(k)?'selected':''}>${esc(n)}</option>`).join('')}</select>`;
   const w=+RK_UI.w, d=RK_UI.d, g=RK_UI.g.trim().toLowerCase();
-  let list=rkRows().filter(r=>r.w===w&&(d==='all'||r.d===d)&&(!g||String(r.g||'').toLowerCase().includes(g))).sort((a,b)=>a.t-b.t).slice(0,15);
+  let list=rkRows().filter(r=>r.w===w&&(d==='all'||r.d===d)&&(!g||(String(r.g||'')+' '+String(r.c||'')+' '+String(r.gr||'')).toLowerCase().includes(g))).sort((a,b)=>a.t-b.t).slice(0,15);
   const medal=i=>i<3?`<span style="display:inline-grid;place-items:center;width:22px;height:22px;border-radius:50%;background:${['#F2B33D','#C9D3DA','#C98A5A'][i]};color:#2A1A00;font:800 12px var(--f-num)">${i+1}</span>`:`<span style="display:inline-block;width:22px;text-align:center;font:600 12px var(--f-num);color:var(--muted)">${i+1}</span>`;
   const DN={exp:'Explorador',sen:'Senderista',mon:'Montañista'};
   el.innerHTML=`<div class="row" style="gap:8px;margin-bottom:10px">
      ${sel('w',[...LV.map((L,i)=>[i,'Mundo '+(i+1)+' · '+L.name]),[8,'Ruta completa']],RK_UI.w)}
      ${sel('d',[['sen','Senderista'],['exp','Explorador'],['mon','Montañista'],['all','Todas las dificultades']],RK_UI.d)}
-     <input type="text" data-rk="g" placeholder="Filtrar por curso" value="${esc(RK_UI.g)}" style="width:150px;font-size:13px;padding:6px 10px">
+     <input type="text" data-rk="g" placeholder="Filtrar por curso o colegio" value="${esc(RK_UI.g)}" style="width:150px;font-size:13px;padding:6px 10px">
    </div>
    <p class="muted" style="margin:0 0 8px;font-size:13px">${RK.shared&&RK.ready?'<b>Ranking compartido</b>: lo ven todos los que abren este juego.':'<b>Ranking de este dispositivo</b>: guarda los tiempos jugados aquí. El ranking compartido aparece cuando el juego se abre con sesión iniciada y permiso para participar.'} Gana el menor tiempo; el patrimonio muestra si se subió bien.</p>
-   ${list.length?`<div class="tblwrap" style="margin:0"><table class="cur" style="min-width:0"><thead><tr><th>#</th><th>Senderista</th><th>Curso</th><th>Tiempo</th><th>Patrimonio</th>${d==='all'?'<th>Dificultad</th>':''}<th>Fecha</th></tr></thead><tbody>${list.map((r,i)=>`<tr style="${r.own?'background:rgba(242,179,61,.08)':''}"><td>${medal(i)}</td><td><b>${esc(r.a)}</b>${r.own?' <span class="tag" style="background:var(--gold)">tú</span>':''}</td><td>${esc(r.g||'—')}</td><td style="font:600 13px var(--f-num)">${fmtT(r.t)}</td><td style="font:600 13px var(--f-num);color:${r.p>=0?'var(--ok)':'var(--bad)'}">${Number(r.p)||0}</td>${d==='all'?`<td>${DN[r.d]||''}</td>`:''}<td class="muted">${esc(String(r.f||''))}</td></tr>`).join('')}</tbody></table></div>`:'<p class="muted">Todavía no hay tiempos aquí. Termina un mundo para entrar al ranking.</p>'}`;
+   ${list.length?`<div class="tblwrap" style="margin:0"><table class="cur" style="min-width:0"><thead><tr><th>#</th><th>Senderista</th><th>Colegio · grado</th><th>Tiempo</th><th>Patrimonio</th>${d==='all'?'<th>Dificultad</th>':''}<th>Fecha</th></tr></thead><tbody>${list.map((r,i)=>`<tr style="${r.own?'background:rgba(242,179,61,.08)':''}"><td>${medal(i)}</td><td><b>${esc(r.a)}</b>${r.own?' <span class="tag" style="background:var(--gold)">tú</span>':''}</td><td>${esc([r.c,[r.gr,r.g].filter(Boolean).join(' ')].filter(Boolean).join(' · ')||'—')}</td><td style="font:600 13px var(--f-num)">${fmtT(r.t)}</td><td style="font:600 13px var(--f-num);color:${r.p>=0?'var(--ok)':'var(--bad)'}">${Number(r.p)||0}</td>${d==='all'?`<td>${DN[r.d]||''}</td>`:''}<td class="muted">${esc(String(r.f||''))}</td></tr>`).join('')}</tbody></table></div>`:'<p class="muted">Todavía no hay tiempos aquí. Termina un mundo para entrar al ranking.</p>'}`;
   el.querySelectorAll('select[data-rk]').forEach(x=>x.onchange=()=>{ RK_UI[x.dataset.rk]=x.value; rkRefresh(); });
   const gi=el.querySelector('input[data-rk="g"]'); if(gi) gi.oninput=()=>{ RK_UI.g=gi.value; clearTimeout(gi._t); gi._t=setTimeout(()=>{ rkRefresh(); const n=document.querySelector('input[data-rk="g"]'); if(n){ n.focus(); n.setSelectionRange(n.value.length,n.value.length); } },350); };
 }
@@ -2584,8 +2676,8 @@ function clearSave(){ try{ localStorage.removeItem('rac-financiera-v2'); }catch(
 
 /* ================= LEYENDA ================= */
 function legend(){
-  const items=[['gana','drop','Moneda: tu dinero (la mochila tiene límite)'],['gana','bill','Billete: ingreso extra'],['gana','emb','Alcancía: ahorro y punto de control'],['gana','I','Bloque de inversión: golpéalo desde abajo'],['gana','offerA','Activo: casa, moto, tienda… trabaja por ti'],['gana','pCasa','Casa: un activo. Al pisarla te paga renta'],['gana','pInv','Caja de inversión: crece cada quincena (interés compuesto)'],['gana','pFrasco','Frasco de ahorro: te impulsa más alto'],['gana','page','Página del Cuaderno de Ruta'],['gana','npc','Persona que te ayuda: tu red de apoyo'],
-   ['pierde','pCarro','Pila de carros: pasivos que cobran mantenimiento'],['pierde','ant','Gasto hormiga: salta encima'],['pierde','impulse','Vitrina “¡solo hoy!”: compra por impulso'],['pierde','offerL','Pasivo disfrazado: brilla, pero cuesta cada quincena'],['pierde','veh','Vehículo: rápido, pero cuesta y pesa en la mochila'],['pierde','lender','Gota a gota: plata rápida, cadena larga'],['pierde','cobrador','Cobrador del gota a gota: te persigue'],['pierde','card','Tarjeta pre-aprobada: crédito fácil'],['pierde','bank','Banco: legal, pero cobra comisiones'],['pierde','cloud','Nube de inflación: llueve y resta'],['pierde','pyr','Pirámide: “duplica tu plata”'],
+  const items=[['gana','drop','Moneda: tu dinero (la mochila tiene límite)'],['gana','bill','Billete: ingreso extra'],['gana','emb','Alcancía: ahorro y punto de control; cada golpe que paga la agrieta'],['gana','I','Bloque de inversión: golpéalo desde abajo'],['gana','offerA','Activo: casa, moto, tienda… trabaja por ti'],['gana','pCasa','Casa: un activo. Te paga arriendo, aunque a veces cobra predial o reparaciones'],['gana','pInv','CDT: la ganancia crece cada quincena que esperas (interés compuesto)'],['gana','pFrasco','Frasco de ahorro: te impulsa, pero si rebotas mucho se agrieta y se rompe'],['gana','page','Página del Cuaderno de Ruta'],['gana','npc','Persona que te ayuda: tu red de apoyo'],
+   ['pierde','pCarro','Carros: pasivos que cobran SOAT, tecnomecánica, impuesto y repuestos'],['pierde','ant','Gasto hormiga: salta encima'],['pierde','impulse','Vitrina “¡solo hoy!”: compra por impulso'],['pierde','offerL','Pasivo disfrazado: brilla, pero cuesta cada quincena'],['pierde','veh','Vehículo: rápido, pero cuesta y pesa en la mochila'],['pierde','lender','Gota a gota: plata rápida, cadena larga'],['pierde','cobrador','Cobrador del gota a gota: te persigue'],['pierde','card','Tarjeta pre-aprobada: crédito fácil'],['pierde','bank','Banco: legal, pero cobra comisiones'],['pierde','cloud','Nube de inflación: llueve y resta'],['pierde','pyr','Pirámide: “duplica tu plata”'],
    ['riesgo','puma','Fiera: un imprevisto (salta para espantarla)'],['riesgo','tDeuda','Cadenas de deuda: pinchan si las tocas'],['riesgo','tPantano','Pantano de la mora: frena si cargas deudas'],['riesgo','tMuro','Muro: mantén la flecha hacia él para trepar'],['riesgo','tRio','Río: las piedras se hunden, no te quedes quieto']];
   const main=ctx, keep={cam:S.cam,t:S.t,L:S.L,rain:S.rain,loose:S.loose};
   items.forEach(([g,k,txt])=>{
@@ -2870,6 +2962,7 @@ function buildInfo(){
 function drawTilesMini(){ ctx.fillStyle='#1F6B40'; rr(6,6,T,T,4); ctx.fill(); ctx.fillStyle='#3FA868'; rr(7,7,T-2,T-4,4); ctx.fill(); ctx.fillStyle='#E9F7EC'; ctx.fillRect(17,14,2,8); ctx.beginPath(); ctx.ellipse(14,15,3.6,2.2,-.5,0,7); ctx.ellipse(22,14,3.6,2.2,.5,0,7); ctx.fill(); ctx.fillStyle='#0E3B22'; ctx.font='700 8px monospace'; ctx.textAlign='center'; ctx.fillText('9',18,27); ctx.textAlign='left'; }
 
 /* ================= BOTONES ================= */
+document.getElementById('bPerfil').onclick=openProfile;
 document.getElementById('bMute').onclick=e=>{ muted=!muted; e.target.textContent=muted?'Sin sonido':'Sonido'; };
 document.getElementById('bPause').onclick=()=>{ if(S.mode==='play'||S.mode==='pause') togglePause(); };
 

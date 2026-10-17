@@ -25,10 +25,10 @@ Empiezas en **El Valle** sin empleo, con una mochila vacía y un letrero de *“
 
 Entre un punto y otro está la montaña, y la montaña **es tu dinero**:
 
-- 🏠 **Las casas son activos.** Súbete a ellas y te pagan renta.
-- 🚗 **Las pilas de carros son pasivos.** Te sostienen un momento, se tambalean y cobran mantenimiento.
-- 🫙 **Los frascos de ahorro te impulsan.** Rebotas más alto y llenas la alcancía.
-- 📦 **Las cajas de inversión crecen** cada quincena que las dejas quietas.
+- 🏠 **Las casas son activos.** Te pagan arriendo, aunque también cobran impuesto predial y reparaciones: dejan más de lo que cuestan.
+- 🚗 **Los carros son pasivos.** Se tambalean, se les caen piezas y cobran SOAT, tecnomecánica, impuesto vehicular, repuestos y gasolina.
+- 🫙 **Los frascos de ahorro te impulsan,** pero si rebotas mucho se agrietan y se rompen: el ahorro en casa es frágil.
+- 📈 **Los CDT muestran su ganancia:** cada quincena que esperas suman intereses, y tú decides cuándo cobrar.
 - ⛓️ **Las deudas son cadenas.** Pinchan, pesan y te hunden en el pantano de la mora.
 
 Aquí no saltas sobre tortugas: **saltas sobre decisiones financieras**. Cada campamento solo se abre si tus finanzas están listas.
@@ -102,9 +102,9 @@ flowchart LR
 |---|---|---|
 | 🪙 **Monedas:** tu dinero, con límite en la mochila | 🐜 **Gastos hormiga:** salta encima para recuperar la moneda | 🐆 **Fieras:** los imprevistos de la vida |
 | 💵 **Billetes:** ingresos extra | 🏷️ **Vitrina “¡solo hoy!”:** la compra por impulso | ⛓️ **Cadenas de deuda:** pinchan si las tocas |
-| 🐷 **Alcancía:** págate primero; te salva de los golpes | ✨ **Pasivos disfrazados:** brillan, pero cobran cada quincena | 🟫 **Pantano de la mora:** frena si cargas deudas |
+| 🐷 **Alcancía:** págate primero; te salva de los golpes, pero cada golpe la agrieta | ✨ **Pasivos disfrazados:** brillan, pero cobran cada quincena | 🟫 **Pantano de la mora:** frena si cargas deudas |
 | 🏠 **Casas:** activos que pagan renta | 🏍️ **Vehículos:** rápidos, pero pesan en la mochila | 🧗 **Muros de escalada** y 🌊 **ríos** con piedras que se hunden |
-| 📦 **Cajas de inversión:** crecen con el tiempo | 🤝 **El gota a gota:** plata rápida, cadena larga | 🌫️ **Inflación, tarjetas, bancos con comisiones y pirámides** |
+| 📈 **CDT:** la ganancia crece cada quincena | 🤝 **El gota a gota:** plata rápida, cadena larga | 🌫️ **Inflación, tarjetas, bancos con comisiones y pirámides** |
 
 En el camino también aparecen **personas que te ayudan**, **cartas de concepto** que se responden como en un juego de cartas, y el **Diario del viajero**, que te cuenta a dónde se fue tu dinero.
 
@@ -121,7 +121,7 @@ En el camino también aparecen **personas que te ayudan**, **cartas de concepto*
 
 **Tres niveles de dificultad:** Explorador (10 a 13 años), Senderista y Montañista.
 
-**Ranking:** regístrate con un apodo y tu curso, y compite por ver **quién llega más rápido a la cima**.
+**Registro y ranking:** escribe tu apodo, colegio, grado, grupo, país y ciudad (se editan en cualquier momento con el botón **Perfil**) y compite por ver **quién llega más rápido a la cima**.
 
 ---
 
