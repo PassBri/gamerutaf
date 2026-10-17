@@ -1,0 +1,243 @@
+<div align="center">
+
+<img src="art/cima.jpg" alt="Ruta Financiera: un sendero que sube por la montaña hasta la cima iluminada" width="100%">
+
+# ⛰️ Ruta Financiera
+
+### Un juego de **Ruta a la Cima** · educación financiera que se juega
+
+*“No se trata solo de ganar dinero, sino de construir la vida que quieres.”*
+
+[![Jugar ahora](https://img.shields.io/badge/▶_Jugar_ahora-F2B33D?style=for-the-badge&labelColor=0F1A20)](https://passbri.github.io/gamerutaf/)
+[![HTML5 Canvas](https://img.shields.io/badge/HTML5-Canvas-E34F26?style=for-the-badge&logo=html5&logoColor=white&labelColor=0F1A20)](#-tecnología)
+[![Sin dependencias](https://img.shields.io/badge/Dependencias-0-62C98A?style=for-the-badge&labelColor=0F1A20)](#-tecnología)
+[![Español](https://img.shields.io/badge/Idioma-Español-5CC2EA?style=for-the-badge&labelColor=0F1A20)](#)
+
+**[Jugar](https://passbri.github.io/gamerutaf/)** · [Cómo se juega](#-cómo-se-juega) · [La montaña](#️-la-montaña-8-mundos-8-versiones-de-ti) · [Para el aula](#-para-el-aula) · [Correrlo en tu equipo](#-correrlo-en-tu-equipo)
+
+</div>
+
+---
+
+## 🎒 ¿De qué se trata?
+
+Empiezas en **El Valle** sin empleo, con una mochila vacía y un letrero de *“Busco trabajo”*. Terminas en **La Cordillera** como **mentor**: con ruana, bastón y un ingreso pasivo que paga tu vida.
+
+Entre un punto y otro está la montaña, y la montaña **es tu dinero**:
+
+- 🏠 **Las casas son activos.** Súbete a ellas y te pagan renta.
+- 🚗 **Las pilas de carros son pasivos.** Te sostienen un momento, se tambalean y cobran mantenimiento.
+- 🫙 **Los frascos de ahorro te impulsan.** Rebotas más alto y llenas la alcancía.
+- 📦 **Las cajas de inversión crecen** cada quincena que las dejas quietas.
+- ⛓️ **Las deudas son cadenas.** Pinchan, pesan y te hunden en el pantano de la mora.
+
+Aquí no saltas sobre tortugas: **saltas sobre decisiones financieras**. Cada campamento solo se abre si tus finanzas están listas.
+
+<div align="center">
+<img src="docs/capturas/mundo2.jpg" alt="El senderista en la Base de la Montaña frente a una pila de carros marcada como PASIVO −1" width="100%">
+<sub><b>Mundo 2 · Base de la Montaña.</b> La pila de carros parece un buen atajo… hasta que cobra el mantenimiento.</sub>
+</div>
+
+---
+
+## 🧗 Tu personaje evoluciona
+
+Cada mundo cambia la ropa y el equipo del senderista según la fase financiera que alcanzó:
+
+<div align="center">
+<img src="docs/capturas/personajes.png" alt="Ocho versiones del senderista: desempleado, empleado, estratega, emprendedor, empresario, inversionista, diversificador y mentor" width="100%">
+</div>
+
+| | Rol | Lo que lo delata |
+|:-:|---|---|
+| 1 | **Desempleado** | Mochila gastada y letrero de “Busco trabajo” |
+| 2 | **Empleado** | Carné en el pecho y bastones prestados |
+| 3 | **Estratega** | Un mapa con la gráfica de su ahorro |
+| 4 | **Emprendedor** | Linterna frontal: trabaja hasta tarde |
+| 5 | **Empresario** | Traje y maletín |
+| 6 | **Inversionista** | Tableta con su portafolio al alza |
+| 7 | **Diversificador** | Abrigo largo y bufanda al viento |
+| 8 | **Mentor** | Ruana, sombrero, barba y bastón de guía |
+
+---
+
+## 🏔️ La montaña: 8 mundos, 8 versiones de ti
+
+<div align="center">
+<img src="docs/capturas/mapa.jpg" alt="Mapa de la montaña con los 8 campamentos y el sendero recorrido" width="100%">
+</div>
+
+| Mundo | Campamento | Rol | Paso financiero | Para abrir el campamento |
+|:-:|---|---|---|---|
+| 1 | El Valle | Desempleado | Identificación de ingresos | Tener un empleo (salario) |
+| 2 | Base de la Montaña | Empleado | Control de gastos | Llegar con 10 monedas o más en la mano |
+| 3 | Puntos de Observación | Estratega | Creación de ahorro | 15 monedas o más en la alcancía |
+| 4 | Primer Campamento | Emprendedor | Inversiones inteligentes | Al menos 1 activo |
+| 5 | Campamento Avanzado | Empresario | Diversificación de recursos | Activos de 2 tipos distintos |
+| 6 | La Cima | Inversionista | Eliminación de pasivos | Cero deudas |
+| 7 | Cumbre Personal | Diversificador | Construcción de patrimonio | Patrimonio de 80 o más |
+| 8 | La Cordillera | Mentor | Libertad financiera | Ingreso pasivo ≥ costo de vida |
+
+```mermaid
+flowchart LR
+    A["🎒 Desempleado"] --> B["🪪 Empleado"] --> C["🗺️ Estratega"] --> D["🔦 Emprendedor"]
+    D --> E["💼 Empresario"] --> F["📈 Inversionista"] --> G["🧣 Diversificador"] --> H["🏔️ Mentor"]
+```
+
+<table>
+<tr>
+<td width="50%"><img src="docs/capturas/mundo1.jpg" alt="Mundo 1, El Valle"><br><sub><b>El Valle.</b> Monedas con límite de mochila y el primer empleo.</sub></td>
+<td width="50%"><img src="docs/capturas/mundo5.jpg" alt="Mundo 5, Campamento Avanzado entre la niebla"><br><sub><b>Campamento Avanzado.</b> Niebla, costos ocultos y cajas de inversión.</sub></td>
+</tr>
+<tr>
+<td colspan="2"><img src="docs/capturas/mundo8.jpg" alt="Mundo 8, La Cordillera nevada con el mentor"><br><sub><b>La Cordillera.</b> El mentor sobre la nieve, junto a los frascos de ahorro.</sub></td>
+</tr>
+</table>
+
+---
+
+## 💸 Lo que encuentras en el camino
+
+| Te ayuda ✅ | Te quita ❌ | Te pone en riesgo ⚠️ |
+|---|---|---|
+| 🪙 **Monedas:** tu dinero, con límite en la mochila | 🐜 **Gastos hormiga:** salta encima para recuperar la moneda | 🐆 **Fieras:** los imprevistos de la vida |
+| 💵 **Billetes:** ingresos extra | 🏷️ **Vitrina “¡solo hoy!”:** la compra por impulso | ⛓️ **Cadenas de deuda:** pinchan si las tocas |
+| 🐷 **Alcancía:** págate primero; te salva de los golpes | ✨ **Pasivos disfrazados:** brillan, pero cobran cada quincena | 🟫 **Pantano de la mora:** frena si cargas deudas |
+| 🏠 **Casas:** activos que pagan renta | 🏍️ **Vehículos:** rápidos, pero pesan en la mochila | 🧗 **Muros de escalada** y 🌊 **ríos** con piedras que se hunden |
+| 📦 **Cajas de inversión:** crecen con el tiempo | 🤝 **El gota a gota:** plata rápida, cadena larga | 🌫️ **Inflación, tarjetas, bancos con comisiones y pirámides** |
+
+En el camino también aparecen **personas que te ayudan**, **cartas de concepto** que se responden como en un juego de cartas, y el **Diario del viajero**, que te cuenta a dónde se fue tu dinero.
+
+---
+
+## 🎮 Cómo se juega
+
+| Acción | Teclado | Ratón | Táctil |
+|---|---|---|---|
+| Caminar | <kbd>←</kbd> <kbd>→</kbd> o <kbd>A</kbd> <kbd>D</kbd> | Clic donde quieres ir | Botones en pantalla o toca el camino |
+| Saltar (mantén para subir más) | <kbd>Espacio</kbd>, <kbd>↑</kbd>, <kbd>W</kbd> | Clic arriba del senderista | Botón **Saltar** |
+| Trepar un muro | Mantén la flecha hacia el muro | — | Mantén la dirección |
+| Pausa | <kbd>P</kbd> o <kbd>Esc</kbd> | Botón **Pausa** | Botón **Pausa** |
+
+**Tres niveles de dificultad:** Explorador (10 a 13 años), Senderista y Montañista.
+
+**Ranking:** regístrate con un apodo y tu curso, y compite por ver **quién llega más rápido a la cima**.
+
+---
+
+## 🏫 Para el aula
+
+Ruta Financiera nació en el aula y está pensada para usarse en ella.
+
+- 🎯 **Un resultado de aprendizaje por mundo**, alineado con las competencias de las orientaciones del MEN para la educación económica y financiera: **decidir, administrar, planear y gestionar**.
+- 📊 **Evidencias que el juego mide solo:** al terminar, el docente ve un resumen con lo logrado, lo que está en proceso y lo que falta.
+- 🧪 **Evaluación completa:** prueba diagnóstica y final de 5 cartas, una carta formativa en cada campamento con repaso espaciado y una rúbrica sencilla por mundo.
+- 📚 **Material docente por unidades:** 7 clases listas, una por guía. Están dentro del juego, en **Menú → Material docente por unidades**.
+
+<table>
+<tr>
+<td width="62%"><img src="docs/capturas/material.jpg" alt="Material docente por unidades con la Unidad 1 abierta"></td>
+<td width="38%">
+
+**Cada unidad trae:**
+
+1. 💡 La gran idea, con la metáfora de la montaña
+2. 🎯 La meta y los logros esperados
+3. 🔑 Ideas clave
+4. 🃏 Vocabulario en tarjetas que se voltean
+5. ⏱️ La clase paso a paso, con tiempos y casillas para marcar
+6. 🎮 Qué mirar en el juego
+7. ✍️ Una actividad práctica con materiales y producto
+8. ✅ Un mini quiz de salida con retroalimentación
+9. 💬 Preguntas para conversar y tarea con la familia
+10. 🧩 Ideas para quien necesita apoyo y para quien va rápido
+
+Todo se puede **copiar** o **imprimir**.
+
+</td>
+</tr>
+</table>
+
+<div align="center">
+<img src="docs/capturas/menu-movil.jpg" alt="Menú desplegable en el celular" width="300"><br>
+<sub>La guía vive en un menú tipo app y se queda oculta mientras juegas.</sub>
+</div>
+
+---
+
+## 📖 Las 7 guías de Ruta a la Cima
+
+El contenido del juego sale de las siete guías de Ruta a la Cima:
+
+| # | Guía | Tema |
+|:-:|---|---|
+| 1 | **Base financiera** | Fundamentos financieros |
+| 2 | **Camino financiero** | Generación de ingresos |
+| 3 | **Cargas financieras** | Transforma pasivos en activos |
+| 4 | **Brújula financiera** | Mentalidad financiera |
+| 5 | **Supervivencia financiera** | Estrategias de protección |
+| 6 | **Cima financiera** | Indicadores financieros |
+| 7 | **Ascenso financiero** | Tu viaje paso a paso |
+
+---
+
+## 💻 Correrlo en tu equipo
+
+No necesitas instalar nada. El juego entero es un solo archivo HTML.
+
+```bash
+git clone https://github.com/PassBri/gamerutaf.git
+cd gamerutaf
+python3 -m http.server 8000
+# abre http://localhost:8000
+```
+
+También puedes abrir `index.html` con doble clic. Con un servidor local las imágenes y el ranking funcionan mejor.
+
+### Publicarlo con GitHub Pages
+
+En **Settings → Pages**, elige **Deploy from a branch**, la rama `main` y la carpeta `/ (root)`. En un par de minutos el juego queda en `https://passbri.github.io/gamerutaf/`.
+
+---
+
+## 🛠️ Tecnología
+
+| | |
+|---|---|
+| **Motor** | HTML5 Canvas 2D propio, sin librerías ni motores externos |
+| **Resolución** | Lienzo lógico de 640 × 360 que se escala a cualquier pantalla |
+| **Física** | Paso fijo a 60 Hz; el juego se recupera solo de cualquier error de dibujo |
+| **Arte** | Montañas con relieve por píxel, luz por mundo, niebla, grano y viñeta |
+| **Controles** | Teclado, ratón (clic para ir) y táctil |
+| **Guardado** | Progreso, ranking local y material docente en `localStorage` |
+| **Ranking en línea** | Base de datos compartida cuando corre como artifact de Claude; en otros sitios usa el ranking local |
+| **Accesibilidad** | Navegación por teclado, foco visible, `aria` en menús y cartas, y respeto por *reducir movimiento* |
+
+```
+gamerutaf/
+├── index.html        ← el juego completo (HTML + CSS + JS)
+├── art/
+│   ├── cima.jpg      ← portada
+│   └── m1…m8.jpg     ← ilustración de cada mundo
+└── docs/capturas/    ← imágenes de este README
+```
+
+---
+
+## 👤 Autor
+
+**Brian Gonzalo Suárez Acevedo**, fundador de **Ruta a la Cima**, docente de educación física en Floridablanca, Santander (Colombia) y artista visual.
+
+Ruta Financiera hace parte de Ruta a la Cima, un sistema de desarrollo personal que usa la montaña como mapa: subir no es un salto, es un camino por fases.
+
+<div align="center">
+
+---
+
+**¿Listo para subir?**
+
+[![Empieza en El Valle](https://img.shields.io/badge/⛰️_Empieza_en_El_Valle-F2B33D?style=for-the-badge&labelColor=0F1A20)](https://passbri.github.io/gamerutaf/)
+
+<sub>© 2026 Ruta a la Cima · Brian Gonzalo Suárez Acevedo. Todos los derechos reservados.</sub>
+
+</div>
