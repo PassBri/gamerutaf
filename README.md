@@ -131,7 +131,7 @@ Ruta Financiera nació en el aula y está pensada para usarse en ella.
 
 - 🎯 **Un resultado de aprendizaje por mundo**, alineado con las competencias de las orientaciones del MEN para la educación económica y financiera: **decidir, administrar, planear y gestionar**.
 - 📊 **Evidencias que el juego mide solo:** al terminar, el docente ve un resumen con lo logrado, lo que está en proceso y lo que falta.
-- 🧪 **Evaluación completa:** prueba diagnóstica y final de 5 cartas, una carta formativa en cada campamento con repaso espaciado y una rúbrica sencilla por mundo.
+- 🧪 **Evaluación completa:** prueba diagnóstica y final de 5 cartas con retroalimentación inmediata y un resumen carta por carta, una carta formativa en cada campamento con repaso espaciado y una rúbrica sencilla por mundo.
 - 📚 **Material docente por unidades:** 7 clases listas, una por guía. Están dentro del juego, en **Menú → Material docente por unidades**.
 
 <table>

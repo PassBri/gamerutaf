@@ -226,6 +226,20 @@ table.cur td{padding:8px;border-bottom:1px dashed var(--line);vertical-align:top
 .info.closed .iclose{display:none}
 .imenu-wrap{display:flex;align-items:center}
 @media (max-width:640px){.info.closed .ihead{flex-wrap:nowrap}.info.closed .imenu-wrap,.info.closed .imenu-btn{width:auto}.info.closed .ihint{display:none}.imenu-btn{flex:1}.info.closed .imenu-btn{flex:none}.iclose span{display:none}.iclose{padding:0 13px}}
+
+.tres{display:flex;gap:14px;align-items:center;background:var(--bg);border-radius:14px;padding:12px 14px;border-left:4px solid var(--c)}
+.tres b{font:400 19px var(--f-display);color:var(--c)}.tres p{margin:2px 0 0;font-size:14px;color:var(--muted)}
+.tring{flex:none;width:68px;height:68px;border-radius:50%;display:grid;place-items:center;background:conic-gradient(var(--c) calc(var(--p)*1%),#24363F 0)}
+.tring span{width:52px;height:52px;border-radius:50%;background:var(--bg);display:grid;place-items:center;font:800 15px var(--f-num)}
+.trh{font:400 17px var(--f-display);margin:14px 0 8px}
+.trev{list-style:none;margin:0;padding:0;display:grid;gap:8px}
+.trev li{display:flex;gap:10px;background:var(--bg);border-radius:12px;padding:10px 12px;border-left:3px solid var(--ok)}
+.trev li.no{border-left-color:var(--bad)}
+.trev .tic{flex:none;width:24px;height:24px;border-radius:50%;display:grid;place-items:center;font-weight:800;font-size:13px;background:var(--ok);color:#05301A}
+.trev li.no .tic{background:var(--bad);color:#3A0D08}
+.trev b{display:block;font-size:14px}.trev p{margin:3px 0 0;font-size:13.5px}
+.trev .tw{color:#F4A79D;text-decoration:line-through;text-decoration-thickness:1px}.trev .ta{color:#A7E3BC}.trev .tx{color:var(--muted)}
+.trev .tw2{display:inline-block;margin-top:6px;font:700 11.5px var(--f-body);background:rgba(255,255,255,.06);border-radius:999px;padding:3px 9px}
 .imenu-h{font:800 10.5px var(--f-body);letter-spacing:.14em;text-transform:uppercase;color:var(--muted);padding:10px 10px 6px}
 .imenu [role=menuitemradio]{display:flex;align-items:center;gap:12px;width:100%;text-align:left;background:transparent;border:0;border-radius:12px;padding:9px 10px;color:var(--ink);cursor:pointer;font:inherit;min-height:52px}
 .imenu [role=menuitemradio]:hover{background:rgba(255,255,255,.05)}
@@ -270,12 +284,12 @@ table.cur td{padding:8px;border-bottom:1px dashed var(--line);vertical-align:top
 .unit .ut b{display:block;font:400 19px var(--f-display);line-height:1.15}
 .unit .ut span{font-size:13px;color:var(--muted)}
 .unit .meta{display:flex;gap:6px;flex-wrap:wrap;margin-top:6px}
-.chip{font:700 11.5px var(--f-body);background:rgba(255,255,255,.06);color:var(--ink);border-radius:999px;padding:3px 9px;white-space:nowrap}
+.unit .chip,.ujuego .chip{font:700 11.5px var(--f-body);background:rgba(255,255,255,.06);color:var(--ink);border-radius:999px;padding:3px 9px;white-space:nowrap}
 .unit .plus{width:30px;height:30px;border-radius:50%;border:1px solid var(--line);display:grid;place-items:center;transition:transform .2s}
 .unit .plus svg{width:16px;height:16px;fill:none;stroke:var(--ink);stroke-width:2.4;stroke-linecap:round}
 .unit[open] .plus{transform:rotate(45deg)}
 .ubody{padding:4px 16px 16px;display:grid;grid-template-columns:minmax(0,1fr);gap:14px}
-.chip{white-space:normal!important}
+.unit .chip,.ujuego .chip{white-space:normal}
 .ubig{margin:0;padding:12px 14px;border-radius:12px;background:color-mix(in srgb,var(--c) 14%,transparent);font:400 17px/1.35 var(--f-display);color:var(--ink)}
 .ubig::before{content:"La gran idea";display:block;font:800 10.5px var(--f-body);letter-spacing:.12em;text-transform:uppercase;color:var(--c);margin-bottom:4px}
 .usec h4{font:800 11px var(--f-body);letter-spacing:.12em;text-transform:uppercase;color:var(--muted);margin:0 0 8px;display:flex;align-items:center;gap:8px}
@@ -2219,7 +2233,7 @@ function quizCard(o){
     let note='Respuesta guardada.';
     if(o.reveal){ sel.classList.add('flip',ok?'good':'bad'); cards.forEach(c=>{ if(c!==sel){ if(+c.dataset.o===0) c.classList.add('good'); else c.classList.add('dim'); } }); snd(ok?'buy':'bad'); if(ok&&!reduced){ const r=sel.getBoundingClientRect(); }
       root.querySelector('.qexp').innerHTML=`<div class="expl ${ok?'':'no'}"><b class="h">${ok?'¡Bien pensado!':'La respuesta era: '+esc(o.opts[0])}</b>${esc(o.exp||'')}</div>`;
-      note=ok?'Lo sabías: así se sube.':'Equivocarse también enseña: la pregunta volverá más adelante.'; }
+      note=ok?(o.noteOk||'Lo sabías: así se sube.'):(o.noteBad||'Equivocarse también enseña: la pregunta volverá más adelante.'); }
     else { cards.forEach(c=>{ if(c!==sel) c.classList.add('dim'); }); }
     const f=root.querySelector('.qfoot'); f.innerHTML=`<span class="muted">${note}</span><button class="btn" type="button" id="bNextQ">${esc(o.nextLabel||'Siguiente')}</button>`;
     const nb=f.querySelector('#bNextQ'); nb.onclick=()=>{ document.removeEventListener('keydown',kh); o.onNext(ok,k); };
@@ -2231,15 +2245,34 @@ function quizCard(o){
   const kh=e=>{ if(!root.contains(cards[0])||ov.hidden){ document.removeEventListener('keydown',kh); return; } if(e.target&&e.target.tagName==='INPUT') return; const n=parseInt(e.key,10); if(!done&&n>=1&&n<=cards.length){ e.preventDefault(); pick(cards[n-1]); try{cards[n-1].focus({preventScroll:true})}catch(_){} } else if(e.key==='Enter'&&sel&&!done){ e.preventDefault(); confirm(); } };
   document.addEventListener('keydown',kh);
 }
+const PRE_W={0:4,2:3,6:5,9:6,14:7};
 function runTest(done,title){
-  let i=0, score=0;
+  let i=0, score=0; const res=[]; const isPre=/inicial/i.test(title);
   const step=()=>{
-    if(i>=PRE.length) return done(score);
-    const [q,opts]=Q[PRE[i]];
-    quizCard({eyebrow:title+' · '+(i+1)+' de '+PRE.length,q,opts,order:shuffle(opts.map((_,k)=>k)),prog:[i,PRE.length],reveal:false,tags:['Diagnóstico','Sin nota'],
-      nextLabel:i===PRE.length-1?'Terminar la prueba':'Siguiente carta',onNext:ok=>{ if(ok) score++; i++; step(); }});
+    if(i>=PRE.length) return testSummary(res,score,title,isPre,done);
+    const qi=PRE[i], [q,opts,exp]=Q[qi];
+    quizCard({eyebrow:title+' · '+(i+1)+' de '+PRE.length,q,opts,exp,order:shuffle(opts.map((_,k)=>k)),prog:[i,PRE.length],reveal:true,tags:[isPre?'Diagnóstico':'Prueba final','No cuenta para el juego'],
+      noteOk:'¡Ya lo sabías! En la ruta lo vas a poner en práctica.',
+      noteBad:isPre?'Tranquilo: para esto es la ruta. Lo aprenderás en el Mundo '+PRE_W[qi]+'.':'Repasa esta idea en el Mundo '+PRE_W[qi]+'.',
+      nextLabel:i===PRE.length-1?'Ver mis resultados':'Siguiente carta',onNext:(ok,k)=>{ if(ok) score++; res.push({qi,ok,pick:opts[k]}); i++; step(); }});
   };
   step();
+}
+function testSummary(res,score,title,isPre,done){
+  const n=res.length, pct=score/n;
+  const lvl=pct>=0.8?['Brújula afinada','#62C98A','Ya tienes buenas bases. En la ruta las pondrás a prueba con decisiones reales.']:pct>=0.4?['Buen punto de partida','#F2B33D','Sabes algunas cosas y otras las vas a descubrir subiendo. Fíjate en las que fallaste.']:['Todo por descubrir','#5CC2EA','¡Perfecto para empezar! Esta prueba no cuenta: la montaña te va a enseñar cada una de estas ideas.'];
+  const cmp=!isPre&&eco.pre!=null?`<div class="fb ok" style="margin:10px 0 0"><b>Tu avance:</b> prueba inicial ${eco.pre}/${n} → prueba final ${score}/${n}${score>eco.pre?` · ¡subiste ${score-eco.pre}!`:score===eco.pre?' · te mantuviste':''}</div>`:'';
+  openOv(`<div class="eyebrow">${esc(title)} · resultados</div>
+  <h2>${score} de ${n} correctas</h2>
+  <div class="tres" style="--c:${lvl[1]}"><div class="tring" style="--p:${pct*100}"><span>${score}/${n}</span></div><div><b>${lvl[0]}</b><p>${lvl[2]}</p></div></div>${cmp}
+  <h3 class="trh">Tu retroalimentación, carta por carta</h3>
+  <ol class="trev">${res.map(r=>{ const [q,opts,exp]=Q[r.qi], w=PRE_W[r.qi]; return `<li class="${r.ok?'ok':'no'}"><span class="tic" aria-hidden="true">${r.ok?'✓':'✗'}</span><div><b>${esc(q)}</b>
+    ${r.ok?`<p class="ta">Respondiste bien: ${esc(opts[0])}</p>`:`<p class="tw">Elegiste: ${esc(r.pick)}</p><p class="ta">Correcta: ${esc(opts[0])}</p>`}
+    <p class="tx">${esc(exp||'')}</p><span class="tw2">${isPre?'Lo practicas en':'Repásalo en'} el Mundo ${w} · ${esc(LV[w-1].name)}</span></div></li>`; }).join('')}</ol>
+  <p class="muted" style="margin-top:10px">${isPre?'Al final de la ruta harás estas mismas 5 cartas para ver cuánto aprendiste.':'Tu docente verá estos resultados en el resumen.'}</p>
+  <div class="row"><button class="btn gold" id="bTestDone" type="button">${isPre?'¡A subir la montaña!':'Ver mi resumen'}</button></div>`);
+  const b=document.getElementById('bTestDone'); b.onclick=()=>done(score); try{ b.focus({preventScroll:true}); box.scrollTop=0; }catch(e){}
+  snd(pct>=0.6?'buy':'drop');
 }
 function levelIntro(li){
   document.getElementById('mapBar').hidden=true;
