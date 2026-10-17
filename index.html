@@ -863,7 +863,7 @@ function startLevel(li){
   S.li=li; S.L=buildLevel(li); S.mode='play';
   S.p=newHiker();
   S.cam=0; S.camY=Math.max(0,S.p.y-H*0.58); S.parts=[]; S.texts=[]; S.rain=[]; S.loose=[]; S.pops=[]; S.t=0; S.pulse=0; S.check={x:S.p.x,y:S.p.y};
-  S.freeze=0; S.shake=0; S.hudPop=0; S.amb=null; S.rocks=[]; S.fees=[]; S.falling=[]; S.swampT=0; S.tgt=null; S.jumpHold=0; S.coach=li===0?600:240; S.toast=null; S.busy=null; S.safe=null; S.wdeaths=0; S.retoDone=false;
+  S.freeze=0; S.shake=0; S.hudPop=0; S.amb=null; S.rocks=[]; S.fees=[]; S.falling=[]; S.swampT=0; S.tgt=null; S.jumpHold=0; S.coach=li===0?600:240; S.toast=null; S.busy=null; S.safe=null; if(S.p){ S.p.antic=0; S.p.landT=0; S.p.toT=0; S.p.tuck=0; } S.wdeaths=0; S.retoDone=false;
   S.ws={coins:0,salary:0,rent:0,cost:0,cuotas:0,primas:0,fijos:0,saved:0,invested:0,lost:{},hist:[0]}; S.ws.hist=[patrimonio()];
   S.arrivalHand=0; S.quizDone=false; S.campRes=null; S.banner=150;
   save(li);
@@ -1102,6 +1102,8 @@ function buyBlock(hit){
   } else { addText(x-14,y-8,'Necesitas '+b.cost+' monedas','#FFC7BF'); snd('bad'); S.L.bump={c:hit.c,r:hit.r,t:10}; }
 }
 
+const JUMP_ANT=4, JUMP_LAND=12;
+function doJump(p,inSwamp){ p.vy=inSwamp?-8.6:-10.4; p.coyote=0; p.on=null; p.onGround=false; p.squash=1.1; p.toT=10; p.jumpRun=Math.abs(p.vx)>=1.4; p.landT=0; snd('jump'); dust(p.x+7,p.y+28,p.jumpRun?3:6); }
 function update(){
   const p=S.p, L=S.L;
   if(S.freeze>0){ S.freeze--; return; }
@@ -1140,8 +1142,9 @@ function update(){
   if(p.onGround) p.coyote=7; else if(p.coyote>0) p.coyote--;
   if(p.onGround) p.dj=has('bastones')?1:0;
   if(p.buf>0 && p.climb && p.coyote<=0){ p.vy=-8; p.buf=0; snd('jump'); }
-  else if(p.buf>0 && p.coyote>0){ p.vy=inSwamp?-8.6:-10.4; p.coyote=0; p.buf=0; p.on=null; p.squash=1.28; snd('jump'); dust(p.x+7,p.y+28,5); }
-  else if(p.buf>0 && !p.onGround && p.coyote<=0 && p.dj>0 && p.vy>-6){ p.vy=-9.2; p.dj=0; p.buf=0; p.squash=1.2; snd('jump'); burst(p.x+7,p.y+28,'rgba(200,220,255,.8)',6); }
+  else if(p.buf>0 && p.coyote>0 && !p.antic){ p.buf=0; if(p.onGround&&Math.abs(p.vx)<1.4&&!p.ride){ p.antic=JUMP_ANT; } else doJump(p,inSwamp); }
+  if(p.antic>0){ p.vx*=0.55; if(--p.antic===0) doJump(p,inSwamp); }
+  else if(p.buf>0 && !p.onGround && p.coyote<=0 && p.dj>0 && p.vy>-6){ p.vy=-9.2; p.dj=0; p.buf=0; p.squash=1.08; p.tuck=16; snd('jump'); burst(p.x+7,p.y+28,'rgba(200,220,255,.8)',6); }
   if(!keys.jump && p.vy<-3.5) p.vy*=0.6;
   const cs=2.3*Math.max(0.45,1-0.08*wt);
   if(p.ride&&p.ride.k==='avion'){ p.vy=Math.min(p.vy+0.14,2.4); if(keys.jump) p.vy=Math.max(p.vy-0.55,-3.4); }
@@ -1162,7 +1165,10 @@ function update(){
   if(p.vy>=0){ const pc=Math.floor((p.x+p.w/2)/T), fr=Math.floor((p.y+p.h-1)/T);
     for(const rr of [fr,fr+1]){ if(tileAt(pc,rr)==='/'){ const gy=(rr+1)*T-((p.x+p.w/2)-pc*T); if(p.y+p.h>=gy-7){ if(gy-p.h<p.y) p.stepOff+=p.y-(gy-p.h); p.y=gy-p.h; p.vy=0; p.onGround=true; } break; } } }
   if(p.onGround && wasAir){ p.squash=fallSpeed>7?0.74:0.84; if(fallSpeed>6) dust(p.x+7,p.y+p.h,6); }
+  if(wasAir&&p.onGround&&fallSpeed>2.6){ p.landK=Math.max(0.18,Math.min(1,(fallSpeed-2)/8.5)); p.landT=JUMP_LAND; p.toT=0; p.tuck=0; }
+  if(p.landT>0) p.landT--; if(p.toT>0) p.toT--; if(p.tuck>0) p.tuck--;
   if(p.onGround&&!p.on) platLand(wasAir);
+  if(p.vy<-12.5&&!p.onGround&&p.landT>0){ p.landT=0; p.toT=12; p.jumpRun=false; }
   p.stepOff*=0.62; if(Math.abs(p.stepOff)<0.3) p.stepOff=0;
   p.pack+=((-p.vy*0.5)-p.pack)*0.25; p.pack=Math.max(-4,Math.min(4,p.pack));
   if(p.onGround && Math.abs(p.vx)>2.4 && S.t%9===0) dust(p.x+(p.face>0?2:12),p.y+p.h,2);
@@ -1976,7 +1982,37 @@ function footAt(u,beta,L,lift,run){
 }
 function legIK(hx,hy,ax,ay){ const a=GAIT.thigh,b=GAIT.shin; let dx=ax-hx,dy=ay-hy,d=Math.hypot(dx,dy); const m=a+b-0.08; if(d>m){ dx*=m/d; dy*=m/d; d=m; }
   const ang=Math.atan2(dy,dx), A=Math.acos(Math.max(-1,Math.min(1,(a*a+d*d-b*b)/(2*a*d)))), k=ang-A; return {kx:hx+a*Math.cos(k),ky:hy+a*Math.sin(k),ax:hx+dx,ay:hy+dy}; }
-function gaitPose(ph,spd,air,vy,climb){
+function lerpPose(a,b,t){ const L=(x,y)=>x+(y-x)*t; return {feet:a.feet.map((f,i)=>({x:L(f.x,b.feet[i].x),y:L(f.y,b.feet[i].y),p:L(f.p||0,b.feet[i].p||0)})),arms:a.arms.map((r,i)=>({t:L(r.t,b.arms[i].t),b:L(r.b,b.arms[i].b)})),bob:L(a.bob||0,b.bob||0)}; }
+// Poses clave del salto (pie trasero, pie delantero; brazo trasero, brazo delantero). t: ángulo del brazo (+ adelante/arriba), b: flexión del codo.
+const JP={
+  despegue:{feet:[{x:-2.4,y:1.2,p:0.75},{x:1.2,y:0.4,p:0.6}],arms:[{t:2.0,b:0.15},{t:2.2,b:0.2}],bob:-1.2},           // extensión total: tobillo, rodilla y cadera; brazos arriba
+  despegueCarrera:{feet:[{x:-5,y:0.6,p:0.7},{x:4.5,y:-6.5,p:-0.1}],arms:[{t:1.7,b:0.5},{t:-0.9,b:0.6}],bob:-1},       // pierna de impulso atrás, rodilla libre arriba, brazos en oposición
+  sube:{feet:[{x:-2.2,y:-3.5,p:0.45},{x:3.4,y:-6,p:0.05}],arms:[{t:1.65,b:0.45},{t:1.85,b:0.45}],bob:0},                   // recoge las rodillas
+  cima:{feet:[{x:-1.4,y:-5.5,p:0.3},{x:3.6,y:-7,p:0}],arms:[{t:1.1,b:0.6},{t:1.4,b:0.55}],bob:0.4},                 // máxima recogida en el punto más alto
+  cae:{feet:[{x:-2.6,y:-1.2,p:0.25},{x:3,y:0.4,p:-0.15}],arms:[{t:-1.45,b:0.25},{t:1.75,b:0.3}],bob:0},                 // estira las piernas buscando el suelo, brazos abiertos para equilibrar
+  bolita:{feet:[{x:-0.5,y:-8,p:0.3},{x:3,y:-9,p:0}],arms:[{t:0.9,b:1.4},{t:1.1,b:1.4}],bob:1.2},                       // doble salto con los bastones: se recoge
+};
+function crouchPose(base,d,landing){ // contramovimiento o amortiguación: cadera abajo, pies plantados, brazos según la fase
+  const arms=landing?[{t:0.55,b:0.7},{t:0.95,b:0.65}]:[{t:-1.15,b:0.25},{t:-0.95,b:0.25}];
+  const target={feet:[{x:-3.1,y:0,p:landing?0:-0.05},{x:3.3,y:0,p:0}],arms,bob:5.2};
+  return lerpPose(base,target,Math.max(0,Math.min(1,d)));
+}
+function gaitPose(ph,spd,air,vy,climb,jp){
+  const g0=gaitPose0(ph,spd,air,vy,climb);
+  if(!jp||climb) return g0;
+  if(air){
+    const k=Math.max(0,Math.min(1,(vy+10.4)/20)); // 0: sale disparado · 0.5: cima · 1: cae rápido
+    let P= k<0.32?lerpPose(JP.despegue,JP.sube,k/0.32): k<0.5?lerpPose(JP.sube,JP.cima,(k-0.32)/0.18): lerpPose(JP.cima,JP.cae,Math.min(1,(k-0.5)/0.3));
+    if(jp.run&&jp.to>0) P=lerpPose(P,JP.despegueCarrera,Math.min(1,jp.to/6));
+    else if(jp.to>0) P=lerpPose(P,JP.despegue,Math.min(1,jp.to/7)*0.8);
+    if(jp.tuck>0) P=lerpPose(P,JP.bolita,Math.sin(Math.PI*jp.tuck/16));
+    return Object.assign(g0,P);
+  }
+  if(jp.antic>0) return Object.assign(g0,crouchPose(g0,jp.antic,false));
+  if(jp.land>0) return Object.assign(g0,crouchPose(g0,jp.land,true));
+  return g0;
+}
+function gaitPose0(ph,spd,air,vy,climb){
   const out={bob:0,feet:[],arms:[],run:0};
   if(climb){ const c=Math.sin(ph*1.6); out.feet=[{x:2,y:-2-Math.max(0,c)*4,p:0.2},{x:3,y:-2-Math.max(0,-c)*4,p:0.2}]; out.arms=[{t:2.7+c*0.25,b:0.3},{t:2.7-c*0.25,b:0.3}]; return out; }
   if(air){ const up=vy<0; out.feet=up?[{x:-4,y:-2.5,p:0.3},{x:4.5,y:-6.5,p:-0.2}]:[{x:-3.5,y:-1,p:0.35},{x:3,y:0.5,p:-0.1}];
@@ -1999,7 +2035,7 @@ function hikerBody(air,w,color,o={}){
   const skin=SKINS[o.skin??1], skinD=mix(skin,'#000000',.18);
   const gph=o.phase!=null?o.phase:Math.asin(Math.max(-1,Math.min(1,w||0)));
   const spd=air?0:(o.spd!=null?o.spd:(Math.abs(w||0)>0.01?0.4:0));
-  const GP=gaitPose(gph,spd,air,o.vy||0,!!o.climb);
+  const GP=gaitPose(gph,spd,air,o.vy||0,!!o.climb,o.jp);
   const sw=air?0:Math.sin(gph)*Math.min(1,spd*2.5);
   const bob=GP.bob, hipY=-14+bob;
   // prendas según la etapa
@@ -2029,8 +2065,6 @@ function hikerBody(air,w,color,o={}){
     ctx.restore(); }
   ctx.save(); ctx.rotate(lean);
   if(poleBack){ ctx.strokeStyle='#5D6770'; ctx.lineWidth=1.6; ctx.lineCap='round'; ctx.beginPath(); ctx.moveTo(AB.hx,AB.hy); ctx.lineTo(AB.hx-5-sw*4+(air?-3:0),-(air?3:0)); ctx.stroke(); }
-  ctx.strokeStyle=mix(jacketDark,'#000000',.25); ctx.lineWidth=3.2; ctx.lineCap='round'; ctx.lineJoin='round'; ctx.beginPath(); ctx.moveTo(-0.5,shY); ctx.lineTo(AB.ex,AB.ey); ctx.lineTo(AB.hx,AB.hy); ctx.stroke();
-  ctx.fillStyle=skinD; ctx.beginPath(); ctx.arc(AB.hx,AB.hy,1.6,0,7); ctx.fill();
   ctx.restore();
   leg(0,false);
   ctx.save(); ctx.rotate(lean); ctx.translate(0,bob);
@@ -2046,6 +2080,9 @@ function hikerBody(air,w,color,o={}){
   if(G('mapa')){ ctx.fillStyle='#EFE3C2'; ctx.fillRect(-6-pw,-18,4,6); ctx.fillStyle='#C9475B'; ctx.fillRect(-6-pw,-16,4,1); }
   if(o.pila&&o.pila.length) drawPila(o.pila,-5-pw/2,-20-ph+(R===0||R===4?4:0),o);
   ctx.restore();
+  // brazo trasero: va sobre la mochila y detrás del torso
+  ctx.strokeStyle=mix(jacketDark,'#000000',.25); ctx.lineWidth=3.2; ctx.lineCap='round'; ctx.lineJoin='round'; ctx.beginPath(); ctx.moveTo(-0.5,shY-bob); ctx.lineTo(AB.ex,AB.ey-bob); ctx.lineTo(AB.hx,AB.hy-bob); ctx.stroke();
+  ctx.fillStyle=skinD; ctx.beginPath(); ctx.arc(AB.hx,AB.hy-bob,1.6,0,7); ctx.fill();
   // torso
   ctx.fillStyle=jacketDark; rr(-7,-30+breath,13,17,4); ctx.fill();
   ctx.fillStyle=jacket; rr(-6,-30+breath,12,15,4); ctx.fill();
@@ -2141,15 +2178,17 @@ function drawHiker(){
   if(p.inv>0 && S.t%8<4 && !reduced) return drawChain(x,y);
   drawChain(x,y);
   const moving=Math.abs(p.vx)>0.3;
-  const lean=(p.onGround&&moving?0.04+0.14*Math.min(1,Math.abs(p.vx)/3.3):(p.vy<0?0.06:0.02))+(chained()?0.08:0)+(mood()==='tired'?0.06:0)+(p.climb?-0.22:0)+(peso()>=6?0.06:0);
+  const ant=p.antic>0?1-(p.antic-1)/JUMP_ANT:0, landE=p.landT>0?(p.landK||0)*Math.sin(Math.PI*Math.min(1,(JUMP_LAND-p.landT+2)/JUMP_LAND))*(p.landT>JUMP_LAND*0.5?1:p.landT/(JUMP_LAND*0.5)):0;
+  const jp={antic:ant*(keys.jump?1:0.75),land:landE,to:p.toT||0,run:!!p.jumpRun,tuck:p.tuck||0};
+  const lean=(ant*0.24+landE*0.28)+(p.onGround&&moving?0.04+0.14*Math.min(1,Math.abs(p.vx)/3.3):(p.vy<0?0.1:(p.vy>3?-0.04:0.04)))+(chained()?0.08:0)+(mood()==='tired'?0.06:0)+(p.climb?-0.22:0)+(peso()>=6?0.06:0);
   const breath=p.idle>0?Math.sin(p.idle*0.08)*0.8:0;
-  ctx.save(); ctx.translate(x,y); ctx.scale(p.face*((2-p.squash)*0.5+0.5),p.squash);
+  ctx.save(); ctx.translate(x,y); const sq=1+(p.squash-1)*0.45; ctx.scale(p.face*((2-sq)*0.5+0.5),sq);
   const blink=(S.t%220)<6;
   let lift=0; const rk=p.ride&&p.ride.k;
   if(rk==='avion'){ icon('avion',0,-4,2.5); lift=6; } else if(rk==='cicla'||rk==='moto'){ icon(rk==='cicla'?'bici':'moto',0,-6,1.6); lift=9; } else if(rk==='carro') lift=8;
   ctx.translate(0,-lift);
   const pl=pila();
-  hikerBody(!p.onGround||!!rk, rk?0:Math.sin(p.walk), eco.color, {phase:p.walk, spd:rk||!moving?0:Math.min(1,Math.abs(p.vx)/3.3), climb:!!p.climb, lean, pack:p.pack, breath, vy:p.vy, gear:eco.gear, skin:eco.skin, head:eco.head, mood:mood(), blink, pila:pl, vx:p.vx, role:S.li});
+  hikerBody(!p.onGround||!!rk, rk?0:Math.sin(p.walk), eco.color, {phase:p.walk, spd:rk||!moving?0:Math.min(1,Math.abs(p.vx)/3.3), climb:!!p.climb, jp:rk?null:jp, lean, pack:p.pack, breath, vy:p.vy, gear:eco.gear, skin:eco.skin, head:eco.head, mood:mood(), blink, pila:pl, vx:p.vx, role:S.li});
   if(rk==='carro'){ ctx.translate(0,lift); icon('carro',0,-8,2); }
   ctx.restore();
   if(p.ride){ const f=Math.max(0,p.ride.t/(p.ride.max||420)); ctx.fillStyle='rgba(0,0,0,.45)'; rr(x-14,y-60-lift,28,4,2); ctx.fill(); ctx.fillStyle='#F2B33D'; rr(x-14,y-60-lift,28*f,4,2); ctx.fill(); }
