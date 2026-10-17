@@ -26,7 +26,7 @@ Empiezas en **El Valle** sin empleo, con una mochila vacía y un letrero de *“
 Entre un punto y otro está la montaña, y la montaña **es tu dinero**:
 
 - 🏠 **Las casas son activos.** Te pagan arriendo, aunque también cobran impuesto predial y reparaciones: dejan más de lo que cuestan.
-- 🚗 **Los carros son pasivos.** Se tambalean, se les caen piezas y cobran SOAT, tecnomecánica, impuesto vehicular, repuestos y gasolina.
+- 🚗 **Los carros son pasivos.** Están en elevadores de taller, parqueaderos de varios pisos o colgados de una grúa. Se les caen piezas, cobran SOAT, tecnomecánica, impuesto vehicular, repuestos y gasolina, y además **cobran tiempo**: cambiar una llanta o ir al CDA te deja quieto unos segundos mientras la quincena sigue corriendo.
 - 🫙 **Los frascos de ahorro te impulsan,** pero si rebotas mucho se agrietan y se rompen: el ahorro en casa es frágil.
 - 📈 **Los CDT muestran su ganancia:** cada quincena que esperas suman intereses, y tú decides cuándo cobrar.
 - ⛓️ **Las deudas son cadenas.** Pinchan, pesan y te hunden en el pantano de la mora.
@@ -105,6 +105,8 @@ flowchart LR
 | 🐷 **Alcancía:** págate primero; te salva de los golpes, pero cada golpe la agrieta | ✨ **Pasivos disfrazados:** brillan, pero cobran cada quincena | 🟫 **Pantano de la mora:** frena si cargas deudas |
 | 🏠 **Casas:** activos que pagan renta | 🏍️ **Vehículos:** rápidos, pero pesan en la mochila | 🧗 **Muros de escalada** y 🌊 **ríos** con piedras que se hunden |
 | 📈 **CDT:** la ganancia crece cada quincena | 🤝 **El gota a gota:** plata rápida, cadena larga | 🌫️ **Inflación, tarjetas, bancos con comisiones y pirámides** |
+
+Si tienes una duda, el **Mentor de la Cordillera** responde preguntas de finanzas con respuestas sacadas de las 7 guías (sin chat libre: el lenguaje está controlado y funciona sin internet).
 
 En el camino también aparecen **personas que te ayudan**, **cartas de concepto** que se responden como en un juego de cartas, y el **Diario del viajero**, que te cuenta a dónde se fue tu dinero.
 

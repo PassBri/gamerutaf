@@ -255,6 +255,22 @@ table.cur td{padding:8px;border-bottom:1px dashed var(--line);vertical-align:top
 .reg select{font:600 16px var(--f-body);background:var(--bg);color:var(--ink);border:1px solid var(--line);border-radius:10px;padding:9px 10px;width:100%}
 .reg select:focus-visible{outline:2px solid var(--gold);outline-offset:2px}
 @media (max-width:420px){.reg-g{grid-template-columns:1fr}}
+
+.mhead{display:flex;gap:12px;align-items:center;margin-bottom:8px}.mhead img{border-radius:50%;flex:none;border:2px solid #9AA3F0}
+.mchat{display:flex;flex-direction:column;gap:8px;max-height:min(46vh,340px);overflow:auto;margin:6px 0 4px;padding:2px}
+.mchat:empty{display:none}
+.mb{max-width:88%;border-radius:14px;padding:9px 12px;font-size:14.5px;line-height:1.45}
+.mb.me{align-self:flex-end;background:#3A3F7A;color:#EEF0FF;border-bottom-right-radius:4px}
+.mb.mt{align-self:flex-start;background:var(--bg);border:1px solid var(--line);border-bottom-left-radius:4px}
+.mb.mt p{margin:0 0 6px}.mb .mp{color:#C9CEFF;font-size:13.5px}.mb .mref{display:inline-block;font:700 11px var(--f-body);background:rgba(154,163,240,.15);color:#C9CEFF;border-radius:999px;padding:3px 9px}
+.mb.typing{display:flex;gap:4px;padding:12px 14px}.mb.typing span{width:6px;height:6px;border-radius:50%;background:#9AA3F0;animation:mdot 1s infinite}.mb.typing span:nth-child(2){animation-delay:.15s}.mb.typing span:nth-child(3){animation-delay:.3s}
+@keyframes mdot{0%,100%{opacity:.3;transform:none}50%{opacity:1;transform:translateY(-3px)}}
+.mlist{max-height:min(34vh,300px);overflow:auto;margin-top:8px}
+.mgrp h4{font:800 10.5px var(--f-body);letter-spacing:.12em;text-transform:uppercase;color:var(--muted);margin:10px 0 6px}
+.mgrp{display:flex;flex-wrap:wrap;gap:6px}.mgrp h4{flex-basis:100%}
+.mqb{font:600 13px var(--f-body);text-align:left;background:var(--bg);color:var(--ink);border:1px solid var(--line);border-radius:999px;padding:7px 12px;cursor:pointer}
+.mqb:hover{border-color:#9AA3F0}.mqb:focus-visible{outline:2px solid var(--gold);outline-offset:2px}
+.tip .mnb{border-color:#9AA3F0;color:#DCE0FF}
 .imenu-h{font:800 10.5px var(--f-body);letter-spacing:.14em;text-transform:uppercase;color:var(--muted);padding:10px 10px 6px}
 .imenu [role=menuitemradio]{display:flex;align-items:center;gap:12px;width:100%;text-align:left;background:transparent;border:0;border-radius:12px;padding:9px 10px;color:var(--ink);cursor:pointer;font:inherit;min-height:52px}
 .imenu [role=menuitemradio]:hover{background:rgba(255,255,255,.05)}
@@ -379,7 +395,7 @@ table.cur td{padding:8px;border-bottom:1px dashed var(--line);vertical-align:top
     <canvas id="cv" tabindex="0" aria-label="Juego Ruta Financiera"></canvas>
     <div class="ov" id="ov"><div class="box" id="ovBox"></div></div>
   </div>
-  <div class="tip quiet" id="tip" role="status" aria-live="polite"><span class="sl"><svg width="18" height="18" viewBox="0 0 100 100" aria-hidden="true"><path d="M20 72 L42 36 L52 50 L62 30 L82 72 Z" fill="#F4E9E1"/></svg></span><div class="nbt"><div class="tt">Cuaderno de ruta</div><div class="tx">Aquí aparecen los conceptos que descubres mientras subes, sin tapar el juego.</div></div><button class="nbb" type="button" id="tipMore" aria-expanded="false" hidden>Leer todo</button><button class="nbb" type="button" id="tipList">Cuaderno<b id="tipN">0</b></button></div>
+  <div class="tip quiet" id="tip" role="status" aria-live="polite"><span class="sl"><svg width="18" height="18" viewBox="0 0 100 100" aria-hidden="true"><path d="M20 72 L42 36 L52 50 L62 30 L82 72 Z" fill="#F4E9E1"/></svg></span><div class="nbt"><div class="tt">Cuaderno de ruta</div><div class="tx">Aquí aparecen los conceptos que descubres mientras subes, sin tapar el juego.</div></div><button class="nbb" type="button" id="tipMore" aria-expanded="false" hidden>Leer todo</button><button class="nbb" type="button" id="tipList">Cuaderno<b id="tipN">0</b></button><button class="nbb mnb" type="button" id="tipMentor">Mentor</button></div>
   </div>
   <div class="mapbar" id="mapBar" hidden></div>
   <p class="rot">Gira el celular para ver la montaña más grande.</p>
@@ -620,6 +636,7 @@ const TIPS={
  frascoRoto:{t:'El ahorro en casa es frágil',g:'Guía 2 y 5',x:'Un frasco o una alcancía en la casa se rompen, se pierden o se “toman prestados”. Úsalos para empezar, pero lleva tu ahorro a una cuenta o a un CDT vigilado por la Superfinanciera.'},
  alcRota:{t:'Alcancía rota',g:'Guía 2 y 5',x:'Cada golpe que paga tu alcancía la agrieta. Si se rompe, pierdes parte del ahorro. Una alcancía nueva en el siguiente punto de control la reemplaza; un seguro o un fondo en el banco protegen mejor.'},
  carroGastos:{t:'Lo que cuesta tener carro',g:'Guía 3',x:'Además de comprarlo, el carro cobra: SOAT, revisión técnico-mecánica, impuesto vehicular, repuestos, aceite, gasolina y parqueadero. Por eso, si no produce dinero, es un pasivo.'},
+ tiempo:{t:'El tiempo también es dinero',g:'Guía 4',x:'Cambiar una llanta, ir al CDA o hacer fila para pagar impuestos te deja quieto mientras la quincena sigue corriendo. Los pasivos cobran en dinero y también en tiempo.'},
  casaGastos:{t:'Un activo también tiene costos',g:'Guía 1 y 6',x:'Una casa en arriendo te paga renta, pero también cobra impuesto predial y reparaciones. Sigue siendo un activo porque deja más de lo que cuesta.'},
  inv:{t:'Bloque de inversión',g:'Guía 1',x:'Invertir es sembrar una semilla: pones tu dinero a trabajar para que dé frutos cada quincena.'},
 };
@@ -846,7 +863,7 @@ function startLevel(li){
   S.li=li; S.L=buildLevel(li); S.mode='play';
   S.p=newHiker();
   S.cam=0; S.camY=Math.max(0,S.p.y-H*0.58); S.parts=[]; S.texts=[]; S.rain=[]; S.loose=[]; S.pops=[]; S.t=0; S.pulse=0; S.check={x:S.p.x,y:S.p.y};
-  S.freeze=0; S.shake=0; S.hudPop=0; S.amb=null; S.rocks=[]; S.fees=[]; S.falling=[]; S.swampT=0; S.tgt=null; S.jumpHold=0; S.coach=li===0?600:240; S.toast=null; S.safe=null; S.wdeaths=0; S.retoDone=false;
+  S.freeze=0; S.shake=0; S.hudPop=0; S.amb=null; S.rocks=[]; S.fees=[]; S.falling=[]; S.swampT=0; S.tgt=null; S.jumpHold=0; S.coach=li===0?600:240; S.toast=null; S.busy=null; S.safe=null; S.wdeaths=0; S.retoDone=false;
   S.ws={coins:0,salary:0,rent:0,cost:0,cuotas:0,primas:0,fijos:0,saved:0,invested:0,lost:{},hist:[0]}; S.ws.hist=[patrimonio()];
   S.arrivalHand=0; S.quizDone=false; S.campRes=null; S.banner=150;
   save(li);
@@ -895,6 +912,72 @@ function syncTip(){ const el=document.getElementById('tip'); if(!el) return; con
   if(t&&tipShown!==t){ tipShown=t; el.querySelector('.tt').textContent=t.title; el.querySelector('.tx').textContent=t.text; el.classList.remove('quiet','open'); el.classList.add('new'); clearTimeout(el._t); el._t=setTimeout(()=>el.classList.remove('new'),2600);
     const m=document.getElementById('tipMore'); m.hidden=false; m.textContent='Leer todo'; m.setAttribute('aria-expanded','false'); }
   const n=eco&&eco.seen?Object.keys(eco.seen).length:0, nb=document.getElementById('tipN'); if(nb&&nb.textContent!==String(n)) nb.textContent=n; }
+/* ================= PREGÚNTALE AL MENTOR ================= */
+// Preguntas y respuestas cerradas, escritas a partir de las 7 guías de Ruta a la Cima. No hay chat libre: el lenguaje está controlado.
+const MENTOR=[
+ {k:'base',tema:'Lo básico',q:'¿Qué es un activo?',a:'Algo que pone dinero en tu bolsillo o que gana valor con el tiempo. Una casa en arriendo, una máquina para trabajar o un CDT son activos. Hazte la prueba del activo real: ¿me genera ingresos? ¿aumenta de valor?',p:'Nombra algo de tu casa que podría convertirse en activo.',g:'Guía 1 y 6',w:[2,4]},
+ {k:'base',tema:'Lo básico',q:'¿Qué es un pasivo?',a:'Algo que saca dinero de tu bolsillo cada mes: deudas, cuotas y cosas que solo generan gastos. Un carro que no produce dinero es un pasivo porque cobra SOAT, impuesto, repuestos y gasolina.',p:'¿Qué pasivo pequeño tienes que podrías quitar?',g:'Guía 1 y 3',w:[2,6]},
+ {k:'base',tema:'Lo básico',q:'¿Qué es el patrimonio?',a:'Lo que tienes menos lo que debes. Si tienes 10 en activos y debes 4, tu patrimonio es 6. En el juego, tu puntaje es tu patrimonio: por eso no basta con recoger monedas, también importa no endeudarte.',p:'¿Por qué alguien con buen salario puede tener patrimonio negativo?',g:'Guía 6',w:[7]},
+ {k:'base',tema:'Lo básico',q:'¿Cuáles son los tres caminos del dinero?',a:'Gastar, ahorrar e invertir. Cada peso que llega toma uno de esos caminos. El que sube la montaña decide el camino antes de recibir el dinero, no después.',p:'Si hoy te regalan $50.000, ¿cómo los repartes en los tres caminos?',g:'Guía 1',w:[1]},
+ {k:'base',tema:'Lo básico',q:'¿Qué es el semáforo 50/30/20?',a:'Una forma sencilla de repartir lo que ganas: 50 % para lo necesario (verde), 30 % para gustos (amarillo) y 20 % para ahorro e inversión (rojo, tu futuro).',p:'¿Cuánto sería el 20 % de $200.000?',g:'Guía 1',w:[2]},
+ {k:'ahorro',tema:'Ahorro',q:'¿Qué significa “págate primero”?',a:'Separar el ahorro apenas recibes el dinero, antes de gastar. Si esperas a ver qué sobra, casi nunca sobra nada. En el Mundo 3 la alcancía hace esto por ti: guarda la mitad apenas la tocas.',p:'¿Qué porcentaje de tu mesada podrías separar primero?',g:'Guía 2',w:[3]},
+ {k:'ahorro',tema:'Ahorro',q:'¿Para qué sirve un fondo de emergencia?',a:'Es tu refugio en la tormenta: dinero guardado solo para imprevistos, como una enfermedad, un daño o quedarte sin empleo. Lo ideal es tener entre 3 y 6 meses de gastos básicos.',p:'¿Qué imprevisto ha vivido tu familia y cómo lo resolvieron?',g:'Guía 2 y 5',w:[3,7]},
+ {k:'ahorro',tema:'Ahorro',q:'¿Por qué se rompen los frascos y la alcancía?',a:'Porque el ahorro guardado en la casa es frágil: se pierde, se rompe o se “toma prestado”. Está bien para empezar, pero cuando ahorras más conviene llevarlo a una cuenta o a un CDT en una entidad vigilada por la Superfinanciera.',p:'¿Dónde guarda su ahorro tu familia? ¿Qué tan seguro es?',g:'Guía 2 y 5',w:[3]},
+ {k:'ahorro',tema:'Ahorro',q:'¿Qué son los gastos hormiga?',a:'Gastos pequeños y frecuentes que no notas: un paquete, una gaseosa, una recarga. Uno solo no pesa, pero $3.000 diarios son más de un millón de pesos al año.',p:'Anota un gasto hormiga tuyo y calcula cuánto suma en un año.',g:'Guía 3',w:[2]},
+ {k:'deuda',tema:'Deudas y crédito',q:'¿Qué es el gota a gota?',a:'Un préstamo informal e ilegal: entrega plata rápido, pero cobra intereses altísimos y presiona con amenazas. Si necesitas dinero, busca una entidad vigilada, una cooperativa o pide ayuda a un adulto de confianza.',p:'¿Qué alternativas legales conoces en tu barrio?',g:'Guía 3 y 5',w:[1,6]},
+ {k:'deuda',tema:'Deudas y crédito',q:'¿Qué pasa si solo pago el mínimo de la tarjeta?',a:'La deuda dura mucho más y pagas mucho más en intereses, porque el pago mínimo cubre casi solo intereses. La regla del sendero: paga el total cada mes y no uses más del 30 % del cupo.',p:'¿Por qué crees que los bancos ofrecen el pago mínimo?',g:'Guía 3',w:[6]},
+ {k:'deuda',tema:'Deudas y crédito',q:'¿Existe una deuda “buena”?',a:'Una deuda puede ayudarte si financia algo que produce más de lo que cuesta, como una herramienta de trabajo. Endeudarse para lujos, ropa o vacaciones es una carga que te frena en la subida.',p:'Da un ejemplo de deuda que sí te ayudaría a subir.',g:'Guía 3',w:[4,6]},
+ {k:'deuda',tema:'Deudas y crédito',q:'¿Qué es el pantano de la mora?',a:'Cuando te atrasas en las deudas, los intereses de mora te hunden: avanzas más lento y cada vez debes más. La salida es negociar, pagar primero las deudas más caras y no tomar deudas nuevas.',p:'¿Qué harías primero si tuvieras dos deudas atrasadas?',g:'Guía 3',w:[2,6]},
+ {k:'bienes',tema:'Carros y casas',q:'¿Por qué el carro es un pasivo?',a:'Porque cuesta aunque no lo uses: SOAT, revisión técnico-mecánica, impuesto vehicular, repuestos, aceite, gasolina y parqueadero. Además pierde valor cada año. Solo es activo si lo usas para producir dinero, por ejemplo para trabajar.',p:'¿Cuánto crees que cuesta al mes tener una moto en tu ciudad?',g:'Guía 3 y 6',w:[2,4]},
+ {k:'bienes',tema:'Carros y casas',q:'¿Por qué el carro me hace perder tiempo?',a:'Cambiar una llanta, ir al CDA o hacer fila para pagar el impuesto toma tiempo, y el tiempo también es dinero. En el juego, cada reparación te deja quieto unos segundos mientras la quincena sigue corriendo.',p:'¿Cuántas horas al mes le dedica tu familia a trámites y reparaciones?',g:'Guía 4',w:[2]},
+ {k:'bienes',tema:'Carros y casas',q:'Si la casa cobra predial, ¿sigue siendo activo?',a:'Sí. Una casa en arriendo cobra impuesto predial y reparaciones, pero deja más dinero del que cuesta. Un activo no es algo que nunca cuesta: es algo que, al final, pone más dinero en tu bolsillo.',p:'¿Qué otro activo conoces que también tenga costos?',g:'Guía 1 y 6',w:[4,7]},
+ {k:'inv',tema:'Inversión',q:'¿Qué es un CDT?',a:'Un certificado de depósito a término: le prestas tu dinero a un banco por un plazo fijo y te paga intereses. En el juego, el CDT muestra la ganancia que crece cada quincena. Si lo cobras antes, ganas menos.',p:'¿Qué preferirías: cobrar el CDT hoy o esperar tres quincenas más? ¿Por qué?',g:'Guía 2 y 6',w:[4,5]},
+ {k:'inv',tema:'Inversión',q:'¿Qué es el interés compuesto?',a:'Ganar intereses sobre los intereses que ya ganaste. Al principio crece despacio y luego cada vez más rápido. Por eso el tiempo es el mejor aliado de quien invierte: empezar temprano vale más que empezar con mucho.',p:'¿Por qué conviene empezar a ahorrar desde joven?',g:'Guía 6',w:[4,7]},
+ {k:'inv',tema:'Inversión',q:'¿Qué significa diversificar?',a:'No poner todos los huevos en la misma canasta: repartir tu dinero en distintos tipos de activos. Si uno falla, los otros te sostienen. En el Mundo 5 necesitas activos de dos tipos distintos.',p:'Diseña una “mochila” con tres activos diferentes.',g:'Guía 1 y 4',w:[5]},
+ {k:'inv',tema:'Inversión',q:'¿Qué es un ingreso pasivo?',a:'Dinero que llega sin que trabajes por cada peso, como un arriendo o la ganancia de un negocio organizado. Llegas a la libertad financiera cuando tus ingresos pasivos cubren tu costo de vida.',p:'¿Qué ingreso pasivo podrías construir en los próximos años?',g:'Guía 7',w:[8]},
+ {k:'prot',tema:'Protección',q:'¿Cómo reconozco una estafa o pirámide?',a:'Si te prometen ganancias altas, rápidas y “seguras”, desconfía. Las pirámides pagan a los primeros con el dinero de los nuevos, hasta que se caen. Nunca compartas claves ni códigos que lleguen a tu celular.',p:'¿Qué mensaje sospechoso has visto en redes o en WhatsApp?',g:'Guía 5',w:[6,7]},
+ {k:'prot',tema:'Protección',q:'¿Para qué sirve un seguro?',a:'Pagas una prima pequeña para que un golpe grande (un accidente, una enfermedad, un robo) no te devuelva al valle. En el juego, el casco y la cuerda funcionan como seguros.',p:'¿Qué seguro tiene tu familia y qué protege?',g:'Guía 5',w:[5,7]},
+ {k:'prot',tema:'Protección',q:'¿Qué es la inflación?',a:'La subida general de los precios. Con inflación, el mismo dinero compra menos cosas con el tiempo. Por eso no basta con guardar: también conviene que el ahorro crezca, por ejemplo en un CDT.',p:'Pregunta en casa cuánto costaba el pan hace cinco años.',g:'Guía 5',w:[5,6]},
+ {k:'mente',tema:'Mentalidad',q:'¿Cómo evito comprar por impulso?',a:'Aplica la regla de las 24 horas: si no estaba en tu plan, espera un día antes de comprar. Las vitrinas de “¡solo hoy!” juegan con la prisa. Pregúntate cuántas horas de trabajo te cuesta.',p:'¿Qué compraste por impulso y te arrepentiste?',g:'Guía 4',w:[2,5]},
+ {k:'mente',tema:'Mentalidad',q:'¿Cuántas horas de mi vida cuesta algo?',a:'Divide el precio entre lo que ganas por hora. Si ganas $6.000 la hora, unos tenis de $240.000 cuestan 40 horas de trabajo. Verlo en horas ayuda a decidir con cabeza fría.',p:'Calcula cuántas horas cuesta algo que quieres.',g:'Guía 4',w:[2]},
+];
+const MENTOR_W={1:['base','deuda'],2:['bienes','ahorro'],3:['ahorro'],4:['inv','bienes'],5:['inv','prot'],6:['deuda','prot'],7:['inv','prot'],8:['inv','base']};
+function mentorSuggest(){
+  const w=(S&&S.li!=null?S.li:0)+1;
+  const byW=MENTOR.map((m,i)=>[m,i]).filter(([m])=>m.w.includes(w)).map(x=>x[1]);
+  return byW.slice(0,4);
+}
+function mentorFace(){
+  try{ const c=document.createElement('canvas'); c.width=96; c.height=96; const main=ctx; ctx=c.getContext('2d'); const keepT=S.t; S.t=S.t||40;
+    ctx.fillStyle='#22264A'; ctx.beginPath(); ctx.arc(48,48,48,0,7); ctx.fill(); ctx.save(); ctx.translate(46,90); ctx.scale(1.55,1.55); hikerBody(false,0,'#6B4A2E',{role:7,skin:2,head:'gorra',gear:[],mood:'happy'}); ctx.restore(); ctx=main; S.t=keepT; return c.toDataURL(); }catch(e){ return ''; }
+}
+let MENTOR_IMG=null;
+function showMentor(opts={}){
+  const m0=S.mode, wasPlay=m0==='play'; if(wasPlay) togglePause();
+  if(!MENTOR_IMG) MENTOR_IMG=mentorFace();
+  const sug=mentorSuggest(), temas=[...new Set(MENTOR.map(m=>m.tema))];
+  openOv(`<div class="mhead">${MENTOR_IMG?`<img src="${MENTOR_IMG}" alt="" width="56" height="56">`:''}<div><div class="eyebrow">Pregúntale al Mentor</div><h2 style="margin:0">El Mentor de la Cordillera</h2><p class="muted" style="margin:2px 0 0">Elige una pregunta. Mis respuestas salen de las 7 guías de Ruta a la Cima.</p></div></div>
+   <div class="mchat" id="mchat" aria-live="polite"></div>
+   <label class="lb" for="mq">Busca tu pregunta</label><input type="text" id="mq" maxlength="40" placeholder="Ej. CDT, carro, ahorro, deuda" autocomplete="off">
+   <div class="mlist" id="mlist"></div>
+   <div class="row"><button class="btn" id="bMx" type="button">${wasPlay?'Seguir jugando':'Cerrar'}</button></div>`,true);
+  const list=document.getElementById('mlist'), chat=document.getElementById('mchat'), qi=document.getElementById('mq');
+  const btn=i=>`<button type="button" class="mqb" data-mi="${i}">${esc(MENTOR[i].q)}</button>`;
+  const norm=t=>t.toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g,'');
+  const render=()=>{ const f=norm(qi.value.trim());
+    if(f){ const hits=MENTOR.map((m,i)=>[m,i]).filter(([m])=>norm(m.q+' '+m.a+' '+m.tema).includes(f)).map(x=>x[1]);
+      list.innerHTML=hits.length?`<div class="mgrp"><h4>Resultados</h4>${hits.map(btn).join('')}</div>`:`<p class="muted">Esa pregunta todavía no está en mi cuaderno. Pregúntale a tu docente o prueba con otra palabra.</p>`; }
+    else list.innerHTML=(sug.length?`<div class="mgrp"><h4>Para el mundo ${(S.li||0)+1}</h4>${sug.map(btn).join('')}</div>`:'')+temas.map(t=>`<div class="mgrp"><h4>${esc(t)}</h4>${MENTOR.map((m,i)=>[m,i]).filter(([m])=>m.tema===t).map(x=>btn(x[1])).join('')}</div>`).join('');
+    list.querySelectorAll('[data-mi]').forEach(b=>b.onclick=()=>ask(+b.dataset.mi)); };
+  const ask=i=>{ const m=MENTOR[i]; eco&&(eco.mentorQ=(eco.mentorQ||0)+1);
+    chat.insertAdjacentHTML('beforeend',`<div class="mb me">${esc(m.q)}</div><div class="mb mt typing"><span></span><span></span><span></span></div>`);
+    const typing=chat.lastElementChild; typing.scrollIntoView({block:'nearest',behavior:reduced?'auto':'smooth'});
+    setTimeout(()=>{ typing.classList.remove('typing'); typing.innerHTML=`<p>${esc(m.a)}</p><p class="mp"><b>Para pensar:</b> ${esc(m.p)}</p><span class="mref">${esc(m.g)} · Lo vives en ${m.w.length>1?'los mundos':'el mundo'} ${m.w.join(' y ')}</span>`; typing.scrollIntoView({block:'nearest',behavior:reduced?'auto':'smooth'}); snd('drop'); },reduced?0:650); };
+  qi.oninput=render; render();
+  if(opts.q!=null) ask(opts.q);
+  document.getElementById('bMx').onclick=()=>{ if(wasPlay){ S.mode='pause'; togglePause(); } else if(m0==='pause'){ S.mode='play'; togglePause(); } else if(m0==='title') titleScreen(); else closeOv(); };
+}
+
 function showCuaderno(){
   const wasPlay=S.mode==='play'; if(wasPlay) togglePause();
   const keys=Object.keys((eco&&eco.seen)||{});
@@ -906,7 +989,7 @@ function burst(x,y,col,n=8){ if(reduced) n=3; for(let i=0;i<n;i++) S.parts.push(
 
 function hurt(n,why,cat){
   const p=S.p;
-  if(p.inv>0) return false;
+  if(p.inv>0||S.busy) return false;
   p.inv=90; p.ride=null; p.vy=-5; p.vx=-p.face*3; S.freeze=reduced?0:5; S.shake=reduced?0:7; p.flash=reduced?0:10;
   if(eco.shield){ eco.shield=false; addText(p.x,p.y-10,'¡Tu educación financiera te protegió!','#C9CEFF'); snd('save'); return false; }
   pileFall();
@@ -1028,6 +1111,7 @@ function update(){
   S.t++; eco.stats.frames++;
   if(S.shake>0) S.shake*=0.84; if(S.shake<0.3) S.shake=0; if(S.hudPop>0) S.hudPop--;
   if(S.banner>0) S.banner--;
+  if(S.busy){ keys.left=keys.right=keys.jump=false; jumpPressed=false; S.tgt=null; if(--S.busy.t<=0){ addText(p.x-20,p.y-30,'¡Listo! Sigue subiendo','#BFF5CF'); snd('drop'); S.busy=null; } }
   // quincena
   S.pulse++; if(S.pulse>=300){ S.pulse=0; doPulse(); }
   // plataformas móviles
@@ -1197,8 +1281,9 @@ const PLAT_W=[[2,4,3,1],[3,3,3,1],[2,2,4,2],[3,2,2,3],[3,2,2,3],[2,3,2,3],[3,2,2
 const PLAT_T=['casa','carro','frasco','inversion'];
 function platType(li,len,h){ const w=PLAT_W[li].slice(); if(len>=5) w[2]=0; if(len<=1){ w[0]*=.3; w[1]*=.3; } if(len===2) w[0]*=.5; const tot=w.reduce((a,b)=>a+b,0); let r=h*tot; for(let i=0;i<4;i++){ if(r<w[i]) return PLAT_T[i]; r-=w[i]; } return 'inversion'; }
 function platUnder(p){ const L=S.L; if(!L||!L.pmap) return null; const c=Math.floor((p.x+p.w/2)/T), r=Math.floor((p.y+p.h+1)/T); if(r<0||r>=L.rows||c<0||c>=L.w) return null; const i=L.pmap[r*L.w+c]; return i>=0&&!L.plats[i].broken?L.plats[i]:null; }
-const CAR_COSTS=[['SOAT',2,'papel'],['Tecnomecánica',1,'papel'],['Impuesto vehicular',2,'papel'],['Repuesto: llanta',1,'llanta'],['Repuesto: batería',1,'bateria'],['Cambio de aceite',1,'gota'],['Gasolina',1,'gota'],['Repuesto: espejo',1,'espejo'],['Parqueadero',1,'papel']];
-const CASA_EV=[['Arriendo',1],['Arriendo',1],['Impuesto predial',-1],['Arriendo',1],['Reparación del techo',-1]];
+const CAR_COSTS=[['SOAT',2,'papel',120,'Comprando el SOAT'],['Tecnomecánica',1,'papel',240,'Revisión técnico-mecánica en el CDA'],['Impuesto vehicular',2,'papel',180,'Fila para pagar el impuesto'],['Repuesto: llanta',1,'llanta',240,'Cambiando la llanta pinchada'],['Repuesto: batería',1,'bateria',180,'Cambiando la batería'],['Cambio de aceite',1,'gota',150,'Cambiando el aceite'],['Gasolina',1,'gota',120,'Tanqueando'],['Repuesto: espejo',1,'espejo',120,'Poniendo el espejo nuevo'],['Parqueadero',1,'papel',90,'Buscando parqueadero']];
+const CASA_EV=[['Arriendo',1],['Arriendo',1],['Impuesto predial',-1,120,'Pagando el predial'],['Arriendo',1],['Reparación del techo',-1,180,'Arreglando las goteras del techo']];
+function busy(frames,label){ if(!frames||!S.p) return; S.busy={t:frames,n:frames,label}; S.tgt=null; keys={left:false,right:false,jump:false}; S.p.vx=0; eco.stats.busy=(eco.stats.busy||0)+frames; if(S.ws) S.ws.busy=(S.ws.busy||0)+frames; learn('tiempo'); }
 function carNext(pl){ return CAR_COSTS[((pl.c0||0)+(pl.n||0)*2)%CAR_COSTS.length]; }
 function casaNext(pl){ return CASA_EV[(pl.n||0)%CASA_EV.length]; }
 function debris(x,y,k){ S.debris=S.debris||[]; S.debris.push({x,y,vx:(Math.random()<.5?-1:1)*(1.2+Math.random()*1.6),vy:-4-Math.random()*2,rot:0,vr:(Math.random()-.5)*.4,k,life:120}); }
@@ -1216,15 +1301,15 @@ function platLand(wasAir){
     if(pl.hits===2) addText(x-40,y-30,'El frasco se agrieta: uno más y se rompe','#FFE18A');
     if(!pl.paid){ pl.paid=true; eco.emb+=1; eco.stats.saved+=1; if(S.ws) S.ws.saved+=1; logD('Ahorro','Frasco de ahorro: te impulsa',1); addText(x-30,y-16,'El ahorro te impulsa ↑ +1 alcancía','#9FD3FF'); }
     learn('frasco'); return; }
-  if(pl.type==='casa'||pl.type==='carro'){ pl.stand=wasAir?0:(pl.stand||0)+1; }
+  if(pl.type==='casa'||pl.type==='carro'){ pl.stand=wasAir||S.busy?0:(pl.stand||0)+1; }
   if(pl.type==='casa'&&(pl.n||0)<CASA_EV.length&&((wasAir&&!pl.n)||pl.stand===150)){ pl.stand=0; const ev=casaNext(pl); pl.n=(pl.n||0)+1; pl.lastT=S.t; pl.paid=pl.n>=CASA_EV.length;
     if(ev[1]>0){ const v=Math.min(ev[1],cap()-eco.hand); eco.hand+=v; if(S.ws) S.ws.rent+=ev[1]; logD('Ingreso',ev[0]+' de una casa (activo)',ev[1]); addText(x-30,y-16,'+'+ev[1]+' '+ev[0].toLowerCase()+': la casa es un activo','#9BF0B8'); snd('drop'); burst(x+7,y+p.h,'#62C98A',8); learn('activo'); }
-    else { const v=Math.min(-ev[1],eco.hand); eco.hand-=v; if(S.ws) S.ws.lost.casa=(S.ws.lost.casa||0)+(-ev[1]); logD('Gasto',ev[0]+' de la casa',ev[1]); addText(x-50,y-16,'−'+(-ev[1])+' '+ev[0]+': un activo también tiene costos','#FFE18A'); snd('bad'); if(ev[0].startsWith('Rep')) debris(x+7,y+4,'teja'); learn('casaGastos'); } }
+    else { const v=Math.min(-ev[1],eco.hand); eco.hand-=v; if(S.ws) S.ws.lost.casa=(S.ws.lost.casa||0)+(-ev[1]); logD('Gasto',ev[0]+' de la casa',ev[1]); addText(x-50,y-16,'−'+(-ev[1])+' '+ev[0]+': un activo también tiene costos','#FFE18A'); snd('bad'); if(ev[0].startsWith('Rep')) debris(x+7,y+4,'teja'); learn('casaGastos'); busy(ev[2],ev[3]); } }
   else if(pl.type==='inversion'&&!pl.paid){ pl.paid=true; const v=Math.min(pl.acc,cap()-eco.hand); eco.hand+=v; eco.stats.invested+=0; logD('Inversión','CDT: capital más intereses de '+(pl.q||0)+' quincenas',v); addText(x-50,y-16,'+'+pl.acc+' CDT cobrado: '+(pl.q||0)+' quincenas de intereses','#9BF0B8'); snd('buy'); confetti(x+7,y+p.h,10); learn('cajaInv'); }
   else if(pl.type==='carro'&&(wasAir||pl.stand===150)){ if(wasAir) pl.wob=20; if((pl.n||0)<3&&((wasAir&&!pl.n)||pl.stand===150)){ pl.stand=0; pl.wob=14; const cst=carNext(pl); pl.n=(pl.n||0)+1; pl.lastT=S.t; pl.charged=pl.n>=3;
       const v=Math.min(cst[1],eco.hand); eco.hand-=v; if(S.ws) S.ws.lost.pasivos=(S.ws.lost.pasivos||0)+cst[1];
       logD('Gasto',cst[0]+' del carro (pasivo)',-cst[1]); addText(x-44,y-16,'−'+cst[1]+' '+cst[0]+(v<cst[1]?' (no te alcanzó)':'')+': el carro es un pasivo','#FFC7BF');
-      debris(x+7,y+10,cst[2]); snd('bad'); learn(pl.n>1?'carroGastos':'pasivo'); } }
+      debris(x+7,y+10,cst[2]); snd('bad'); learn(pl.n>1?'carroGastos':'pasivo'); busy(cst[3],cst[4]); } }
 }
 function plab(fn){ if(S.plabels){ S.plabels.push([fn,ctx.getTransform()]); } else fn(); }
 function drawPlatLabels(){ const L=S.plabels; S.plabels=null; if(!L) return; for(const [fn,m] of L){ ctx.save(); ctx.setTransform(m); try{ fn(); }catch(e){} ctx.restore(); } }
@@ -1252,8 +1337,26 @@ plab(()=>{    { const done=pl&&pl.n>=CASA_EV.length, ev=pl?casaNext(pl):CASA_EV[
   }
   else if(type==='carro'){
     const wob=pl&&pl.wob?Math.sin(pl.wob*1.3)*pl.wob*.012:0; const cols=['#B8323C','#E0B030','#1E2A3A','#7A3FA0','#C8CDD2'];
-    // pila de carros viejos debajo (pasivos acumulados)
-    let yy=y+T, n=0; while(yy<y+T+bodyH-6&&n<5){ for(let k=0;k<len;k+=2){ const cw=Math.min(2,len-k)*T-2, cx=x+k*T+1+((n%2)?4:-2); ctx.fillStyle=mix(cols[(n+k+3)%5],'#2A2420',.55); rr(cx,yy+2,cw,13,3); ctx.fill(); ctx.fillStyle='rgba(0,0,0,.35)'; ctx.fillRect(cx,yy+11,cw,4); ctx.fillStyle='#141414'; ctx.beginPath(); ctx.arc(cx+7,yy+15,3.6,0,7); ctx.arc(cx+cw-7,yy+15,3.6,0,7); ctx.fill(); ctx.fillStyle='rgba(150,90,50,.5)'; ctx.fillRect(cx+cw*.3,yy+5,cw*.2,3); } yy+=15; n++; }
+    // debajo del carro: grúa (si cuelga), elevador de taller (si es bajo) o parqueadero de varios pisos (si es alto)
+    if(o.hang||bodyH<=T*1.3){
+      if(o.hang){ ctx.fillStyle='#4A5058'; ctx.fillRect(x+2,y+T,wpx-4,4); ctx.fillStyle='#E0B030'; for(let k=x+4;k<x+wpx-6;k+=10) ctx.fillRect(k,y+T,5,4); }
+      else { const base=y+T+bodyH; ctx.fillStyle='#3A4048'; ctx.fillRect(x+wpx/2-10,base-4,20,4); ctx.fillStyle='#9AA3AA'; ctx.fillRect(x+wpx/2-3,y+T,6,bodyH-4); ctx.fillStyle='#C9D3DA'; ctx.fillRect(x+wpx/2-2,y+T,1.4,bodyH-4);
+        ctx.fillStyle='#E0B030'; ctx.fillRect(x+4,y+T-1,wpx-8,3); ctx.fillStyle='#2A2A2A'; for(let k=x+6;k<x+wpx-8;k+=8) ctx.fillRect(k,y+T-1,4,3); }
+    } else {
+      const top=y+T, bot=y+T+bodyH, fl=26; ctx.fillStyle='#262B31'; ctx.fillRect(x+1,top,wpx-2,bodyH);
+      let yy=top, n=0; while(yy<bot-8){ const fh=Math.min(fl,bot-yy);
+        ctx.fillStyle='#1B1F24'; ctx.fillRect(x+3,yy+4,wpx-6,fh-4);
+        if(n%2===0&&fh>18){ const pc=['#B8323C','#1E2A3A','#C8CDD2','#7A3FA0'][(n+(pl?pl.c0:0))%4], cw=Math.min(34,wpx-14), cx2=x+7+((n*13)%Math.max(1,wpx-cw-12));
+          ctx.fillStyle=mix(pc,'#000000',.45); rr(cx2,yy+fh-12,cw,8,3); ctx.fill(); ctx.fillStyle=mix(pc,'#000000',.6); ctx.fillRect(cx2+6,yy+fh-15,cw-12,4); ctx.fillStyle='#0E0E0E'; ctx.beginPath(); ctx.arc(cx2+6,yy+fh-4,2.6,0,7); ctx.arc(cx2+cw-6,yy+fh-4,2.6,0,7); ctx.fill(); }
+        ctx.fillStyle='rgba(255,230,160,.18)'; ctx.fillRect(x+wpx/2-6,yy+5,12,1.5);
+        ctx.fillStyle='#8E949A'; ctx.fillRect(x,yy,wpx,4); ctx.fillStyle='#A9AFB4'; ctx.fillRect(x,yy,wpx,1.2);
+        yy+=fl; n++; }
+      ctx.fillStyle='#7F858B'; ctx.fillRect(x,top,4,bodyH); ctx.fillRect(x+wpx-4,top,4,bodyH); if(wpx>60) ctx.fillRect(x+wpx/2-2,top,4,bodyH);
+      ctx.fillStyle='#8E949A'; ctx.fillRect(x-2,bot-3,wpx+4,3);
+      // letrero de parqueadero
+      if(bodyH>40){ ctx.fillStyle='#1F5FAF'; rr(x+wpx-16,top+6,12,12,2); ctx.fill(); ctx.fillStyle='#fff'; ctx.font='800 9px Figtree, sans-serif'; ctx.textAlign='center'; ctx.fillText('P',x+wpx-10,top+15.5); ctx.textAlign='left'; }
+      ctx.fillStyle='#E0B030'; ctx.fillRect(x+6,bot-14,10,2); ctx.fillStyle='#2A2A2A'; ctx.fillRect(x+8,bot-14,2,2); ctx.fillRect(x+12,bot-14,2,2);
+    }
     // carro reluciente encima: la superficie que se pisa
     for(let k=0;k<len;k+=2){ const cw=Math.min(2,len-k)*T, cx=x+k*T, col=cols[((pl?pl.c0:0)+k)%5];
       ctx.save(); ctx.translate(cx+cw/2,y+T); ctx.rotate(wob); ctx.translate(-(cx+cw/2),-(y+T));
@@ -1302,7 +1405,7 @@ function drawPlats(th){
     if(pl.wob>0) pl.wob--;
     const bodyH=pl.ground>=0?Math.min(T*6,(pl.ground-pl.r-1)*T):T*1.2;
     if(pl.ground<0||(pl.ground-pl.r)>7){ ctx.strokeStyle=dark?'rgba(150,160,170,.55)':'rgba(70,60,50,.6)'; ctx.lineWidth=1.2; ctx.beginPath(); ctx.moveTo(x+6,y-14); ctx.lineTo(x+6,S.camY-10); ctx.moveTo(x+wpx-6,y-14); ctx.lineTo(x+wpx-6,S.camY-10); ctx.stroke(); ctx.fillStyle='#5A5048'; ctx.fillRect(x+4,y-16,4,3); ctx.fillRect(x+wpx-8,y-16,4,3); }
-    drawPlatObj(pl.type,Math.round(x),y,pl.c1-pl.c0+1,Math.max(0,bodyH),pl,{dark,snow}); }
+    drawPlatObj(pl.type,Math.round(x),y,pl.c1-pl.c0+1,Math.max(0,bodyH),pl,{dark,snow,hang:pl.ground<0||(pl.ground-pl.r)>7}); }
   drawDebris();
 }
 function drawDebris(){
@@ -1970,6 +2073,19 @@ function hikerBody(air,w,color,o={}){
     ctx.restore(); }
 }
 
+function drawBusy(){
+  const b=S.busy; if(!b||!S.p) return; const p=S.p, cx=p.x+p.w/2-S.cam, top=p.y-62, pr=1-b.t/b.n, secs=Math.ceil(b.t/60);
+  ctx.save(); ctx.font='800 8px Figtree, sans-serif'; const tw=Math.max(110,ctx.measureText(b.label).width+44); const bx=Math.round(Math.max(4,Math.min(W-tw-4,cx-tw/2)));
+  ctx.fillStyle='rgba(10,20,26,.86)'; rr(bx,top-14,tw,24,7); ctx.fill(); ctx.strokeStyle='#F2B33D'; ctx.lineWidth=1; rr(bx,top-14,tw,24,7); ctx.stroke();
+  // reloj
+  const rx=bx+13, ry=top-2; ctx.strokeStyle='rgba(255,255,255,.25)'; ctx.lineWidth=2.4; ctx.beginPath(); ctx.arc(rx,ry,7,0,7); ctx.stroke(); ctx.strokeStyle='#F2B33D'; ctx.beginPath(); ctx.arc(rx,ry,7,-Math.PI/2,-Math.PI/2+Math.PI*2*pr); ctx.stroke();
+  ctx.fillStyle='#fff'; ctx.font='800 7px "IBM Plex Mono", monospace'; ctx.textAlign='center'; ctx.fillText(secs,rx,ry+2.5);
+  ctx.textAlign='left'; ctx.font='800 8px Figtree, sans-serif'; ctx.fillStyle='#FFE18A'; ctx.fillText(b.label+'…',bx+25,top-4);
+  ctx.fillStyle='rgba(255,255,255,.15)'; rr(bx+25,top+1,tw-33,3,1.5); ctx.fill(); ctx.fillStyle='#F2B33D'; rr(bx+25,top+1,Math.max(2,(tw-33)*pr),3,1.5); ctx.fill();
+  // herramienta que se mueve
+  const a=Math.sin((S.t||0)*.35)*.6; ctx.translate(cx+10,p.y+10); ctx.rotate(a); ctx.fillStyle='#C9D3DA'; ctx.fillRect(-1,-9,2,9); ctx.beginPath(); ctx.arc(0,-10,2.6,0,7); ctx.fill(); ctx.fillStyle='rgba(10,20,26,.9)'; ctx.fillRect(-1,-12.5,2,2.4);
+  ctx.restore();
+}
 function drawHiker(){
   const p=S.p, x=Math.round(p.x+p.w/2-S.cam), y=Math.round(p.y+p.h+p.stepOff);
   // sombra de contacto
@@ -2188,7 +2304,7 @@ function draw(){
   ctx.save();
   const sh=S.shake&&!reduced?S.shake:0;
   ctx.translate(sh?(Math.random()-.5)*sh:0, -Math.round(S.camY)+(sh?(Math.random()-.5)*sh:0));
-  drawDeco(th); S.plabels=[]; drawPlats(th); drawTiles(th); drawEnts(); drawPlatLabels(); drawHiker(); drawFront();
+  drawDeco(th); S.plabels=[]; drawPlats(th); drawTiles(th); drawEnts(); drawPlatLabels(); drawHiker(); drawBusy(); drawFront();
   S.pops.forEach(q=>{ const k=1-q.life/14; ctx.globalAlpha=1-k; ctx.save(); ctx.globalCompositeOperation='lighter'; drop(q.x-S.cam,q.y-k*10,1+k*0.8,'#8EE0FF'); ctx.restore(); }); ctx.globalAlpha=1;
   S.parts.forEach(q=>{ ctx.globalAlpha=Math.min(1,q.life/20); ctx.fillStyle=q.col; if(q.conf){ ctx.save(); ctx.translate(q.x-S.cam,q.y); ctx.rotate(q.rot+=0.2); ctx.fillRect(-2,-1,4,2.4); ctx.restore(); } else if(q.dust){ ctx.beginPath(); ctx.arc(q.x-S.cam,q.y,q.r*(1.4-q.life/40),0,7); ctx.fill(); } else ctx.fillRect(q.x-S.cam,q.y,3,3); }); ctx.globalAlpha=1;
   ctx.font='800 11px Figtree, sans-serif'; ctx.textAlign='center';
@@ -2407,8 +2523,8 @@ function togglePause(){
     <div class="req"><span class="mk no">!</span><div><b>Meta:</b> ${esc(reqText(S.li))}.</div></div>
     <div class="sec"><h3>Diario del viajero (últimos movimientos)</h3>${(eco.diario||[]).filter(d=>d.w===S.li).slice(-6).reverse().map(d=>`<div class="item"><span class="tag" style="background:${DCAT[d.cat]||'#9DB0B8'}">${d.cat}</span><span class="n">${esc(d.txt)}</span><span class="m">${d.v>0?'+':''}${d.v}</span></div>`).join('')||'<p class="muted">Sin movimientos todavía.</p>'}</div>
     <div class="sec"><h3>Glosario de tu ruta</h3>${Object.keys(eco.seen||{}).map(k=>`<p class="muted" style="margin:0 0 6px"><b style="color:var(--ink)">${esc(TIPS[k].t)}:</b> ${esc(TIPS[k].x)}</p>`).join('')||'<p class="muted">Aún no descubres conceptos.</p>'}</div>
-    <div class="row"><button class="btn" id="bRes" type="button">Seguir</button><button class="btn alt" id="bRst" type="button">Reiniciar el mundo</button><button class="btn alt" id="bMenu" type="button">Menú principal</button></div>`);
-    document.getElementById('bRes').onclick=togglePause; document.getElementById('bRst').onclick=()=>{ const s=loadSave(); if(s){ eco=s.eco; } levelIntro(S.li); };
+    <div class="row"><button class="btn" id="bRes" type="button">Seguir</button><button class="btn alt" id="bMent" type="button">Pregúntale al Mentor</button><button class="btn alt" id="bRst" type="button">Reiniciar el mundo</button><button class="btn alt" id="bMenu" type="button">Menú principal</button></div>`);
+    document.getElementById('bRes').onclick=togglePause; document.getElementById('bMent').onclick=()=>showMentor(); document.getElementById('bRst').onclick=()=>{ const s=loadSave(); if(s){ eco=s.eco; } levelIntro(S.li); };
     document.getElementById('bMenu').onclick=titleScreen; }
   else if(S.mode==='pause'){ S.mode='play'; closeOv(); last=performance.now(); }
 }
@@ -2818,8 +2934,8 @@ const UNITS=[
   reto:'Preparar una mini clase de 5 minutos para estudiantes de un grado menor.'}
 ];
 
-const MICON={play:'<path d="M7 5v14l11-7z"/>',grid:'<rect x="4" y="4" width="7" height="7" rx="1.5"/><rect x="13" y="4" width="7" height="7" rx="1.5"/><rect x="4" y="13" width="7" height="7" rx="1.5"/><rect x="13" y="13" width="7" height="7" rx="1.5"/>',book:'<path d="M4 5a2 2 0 0 1 2-2h13v16H6a2 2 0 0 0-2 2z"/><path d="M4 19V5"/><path d="M9 7h6"/>',trophy:'<path d="M8 4h8v5a4 4 0 0 1-8 0z"/><path d="M16 6h3a3 3 0 0 1-3 4M8 6H5a3 3 0 0 0 3 4"/><path d="M12 13v4M8 20h8"/>',cap:'<path d="m2 9 10-5 10 5-10 5z"/><path d="M6 11v5c3 2 9 2 12 0v-5"/>',layers:'<path d="m12 3 9 5-9 5-9-5z"/><path d="m3 13 9 5 9-5"/>'};
-const IPANES=[{id:'jugar',lb:'Cómo jugar',d:'Controles, metas y consejos',ic:'play',c:'#5CC2EA',g:'Para jugar'},{id:'cosas',lb:'Qué es cada cosa',d:'Activos, pasivos y peligros',ic:'grid',c:'#62C98A'},{id:'guias',lb:'Las 7 guías',d:'De dónde sale cada mundo',ic:'book',c:'#C9475B'},{id:'ranking',lb:'Ranking',d:'Quién sube más rápido',ic:'trophy',c:'#F2B33D'},{id:'docente',lb:'Para el docente',d:'Currículo, rúbrica y evaluación',ic:'cap',c:'#9AA3F0',g:'Para el docente'},{id:'material',lb:'Material docente por unidades',d:'7 unidades listas para la clase',ic:'layers',c:'#5FD0C4',nuevo:1}];
+const MICON={chat:'<path d="M4 5h16v10H9l-5 4z"/><path d="M8 9h8M8 12h5"/>',play:'<path d="M7 5v14l11-7z"/>',grid:'<rect x="4" y="4" width="7" height="7" rx="1.5"/><rect x="13" y="4" width="7" height="7" rx="1.5"/><rect x="4" y="13" width="7" height="7" rx="1.5"/><rect x="13" y="13" width="7" height="7" rx="1.5"/>',book:'<path d="M4 5a2 2 0 0 1 2-2h13v16H6a2 2 0 0 0-2 2z"/><path d="M4 19V5"/><path d="M9 7h6"/>',trophy:'<path d="M8 4h8v5a4 4 0 0 1-8 0z"/><path d="M16 6h3a3 3 0 0 1-3 4M8 6H5a3 3 0 0 0 3 4"/><path d="M12 13v4M8 20h8"/>',cap:'<path d="m2 9 10-5 10 5-10 5z"/><path d="M6 11v5c3 2 9 2 12 0v-5"/>',layers:'<path d="m12 3 9 5-9 5-9-5z"/><path d="m3 13 9 5 9-5"/>'};
+const IPANES=[{id:'jugar',lb:'Cómo jugar',d:'Controles, metas y consejos',ic:'play',c:'#5CC2EA',g:'Para jugar'},{id:'cosas',lb:'Qué es cada cosa',d:'Activos, pasivos y peligros',ic:'grid',c:'#62C98A'},{id:'guias',lb:'Las 7 guías',d:'De dónde sale cada mundo',ic:'book',c:'#C9475B'},{id:'ranking',lb:'Ranking',d:'Quién sube más rápido',ic:'trophy',c:'#F2B33D'},{id:'mentor',lb:'Pregúntale al Mentor',d:'Preguntas de finanzas resueltas con las guías',ic:'chat',c:'#9AA3F0',action:1,nuevo:1},{id:'docente',lb:'Para el docente',d:'Currículo, rúbrica y evaluación',ic:'cap',c:'#9AA3F0',g:'Para el docente'},{id:'material',lb:'Material docente por unidades',d:'7 unidades listas para la clase',ic:'layers',c:'#5FD0C4',nuevo:1}];
 const micon=(k,c)=>`<span class="mic" style="--c:${c}"><svg viewBox="0 0 24 24" aria-hidden="true">${MICON[k]}</svg></span>`;
 let MAT={}; try{ MAT=JSON.parse(localStorage.getItem('rac-mat')||'{}')||{}; }catch(e){ MAT={}; }
 function matSave(){ try{ localStorage.setItem('rac-mat',JSON.stringify(MAT)); }catch(e){} }
@@ -2854,7 +2970,7 @@ function buildMenu(){
   m.innerHTML='<div class="imenu-grab"></div>'+IPANES.map(p=>(p.g?(p.id!=='jugar'?'<div class="imenu-sep"></div>':'')+`<div class="imenu-h">${p.g}</div>`:'')+`<button type="button" role="menuitemradio" aria-checked="false" data-ip="${p.id}">${micon(p.ic,p.c)}<span class="mt"><b>${esc(p.lb)}${p.nuevo?'<span class="nuevo">Nuevo</span>':''}</b><small>${esc(p.d)}</small></span><svg class="ck" viewBox="0 0 24 24" aria-hidden="true"><path d="m5 12 5 5 9-10"/></svg></button>`).join('');
   const b=document.getElementById('imenuBtn');
   b.onclick=e=>{ e.stopPropagation(); menuOpen(m.hidden); };
-  m.querySelectorAll('[data-ip]').forEach(x=>x.onclick=()=>{ openPane(x.dataset.ip,{scroll:true}); menuOpen(false,true); });
+  m.querySelectorAll('[data-ip]').forEach(x=>x.onclick=()=>{ if(x.dataset.ip==='mentor'){ menuOpen(false); if(['title','map','play','pause'].includes(S.mode)){ document.getElementById('cv').scrollIntoView({behavior:'smooth',block:'center'}); showMentor(); } return; } openPane(x.dataset.ip,{scroll:true}); menuOpen(false,true); });
   document.getElementById('iback').onclick=()=>menuOpen(false,true);
   document.addEventListener('click',e=>{ if(!m.hidden && !e.target.closest('.imenu-wrap')) menuOpen(false); });
   m.addEventListener('keydown',e=>{
@@ -2975,6 +3091,7 @@ function buildInfo(){
   document.getElementById('icloseBtn').onclick=closeGuide;
   const tm=document.getElementById('tipMore'); if(tm) tm.onclick=()=>{ const el=document.getElementById('tip'), o=!el.classList.contains('open'); el.classList.toggle('open',o); tm.textContent=o?'Resumir':'Leer todo'; tm.setAttribute('aria-expanded',String(o)); try{cv.focus({preventScroll:true})}catch(e){} };
   const tl=document.getElementById('tipList'); if(tl) tl.onclick=showCuaderno;
+  const tmn=document.getElementById('tipMentor'); if(tmn) tmn.onclick=()=>{ if(!['title','map','play','pause'].includes(S.mode)) return; showMentor(); };
 }
 function drawTilesMini(){ ctx.fillStyle='#1F6B40'; rr(6,6,T,T,4); ctx.fill(); ctx.fillStyle='#3FA868'; rr(7,7,T-2,T-4,4); ctx.fill(); ctx.fillStyle='#E9F7EC'; ctx.fillRect(17,14,2,8); ctx.beginPath(); ctx.ellipse(14,15,3.6,2.2,-.5,0,7); ctx.ellipse(22,14,3.6,2.2,.5,0,7); ctx.fill(); ctx.fillStyle='#0E3B22'; ctx.font='700 8px monospace'; ctx.textAlign='center'; ctx.fillText('9',18,27); ctx.textAlign='left'; }
 
