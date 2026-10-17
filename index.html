@@ -1168,7 +1168,7 @@ function update(){
   if(p.onGround && Math.abs(p.vx)>2.4 && S.t%9===0) dust(p.x+(p.face>0?2:12),p.y+p.h,2);
   p.idle=(p.onGround&&Math.abs(p.vx)<0.3)?p.idle+1:0;
   p.squash+= (1-p.squash)*0.2;
-  if(p.onGround && Math.abs(p.vx)>0.3) p.walk+=Math.abs(p.vx)*0.09;
+  if(p.onGround && Math.abs(p.vx)>0.3) p.walk+=gaitStep(p.vx,3.3);
   if(p.inv>0) p.inv--; if(p.flash>0) p.flash--;
   { const pt=patrimonio(); if(S.patPrev==null) S.patPrev=pt; if(pt!==S.patPrev){ S.patDelta=(S.patDeltaLife>0?S.patDelta:0)+(pt-S.patPrev); S.patDeltaLife=80; S.patPrev=pt; } if(S.patDeltaLife>0) S.patDeltaLife--; }
   // espinas
@@ -1959,14 +1959,49 @@ function mood(){
   return 'ok';
 }
 const ROLE_N=['Desempleado','Empleado','Estratega','Emprendedor','Empresario','Inversionista','Diversificador','Mentor'];
+
+/* ================= MARCHA: ciclo de la marcha con cinemática inversa =================
+   Fase de apoyo: el pie queda fijo en el suelo (sin patinar) y el cuerpo pasa por encima.
+   Fase de balanceo: el pie sube, pasa adelante y aterriza con el talón.
+   Caminar: apoyo 60 %, la cadera sube en el apoyo medio (péndulo invertido).
+   Correr: apoyo 38 % con fase de vuelo, la cadera baja en el apoyo (amortiguación) y sube en el vuelo.
+   Los brazos van en oposición a la pierna del mismo lado; al correr el codo se dobla cerca de 90°. */
+const GAIT={thigh:7.4,shin:7.6,walkL:11,runL:19};
+function gaitBlend(spd){ const r=Math.max(0,Math.min(1,(spd-0.55)/0.3)); return r*r*(3-2*r); }
+function gaitParams(spd){ const r=gaitBlend(spd), beta=0.6+(0.38-0.6)*r, L=(GAIT.walkL*(0.55+0.45*Math.min(1,spd/0.55)))*(1-r)+GAIT.runL*r; return {r,beta,L}; }
+function gaitStep(vx,speedMax){ const spd=Math.min(1,Math.abs(vx)/(speedMax||3.3)); const g=gaitParams(spd); return 2*Math.PI*g.beta*Math.abs(vx)/Math.max(4,g.L); }
+function footAt(u,beta,L,lift,run){
+  if(u<beta){ const t=u/beta; return {x:L/2-L*t,y:0,p:t<0.15?-0.28*(1-t/0.15):t>0.78?0.42*((t-0.78)/0.22):0,st:1}; }
+  const t=(u-beta)/(1-beta), e=t*t*(3-2*t), tp=run?Math.pow(t,0.6+0.4*(1-run)):t; return {x:-L/2+L*e,y:-Math.sin(Math.PI*Math.min(1,tp*1.08))*lift,p:t<0.35?0.42*(1-t/0.35):-0.18*Math.sin(Math.PI*t),st:0};
+}
+function legIK(hx,hy,ax,ay){ const a=GAIT.thigh,b=GAIT.shin; let dx=ax-hx,dy=ay-hy,d=Math.hypot(dx,dy); const m=a+b-0.08; if(d>m){ dx*=m/d; dy*=m/d; d=m; }
+  const ang=Math.atan2(dy,dx), A=Math.acos(Math.max(-1,Math.min(1,(a*a+d*d-b*b)/(2*a*d)))), k=ang-A; return {kx:hx+a*Math.cos(k),ky:hy+a*Math.sin(k),ax:hx+dx,ay:hy+dy}; }
+function gaitPose(ph,spd,air,vy,climb){
+  const out={bob:0,feet:[],arms:[],run:0};
+  if(climb){ const c=Math.sin(ph*1.6); out.feet=[{x:2,y:-2-Math.max(0,c)*4,p:0.2},{x:3,y:-2-Math.max(0,-c)*4,p:0.2}]; out.arms=[{t:2.7+c*0.25,b:0.3},{t:2.7-c*0.25,b:0.3}]; return out; }
+  if(air){ const up=vy<0; out.feet=up?[{x:-4,y:-2.5,p:0.3},{x:4.5,y:-6.5,p:-0.2}]:[{x:-3.5,y:-1,p:0.35},{x:3,y:0.5,p:-0.1}];
+    out.arms=up?[{t:-0.7,b:0.5},{t:1.5,b:0.6}]:[{t:-1.1,b:0.2},{t:1.15,b:0.25}]; return out; }
+  if(spd<0.04){ out.feet=[{x:-2.2,y:0,p:0},{x:2.4,y:0,p:0}]; out.arms=[{t:-0.08,b:0.25},{t:0.12,b:0.3}]; return out; }
+  const g=gaitParams(spd), u0=((ph/(2*Math.PI))%1+1)%1, lift=2.6+3.6*g.r, amp=Math.min(1,spd*3);
+  out.run=g.r;
+  for(let i=0;i<2;i++){ const u=(u0+i*0.5)%1; out.feet.push(footAt(u,g.beta,g.L,lift,g.r)); }
+  const wave=Math.cos(2*Math.PI*(2*u0-g.beta));
+  out.bob=(-0.8*(1-g.r)+1.5*g.r)*wave*amp - 0.9*g.r;   // caminar: sube en el apoyo medio · correr: baja al apoyar y se agacha un poco
+  const sw=0.42+0.45*g.r;
+  for(let i=0;i<2;i++){ const f=out.feet[i]; const k=-(f.x/(g.L/2||1)); out.arms.push({t:k*sw*amp,b:0.3+1.15*g.r}); }
+  return out;
+}
 function hikerBody(air,w,color,o={}){
   // El senderista evoluciona con la ruta: cada mundo cambia su ropa y lo que lleva en la mano (o.role = índice del mundo).
   const R=o.role??1;
   const lean=(o.lean||0)+(R===0?.08:0), pack=o.pack||0, breath=o.breath||0;
   const G=k=>(o.gear||[]).includes(k);
   const skin=SKINS[o.skin??1], skinD=mix(skin,'#000000',.18);
-  const sw=air?0:w;
-  const legA=sw*0.55, legB=-sw*0.55;
+  const gph=o.phase!=null?o.phase:Math.asin(Math.max(-1,Math.min(1,w||0)));
+  const spd=air?0:(o.spd!=null?o.spd:(Math.abs(w||0)>0.01?0.4:0));
+  const GP=gaitPose(gph,spd,air,o.vy||0,!!o.climb);
+  const sw=air?0:Math.sin(gph)*Math.min(1,spd*2.5);
+  const bob=GP.bob, hipY=-14+bob;
   // prendas según la etapa
   let jacket=color;
   if(R===0) jacket=mix(color,'#3A3D44',.62);           // buzo gastado
@@ -1978,18 +2013,29 @@ function hikerBody(air,w,color,o={}){
   const shoe=R===0?'#B9B4AA':R===4?'#15181D':'#6B4B2E';
   const big=G('mochila');
   const poleBack=![0,4,5,7].includes(R), poleFront=![0,2,3,4,5,7].includes(R);
-  // bastón trasero
-  if(poleBack){ ctx.strokeStyle='#5D6770'; ctx.lineWidth=1.6; ctx.lineCap='round'; ctx.beginPath(); ctx.moveTo(-1,-20); ctx.lineTo(-7-sw*5+(air?-3:0),0); ctx.stroke(); }
-  function leg(a,front){ const kx=Math.sin(a)*5, ky=-7+Math.abs(Math.sin(a))*1.2, fx=Math.sin(a)*8+(air?(front?3:-2):0), fy=air?(front?-4:-1):0;
-    ctx.strokeStyle=front?pants:pantsB; ctx.lineWidth=4.2; ctx.lineCap='round'; ctx.beginPath(); ctx.moveTo(front?1:-1,-14); ctx.lineTo(kx,ky+fy*0.5); ctx.lineTo(fx,-2+fy); ctx.stroke();
-    if(R===0&&front){ ctx.fillStyle='#5A6170'; ctx.fillRect(kx-1.5,ky-1+fy*.5,3,2); } // remiendo en la rodilla
-    ctx.fillStyle=front?shoe:mix(shoe,'#000000',.2); rr(fx-3,-4+fy,8,4,1.5); ctx.fill(); ctx.fillStyle=R===0?'#7C776E':'#2A1C10'; ctx.fillRect(fx-3,-1+fy,8,1.2);
-    if(G('botas')&&R!==0&&R!==4){ ctx.fillStyle='#E07A2A'; ctx.fillRect(fx-1,-4+fy,3,1); }
-    if(G('crampones')){ ctx.fillStyle='#C9D3DA'; for(let k=0;k<3;k++){ ctx.beginPath(); ctx.moveTo(fx-2+k*3,0+fy); ctx.lineTo(fx-1+k*3,2.2+fy); ctx.lineTo(fx+k*3,0+fy); ctx.fill(); } } }
-  leg(legB,false);
+  // brazo trasero (detrás del cuerpo) con su bastón
+  const shY=-27+breath+bob;
+  function armPts(a,side){ const t=a.t, ux=Math.sin(t)*5.6, uy=Math.cos(t)*5.6, ex=side+ux, ey=shY+uy, f=t+a.b; return {ex,ey,hx:ex+Math.sin(f)*5.2,hy:ey+Math.cos(f)*5.2}; }
+  const AB=armPts(GP.arms[0],-0.5);
+  function leg(i,front){ const f=GP.feet[i], hx0=front?0.8:-0.8; const k=legIK(hx0,hipY,f.x,-2+f.y);
+    ctx.strokeStyle=front?pants:pantsB; ctx.lineCap='round'; ctx.lineJoin='round';
+    ctx.lineWidth=4.6; ctx.beginPath(); ctx.moveTo(hx0,hipY); ctx.lineTo(k.kx,k.ky); ctx.stroke();
+    ctx.lineWidth=3.7; ctx.beginPath(); ctx.moveTo(k.kx,k.ky); ctx.lineTo(k.ax,k.ay); ctx.stroke();
+    if(R===0&&front){ ctx.fillStyle='#5A6170'; ctx.fillRect(k.kx-1.5,k.ky-1,3,2); } // remiendo en la rodilla
+    ctx.save(); ctx.translate(k.ax,k.ay); ctx.rotate(f.p||0);
+    ctx.fillStyle=front?shoe:mix(shoe,'#000000',.2); rr(-2.6,-1.6,8,3.8,1.5); ctx.fill(); ctx.fillStyle=R===0?'#7C776E':'#2A1C10'; ctx.fillRect(-2.6,1.2,8,1.1);
+    if(G('botas')&&R!==0&&R!==4){ ctx.fillStyle='#E07A2A'; ctx.fillRect(-.6,-1.6,3,1); }
+    if(G('crampones')){ ctx.fillStyle='#C9D3DA'; for(let q=0;q<3;q++){ ctx.beginPath(); ctx.moveTo(-1.6+q*3,2.3); ctx.lineTo(-.6+q*3,4.4); ctx.lineTo(.4+q*3,2.3); ctx.fill(); } }
+    ctx.restore(); }
   ctx.save(); ctx.rotate(lean);
+  if(poleBack){ ctx.strokeStyle='#5D6770'; ctx.lineWidth=1.6; ctx.lineCap='round'; ctx.beginPath(); ctx.moveTo(AB.hx,AB.hy); ctx.lineTo(AB.hx-5-sw*4+(air?-3:0),-(air?3:0)); ctx.stroke(); }
+  ctx.strokeStyle=mix(jacketDark,'#000000',.25); ctx.lineWidth=3.2; ctx.lineCap='round'; ctx.lineJoin='round'; ctx.beginPath(); ctx.moveTo(-0.5,shY); ctx.lineTo(AB.ex,AB.ey); ctx.lineTo(AB.hx,AB.hy); ctx.stroke();
+  ctx.fillStyle=skinD; ctx.beginPath(); ctx.arc(AB.hx,AB.hy,1.6,0,7); ctx.fill();
+  ctx.restore();
+  leg(0,false);
+  ctx.save(); ctx.rotate(lean); ctx.translate(0,bob);
   // mochila (pequeña y gastada para el desempleado, delgada para el empresario)
-  ctx.save(); ctx.translate(0,pack*0.6);
+  ctx.save(); ctx.translate(0,pack*0.6-bob*0.45);
   const pw=R===0?8:R===4?7:(big?12:10), ph=R===0?16:R===4?18:(big?25:22);
   ctx.fillStyle=R===0?'#3A3A36':'#2F4A3A'; rr(-5-pw,-15-ph,pw,ph,3); ctx.fill();
   ctx.fillStyle=R===0?'#4A4A44':'#3E5E4A'; rr(-4-pw,-14-ph,pw-2,ph-2,3); ctx.fill();
@@ -2018,8 +2064,10 @@ function hikerBody(air,w,color,o={}){
   if(G('rinonera')){ ctx.fillStyle='#2B3440'; rr(1,-18,7,5,2); ctx.fill(); ctx.fillStyle='#F2B33D'; ctx.fillRect(4,-17,1.4,1.4); }
   if(G('brujula')&&R!==2){ ctx.strokeStyle='#8C98A2'; ctx.lineWidth=0.8; ctx.beginPath(); ctx.moveTo(-3,-29+breath); ctx.lineTo(-1,-22+breath); ctx.stroke(); ctx.fillStyle='#D9DEE2'; ctx.beginPath(); ctx.arc(-1,-21+breath,2.2,0,7); ctx.fill(); ctx.fillStyle='#E04A4A'; ctx.fillRect(-1.4,-22.6+breath,0.9,1.8); }
   // brazo delantero y lo que lleva en la mano
-  const hx=7+sw*1.5, hy=-20+breath;
-  ctx.strokeStyle=jacketDark; ctx.lineWidth=3.6; ctx.beginPath(); ctx.moveTo(2,-27+breath); ctx.lineTo(hx,hy); ctx.stroke();
+  const holdK=[0.3,1,0.2,0.85,1,0.2,1,0.4][R]??1, aF=GP.arms[1], hold=[0,2,5].includes(R)&&!air;
+  const AF=hold?armPts({t:0.75+aF.t*holdK,b:0.9},1.5):armPts({t:0.12+aF.t*holdK+(R===7?0.25:0),b:aF.b+(R===4?-0.2:0)},1.5);
+  const hx=AF.hx, hy=AF.hy-bob;
+  ctx.strokeStyle=jacketDark; ctx.lineWidth=3.5; ctx.lineCap='round'; ctx.lineJoin='round'; ctx.beginPath(); ctx.moveTo(1.5,-27+breath); ctx.lineTo(AF.ex,AF.ey-bob); ctx.lineTo(hx,hy); ctx.stroke();
   if(R===0){ // cartón "busco trabajo"
     ctx.save(); ctx.translate(hx+1,hy-2); ctx.rotate(-.12+sw*.1); ctx.fillStyle='#B8956A'; ctx.fillRect(-1,-8,12,8); ctx.strokeStyle='#7A5C3A'; ctx.lineWidth=.6; ctx.strokeRect(-1,-8,12,8);
     ctx.fillStyle='#3A2A1A'; ctx.font='800 2.6px Figtree, sans-serif'; ctx.fillText('BUSCO',0.4,-4.8); ctx.fillText('TRABAJO',0,-1.6); ctx.restore(); }
@@ -2066,9 +2114,9 @@ function hikerBody(air,w,color,o={}){
   else { ctx.fillStyle='#2B3440'; ctx.beginPath(); ctx.arc(1,-39+by,6,Math.PI,0); ctx.fill(); ctx.fillRect(-5,-40+by,12,2); ctx.fillStyle='#1B2129'; rr(4,-41+by,8,2.4,1.2); ctx.fill(); ctx.fillStyle=color; ctx.fillRect(-1,-44+by,3,1.4); }
   if(G('linterna')&&R!==3&&R!==7&&R!==0){ ctx.fillStyle='#E8ECEF'; rr(3,-43.5+by,4,2.6,1); ctx.fill(); ctx.fillStyle='#FFF2B0'; ctx.fillRect(6,-43+by,1.4,1.6); }
   ctx.restore();
-  leg(legA,true);
+  leg(1,true);
   // faldón del gabán o de la ruana, por encima de las piernas
-  if(R===6||R===7){ ctx.save(); ctx.rotate(lean); const fl=Math.sin((S.t||0)*.1)*1.2-sw*1.5; ctx.fillStyle=R===7?'#6E5238':jacket; ctx.beginPath(); ctx.moveTo(-7,-17); ctx.lineTo(6,-17); ctx.lineTo(7+fl*.4,-6); ctx.lineTo(-9+fl,-5); ctx.closePath(); ctx.fill();
+  if(R===6||R===7){ ctx.save(); ctx.rotate(lean); ctx.translate(0,bob); const fl=Math.sin((S.t||0)*.1)*1.2-sw*1.5; ctx.fillStyle=R===7?'#6E5238':jacket; ctx.beginPath(); ctx.moveTo(-7,-17); ctx.lineTo(6,-17); ctx.lineTo(7+fl*.4,-6); ctx.lineTo(-9+fl,-5); ctx.closePath(); ctx.fill();
     if(R===7){ ctx.fillStyle=color; ctx.fillRect(-7.6,-10,15,1.4); ctx.fillStyle='#E2C27A'; ctx.fillRect(-7.8,-7.5,15.4,.9); } else { ctx.fillStyle=jacketDark; ctx.fillRect(-.5,-17,1,11); }
     ctx.restore(); }
 }
@@ -2093,7 +2141,7 @@ function drawHiker(){
   if(p.inv>0 && S.t%8<4 && !reduced) return drawChain(x,y);
   drawChain(x,y);
   const moving=Math.abs(p.vx)>0.3;
-  const lean=(p.onGround&&moving?0.16:(p.vy<0?0.06:0.02))+(chained()?0.08:0)+(mood()==='tired'?0.06:0)+(p.climb?-0.22:0)+(peso()>=6?0.06:0);
+  const lean=(p.onGround&&moving?0.04+0.14*Math.min(1,Math.abs(p.vx)/3.3):(p.vy<0?0.06:0.02))+(chained()?0.08:0)+(mood()==='tired'?0.06:0)+(p.climb?-0.22:0)+(peso()>=6?0.06:0);
   const breath=p.idle>0?Math.sin(p.idle*0.08)*0.8:0;
   ctx.save(); ctx.translate(x,y); ctx.scale(p.face*((2-p.squash)*0.5+0.5),p.squash);
   const blink=(S.t%220)<6;
@@ -2101,7 +2149,7 @@ function drawHiker(){
   if(rk==='avion'){ icon('avion',0,-4,2.5); lift=6; } else if(rk==='cicla'||rk==='moto'){ icon(rk==='cicla'?'bici':'moto',0,-6,1.6); lift=9; } else if(rk==='carro') lift=8;
   ctx.translate(0,-lift);
   const pl=pila();
-  hikerBody(!p.onGround||!!rk, rk?0:Math.sin(p.walk), eco.color, {lean, pack:p.pack, breath, vy:p.vy, gear:eco.gear, skin:eco.skin, head:eco.head, mood:mood(), blink, pila:pl, vx:p.vx, role:S.li});
+  hikerBody(!p.onGround||!!rk, rk?0:Math.sin(p.walk), eco.color, {phase:p.walk, spd:rk||!moving?0:Math.min(1,Math.abs(p.vx)/3.3), climb:!!p.climb, lean, pack:p.pack, breath, vy:p.vy, gear:eco.gear, skin:eco.skin, head:eco.head, mood:mood(), blink, pila:pl, vx:p.vx, role:S.li});
   if(rk==='carro'){ ctx.translate(0,lift); icon('carro',0,-8,2); }
   ctx.restore();
   if(p.ride){ const f=Math.max(0,p.ride.t/(p.ride.max||420)); ctx.fillStyle='rgba(0,0,0,.45)'; rr(x-14,y-60-lift,28,4,2); ctx.fill(); ctx.fillStyle='#F2B33D'; rr(x-14,y-60-lift,28*f,4,2); ctx.fill(); }
@@ -2181,7 +2229,7 @@ function drawMap(){
   let hx=MAPN[m.li][0], hy=MAPN[m.li][1], walking=false;
   if(m.from!==m.li){ const q=reduced?1:ease((m.t-25)/100); const [fx,fy]=MAPN[m.from]; hx=fx+(hx-fx)*q; hy=fy+(hy-fy)*q; walking=q<1; }
   ctx.save(); ctx.translate(hx,hy-6); const face=MAPN[m.li][0]>=MAPN[m.from][0]?1:-1; ctx.scale(0.62*face,0.62);
-  hikerBody(false, walking?Math.sin(m.t*0.35):0, eco.color,{lean:walking?0.16:0,gear:eco.gear,skin:eco.skin,head:eco.head,mood:m.li===0?'worried':'happy',role:m.li}); ctx.restore();
+  hikerBody(false, walking?Math.sin(m.t*0.35):0, eco.color,{phase:m.t*0.3, spd:walking?0.32:0, lean:walking?0.08:0,gear:eco.gear,skin:eco.skin,head:eco.head,mood:m.li===0?'worried':'happy',role:m.li}); ctx.restore();
   ctx.restore();
   // títulos en pantalla
   const ta=(m.reveal&&!reduced)?Math.min(1,m.t/60):1;
