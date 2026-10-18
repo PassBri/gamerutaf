@@ -498,6 +498,11 @@ const CH={
  lz_scroll:["                  ","                  ","                  ","                  ","  o            o  ","        T         ","##################","##################"],
  lz_vitrina:["                  ","                  ","                  ","                  ","  o            o  ","        O         ","##################","##################"],
  lz_tarjeta:["                  ","                  ","                  ","                  ","  o            o  ","        R         ","##################","##################"],
+ paciencia:["                ","                ","                ","                ","  o    l     o  ","################","################"],
+ tiendas:["                    ","                    ","                    ","                    ","  o  j          o   ","####################","####################"],
+ curso:["                ","                ","                ","                ","  o    i     o  ","################","################"],
+ apuros:["                ","                ","                ","                ","  o    t     o  ","################","################"],
+ fomo:["                  ","                  ","                  ","                  ","  o    s       o  ","##################","##################"],
  colchon:["                ","                ","                ","                ","  o    q     o  ","################","################"],
  cripto:["                ","          e     ","        ====    ","                ","   o  d     o   ","################","################"],
  lz_hacker:["                  ","                  ","                  ","                  ","  o            o  ","        n         ","##################","##################"],
@@ -552,35 +557,35 @@ const LV=[
  {name:'El Valle',role:'Desempleado',step:'Identificación de ingresos',theme:0,costo:0,
   lesson:'En El Valle todavía no tienes ingreso fijo. Las monedas son tu dinero: recógelas, pero tu mochila tiene un límite. Busca el <b>casco de Empleo</b> sobre una plataforma: te dará un salario en cada quincena. Hay 3 páginas del <b>Cuaderno de Ruta</b> escondidas en las alturas. Terreno nuevo: un <b>pantano</b> que frena, un <b>río</b> con piedras que se hunden y un <b>muro de escalada</b> (mantén la flecha hacia el muro). Doña Rosa te espera en el camino… y un <b>gota a gota</b> también.',
   req:'Tener un empleo (salario)',
-  chunks:['start','coins','pantano','billetes','job','ayuda','steps','page1','colchon','rio','embalse','gap','vehiculo','bridge','lender','coins','page2','embalse','muro','steps','coins','page3','camp']},
+  chunks:['start','coins','pantano','billetes','job','ayuda','steps','page1','paciencia','colchon','rio','embalse','gap','vehiculo','bridge','lender','coins','page2','curso','embalse','muro','steps','coins','page3','camp']},
  {name:'Base de la Montaña',role:'Empleado',step:'Control de gastos',theme:1,costo:1,
   lesson:'Las <b>hormigas</b> son gastos hormiga: si te tocan se llevan monedas. Salta encima de ellas para recuperar una. Desde aquí el costo de vida cobra 1 moneda por quincena. Aparecen el <b>banco</b> que cobra comisiones, la <b>nube de inflación</b>, las <b>tarjetas pre-aprobadas</b> y una <b>culebra</b> escondida en el pasto.',
   req:'Llegar al campamento con 10 monedas o más en la mano',
-  chunks:['start','ants','billetes','pantano','vitrina','page1','colchon','embalse','culebra','credito','fugas','antgap','ayuda','page2','embalse','banco','cloud','rio','vitrina','antgap','page3','ants','camp']},
+  chunks:['start','ants','billetes','pantano','vitrina','page1','tiendas','colchon','embalse','culebra','credito','fugas','antgap','ayuda','page2','paciencia','embalse','banco','cloud','rio','vitrina','antgap','curso','page3','ants','camp']},
  {name:'Puntos de Observación',role:'Estratega',step:'Creación de ahorro',theme:2,costo:1,
   lesson:'Cada <b>alcancía</b> guarda la mitad de tus monedas apenas la tocas: págate primero. Si te golpean con la mano vacía, tu alcancía paga el golpe. Sin alcancía ni monedas, te quedas sin fondos.',
   req:'Tener 15 monedas o más en la alcancía',
-  chunks:['start','steps','billetes','embalse','muro','mercado','puma','page1','colchon','embalse','prima','lender','vehiculo','cloud','sueno','rio','bridge','page2','embalse','banco','antgap','ayuda','pits','page3','coins','camp']},
+  chunks:['start','steps','billetes','embalse','muro','mercado','puma','page1','apuros','colchon','embalse','prima','lender','vehiculo','cloud','sueno','rio','bridge','page2','tiendas','embalse','banco','antgap','ayuda','pits','paciencia','page3','coins','camp']},
  {name:'Primer Campamento',role:'Emprendedor',step:'Inversiones inteligentes',theme:3,costo:1,
   lesson:'Llega a los <b>lotes de inversión</b> con las monedas que piden y siembra. Se vuelven manantiales que te pagan en cada quincena, para siempre. Cuidado con las nubes de inflación.',
   req:'Tener al menos 1 activo',
-  chunks:['start','invest','ants','mercado','cloud','rio','page1','embalse','billetes','invest','vehiculo','credito','muro','sueno','page2','cripto','embalse','banco','puma','ayuda','mercado','invest','pantano','page3','coins','camp']},
+  chunks:['start','invest','ants','mercado','cloud','rio','page1','tiendas','embalse','billetes','invest','vehiculo','credito','muro','sueno','page2','curso','cripto','embalse','banco','puma','ayuda','mercado','invest','pantano','page3','coins','camp']},
  {name:'Campamento Avanzado',role:'Empresario',step:'Diversificación de recursos',theme:4,costo:2,
   lesson:'Bosque de niebla: ves poco (la <b>linterna</b> ayuda) y hay <b>costos ocultos</b>, zarzas que no se ven. Hay tres tipos de activo: <b>financiero</b>, <b>inmueble</b> y <b>emprendimiento</b>; no dependas de uno solo. Ojo con el <b>prestamista gota a gota</b>: da plata rápido, pero encadena.',
   req:'Tener activos de 2 tipos distintos',
-  chunks:['start','invest','mercado','moving','cloud','hidden','page1','embalse','credito','lender','pantano','duo','bridge','page2','cripto','embalse','tower','banco','culebra','ayuda','invest','vehiculo','page3','coins','camp']},
+  chunks:['start','invest','mercado','moving','cloud','hidden','page1','fomo','embalse','credito','lender','pantano','duo','bridge','page2','tiendas','cripto','embalse','tower','banco','culebra','ayuda','invest','vehiculo','page3','coins','camp']},
  {name:'La Cima',role:'Inversionista',step:'Eliminación de pasivos',theme:5,costo:2,
   lesson:'El páramo de los frailejones. Caen <b>rocas</b> de las laderas: un <b>casco</b> es un seguro que cuesta poco cada quincena. Aquí no se sube con cadenas: llega <b>sin deudas</b>. Las pirámides doradas prometen duplicar tu plata; ya sabes cómo terminan.',
   req:'Cero deudas',
-  chunks:['start','lender','credito','pyramid','rocks','page1','embalse','mercado','muro','lender','fugas','puma','cloud','page2','cripto','embalse','sueno','rio','rocks','duo','banco','hidden','ayuda','page3','coins','camp']},
+  chunks:['start','lender','credito','pyramid','rocks','page1','apuros','embalse','mercado','muro','lender','fugas','puma','cloud','page2','fomo','cripto','embalse','sueno','rio','rocks','duo','banco','hidden','ayuda','page3','coins','camp']},
  {name:'Cumbre Personal',role:'Diversificador',step:'Construcción de patrimonio',theme:6,costo:2,
   lesson:'Tu <b>patrimonio</b> es todo lo que tienes (mano, alcancía y activos) menos lo que debes. Constrúyelo sin caer en trampas.',
   req:'Patrimonio de 80 o más',
-  chunks:['start','tower','mercado','invest','rocks','vehiculo','page1','embalse','sueno','pyramid','pantano','credito','lender','puma','page2','cripto','embalse','muro','billetes','rocks','banco','ayuda','prima','page3','coins','camp']},
+  chunks:['start','tower','mercado','invest','rocks','vehiculo','page1','fomo','embalse','sueno','pyramid','pantano','credito','lender','puma','page2','apuros','cripto','embalse','muro','billetes','rocks','banco','ayuda','prima','page3','coins','camp']},
  {name:'La Cordillera',role:'Mentor',step:'Libertad financiera',theme:7,costo:3,
   lesson:'Hielo resbaloso (los <b>crampones</b> ayudan) y el costo de vida más alto de la ruta. Para ser <b>mentor</b> tu ingreso pasivo debe cubrir tu costo de vida sin trabajar, y debes superar la Prueba del Mentor.',
   req:'Ingreso pasivo igual o mayor que el costo de vida (3)',
-  chunks:['start','tower','mercado','moving','rocks','page1','embalse','cloud','vitrina','lender','muro','invest','sueno','page2','cripto','embalse','rio','hidden','puma','pyramid','ayuda','vehiculo','duo','page3','antgap','camp']},
+  chunks:['start','tower','mercado','moving','rocks','page1','fomo','embalse','cloud','vitrina','lender','muro','invest','sueno','page2','apuros','cripto','embalse','rio','hidden','puma','pyramid','ayuda','vehiculo','duo','page3','antgap','camp']},
 ];
 
 const THEMES=[
@@ -705,6 +710,15 @@ const TIPS={
  ludopatia:{t:'Apuestas y ludopatía',g:'Guía 4 y 5',x:'En las apuestas y tragamonedas la casa siempre gana a la larga. Ganar una vez engancha y hace perder más. Si sientes que no puedes parar, pide ayuda.'},
  ruina:{t:'El Gran Estafador',g:'Guía 5',x:'Promete rendimientos imposibles y se lleva todo lo que le entregas. Defiéndete: desconfía de lo “garantizado”, verifica con la Superfinanciera, diversifica, guarda en la alcancía y ten seguros.'},
  terremoto:{t:'Imprevisto: terremoto',g:'Guía 5',x:'La tierra se abre y las casas se dañan. Un seguro (el casco) cubre los daños de tu casa y un fondo de emergencia evita que el golpe te devuelva al valle.'},
+ paciencia:{t:'Paciencia (gratificación diferida)',g:'Guía 3',x:'Esperar por una recompensa mayor es la base del ahorro y la inversión: 2 hoy o 6 mañana. Quien sabe esperar, llega más alto.'},
+ plan:{t:'Págate primero, en automático',g:'Guía 2',x:'Un presupuesto bien hecho se cumple solo: apenas llega el sueldo, una parte va directo al ahorro antes de gastar.'},
+ credito:{t:'Historial crediticio (DataCrédito)',g:'Guía 6',x:'Cada cuota pagada a tiempo sube tu puntaje; un atraso o un acuerdo de pago lo baja. Con buen puntaje te prestan más barato; con mal puntaje, más caro o nada.'},
+ compuesto:{t:'Interés compuesto',g:'Guía 4',x:'Los intereses también ganan intereses: al principio crece despacio y luego cada vez más rápido. El tiempo es su mejor aliado.'},
+ comparar:{t:'Comparar el precio total',g:'Guía 2',x:'El precio grande no es el precio real: suma envío, recargos y cuotas de manejo antes de decidir. Pide la factura.'},
+ curso:{t:'Capital humano',g:'Guía 2',x:'Estudiar cuesta hoy y sube tu ingreso para siempre. Es la inversión con mejor rentabilidad para un joven.'},
+ pension:{t:'Pensión y cesantías',g:'Guía 6',x:'Una parte del sueldo se guarda sola para la vejez (pensión) y el empleador consigna cesantías para vivienda o estudio. Es ahorro obligatorio que trabaja a largo plazo.'},
+ generosidad:{t:'Generosidad con presupuesto',g:'Guía 7',x:'Ayudar a otros hace parte de la cima, pero sin desfinanciarte: primero aseguras lo tuyo y luego das lo que te sobra.'},
+ fomo:{t:'Efecto manada (FOMO)',g:'Guía 5',x:'“Todos están comprando” no es un análisis. Las burbujas suben por el entusiasmo y estallan; invierte en lo que entiendes.'},
  colchon:{t:'Plata debajo del colchón',g:'Guía 3',x:'El efectivo escondido no gana intereses, la inflación lo encoge y se lo comen la humedad, los ratones o un robo. Guárdalo en una cuenta, la alcancía o un CDT.'},
  btc:{t:'Bitcoin y criptoactivos',g:'Guía 5',x:'Su precio sube y baja mucho (volatilidad). Invierte solo lo que puedas perder, nunca prestado, y guarda tu frase semilla: sin ella, si olvidas la clave, pierdes todo.'},
  btcClave:{t:'Clave olvidada',g:'Guía 5',x:'Una billetera cripto no tiene banco que te devuelva el acceso. La frase semilla de 12 palabras, escrita en papel y guardada en un lugar seguro, es tu única copia.'},
@@ -834,7 +848,7 @@ const renta=()=>eco.assets.reduce((s,a)=>s+a.renta,0);
 const debtTot=()=>eco.debts.reduce((s,d)=>s+d.saldo,0);
 const cuotas=()=>eco.debts.reduce((s,d)=>s+Math.min(d.cuota,d.saldo),0);
 const tipos=()=>new Set(eco.assets.map(a=>a.type)).size;
-const patrimonio=()=>eco.hand+eco.emb+(eco.colchon||0)+(eco.crypto&&!eco.crypto.lost?eco.crypto.v:0)+eco.assets.reduce((s,a)=>s+a.value,0)+(eco.lujos||[]).reduce((s,a)=>s+a.value,0)-debtTot();
+const patrimonio=()=>eco.hand+eco.emb+(eco.colchon||0)+(eco.pension||0)+(eco.cesantias||0)+(eco.crypto&&!eco.crypto.lost?eco.crypto.v:0)+eco.assets.reduce((s,a)=>s+a.value,0)+(eco.lujos||[]).reduce((s,a)=>s+a.value,0)-debtTot();
 const costo=()=>Math.round(LV[S.li].costo*Dif().cost);
 const flujo=()=>eco.salario+renta()-costo()-cuotas()-primas()-fijos();
 const chained=()=>eco.debts.some(d=>d.kind==='gota');
@@ -916,6 +930,11 @@ function buildLevel(li){
     if(ch==='G') ents.push({t:'gotaJefe',x:x-16,y:y+T-76,w:48,h:76,x0:x-16,hp:3,cd:70,dir:-1,flash:0,hitCd:0});
     if(ch==='K') ents.push({t:'creditoJefe',x:x-12,y:y+T-72,w:40,h:72,x0:x-12,hp:3,cd:90,roll:0,dir:-1,flash:0,hitCd:0});
     if(ch==='Y') ents.push({t:'bank',x:x-24,y:y+T-68,w:72,h:68,cd:60,lab:0});
+    if(ch==='l') ents.push({t:'paciencia',x:x-10,y:y+T-30,w:44,h:30,st:0});
+    if(ch==='j'){ ents.push({t:'tienda',k:'A',x:x-4,y:y+T-34,w:40,h:34,grp:x}); ents.push({t:'tienda',k:'B',x:x+5*T,y:y+T-34,w:40,h:34,grp:x}); }
+    if(ch==='i') ents.push({t:'curso',x:x-8,y:y+T-36,w:40,h:36,used:false});
+    if(ch==='t') ents.push({t:'apuros',x:x,y:y+T-24,w:24,h:24,used:false});
+    if(ch==='s') ents.push({t:'fomo',x:x-10,y:y+T-40,w:46,h:40,used:false});
     if(ch==='q') ents.push({t:'colchon',x:x-8,y:y+T-16,w:40,h:16,used:false});
     if(ch==='d') ents.push({t:'btc',x:x+3,y:y+2,w:18,h:20,ph:Math.random()*6});
     if(ch==='e') ents.push({t:'semilla',x:x+4,y:y+4,w:16,h:18,ph:Math.random()*6});
@@ -1150,9 +1169,14 @@ function sequia(){
 }
 function respawn(){ const p=S.p; p.x=S.check.x; p.y=S.check.y; p.vx=0; p.vy=0; p.inv=90; p.stepOff=0; S.cam=Math.max(0,p.x-W*.4); S.camY=Math.max(0,Math.min(S.L.rows*T-H,p.y-H*0.58)); }
 function adaptiveHelp(){ S.wdeaths=(S.wdeaths||0)+1; if(S.wdeaths===3){ const tip=!has('cuerda')&&S.li>=2?'Consejo: la cuerda y arnés es un seguro barato contra las caídas al río.':'Consejo: guarda monedas en la alcancía; es tu fondo de emergencia cuando te golpean.'; toast('Cuaderno de Ruta','Caer no es el final. '+tip); } }
-function addDebt(name,saldo,cuota,kind){ const d=eco.debts.find(x=>x.kind===kind); if(d) d.saldo+=saldo; else eco.debts.push({name,saldo,cuota,kind}); }
+function scoreAdd(n,why){ eco.score=Math.max(300,Math.min(900,(eco.score||650)+n)); if(why&&S.p) addText(S.p.x-60,S.p.y-50,'DataCrédito '+(n>0?'+':'')+n+': '+why,n>0?'#BFF5CF':'#FFC7BF'); learn('credito'); }
+function addDebt(name,saldo,cuota,kind){ if(kind==='acuerdo') scoreAdd(-60,'reportado por no pagar'); else if(kind==='tarjeta') scoreAdd(-6); else if(kind==='credito') scoreAdd(-25,'crédito por encima de tu capacidad'); const d=eco.debts.find(x=>x.kind===kind); if(d) d.saldo+=saldo; else eco.debts.push({name,saldo,cuota,kind}); }
 
 function pulseExtras(p){
+  if(eco.salario>0){ eco.pq=(eco.pq||0)+1; if(eco.pq%2===0){ eco.pension=(eco.pension||0)+1; eco.cesantias=(eco.cesantias||0)+1; eco.hand=Math.max(0,eco.hand-1); addText(p.x-50,p.y-72,'Aportes: pensión +1 (de tu sueldo) · cesantías +1 (del empleador)','#C9CEFF'); learn('pension'); } }
+  if(eco.plan&&eco.plan.ok&&eco.hand>0){ eco.hand--; eco.emb++; addText(p.x-50,p.y-86,'Págate primero en automático: +1 a la alcancía','#9FD3FF'); learn('plan'); }
+  if(eco.meme&&eco.meme.v>0){ const back=1; addText(p.x-70,p.y-100,'¡La burbuja de la memecoin estalló! De '+eco.meme.v+' te quedó '+back,'#FF9A8C'); logD('Pérdida','Memecoin: comprar porque todos compran',back-eco.meme.v); eco.hand+=back; eco.meme=null; learn('fomo'); snd('bad'); }
+  if(eco.favor>0){ eco.favor--; if(eco.favor===0){ eco.hand+=3; addText(p.x-70,p.y-100,'El senderista que ayudaste te recomendó para un trabajo: +3','#BFF5CF'); logD('Ingreso','Red de apoyo: te devolvieron el favor',3); } }
   if(eco.colchon>0){ const l=Math.max(1,Math.ceil(eco.colchon*0.2)); eco.colchon=Math.max(0,eco.colchon-l); const why=['la humedad dañó los billetes','los ratones se comieron un fajo','el comején llegó al colchón','la inflación encogió el efectivo','alguien encontró el escondite'][rnd(5)];
     addText(p.x-60,p.y-44,'Colchón: '+why+' −'+l,'#FFC7BF'); logD('Pérdida','Plata debajo del colchón: '+why,-l); learn('colchon'); }
   const C=eco.crypto; if(C&&!C.lost&&C.v>0){ const v0=C.v; C.v=Math.max(0,Math.round(C.v*(0.45+Math.random()*1.15))); const d=C.v-v0;
@@ -1162,12 +1186,12 @@ function pulseExtras(p){
 function addShock(n,c,q){ eco.shocks=eco.shocks||[]; eco.shocks.push({n,c,q}); }
 function doPulse(){
   const p=S.p, ws=S.ws;
-  if(S.L&&S.L.plats) S.L.plats.forEach(q=>{ if(q.type==='inversion'&&!q.paid){ q.q=(q.q||0)+1; if(q.acc<6){ q.acc++; q.grow=40; const qx=q.c0*T, qy=q.r*T; if(qx>S.cam-20&&qx<S.cam+W+20) addText(qx-10,qy-34-q.acc*2.2,'+1 interés CDT','#9BF0B8'); } } });
+  if(S.L&&S.L.plats) S.L.plats.forEach(q=>{ if(q.type==='inversion'&&!q.paid){ q.q=(q.q||0)+1; if(q.acc<14){ const inc=Math.max(1,Math.floor(q.acc*0.3)); q.acc=Math.min(14,q.acc+inc); q.grow=40; q.hist=(q.hist||[1]).concat(q.acc); const qx=q.c0*T, qy=q.r*T; if(qx>S.cam-20&&qx<S.cam+W+20) addText(qx-20,qy-34-Math.min(10,q.acc)*1.6,'+'+inc+' interés compuesto (va en '+q.acc+')','#9BF0B8'); learn('compuesto'); } } });
   const sal=eco.salario, ren=renta(); const inc=sal+ren; eco.hand+=inc;
   if(ws){ ws.salary+=sal; ws.rent+=ren; }
   let cost=costo()+(eco.shocks||[]).reduce((a,k)=>a+k.c,0), cu=0, pr=primas(), fj=fijos(); (eco.shocks||[]).forEach(k=>k.q--); eco.shocks=(eco.shocks||[]).filter(k=>k.q>0);
   pulseExtras(p);
-  eco.debts.forEach(d=>{ if(d.kind==='gota' && Dif().loan>1) d.saldo+=1; const c=Math.min(d.cuota,d.saldo); cu+=c; d.saldo-=c; });
+  eco.debts.forEach(d=>{ if(d.kind==='gota' && Dif().loan>1) d.saldo+=1; const c=Math.min(d.cuota,d.saldo); cu+=c; d.saldo-=c; if(d.kind!=='gota'&&d.kind!=='acuerdo') scoreAdd(4); if(d.saldo<=0&&d.kind!=='gota') scoreAdd(15,'pagaste toda la deuda'); });
   eco.debts=eco.debts.filter(d=>d.saldo>0); prunePila();
   if(eco.debts.some(d=>d.kind==='gota') && S.L && !S.L.ents.some(e=>e.t==='cobrador'&&!e.dead)){ S.L.ents.push({t:'cobrador',x:p.x-W*0.55,y:p.y-70,w:22,h:30,life:560}); addText(p.x-40,p.y-40,'¡Llegó el cobrador del gota a gota!','#FF9A8C'); }
   if(ws){ ws.cost+=cost; ws.cuotas+=cu; ws.primas+=pr; ws.fijos+=fj; }
@@ -1176,7 +1200,7 @@ function doPulse(){
   if(total){ parts.push('−'+total);
     const fromH=Math.min(total,eco.hand); eco.hand-=fromH; let rest=total-fromH;
     if(rest>0){ const fe=Math.min(rest,eco.emb); eco.emb-=fe; rest-=fe; }
-    if(rest>0){ addDebt('Acuerdo de pago',rest+1,1,'acuerdo'); parts.push('deuda +'+(rest+1)); }
+    if(rest>0){ const sc=eco.score||650, extra=sc<550?2:sc>=750?0:1; addDebt('Acuerdo de pago',rest+extra,1,'acuerdo'); parts.push('deuda +'+(rest+extra)); }
   }
   if(eco.hand>cap()){ const over=eco.hand-cap(); eco.hand=cap(); if(ws) ws.lost.desborde=(ws.lost.desborde||0)+over; addText(p.x-10,p.y-30,'Mochila llena: se perdieron '+over,'#FFC7BF'); }
   (eco.lujos||[]).forEach(l=>{ if(l.value>0) l.value-=1; });
@@ -1227,6 +1251,33 @@ function loteUpdate(e,p){ if(e.cd>0) e.cd--; if(e.shake>0) e.shake--; if(e.used|
     const name={fin:'Bonos',inm:'Arriendo',emp:'Negocio'}[e.type]; eco.assets.push({n:name+' del camino',type:e.type,value:e.cost,renta:1});
     addText(e.x-20,e.y-14,'¡Sembraste tu inversión! +1 por quincena','#9BF0B8'); logD('Inversión','Lote de inversión: '+name.toLowerCase()+' (+1 por quincena)',-e.cost); confetti(e.x+18,e.y,14); learn('inv'); burst(e.x+18,e.y+10,'#62C98A',14); snd('buy'); }
   else { e.cd=90; e.shake=16; addText(e.x-24,e.y-14,'Este lote pide '+e.cost+': ahorra y vuelve','#FFC7BF'); snd('bad'); learn('inv'); } }
+function signBoard(cx,y,w,h,title,lines,col){ ctx.fillStyle='rgba(0,0,0,.25)'; rr(cx-w/2+1.5,y+1.5,w,h,2); ctx.fill(); ctx.fillStyle='#F4ECD8'; rr(cx-w/2,y,w,h,2); ctx.fill(); ctx.strokeStyle=col||'#6B2A1A'; ctx.lineWidth=0.9; rr(cx-w/2+1.5,y+1.5,w-3,h-3,1.5); ctx.stroke();
+  ctx.textAlign='center'; ctx.fillStyle=col||'#6B2A1A'; ctx.font='800 5px Figtree, sans-serif'; ctx.fillText(title,cx,y+7.4); ctx.fillStyle='#3A2A20'; ctx.font='700 4.4px Figtree, sans-serif'; lines.forEach((l,i)=>ctx.fillText(l,cx,y+13+i*5.4)); ctx.textAlign='left'; }
+function drawPaciencia(e,x,y){ const fy=y+30, cx=x+22; ctx.fillStyle='rgba(0,0,0,.22)'; ctx.beginPath(); ctx.ellipse(cx,fy,24,3,0,0,7); ctx.fill();
+  if(e.st!==3&&e.st!==2){ ctx.fillStyle='#6B4A2B'; rr(cx-9,fy-14,18,13,2); ctx.fill(); ctx.fillStyle='#8A6236'; rr(cx-9,fy-18,18,6,3); ctx.fill(); ctx.fillStyle='#B8862F'; ctx.fillRect(cx-9,fy-10,18,1.6); ctx.fillRect(cx-1.5,fy-12,3,5); }
+  if(e.st===1){ const f=1-e.timer/720; ctx.strokeStyle='rgba(0,0,0,.35)'; ctx.lineWidth=2.4; ctx.beginPath(); ctx.arc(cx,fy-30,7,0,7); ctx.stroke(); ctx.strokeStyle='#62C98A'; ctx.beginPath(); ctx.arc(cx,fy-30,7,-Math.PI/2,-Math.PI/2+f*Math.PI*2); ctx.stroke(); ctx.fillStyle='#fff'; ctx.font='800 6px Figtree, sans-serif'; ctx.textAlign='center'; ctx.fillText(Math.ceil(e.timer/60),cx,fy-28); ctx.textAlign='left'; }
+  if(e.st===0){ ctx.fillStyle='#7A5A30'; ctx.fillRect(x+1,fy-22,1.6,22); ctx.fillRect(x+41,fy-22,1.6,22); signBoard(x+8,fy-44,22,20,'YA',['+2','ahora'],'#B8862F'); signBoard(x+36,fy-44,24,20,'ESPERA',['+6','en 12 s'],'#2F7A4A'); }
+  if(e.st===2){ ctx.fillStyle='#fff'; ctx.font='700 5px Figtree, sans-serif'; ctx.textAlign='center'; ctx.fillText('elegiste ya: +2',cx,fy-4); ctx.textAlign='left'; } }
+function drawTienda(e,x,y){ const fy=y+34, A=e.k==='A'; ctx.fillStyle='rgba(0,0,0,.22)'; ctx.beginPath(); ctx.ellipse(x+20,fy,22,3,0,0,7); ctx.fill();
+  ctx.fillStyle=A?'#D9CBB0':'#E3D7BE'; ctx.fillRect(x+2,fy-22,36,22); ctx.fillStyle='#6B4A2B'; ctx.fillRect(x+2,fy-4,36,4);
+  for(let i=0;i<6;i++){ ctx.fillStyle=i%2?'#F4ECD8':(A?'#C9475B':'#2F7A4A'); ctx.beginPath(); ctx.moveTo(x+i*6.6,fy-22); ctx.lineTo(x+6.6+i*6.6,fy-22); ctx.lineTo(x+6.6+i*6.6,fy-17); ctx.quadraticCurveTo(x+3.3+i*6.6,fy-14,x+i*6.6,fy-17); ctx.fill(); }
+  ctx.fillStyle='#8A6A3A'; ctx.fillRect(x+8,fy-12,24,8); ctx.fillStyle='#F2EBDD'; for(let i=0;i<3;i++){ ctx.beginPath(); ctx.ellipse(x+12+i*8,fy-12,3,2,0,0,7); ctx.fill(); }
+  if(A){ ctx.fillStyle='#FFE18A'; ctx.font='900 11px Figtree, sans-serif'; ctx.textAlign='center'; ctx.fillText('ARROZ 4',x+20,fy-28); ctx.fillStyle='rgba(255,255,255,.55)'; ctx.font='600 3.2px Figtree, sans-serif'; ctx.fillText('*+2 de envío y recargo',x+20,fy-24.4); }
+  else { ctx.fillStyle='#fff'; ctx.font='800 7.5px Figtree, sans-serif'; ctx.textAlign='center'; ctx.fillText('ARROZ 5',x+20,fy-28); ctx.font='700 4px Figtree, sans-serif'; ctx.fillStyle='#BFF5CF'; ctx.fillText('total, sin recargos',x+20,fy-24); }
+  if(e.done){ ctx.fillStyle=e.bought?'#BFF5CF':'rgba(255,255,255,.5)'; ctx.font='800 5px Figtree, sans-serif'; ctx.fillText(e.bought?'✓ COMPRASTE AQUÍ':'CERRADO',x+20,fy+7); } else { ctx.fillStyle='#fff'; ctx.font='800 5px Figtree, sans-serif'; ctx.fillText('MERCADO · COMPARA',x+20,fy+7); } ctx.textAlign='left'; }
+function drawCurso(e,x,y){ const fy=y+36; ctx.fillStyle='rgba(0,0,0,.22)'; ctx.beginPath(); ctx.ellipse(x+20,fy,22,3,0,0,7); ctx.fill();
+  ctx.fillStyle='#E8E2D6'; ctx.fillRect(x+4,fy-20,32,20); ctx.fillStyle='#6B2A1A'; ctx.beginPath(); ctx.moveTo(x,fy-20); ctx.lineTo(x+20,fy-32); ctx.lineTo(x+40,fy-20); ctx.fill(); ctx.fillStyle='#B8862F'; ctx.fillRect(x+2,fy-21,36,1.6);
+  ctx.fillStyle='#5A3A22'; ctx.fillRect(x+16,fy-12,8,12); ctx.fillStyle='#7FC6E8'; ctx.fillRect(x+7,fy-16,6,5); ctx.fillRect(x+27,fy-16,6,5);
+  ctx.fillStyle='#1E2430'; ctx.beginPath(); ctx.moveTo(x+13,fy-38); ctx.lineTo(x+20,fy-41); ctx.lineTo(x+27,fy-38); ctx.lineTo(x+20,fy-35); ctx.fill(); ctx.fillRect(x+16,fy-38,8,3); ctx.strokeStyle='#B8862F'; ctx.lineWidth=.7; ctx.beginPath(); ctx.moveTo(x+26,fy-38); ctx.lineTo(x+27,fy-33); ctx.stroke();
+  ctx.fillStyle=e.used?'#BFF5CF':'#fff'; ctx.font='800 5.5px Figtree, sans-serif'; ctx.textAlign='center'; ctx.fillText(e.used?'✓ CERTIFICADO':'CURSO TÉCNICO · 4',x+20,fy+7); if(!e.used){ ctx.fillStyle='#BFF5CF'; ctx.fillText('+1 salario para siempre',x+20,fy+13); } ctx.textAlign='left'; }
+function drawApuros(e,x,y){ const fy=y+24; ctx.save(); ctx.translate(x+12,fy); ctx.scale(0.75,0.75); hikerBody(true,0,'#7A6A5A',{role:0,skin:3,head:'gorra',gear:[],mood:e.used?'happy':'worried',lean:-0.05}); ctx.restore();
+  ctx.fillStyle='#F4ECD8'; ctx.save(); ctx.translate(x+24,fy-10); ctx.rotate(0.1); ctx.fillRect(-6,-5,13,9); ctx.fillStyle='#6B2A1A'; ctx.font='800 3.2px Figtree, sans-serif'; ctx.textAlign='center'; ctx.fillText('¿AYUDA?',0.5,1); ctx.restore();
+  if(!e.used&&S.p&&Math.abs(S.p.x-e.x)<120) bubble(x+12,y-14,'¿Me ayudas con 2 para el pasaje?','#3A2A20'); ctx.textAlign='left'; }
+function drawFomo(e,x,y){ const fy=y+40; ctx.fillStyle='rgba(0,0,0,.22)'; ctx.beginPath(); ctx.ellipse(x+23,fy,26,3,0,0,7); ctx.fill();
+  ctx.fillStyle='#2B2F36'; ctx.fillRect(x+10,fy-28,26,28); ctx.fillStyle='#14171C'; ctx.fillRect(x+12,fy-26,22,14); ctx.strokeStyle='#62FF9A'; ctx.lineWidth=1.2; ctx.beginPath(); const h=[2,3,2,5,4,8,7,11]; h.forEach((v,i)=>{ const px=x+13+i*2.8, py=fy-13-v; i?ctx.lineTo(px,py):ctx.moveTo(px,py); }); ctx.stroke();
+  ctx.fillStyle='#FFE18A'; ctx.font='900 6px Figtree, sans-serif'; ctx.textAlign='center'; ctx.fillText('MEMECOIN',x+23,fy-31); ctx.fillStyle='#62FF9A'; ctx.font='800 5px Figtree, sans-serif'; ctx.fillText('+1000 %',x+23,fy-6);
+  if(!e.used) for(let i=0;i<3;i++){ const px=x-6+i*7+Math.sin(S.t*0.2+i)*1.5; ctx.save(); ctx.translate(px,fy); ctx.scale(0.55,0.55); hikerBody(false,0,['#C9475B','#4A8FD3','#E0B030'][i],{phase:S.t*0.2+i,spd:0.5,role:1,skin:i+1,head:'gorra',gear:[],mood:'happy',lean:0.12}); ctx.restore(); }
+  if(!e.used&&S.t%80<50) bubble(x+23,y-6,'¡Todos están comprando!','#5A1A1A'); ctx.textAlign='left'; }
 function drawColchon(e,x,y){ const fy=y+16; ctx.fillStyle='rgba(0,0,0,.22)'; ctx.beginPath(); ctx.ellipse(x+20,fy,22,3,0,0,7); ctx.fill();
   ctx.fillStyle='#6B4A2B'; ctx.fillRect(x,fy-5,40,5); ctx.fillStyle='#E9DFC8'; rr(x+1,fy-14,38,9,3); ctx.fill(); ctx.strokeStyle='#B9AE95'; ctx.lineWidth=.6; for(let i=1;i<6;i++){ ctx.beginPath(); ctx.moveTo(x+1+i*6.3,fy-14); ctx.lineTo(x+1+i*6.3,fy-5); ctx.stroke(); }
   ctx.fillStyle='#F4ECD8'; rr(x+3,fy-18,10,5,2); ctx.fill();
@@ -1655,6 +1706,8 @@ function drawWorldHazards(){
     ctx.strokeStyle='rgba(220,235,240,.8)'; ctx.lineWidth=1.4; ctx.beginPath(); for(let xx=0;xx<=W;xx+=8) ctx.lineTo(xx,top+Math.sin(xx*0.08+S.t*0.12)*1.8); ctx.stroke();
     for(let i=0;i<4;i++){ const dx=((i*173+S.t*0.6)%(W+40))-20; ctx.fillStyle='#6B4A2B'; ctx.fillRect(dx,top-2+Math.sin(S.t*0.1+i)*1.5,12,3); } ctx.restore(); }
 }
+function drawScore(){ const sc=eco.score||650, col=sc>=750?'#62C98A':sc>=600?'#F2C230':'#EE6A5C', txt='DataCrédito '+sc+(eco.pension?' · pensión '+eco.pension:'');
+  ctx.font='700 8px Figtree, sans-serif'; const w=ctx.measureText(txt).width+18; ctx.fillStyle='rgba(10,20,26,.62)'; rr(8,56,w,13,6); ctx.fill(); ctx.fillStyle=col; ctx.beginPath(); ctx.arc(15,62.5,3,0,7); ctx.fill(); ctx.fillStyle='#fff'; ctx.fillText(txt,21,65.5); }
 function drawEventFx(){ const C=S.dis&&S.dis.cur; if(S.flashSky>0){ ctx.fillStyle='rgba(255,255,240,'+(S.flashSky/8*0.55)+')'; ctx.fillRect(0,0,W,H); }
   if(!C||C.t<C.warn-30) return; const tt=C.t-C.warn, a=Math.min(1,(C.t-C.warn+30)/40)*Math.min(1,(C.dur-tt+10)/40);
   if(a<=0) return; ctx.save(); ctx.globalAlpha=Math.max(0,a);
@@ -1836,6 +1889,17 @@ function update(){
     else if(e.t==='prima'){ if(overlap(p,e)){ e.dead=true; eco.hand=Math.min(cap(),eco.hand+5); if(S.ws) S.ws.coins+=5; addText(e.x-10,e.y-12,'Prima de servicios +5','#FFE18A'); snd('buy'); burst(e.x+10,e.y+8,'#FFE18A',10); } }
     else if(e.t==='job'){ if(overlap(p,e)){ e.dead=true; if(eco.salario<1){ eco.salario=1; addText(e.x-50,e.y-14,'¡Empleo! Salario +1 en cada quincena','#BFF5CF'); } else { eco.hand+=3; addText(e.x,e.y-12,'+3','#BFF5CF'); } snd('gate'); burst(e.x+9,e.y+8,'#F2B33D',14); } }
     else if(e.t==='lote') loteUpdate(e,p);
+    else if(e.t==='paciencia'){ if(e.st===1&&--e.timer<=0){ e.st=3; eco.hand=Math.min(cap(),eco.hand+6); eco.stats.paciencia=(eco.stats.paciencia||0)+1; addText(p.x-60,p.y-40,'¡Tu paciencia pagó! El cofre se abrió: +6','#BFF5CF'); snd('gate'); confetti(p.x+7,p.y,14); logD('Ahorro','Esperaste: 6 en vez de 2',6); }
+      if(e.st===0&&overlap(p,e)){ const left=(p.x+p.w/2)<e.x+e.w/2; learn('paciencia'); if(left){ e.st=2; eco.hand=Math.min(cap(),eco.hand+2); eco.stats.impaciente=(eco.stats.impaciente||0)+1; addText(e.x-40,e.y-20,'+2 ya… si esperabas eran 6','#FFE18A'); snd('drop'); } else { e.st=1; e.timer=720; addText(e.x-50,e.y-20,'¡Esperas! El cofre te dará 6 en 12 s: sigue subiendo','#BFF5CF'); snd('save'); } } }
+    else if(e.t==='tienda'){ const pair=S.L.ents.filter(q=>q.t==='tienda'&&q.grp===e.grp); if(!e.done&&overlap(p,e)&&!pair.some(q=>q.bought)){ e.bought=true; pair.forEach(q=>q.done=true); const tot=e.k==='A'?6:5; const l=takeCoins(tot); learn('comparar'); logD('Gasto','Mercado en la tienda '+(e.k==='A'?'del aviso grande (4 + 2 de envío)':'sin recargos'),-l);
+        addText(e.x-50,e.y-20,e.k==='A'?'Decía 4… pero con envío fueron 6. La otra cobraba 5':'Total 5, sin letra pequeña: comparaste bien',e.k==='A'?'#FFC7BF':'#BFF5CF'); eco.stats.compara=(eco.stats.compara||0)+(e.k==='B'?1:0); snd(e.k==='A'?'bad':'buy'); }
+      if(e.k==='B'&&!e.done&&p.x>e.x+3*T){ pair.forEach(q=>q.done=true); const l=takeCoins(4); learn('comparar'); addText(p.x-60,p.y-30,'Sin mercado: comiste en la calle −4. Lo necesario se planea','#FFC7BF'); logD('Gasto','Comida en la calle por no hacer mercado',-l); } }
+    else if(e.t==='curso'){ if(!e.used&&overlap(p,e)){ if(eco.hand>=4){ e.used=true; eco.hand-=4; eco.salario+=1; eco.stats.cursos=(eco.stats.cursos||0)+1; busy(150,'Estudiando el curso técnico'); learn('curso'); addText(e.x-50,e.y-24,'¡Te certificaste! Salario +1 por quincena, para siempre','#BFF5CF'); logD('Inversión','Curso técnico (capital humano)',-4); confetti(e.x+20,e.y,14); }
+        else if(!e.warn){ e.warn=1; learn('curso'); addText(e.x-50,e.y-24,'El curso cuesta 4: vale la pena ahorrar para estudiar','#FFE18A'); } } }
+    else if(e.t==='apuros'){ if(!e.used&&overlap(p,e)){ e.used=true; learn('generosidad'); if(eco.hand>=4){ eco.hand-=2; eco.favor=2; eco.stats.ayudas=(eco.stats.ayudas||0)+1; stampAt(e.x+12,e.y-10,'AYUDA SOLIDARIA','sin desfinanciarte'); addText(e.x-50,e.y-30,'Le diste 2 para el pasaje: “¡Gracias, no lo olvidaré!”','#BFF5CF'); logD('Gasto','Ayudaste a otro senderista',-2); snd('save'); }
+        else addText(e.x-60,e.y-30,'Con menos de 4 no te alcanza: primero lo tuyo. “Gracias igual”','#FFE18A'); } }
+    else if(e.t==='fomo'){ if(!e.used&&overlap(p,e)){ e.used=true; learn('fomo'); if(eco.hand>=5){ eco.hand-=5; eco.meme={v:5}; addText(e.x-60,e.y-20,'Compraste memecoin con 5 porque todos compraban…','#FFE18A'); logD('Inversión','Memecoin (efecto manada)',-5); snd('buy'); } else addText(e.x-60,e.y-20,'No te alcanzó… y fue suerte: era una burbuja','#BFF5CF'); }
+      if(!e.used&&p.x>e.x+e.w+T){ e.used=true; learn('fomo'); eco.stats.nofomo=(eco.stats.nofomo||0)+1; addText(p.x-60,p.y-30,'No te dejaste llevar por la manada: ¡bien!','#BFF5CF'); stampAt(p.x+7,p.y-10,'SIN FOMO','decides con datos'); } }
     else if(e.t==='colchon'){ if(!e.used&&overlap(p,e)){ e.used=true; const n=Math.floor(eco.hand/2); eco.hand-=n; eco.colchon=(eco.colchon||0)+n; learn('colchon'); snd('drop');
         addText(e.x-40,e.y-22,n?'Escondiste '+n+' debajo del colchón… sin intereses y en riesgo':'Un colchón: mal lugar para ahorrar','#FFE18A'); if(n) addText(e.x-40,e.y-36,'Llévala a la próxima alcancía','#9FD3FF'); } }
     else if(e.t==='btc'){ if(overlap(p,e)){ e.dead=true; eco.crypto=eco.crypto&&!eco.crypto.lost?eco.crypto:{v:0,seed:!!(eco.crypto&&eco.crypto.seed)}; eco.crypto.v+=6; eco.crypto.lost=false; learn('btc'); snd('buy'); burst(e.x+9,e.y+8,'#F7931A',10);
@@ -2568,7 +2632,7 @@ function icon(ic,x,y,k=1){
   else if(ic==='carro'){ ctx.fillStyle='#C8323C'; ctx.beginPath(); ctx.moveTo(-11,4); ctx.lineTo(-10,-1); ctx.lineTo(-4,-2); ctx.lineTo(-1,-6); ctx.lineTo(6,-6); ctx.lineTo(10,-1); ctx.lineTo(11,4); ctx.fill(); ctx.fillStyle='#BFE6F5'; ctx.fillRect(0,-5,5,3); ctx.fillStyle='#1B1F24'; ctx.beginPath(); ctx.arc(-6,5,2.8,0,7); ctx.arc(6,5,2.8,0,7); ctx.fill(); ctx.fillStyle='rgba(255,255,255,.7)'; ctx.fillRect(-8,-1,6,1); }
   else if(ic==='celular'){ ctx.fillStyle='#1B1F24'; rr(-5,-9,10,18,2); ctx.fill(); ctx.fillStyle='#7FC6E8'; ctx.fillRect(-4,-7,8,13); ctx.fillStyle='#F2B33D'; ctx.fillRect(-3,-5,3,3); ctx.fillStyle='#E5679E'; ctx.fillRect(1,-1,3,3); }
   else if(ic==='avion'){ ctx.fillStyle='#F4F8FB'; ctx.beginPath(); ctx.ellipse(0,0,10,2.6,-.3,0,7); ctx.fill(); ctx.beginPath(); ctx.moveTo(-1,0); ctx.lineTo(-5,7); ctx.lineTo(-2,7); ctx.lineTo(4,0); ctx.fill(); ctx.beginPath(); ctx.moveTo(-1,-1); ctx.lineTo(-3,-7); ctx.lineTo(0,-7); ctx.lineTo(3,-1); ctx.fill(); ctx.fillStyle='#2E6FB0'; ctx.fillRect(-9,-3,3,2); }
-  else if(ic==='ropa'){ ctx.fillStyle='#E5679E'; ctx.beginPath(); ctx.moveTo(-9,-5); ctx.lineTo(-4,-8); ctx.lineTo(4,-8); ctx.lineTo(9,-5); ctx.lineTo(6,-1); ctx.lineTo(5,-3); ctx.lineTo(5,8); ctx.lineTo(-5,8); ctx.lineTo(-5,-3); ctx.lineTo(-6,-1); ctx.fill(); ctx.fillStyle='#FFE18A'; ctx.font='800 6px Figtree'; ctx.textAlign='center'; ctx.fillText('VIP',0,3); ctx.textAlign='left'; }
+  else if(ic==='ropa'){ ctx.fillStyle='#E5679E'; ctx.beginPath(); ctx.moveTo(-9,-5); ctx.lineTo(-4,-8); ctx.lineTo(4,-8); ctx.lineTo(9,-5); ctx.lineTo(6,-1); ctx.lineTo(5,-3); ctx.lineTo(5,8); ctx.lineTo(-5,8); ctx.lineTo(-5,-3); ctx.lineTo(-6,-1); ctx.fill(); ctx.fillStyle='#FFE18A'; ctx.font='800 6px Figtree, sans-serif'; ctx.textAlign='center'; ctx.fillText('VIP',0,3); ctx.textAlign='left'; }
   else if(ic==='bici'){ ctx.strokeStyle='#2B3440'; ctx.lineWidth=1.8; ctx.beginPath(); ctx.arc(-6,4,4,0,7); ctx.arc(6,4,4,0,7); ctx.stroke(); ctx.strokeStyle='#3FA868'; ctx.beginPath(); ctx.moveTo(-6,4); ctx.lineTo(-1,-3); ctx.lineTo(5,-3); ctx.lineTo(6,4); ctx.moveTo(-1,-3); ctx.lineTo(0,4); ctx.lineTo(5,-3); ctx.stroke(); }
   else if(ic==='curso'){ ctx.fillStyle='#2B3440'; rr(-8,-4,16,11,2); ctx.fill(); ctx.fillStyle='#9AA3F0'; ctx.beginPath(); ctx.arc(0,1,3.6,0,7); ctx.fill(); ctx.fillStyle='#2B3440'; ctx.fillRect(-4,-7,6,3); }
   ctx.restore();
@@ -2583,7 +2647,7 @@ function offerCard(e,x,y){
   icon(it.ic,x+15,y+13,0.9);
   ctx.textAlign='center'; ctx.font='800 7px Figtree, sans-serif';
   if(k==='activo'){ ctx.fillStyle='#9BF0B8'; ctx.fillText('+'+it.r+'/QUINC.',x+15,y+28); ctx.fillStyle='#F2B33D'; ctx.font='800 8px "IBM Plex Mono", monospace'; ctx.fillText('$'+it.c,x+15,y-4); }
-  else if(k==='pasivo'){ ctx.fillStyle='#FFE18A'; ctx.fillText(S.t%40<28?'¡ESTRENA!':'¡OFERTA!',x+15,y+28); if(has('linterna')){ ctx.fillStyle='#FF9A8C'; ctx.font='800 7px Figtree'; ctx.fillText(it.fijo?'−'+it.fijo+'/quinc.':'pierde valor',x+15,y-4); }
+  else if(k==='pasivo'){ ctx.fillStyle='#FFE18A'; ctx.fillText(S.t%40<28?'¡ESTRENA!':'¡OFERTA!',x+15,y+28); if(has('linterna')){ ctx.fillStyle='#FF9A8C'; ctx.font='800 7px Figtree, sans-serif'; ctx.fillText(it.fijo?'−'+it.fijo+'/quinc.':'pierde valor',x+15,y-4); }
     for(let i=0;i<3;i++){ const a=t*0.08+i*2.1; ctx.fillStyle='#FFF6C8'; ctx.fillRect(x+15+Math.cos(a)*19,y+16+Math.sin(a)*19,2,2); } }
   else { ctx.fillStyle='#C9CEFF'; ctx.fillText('SUEÑO',x+15,y+28); ctx.fillStyle='#9FD3FF'; ctx.font='800 8px "IBM Plex Mono", monospace'; ctx.fillText('alcancía '+it.c,x+15,y-4); }
   ctx.textAlign='left';
@@ -2669,6 +2733,11 @@ function drawEnts(only){
     else if(e.t==='emb'){ piggy(x,y,e.used,e); }
     else if(e.t==='lote') drawLote(e,x,y);
     else if(e.t==='colchon') drawColchon(e,x,y);
+    else if(e.t==='paciencia') drawPaciencia(e,x,y);
+    else if(e.t==='tienda') drawTienda(e,x,y);
+    else if(e.t==='curso') drawCurso(e,x,y);
+    else if(e.t==='apuros') drawApuros(e,x,y);
+    else if(e.t==='fomo') drawFomo(e,x,y);
     else if(e.t==='btc') drawBtc(x,y+Math.sin(S.t*0.07+e.ph)*2);
     else if(e.t==='semilla') drawSemilla(x,y+Math.sin(S.t*0.07+e.ph)*2);
     else if(e.t==='bill'){ const fl=Math.sin(S.t*0.12+e.ph); ctx.save(); ctx.translate(x+11,y+6+Math.sin(S.t*0.07+e.ph)*2); ctx.rotate(fl*0.12); ctx.scale(1,0.8+0.2*Math.abs(fl));
@@ -3079,7 +3148,7 @@ function drawGuides(){
   // mapa: marcadores de páginas e inversiones fuera de pantalla
   if(has('mapa')){ L.ents.forEach(e=>{ if(e.dead||e.t!=='page') return; const sx=e.x-S.cam, sy=e.y-S.camY; if(sx>0&&sx<W&&sy>0&&sy<H) return;
       const cx=Math.max(14,Math.min(W-14,sx)), cy=Math.max(74,Math.min(H-50,sy)); ctx.fillStyle='rgba(91,75,176,.9)'; ctx.beginPath(); ctx.arc(cx,cy,8,0,7); ctx.fill(); ctx.fillStyle='#F4ECD8'; ctx.fillRect(cx-3,cy-4,6,8); });
-    for(const b of L.ents.filter(q=>q.t==='lote'&&!q.used&&!q.dead)){ const sx=b.x+18-S.cam, sy=b.y-S.camY; if(sx>-40&&sx<W+400&&(sx<0||sx>W||sy<0||sy>H)){ const cx=Math.max(14,Math.min(W-14,sx)), cy=Math.max(74,Math.min(H-50,sy)); ctx.fillStyle='rgba(47,138,85,.9)'; ctx.beginPath(); ctx.arc(cx,cy,7,0,7); ctx.fill(); ctx.fillStyle='#fff'; ctx.font='800 8px Figtree'; ctx.textAlign='center'; ctx.fillText('$',cx,cy+3); ctx.textAlign='left'; } } }
+    for(const b of L.ents.filter(q=>q.t==='lote'&&!q.used&&!q.dead)){ const sx=b.x+18-S.cam, sy=b.y-S.camY; if(sx>-40&&sx<W+400&&(sx<0||sx>W||sy<0||sy>H)){ const cx=Math.max(14,Math.min(W-14,sx)), cy=Math.max(74,Math.min(H-50,sy)); ctx.fillStyle='rgba(47,138,85,.9)'; ctx.beginPath(); ctx.arc(cx,cy,7,0,7); ctx.fill(); ctx.fillStyle='#fff'; ctx.font='800 8px Figtree, sans-serif'; ctx.textAlign='center'; ctx.fillText('$',cx,cy+3); ctx.textAlign='left'; } } }
 }
 function drawToast(){
   const t=S.toast; if(!t||t.life<=0) return;
@@ -3183,7 +3252,7 @@ function draw(){
   gradeScene();
   // viñeta suave
   const VIG=[.62,.42,.3,.3,.38,.28,.22,.2][S.li]||.25; const vg=ctx.createRadialGradient(W/2,H*.55,H*(S.li===0?.3:.42),W/2,H/2,W*0.66); vg.addColorStop(0,'rgba(0,0,0,0)'); vg.addColorStop(1,'rgba(4,6,10,'+VIG+')'); ctx.fillStyle=vg; ctx.fillRect(0,0,W,H); drawGrain();
-  drawEventFx(); drawHud(); drawDisasterHud(); drawGuides(); syncTip();
+  drawEventFx(); drawHud(); drawScore(); drawDisasterHud(); drawGuides(); syncTip();
   if(S.coach>0&&S.mode==='play'){ const a=Math.min(1,S.coach/40); ctx.globalAlpha=a; const t1=isTouch()?'Usa los botones de abajo o toca donde quieres ir':'Flechas ← → para caminar · Espacio para saltar', t2=isTouch()?'Toca arriba del senderista para saltar':'También puedes hacer clic donde quieres ir (clic arriba de él = saltar)';
     ctx.font='800 13px Figtree, sans-serif'; const w1=Math.max(ctx.measureText(t1).width,ctx.measureText(t2).width)+28; ctx.fillStyle='rgba(10,20,26,.82)'; rr(W/2-w1/2,H/2-70,w1,48,12); ctx.fill(); ctx.strokeStyle='#F2B33D'; ctx.lineWidth=1.5; rr(W/2-w1/2,H/2-70,w1,48,12); ctx.stroke();
     ctx.textAlign='center'; ctx.fillStyle='#FFE18A'; ctx.fillText(t1,W/2,H/2-50); ctx.font='600 12px Figtree, sans-serif'; ctx.fillStyle='#EAF1F3'; ctx.fillText(t2,W/2,H/2-32); ctx.textAlign='left'; ctx.globalAlpha=1; }
@@ -3439,6 +3508,7 @@ function enterCamp(){
   S.campStars=1+(S.arrivalDebt===0?1:0)+(pages===3?1:0);
   eco.stars[S.li]=Math.max(eco.stars[S.li]||0,S.campStars);
   eco.logros=eco.logros||[]; try{ eco.logros[S.li]=Math.max(eco.logros[S.li]||0,CURR[S.li].ok()?2:1); }catch(err){}
+  if(eco.cesantias>0){ eco.emb+=eco.cesantias; logD('Ahorro','Cesantías consignadas a la alcancía',eco.cesantias); S.cesMsg=eco.cesantias; eco.cesantias=0; } else S.cesMsg=0;
   S.reto=RETOS[S.li](); S.retoRes=null; S.sema=null; S.campTab='ruta'; logD('Ahorro','Llegaste al campamento '+(S.li+1)+' con '+eco.hand+' en mano y '+eco.emb+' en la alcancía',0);
   renderCamp();
 }
@@ -3499,7 +3569,9 @@ function renderCamp(msg){
       <div class="st"><b>${eco.emb}</b><span>Alcancía</span></div>
       <div class="st"><b>${eco.salario}+${renta()}</b><span>Salario + pasivo</span></div>
       <div class="st"><b>${patrimonio()}</b><span>Patrimonio</span></div>
-    </div>
+      <div class="st"><b>${eco.score||650}</b><span>Puntaje DataCrédito</span></div>
+      <div class="st"><b>${eco.pension||0}</b><span>Pensión acumulada</span></div>
+    </div>${S.cesMsg?`<div class="fb ok">Te consignaron <b>${S.cesMsg}</b> de cesantías: ya están en tu alcancía.</div>`:''}
     <p class="muted">${final?'':'En el siguiente mundo el costo de vida será '+nextCosto+' por quincena. '}Cuotas: ${cuotas()} · seguros: ${primas()} · gastos fijos: ${fijos()} por quincena.</p>
     <div class="sec"><h3>Sueños cumplidos</h3><div class="row" style="gap:6px">${suenos}</div></div>`,
    balance:`${summaryHTML()}
@@ -3547,8 +3619,8 @@ function renderCamp(msg){
   const bs=document.getElementById('bSema'); if(bs) bs.onclick=()=>{ const {v,a,r}=S.sema; S.sema.done=true;
     const ok=v>=4&&v<=6&&a>=2&&a<=4&&r>=1&&r<=3;
     let tip=v<4?'Dejaste muy poco para lo necesario: sin comida ni transporte el viaje se vuelve riesgoso.':v>6?'Lo necesario se llevó casi todo: revisa cómo reducir costos básicos.':a>4?'La franja amarilla pesa demasiado: los gastos variables crecen si no los controlas.':r<1?'Sin franja roja no hay crecimiento: invertir en ti y en activos es lo que te hace subir.':r>3?'Mucha inversión y poco colchón: primero asegura lo necesario y un ahorro pequeño.':'';
-    if(ok){ eco.hand=Math.min(cap(),eco.hand+3); snd('buy'); }
-    renderCamp({ok, html: ok?'¡Presupuesto equilibrado ('+v+'/'+a+'/'+r+')! +3 monedas. Así se reparte la quincena con el método del semáforo.':'Tu reparto fue '+v+'/'+a+'/'+r+'. '+tip+' La guía propone 5/3/2.'}); };
+    eco.plan={v,a,r,ok}; if(ok){ eco.hand=Math.min(cap(),eco.hand+3); snd('buy'); }
+    renderCamp({ok, html: ok?'¡Presupuesto equilibrado ('+v+'/'+a+'/'+r+')! +3 monedas. En el próximo mundo cada quincena pasará sola 1 moneda a tu alcancía: págate primero en automático.':'Tu reparto fue '+v+'/'+a+'/'+r+'. '+tip+' La guía propone 5/3/2.'}); };
   const bq=document.getElementById('bQuiz'); if(bq) bq.onclick=()=>askQuiz(false);
   document.getElementById('bNext').onclick=()=>{ if(final) askQuiz(true); else { save(li+1); showMap(li+1,{from:li}); } };
   document.getElementById('bRetry').onclick=()=>levelIntro(li);
@@ -3631,39 +3703,74 @@ function drawFinale(){
   if(t>470){ ctx.fillStyle=t%50<32?'#F4ECD8':'rgba(244,236,216,.55)'; ctx.font='700 9px Figtree, sans-serif'; ctx.textAlign='center'; ctx.fillText('Toca o pulsa una tecla para ver tu certificado',W/2,H-8); ctx.textAlign='left'; }
   if(t>1100) endingReport();
 }
-function certPattern(c){ // marca de agua tipo fondo de chat: lo que este jugador construyó (activos, pasivos, ahorro, patrimonio, inversiones)
+function certPattern(c,x0,y0,w,h,al){ x0=x0??50; y0=y0??50; w=w??1100; h=h??750; al=al??0.085; // marca de agua tipo fondo de chat: lo que este jugador construyó (activos, pasivos, ahorro, patrimonio, inversiones)
   const it=[]; const tn={fin:'cdt',inm:'casa',emp:'tienda'};
   (eco.assets||[]).forEach(a=>it.push({ic:a.ic||tn[a.type]||'cdt',t:'ACTIVO · '+a.n}));
   (eco.lujos||[]).forEach(l=>it.push({ic:l.ic||'carro',t:'PASIVO · '+l.n}));
   it.push({g:'alc',t:'AHORRO '+eco.emb}); it.push({g:'pat',t:'PATRIMONIO '+patrimonio()}); it.push({g:'arb',t:'INVERTIDO '+(eco.stats.invested||0)});
   if(eco.crypto&&(eco.crypto.v>0||eco.crypto.lost)) it.push({g:'btc',t:eco.crypto.lost?'₿ CLAVE PERDIDA':'₿ '+eco.crypto.v}); it.push({g:'mon',t:'RUTA A LA CIMA'});
-  const main=ctx; ctx=c; c.save(); c.beginPath(); c.rect(50,50,1100,750); c.clip(); c.translate(600,425); c.rotate(-0.32); let n=0;
-  for(let gy=-760;gy<760;gy+=118) for(let gx=-900;gx<900;gx+=150){ const q=it[(n++)%it.length], ox=((gy/118)%2?75:0); c.save(); c.translate(gx+ox,gy); c.globalAlpha=0.085;
+  const main=ctx; ctx=c; c.save(); c.beginPath(); c.rect(x0,y0,w,h); c.clip(); c.translate(x0+w/2,y0+h/2); c.rotate(-0.32); let n=0;
+  for(let gy=-900;gy<900;gy+=118) for(let gx=-1100;gx<1100;gx+=150){ const q=it[(n++)%it.length], ox=((gy/118)%2?75:0); c.save(); c.translate(gx+ox,gy); c.globalAlpha=al;
     if(q.ic){ icon(q.ic,0,0,2.4); }
     else if(q.g==='alc'){ c.fillStyle='#4A8FD3'; c.beginPath(); c.ellipse(0,0,22,16,0,0,7); c.fill(); c.fillRect(18,-5,8,10); c.fillRect(-12,12,6,8); c.fillRect(6,12,6,8); c.fillStyle='#F4ECD8'; c.fillRect(-6,-14,14,3); }
     else if(q.g==='pat'){ c.strokeStyle='#2F7A4A'; c.lineWidth=4; c.lineCap='round'; c.beginPath(); c.moveTo(-24,14); c.lineTo(-8,0); c.lineTo(2,8); c.lineTo(22,-14); c.stroke(); c.beginPath(); c.moveTo(12,-15); c.lineTo(23,-15); c.lineTo(23,-4); c.stroke(); }
     else if(q.g==='arb'){ c.fillStyle='#6B4A2B'; c.fillRect(-2,-2,5,20); c.fillStyle='#2F7A4A'; c.beginPath(); c.arc(0,-10,14,0,7); c.arc(-11,-2,9,0,7); c.arc(11,-3,9,0,7); c.fill(); }
     else if(q.g==='btc'){ c.fillStyle='#F7931A'; c.beginPath(); c.arc(0,0,18,0,7); c.fill(); c.fillStyle='#F4ECD8'; c.font='800 22px sans-serif'; c.textAlign='center'; c.fillText('₿',0,8); }
     else if(q.g==='mon'){ drop(0,0,2.6); }
-    c.globalAlpha=0.11; c.fillStyle='#6B2A1A'; c.font='800 11px Figtree, sans-serif'; c.textAlign='center'; c.fillText(q.t.length>26?q.t.slice(0,25)+'…':q.t,0,40); c.restore(); }
+    c.globalAlpha=al*1.3; c.fillStyle='#6B2A1A'; c.font='800 11px Figtree, sans-serif'; c.textAlign='center'; c.fillText(q.t.length>26?q.t.slice(0,25)+'…':q.t,0,40); c.restore(); }
   c.restore(); ctx=main; c.textAlign='center'; }
-function certURL(){ // certificado imprimible: papel, lacre y oro, cordillera al pie
-  const c0=document.createElement('canvas'); c0.width=1200; c0.height=850; const c=c0.getContext('2d');
-  c.fillStyle='#F4ECD8'; c.fillRect(0,0,1200,850); const R=mulberry(5); for(let i=0;i<2600;i++){ c.fillStyle='rgba(120,90,50,'+(R()*0.05)+')'; c.fillRect(R()*1200,R()*850,1.5,1.5); }
-  certPattern(c);
-  const pts=[finRidge(3,120,780,1200),finRidge(9,90,820,1200)]; c.save(); c.beginPath(); c.rect(50,50,1100,750); c.clip(); ['rgba(169,191,207,.55)','rgba(51,72,90,.35)'].forEach((col,i)=>{ c.fillStyle=col; c.beginPath(); c.moveTo(0,850); pts[i].forEach(p=>c.lineTo(p[0],p[1])); c.lineTo(1200,850); c.fill(); }); c.restore();
-  c.strokeStyle='#6B2A1A'; c.lineWidth=6; c.strokeRect(34,34,1132,782); c.strokeStyle='#B8862F'; c.lineWidth=2; c.strokeRect(50,50,1100,750);
-  c.textAlign='center'; c.fillStyle='#6B2A1A'; c.font='700 22px Figtree, sans-serif'; c.fillText('RUTA FINANCIERA · UN JUEGO DE RUTA A LA CIMA',600,128);
-  c.font='58px "Young Serif", Georgia, serif'; c.fillText('Certificado de Inteligencia Financiera',600,210);
-  c.fillStyle='#3A2A20'; c.font='600 24px Figtree, sans-serif'; c.fillText('Se otorga a',600,280);
-  c.fillStyle='#6B2A1A'; c.font='64px "Young Serif", Georgia, serif'; c.fillText(eco.name||'Senderista',600,360); c.strokeStyle='#B8862F'; c.lineWidth=2; c.beginPath(); c.moveTo(330,382); c.lineTo(870,382); c.stroke();
-  const pl=profLine(); if(pl){ c.fillStyle='#3A2A20'; c.font='600 20px Figtree, sans-serif'; c.fillText(pl,600,414); }
-  c.fillStyle='#3A2A20'; c.font='600 24px Figtree, sans-serif'; c.fillText('por demostrar ser una persona con',600,466);
-  c.fillStyle='#6B2A1A'; c.font='800 40px Figtree, sans-serif'; c.fillText('EXCELENTE INTELIGENCIA FINANCIERA',600,518);
-  c.fillStyle='#3A2A20'; c.font='600 20px Figtree, sans-serif'; c.fillText('Conquistó las 8 estaciones de la montaña: del Valle a la Cordillera, hasta la libertad financiera.',600,566);
-  const ts=eco.stars.reduce((a,b)=>a+(b||0),0); c.font='700 19px "IBM Plex Mono", monospace'; c.fillText(`Patrimonio ${patrimonio()} · Ingreso pasivo ${renta()} por quincena · Activos ${eco.assets.length} · Estrellas ${ts}/24`,600,606);
-  const d=new Date(); c.font='600 18px Figtree, sans-serif'; c.fillText(d.toLocaleDateString('es-CO',{day:'numeric',month:'long',year:'numeric'})+' · Dificultad '+Dif().n,600,642);
-  waxSeal(c,1000,700,62,-0.15); c.textAlign='left';
+function certURL(){ // diploma: papel de seguridad, guilloche de oro, emblema, medallas de logros, firmas y código de verificación
+  const Wc=1600, Hc=1131, c0=document.createElement('canvas'); c0.width=Wc; c0.height=Hc; const c=c0.getContext('2d'); const R=mulberry(5);
+  const LAC='#6B2A1A', ORO='#B8862F', ORO2='#D9B26A', INK='#3A2A20', PAP='#F6EFDF';
+  c.fillStyle=PAP; c.fillRect(0,0,Wc,Hc);
+  for(let i=0;i<5200;i++){ c.fillStyle='rgba(120,90,50,'+(R()*0.045)+')'; c.fillRect(R()*Wc,R()*Hc,1+R()*1.5,1); }
+  const vg=c.createRadialGradient(Wc/2,Hc/2,300,Wc/2,Hc/2,1000); vg.addColorStop(0,'rgba(255,255,255,0)'); vg.addColorStop(1,'rgba(150,110,60,.16)'); c.fillStyle=vg; c.fillRect(0,0,Wc,Hc);
+  // marco: banda de lacre, guilloche de oro y filetes
+  c.fillStyle=LAC; c.fillRect(0,0,Wc,26); c.fillRect(0,Hc-26,Wc,26); c.fillRect(0,0,26,Hc); c.fillRect(Wc-26,0,26,Hc);
+  const gx=44, gy=44, gw=Wc-88, gh=Hc-88, band=34;
+  const rectPt=(u)=>{ const P=2*(gw+gh); let d=u*P; if(d<gw) return [gx+d,gy,0,1]; d-=gw; if(d<gh) return [gx+gw,gy+d,-1,0]; d-=gh; if(d<gw) return [gx+gw-d,gy+gh,0,-1]; d-=gw; return [gx,gy+gh-d,1,0]; };
+  c.lineWidth=0.8; for(let k=0;k<6;k++){ c.strokeStyle=k%2?'rgba(184,134,47,.55)':'rgba(107,42,26,.35)'; c.beginPath(); const N=2400; for(let i=0;i<=N;i++){ const u=i/N, [x,y,nx,ny]=rectPt(u), off=band/2+Math.sin(u*Math.PI*2*120+k*Math.PI/3)*band*0.42*Math.cos(u*Math.PI*2*6+k); i?c.lineTo(x+nx*off,y+ny*off):c.moveTo(x+nx*off,y+ny*off); } c.closePath(); c.stroke(); }
+  c.strokeStyle=ORO; c.lineWidth=2; c.strokeRect(gx,gy,gw,gh); c.lineWidth=1; c.strokeRect(gx+band,gy+band,gw-2*band,gh-2*band); c.strokeStyle=LAC; c.lineWidth=0.6; c.strokeRect(gx+band+6,gy+band+6,gw-2*band-12,gh-2*band-12);
+  const rosette=(x,y,r,al,n)=>{ c.save(); c.translate(x,y); c.strokeStyle='rgba(184,134,47,'+al+')'; c.lineWidth=0.7; for(let k=0;k<n;k++){ c.beginPath(); for(let i=0;i<=360;i++){ const a=i/360*Math.PI*2, rr2=r*(0.62+0.38*Math.cos(a*7+k*0.5)); c.lineTo(Math.cos(a+k*0.13)*rr2,Math.sin(a+k*0.13)*rr2); } c.stroke(); } c.restore(); };
+  [[gx+band,gy+band],[gx+gw-band,gy+band],[gx+band,gy+gh-band],[gx+gw-band,gy+gh-band]].forEach(([x,y])=>{ c.fillStyle=PAP; c.beginPath(); c.arc(x,y,30,0,7); c.fill(); rosette(x,y,26,.9,8); c.fillStyle=LAC; c.beginPath(); c.arc(x,y,5,0,7); c.fill(); });
+  // panel interior: marca de agua con lo que construyó el jugador y gran roseta central
+  const px0=gx+band+14, py0=gy+band+14, pw=gw-2*band-28, ph=gh-2*band-28;
+  certPattern(c,px0,py0,pw,ph,0.055);
+  rosette(Wc/2,500,250,.10,18);
+  const pts=[finRidge(3,110,Hc-90,Wc),finRidge(9,80,Hc-62,Wc)]; c.save(); c.beginPath(); c.rect(px0,py0,pw,ph); c.clip(); ['rgba(169,191,207,.32)','rgba(51,72,90,.18)'].forEach((col,i)=>{ c.fillStyle=col; c.beginPath(); c.moveTo(0,Hc); pts[i].forEach(p=>c.lineTo(p[0],p[1])); c.lineTo(Wc,Hc); c.fill(); }); c.restore();
+  // emblema: medalla de oro con la cordillera y la bandera
+  const ex=Wc/2, ey=168; c.fillStyle='rgba(0,0,0,.18)'; c.beginPath(); c.arc(ex+3,ey+4,62,0,7); c.fill();
+  const mg=c.createRadialGradient(ex-20,ey-20,10,ex,ey,64); mg.addColorStop(0,'#F2D58A'); mg.addColorStop(1,'#A8761A'); c.fillStyle=mg; c.beginPath(); c.arc(ex,ey,62,0,7); c.fill();
+  c.strokeStyle='#8A5A10'; c.lineWidth=1; for(let i=0;i<72;i++){ const a=i/72*Math.PI*2; c.beginPath(); c.moveTo(ex+Math.cos(a)*55,ey+Math.sin(a)*55); c.lineTo(ex+Math.cos(a)*61,ey+Math.sin(a)*61); c.stroke(); }
+  c.fillStyle=LAC; c.beginPath(); c.arc(ex,ey,48,0,7); c.fill(); c.fillStyle='#F4ECD8'; c.beginPath(); c.moveTo(ex-36,ey+22); c.lineTo(ex-14,ey-6); c.lineTo(ex-4,ey+6); c.lineTo(ex+12,ey-22); c.lineTo(ex+36,ey+22); c.closePath(); c.fill(); c.fillStyle=LAC; c.beginPath(); c.moveTo(ex-24,ey+22); c.lineTo(ex-14,ey+8); c.lineTo(ex-4,ey+22); c.fill();
+  c.strokeStyle=ORO2; c.lineWidth=2; c.beginPath(); c.moveTo(ex+12,ey-22); c.lineTo(ex+12,ey-42); c.stroke(); c.fillStyle=ORO2; c.beginPath(); c.moveTo(ex+12,ey-42); c.lineTo(ex+30,ey-36); c.lineTo(ex+12,ey-30); c.fill();
+  const sp=(t,x,y,f,col,ls)=>{ c.font=f; c.fillStyle=col; const chars=[...t]; const w=chars.reduce((a,ch)=>a+c.measureText(ch).width+ls,-ls); let xx=x-w/2; chars.forEach(ch=>{ c.fillText(ch,xx,y); xx+=c.measureText(ch).width+ls; }); };
+  c.textAlign='left'; sp('RUTA A LA CIMA',Wc/2,266,'800 20px Figtree, sans-serif',LAC,6); sp('RUTA FINANCIERA · EDUCACIÓN FINANCIERA QUE SE JUEGA',Wc/2,292,'600 13px Figtree, sans-serif',INK,3);
+  c.textAlign='center'; c.fillStyle=LAC; c.font='66px "Young Serif", Georgia, serif'; c.fillText('Certificado de Inteligencia Financiera',Wc/2,372);
+  sp('SE OTORGA A',Wc/2,428,'700 16px Figtree, sans-serif',INK,5);
+  c.textAlign='center'; c.fillStyle=LAC; c.font='88px "Young Serif", Georgia, serif'; const nm=eco.name||'Senderista'; c.fillText(nm,Wc/2,520);
+  const nw=Math.max(420,c.measureText(nm).width+120); c.strokeStyle=ORO; c.lineWidth=1.6; c.beginPath(); c.moveTo(Wc/2-nw/2,546); c.lineTo(Wc/2-12,546); c.moveTo(Wc/2+12,546); c.lineTo(Wc/2+nw/2,546); c.stroke(); c.fillStyle=ORO; c.beginPath(); c.moveTo(Wc/2,539); c.lineTo(Wc/2+7,546); c.lineTo(Wc/2,553); c.lineTo(Wc/2-7,546); c.fill();
+  const pl=profLine(); if(pl){ c.fillStyle=INK; c.font='600 19px Figtree, sans-serif'; c.fillText(pl,Wc/2,580); }
+  c.fillStyle=INK; c.font='500 23px Figtree, sans-serif'; c.fillText('por demostrar una',Wc/2,626);
+  c.fillStyle=LAC; c.font='800 40px Figtree, sans-serif'; c.fillText('EXCELENTE INTELIGENCIA FINANCIERA',Wc/2,674);
+  c.fillStyle=INK; c.font='500 20px Figtree, sans-serif'; c.fillText('al conquistar las 8 estaciones de la montaña, del Valle a la Cordillera, hasta alcanzar la libertad financiera.',Wc/2,710);
+  // medallas de logros
+  const ts=eco.stars.reduce((a,b)=>a+(b||0),0), M=[[patrimonio(),'PATRIMONIO'],[renta(),'INGRESO PASIVO'],[eco.assets.length,'ACTIVOS'],[eco.emb,'AHORRO'],[eco.stats.invested||0,'INVERTIDO'],[eco.score||650,'DATACRÉDITO'],[ts+'/24','ESTRELLAS']];
+  const mw=150, mx0=Wc/2-(M.length-1)*mw/2;
+  M.forEach(([v,l],i)=>{ const x=mx0+i*mw, y=790; c.fillStyle='rgba(255,252,244,.85)'; c.beginPath(); c.arc(x,y,44,0,7); c.fill(); c.strokeStyle=ORO; c.lineWidth=2.4; c.beginPath(); c.arc(x,y,44,0,7); c.stroke(); c.strokeStyle='rgba(107,42,26,.5)'; c.lineWidth=0.8; c.beginPath(); c.arc(x,y,38,0,7); c.stroke();
+    c.fillStyle=LAC; c.font='700 '+(String(v).length>4?22:28)+'px "IBM Plex Mono", monospace'; c.fillText(String(v),x,y+9); c.fillStyle=INK; c.font='800 11px Figtree, sans-serif'; c.fillText(l,x,y+66); });
+  // firmas
+  const sigY=975; [[360,'Brian Suárez','Fundador · Ruta a la Cima'],[Wc-360,eco.colegio?'':'',(eco.colegio?'Docente · '+eco.colegio:'Docente acompañante')]].forEach(([x,n,r],i)=>{ c.strokeStyle=INK; c.lineWidth=1; c.beginPath(); c.moveTo(x-150,sigY); c.lineTo(x+150,sigY); c.stroke();
+    if(n){ c.save(); c.translate(x,sigY-10); c.transform(1,0,-0.25,1,0,0); c.fillStyle='#24324A'; c.font='40px "Young Serif", Georgia, serif'; c.fillText(n,0,0); c.restore(); }
+    c.fillStyle=INK; c.font='700 15px Figtree, sans-serif'; c.fillText(r,x,sigY+24); });
+  // sello de lacre con cintas
+  const sx=Wc/2, sy=960; c.fillStyle='#4A1A0E'; c.beginPath(); c.moveTo(sx-26,sy+20); c.lineTo(sx-44,sy+98); c.lineTo(sx-28,sy+86); c.lineTo(sx-16,sy+102); c.lineTo(sx-4,sy+24); c.fill(); c.beginPath(); c.moveTo(sx+26,sy+20); c.lineTo(sx+44,sy+98); c.lineTo(sx+28,sy+86); c.lineTo(sx+16,sy+102); c.lineTo(sx+4,sy+24); c.fill();
+  c.fillStyle=LAC; c.beginPath(); c.moveTo(sx-22,sy+20); c.lineTo(sx-38,sy+92); c.lineTo(sx-26,sy+82); c.lineTo(sx-16,sy+96); c.lineTo(sx-6,sy+24); c.fill(); c.beginPath(); c.moveTo(sx+22,sy+20); c.lineTo(sx+38,sy+92); c.lineTo(sx+26,sy+82); c.lineTo(sx+16,sy+96); c.lineTo(sx+6,sy+24); c.fill();
+  waxSeal(c,sx,sy,62,-0.12);
+  // pie: fecha, dificultad y código de verificación
+  let h=2166136261; for(const ch of nm+patrimonio()+(eco.seed||0)+ts) { h^=ch.charCodeAt(0); h=Math.imul(h,16777619)>>>0; } const code='RF-'+h.toString(36).toUpperCase().padStart(7,'0').slice(0,4)+'-'+(h>>>7).toString(36).toUpperCase().slice(0,4);
+  const d=new Date(); c.fillStyle=INK; c.font='600 14px Figtree, sans-serif'; const fyy=Hc-gy-band-22; c.textAlign='left'; c.fillText(d.toLocaleDateString('es-CO',{day:'numeric',month:'long',year:'numeric'})+'  ·  Dificultad '+Dif().n,px0+30,fyy); c.textAlign='right'; c.fillText('Código de verificación '+code,px0+pw-30,fyy);
+  c.textAlign='left';
   return c0.toDataURL('image/png'); }
 addEventListener('pointerdown',ev=>{ if(S.mode==='finale'&&ev.target===cv) finSkip(); });
 
@@ -3676,7 +3783,7 @@ function endingReport(){
   eco.logros=eco.logros||[]; try{ eco.logros[7]=CURR[7].ok()?2:Math.max(1,eco.logros[7]||0); }catch(err){}
   const nLog=()=>(eco.logros||[]).filter(v=>v===2).length;
   const show=()=>{
-    const report=`Ruta Financiera · ${eco.name}${eco.grupo?' ('+eco.grupo+')':''} · ${Dif().n}${profLine()?'\n'+profLine():''}\nTiempo: ${mins}:${String(secs).padStart(2,'0')} · Estrellas: ${totalStars}/24 · Páginas del Cuaderno: ${totalPages}/24\nPatrimonio final: ${patrimonio()} · Ingreso pasivo: ${renta()} por quincena · Activos: ${eco.assets.length}\nAhorrado: ${st.saved} · Invertido: ${st.invested} · Trampas: ${st.traps} · Quiebras y caídas: ${st.deaths}\nSueños cumplidos: ${(eco.suenos||[]).join(', ')||'ninguno'} · Pasivos: ${(eco.lujos||[]).map(l=>l.n).join(', ')||'ninguno'} · Conceptos: ${Object.keys(eco.seen||{}).length}/${Object.keys(TIPS).length}\nPreguntas acertadas en la ruta: ${st.quizOk}/${st.quizN}`+(eco.pre!=null?`\nPrueba inicial: ${eco.pre}/5`:'')+(eco.post!=null?` · Prueba final: ${eco.post}/5`:'')+`\nAyudas recibidas: ${eco.stats.helps||0} · Peso que carga al final: ${peso()}\n\nResultados de aprendizaje (competencias de educación económica y financiera: decidir, administrar, planear, gestionar):\n`+CURR.map((c,i)=>`M${i+1} · ${c.comp} · ${c.g}: ${c.ra} → ${logro(i)}`).join('\n');
+    const report=`Ruta Financiera · ${eco.name}${eco.grupo?' ('+eco.grupo+')':''} · ${Dif().n}${profLine()?'\n'+profLine():''}\nTiempo: ${mins}:${String(secs).padStart(2,'0')} · Estrellas: ${totalStars}/24 · Páginas del Cuaderno: ${totalPages}/24\nPatrimonio final: ${patrimonio()} · Ingreso pasivo: ${renta()} por quincena · Activos: ${eco.assets.length}\nAhorrado: ${st.saved} · Invertido: ${st.invested} · Trampas: ${st.traps} · Quiebras y caídas: ${st.deaths}\nSueños cumplidos: ${(eco.suenos||[]).join(', ')||'ninguno'} · Pasivos: ${(eco.lujos||[]).map(l=>l.n).join(', ')||'ninguno'} · Conceptos: ${Object.keys(eco.seen||{}).length}/${Object.keys(TIPS).length}\nPreguntas acertadas en la ruta: ${st.quizOk}/${st.quizN}\nHábitos: DataCrédito ${eco.score||650} · esperó por más ${st.paciencia||0} vez(es) (eligió ya ${st.impaciente||0}) · cursos ${st.cursos||0} · comparó precios ${st.compara||0} · ayudó ${st.ayudas||0} · evitó el FOMO ${st.nofomo||0} · pensión ${eco.pension||0}`+(eco.pre!=null?`\nPrueba inicial: ${eco.pre}/5`:'')+(eco.post!=null?` · Prueba final: ${eco.post}/5`:'')+`\nAyudas recibidas: ${eco.stats.helps||0} · Peso que carga al final: ${peso()}\n\nResultados de aprendizaje (competencias de educación económica y financiera: decidir, administrar, planear, gestionar):\n`+CURR.map((c,i)=>`M${i+1} · ${c.comp} · ${c.g}: ${c.ra} → ${logro(i)}`).join('\n');
     const cert=certURL();
     openOv(`<div class="eyebrow">Libertad financiera</div>
     <h2>${esc(eco.name)}: excelente inteligencia financiera</h2>
@@ -3790,7 +3897,7 @@ function legend(){
       else if(k==='I') drawLote({cost:5,type:'fin',used:false,x:0},0,4);
       else if(k==='bank'){ ctx.save(); ctx.scale(.44,.44); S.L={ents:[{t:'bank',x:4,y:12,w:72,h:68,lab:0}],mps:[]}; drawEnts(); ctx.restore(); }
       else if(['pCasa','pInv','pFrasco','pCarro'].includes(k)){ ctx.save(); ctx.translate(2,13); ctx.scale(.66,.66); drawPlatObj({pCasa:'casa',pInv:'inversion',pFrasco:'frasco',pCarro:'carro'}[k],2,0,2,14,{acc:3,paid:false,wob:0},{}); ctx.restore(); }
-      else if(k==='tDeuda'){ ctx.strokeStyle='#5A4A44'; ctx.lineWidth=1.6; for(let j=0;j<3;j++){ ctx.beginPath(); ctx.ellipse(8+j*8,28-(j%2)*3,4,2.4,(j%2)*1.2,0,7); ctx.stroke(); } ctx.fillStyle='#F2EBDD'; ctx.fillRect(10,8,16,10); ctx.fillStyle='#C9475B'; ctx.font='800 5px Figtree'; ctx.textAlign='center'; ctx.fillText('DEUDA',18,15); ctx.textAlign='left'; }
+      else if(k==='tDeuda'){ ctx.strokeStyle='#5A4A44'; ctx.lineWidth=1.6; for(let j=0;j<3;j++){ ctx.beginPath(); ctx.ellipse(8+j*8,28-(j%2)*3,4,2.4,(j%2)*1.2,0,7); ctx.stroke(); } ctx.fillStyle='#F2EBDD'; ctx.fillRect(10,8,16,10); ctx.fillStyle='#C9475B'; ctx.font='800 5px Figtree, sans-serif'; ctx.textAlign='center'; ctx.fillText('DEUDA',18,15); ctx.textAlign='left'; }
       else if(k==='tPantano'){ ctx.fillStyle='#4A4424'; ctx.fillRect(0,16,36,20); ctx.fillStyle='#7C7A3E'; ctx.fillRect(0,16,36,3); ctx.strokeStyle='rgba(200,200,130,.9)'; ctx.lineWidth=1; ctx.beginPath(); ctx.arc(12,24,2.5,0,7); ctx.stroke(); ctx.beginPath(); ctx.arc(24,27,1.8,0,7); ctx.stroke(); ctx.strokeStyle='#5E7A30'; ctx.lineWidth=1.4; ctx.beginPath(); ctx.moveTo(6,17); ctx.lineTo(4,4); ctx.moveTo(30,17); ctx.lineTo(32,6); ctx.stroke(); ctx.fillStyle='#6B4A2B'; ctx.fillRect(2,2,3,6); }
       else if(k==='tMuro'){ ctx.fillStyle='#5E5A55'; ctx.fillRect(9,2,20,34); ctx.fillStyle='#77726B'; ctx.fillRect(12,2,17,34); const hc=['#E04A4A','#F2B33D','#2E7BC4','#3FA868']; for(let i=0;i<4;i++){ ctx.fillStyle=hc[i]; ctx.beginPath(); ctx.ellipse(15+(i%2)*8,8+i*7,3,2.2,.4,0,7); ctx.fill(); } }
       else if(k==='tRio'){ ctx.fillStyle='#3B8CC4'; ctx.fillRect(0,20,36,16); ctx.fillStyle='#7FC1E8'; ctx.fillRect(0,20,36,3); ctx.fillStyle='rgba(255,255,255,.6)'; ctx.fillRect(4,27,8,1.5); ctx.fillRect(22,31,8,1.5); ctx.fillStyle='#4E5860'; ctx.beginPath(); ctx.ellipse(18,20,11,5,0,0,7); ctx.fill(); ctx.fillStyle='#97A1A8'; ctx.beginPath(); ctx.ellipse(17,18,9,3.5,0,0,7); ctx.fill(); }
