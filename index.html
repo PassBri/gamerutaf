@@ -1479,6 +1479,24 @@ function bossUpdate(e,p){
    Mismo motor de marcha del senderista: piernas con cinemática inversa, pie fijo en el apoyo,
    cadera que sube al caminar y baja al correr, brazos en oposición. Encima: lanzamiento con
    preparación (brazo atrás), descarga y seguimiento; reacción al golpe; respiración; mirada al jugador. */
+const SHC={a:document.createElement('canvas'),b:document.createElement('canvas')};
+function shaded(bx,by,bw,bh,fn,o){ // dibuja fn en un lienzo aparte y le aplica luz del mundo, oclusión, luz de borde y contorno
+  o=o||{}; const main=ctx; let m; try{ m=main.getTransform(); }catch(e){ fn(); return; }
+  const P=[[bx,by],[bx+bw,by],[bx,by+bh],[bx+bw,by+bh]].map(([x,y])=>[m.a*x+m.c*y+m.e,m.b*x+m.d*y+m.f]);
+  const x0=Math.floor(Math.min(P[0][0],P[1][0],P[2][0],P[3][0]))-3, y0=Math.floor(Math.min(P[0][1],P[1][1],P[2][1],P[3][1]))-3, x1=Math.ceil(Math.max(P[0][0],P[1][0],P[2][0],P[3][0]))+3, y1=Math.ceil(Math.max(P[0][1],P[1][1],P[2][1],P[3][1]))+3, w=x1-x0, h=y1-y0;
+  if(w<=4||h<=4||w>1600||h>1600||reduced&&o.cheap){ fn(); return; }
+  const A=SHC.a, B=SHC.b; if(A.width!==w||A.height!==h){ A.width=w; A.height=h; B.width=w; B.height=h; }
+  const ac=A.getContext('2d'), bc=B.getContext('2d'); ac.setTransform(1,0,0,1,0,0); ac.globalCompositeOperation='source-over'; ac.globalAlpha=1; ac.clearRect(0,0,w,h);
+  ac.setTransform(m.a,m.b,m.c,m.d,m.e-x0,m.f-y0); ctx=ac; try{ fn(); }catch(err){ ctx=main; throw err; } ctx=main; ac.setTransform(1,0,0,1,0,0);
+  const Lg=(typeof LIGHT!=='undefined'&&S.li!=null&&LIGHT[S.li])||{sun:[.8],warm:'#FFE8C0'}, L=Lg.sun[0]>=0.5?1:-1, warm=hexRgb(Lg.warm||'#FFE8C0').join(',');
+  ac.globalCompositeOperation='source-atop';
+  const g=ac.createLinearGradient(L>0?w:0,0,L>0?0:w,h*0.5); g.addColorStop(0,'rgba('+warm+','+(o.lit??.16)+')'); g.addColorStop(0.42,'rgba('+warm+',0)'); g.addColorStop(0.58,'rgba(24,28,52,0)'); g.addColorStop(1,'rgba(24,28,52,'+(o.dark??.3)+')'); ac.fillStyle=g; ac.fillRect(0,0,w,h);
+  const g2=ac.createLinearGradient(0,h*0.7,0,h); g2.addColorStop(0,'rgba(12,10,14,0)'); g2.addColorStop(1,'rgba(12,10,14,.26)'); ac.fillStyle=g2; ac.fillRect(0,0,w,h);
+  const px=Math.max(1,Math.round(Math.abs(m.a)*0.55));
+  bc.setTransform(1,0,0,1,0,0); bc.globalCompositeOperation='source-over'; bc.clearRect(0,0,w,h); bc.drawImage(A,0,0); bc.globalCompositeOperation='source-in'; bc.fillStyle='rgba('+warm+',.75)'; bc.fillRect(0,0,w,h); bc.globalCompositeOperation='destination-out'; bc.drawImage(A,-L*px,px); bc.globalCompositeOperation='source-over';
+  ac.globalCompositeOperation='source-atop'; ac.drawImage(B,0,0); ac.globalCompositeOperation='source-over';
+  bc.clearRect(0,0,w,h); bc.drawImage(A,0,0); bc.globalCompositeOperation='source-in'; bc.fillStyle='rgba(20,12,10,.55)'; bc.fillRect(0,0,w,h); bc.globalCompositeOperation='source-over';
+  main.save(); main.setTransform(1,0,0,1,0,0); const op=Math.max(1,Math.round(Math.abs(m.a)*0.35)); for(const [dx,dy] of [[op,0],[-op,0],[0,op],[0,-op]]) main.drawImage(B,x0+dx,y0+dy); main.drawImage(A,x0,y0); main.restore(); }
 function rigMotion(e,k,dir){ // fase de marcha sin patinar, según cuánto se movió de verdad
   const dx=e.px==null?0:e.x-e.px; e.px=e.x; const v=Math.abs(dx);
   e.spdS=(e.spdS||0)+((Math.min(1,v/3.3))-(e.spdS||0))*0.25;
@@ -1502,16 +1520,18 @@ function personPose(P){
 }
 function drawPerson(P){
   // P: {ph,spd,air,vy,lean,wind,follow,hit,breath,skin,top,topD,pants,shoes,torso(fn),head(fn),hand(fn front),handB(fn back),back(fn),belly,shoulders,legScale,face}
-  const {g,lean}=personPose(P), bob=g.bob, ls=P.legScale||1.08, hipY=-14*ls+bob, br=P.breath||0, shY=-27-(ls-1)*14+bob+br;
+  const {g,lean}=personPose(P), bob=g.bob, ls=P.legScale||1.08, hipY=-15.4*ls+bob, br=P.breath||0, shY=-29.6-(ls-1)*14+bob+br;
   const skin=P.skin||'#C08A5E', skinD=mix(skin,'#000000',.2), pants=P.pants||'#2B3040', pantsB=mix(pants,'#000000',.25), shoes=P.shoes||'#1E1A18';
   function leg(i,front){ const f=g.feet[i], hx0=front?1:-1; const kk=legIK(hx0,hipY,f.x*ls,-2+f.y*ls);
     ctx.strokeStyle=front?pants:pantsB; ctx.lineCap='round'; ctx.lineJoin='round';
     ctx.lineWidth=(P.legW||4.4); ctx.beginPath(); ctx.moveTo(hx0,hipY); ctx.lineTo(kk.kx,kk.ky); ctx.stroke();
-    ctx.lineWidth=(P.legW||4.4)*0.82; ctx.beginPath(); ctx.moveTo(kk.kx,kk.ky); ctx.lineTo(kk.ax,kk.ay); ctx.stroke();
+    ctx.lineWidth=(P.legW||4.4)*0.78; ctx.beginPath(); ctx.moveTo(kk.kx,kk.ky); ctx.lineTo(kk.ax,kk.ay); ctx.stroke();
+    if(front){ ctx.strokeStyle='rgba(255,255,255,.13)'; ctx.lineWidth=1; ctx.beginPath(); ctx.moveTo(hx0+1.2,hipY+1); ctx.lineTo(kk.kx+1,kk.ky); ctx.lineTo(kk.ax+0.8,kk.ay-1); ctx.stroke(); }
+    ctx.strokeStyle='rgba(0,0,0,.22)'; ctx.lineWidth=0.6; ctx.beginPath(); ctx.arc(kk.kx,kk.ky,1.2,Math.PI*0.2,Math.PI*0.9); ctx.stroke();
     if(P.skirt&&!front){}
-    ctx.save(); ctx.translate(kk.ax,kk.ay); ctx.rotate(f.p||0); ctx.fillStyle=front?shoes:mix(shoes,'#000000',.25); rr(-2.6,-1.6,8,3.8,1.6); ctx.fill(); ctx.fillStyle='rgba(0,0,0,.45)'; ctx.fillRect(-2.6,1.3,8,1); if(P.heels){ ctx.fillStyle=shoes; ctx.fillRect(-2.4,1.5,1.4,2); } ctx.restore(); }
+    ctx.save(); ctx.translate(kk.ax,kk.ay); ctx.rotate(f.p||0); ctx.fillStyle=front?shoes:mix(shoes,'#000000',.25); ctx.beginPath(); ctx.moveTo(-2.4,1.6); ctx.lineTo(-2.4,-1.6); ctx.quadraticCurveTo(0,-2.6,2.2,-1.2); ctx.quadraticCurveTo(5.8,-0.8,5.8,1.2); ctx.lineTo(5.8,1.8); ctx.closePath(); ctx.fill(); ctx.fillStyle='rgba(255,255,255,.22)'; ctx.beginPath(); ctx.ellipse(3.6,-0.6,1.4,0.6,0,0,7); ctx.fill(); ctx.fillStyle='rgba(0,0,0,.5)'; ctx.fillRect(-2.6,1.4,8.6,1.1); if(P.heels){ ctx.fillStyle=shoes; ctx.fillRect(-2.4,1.5,1.4,2); } ctx.restore(); }
   function armPts(a,side){ const t=a.t, L1=5.6*(P.armL||1), L2=5.2*(P.armL||1), ex=side+Math.sin(t)*L1, ey=shY+Math.cos(t)*L1, f=t+a.b; return {ex,ey,hx:ex+Math.sin(f)*L2,hy:ey+Math.cos(f)*L2,ang:f}; }
-  const legDraw=(i,fr)=>{ const a=GAIT.thigh,b=GAIT.shin; GAIT.thigh=6.7*ls; GAIT.shin=6.9*ls; leg(i,fr); GAIT.thigh=a; GAIT.shin=b; };
+  const legDraw=(i,fr)=>{ const a=GAIT.thigh,b=GAIT.shin; GAIT.thigh=7.3*ls; GAIT.shin=7.5*ls; leg(i,fr); GAIT.thigh=a; GAIT.shin=b; };
   legDraw(0,false);
   ctx.save(); ctx.rotate(lean);
   if(P.back) P.back(shY,hipY);
@@ -1519,27 +1539,31 @@ function drawPerson(P){
   const AB=armPts(g.arms[0],-1.2); ctx.strokeStyle=P.topD||mix(P.top,'#000000',.35); ctx.lineWidth=P.armW||3.3; ctx.lineCap='round'; ctx.lineJoin='round';
   ctx.beginPath(); ctx.moveTo(-1.2,shY+1); ctx.lineTo(AB.ex,AB.ey); ctx.lineTo(AB.hx,AB.hy); ctx.stroke();
   if(P.handB){ ctx.save(); ctx.translate(AB.hx,AB.hy); P.handB(AB); ctx.restore(); }
-  ctx.fillStyle=skinD; ctx.beginPath(); ctx.arc(AB.hx,AB.hy,1.7,0,7); ctx.fill();
+  ctx.fillStyle=skinD; ctx.beginPath(); ctx.ellipse(AB.hx,AB.hy,1.6,1.9,AB.ang,0,7); ctx.fill();
   // torso
   if(P.torso) P.torso(shY,hipY); else { ctx.fillStyle=P.topD||mix(P.top,'#000000',.3); rr(-7,shY-3,14,hipY-shY+4,4); ctx.fill(); ctx.fillStyle=P.top; rr(-6,shY-3,12,hipY-shY+2,4); ctx.fill(); }
   // luz de borde y sombra del lado de atrás
-  ctx.fillStyle='rgba(255,255,255,.14)'; ctx.fillRect(4,shY-1,1.6,hipY-shY-2); ctx.fillStyle='rgba(0,0,0,.16)'; ctx.fillRect(-6,shY-1,2,hipY-shY-2);
+  ctx.fillStyle='rgba(255,255,255,.12)'; ctx.fillRect(4,shY-1,1.6,hipY-shY-2); ctx.fillStyle='rgba(0,0,0,.16)'; ctx.fillRect(-6,shY-1,2,hipY-shY-2);
+  ctx.strokeStyle='rgba(0,0,0,.2)'; ctx.lineWidth=0.6; ctx.beginPath(); ctx.moveTo(-4.6,hipY-4); ctx.quadraticCurveTo(-1,hipY-2.6,3.4,hipY-4.4); ctx.moveTo(-3,shY+4); ctx.quadraticCurveTo(-1.6,shY+6,-3.6,shY+8); ctx.stroke();
   // cabeza (mira un poco hacia el jugador; se inclina con el golpe)
-  const hy=shY-10+(P.headDrop||0); ctx.save(); ctx.translate(1,hy); ctx.rotate((P.headTilt||0)-(P.hit||0)*0.25);
-  ctx.fillStyle=skinD; ctx.fillRect(-2,5,4,3);
-  ctx.fillStyle=skin; ctx.beginPath(); ctx.arc(0,0,P.headR||5.8,0,7); ctx.fill(); ctx.fillStyle=skinD; ctx.beginPath(); ctx.arc(-3.4,1,1.5,0,7); ctx.fill();
+  ctx.fillStyle=skinD; rr(-0.6,shY-5.4,3.4,5.6,1.2); ctx.fill();
+  const hy=shY-8.2+(P.headDrop||0); ctx.save(); ctx.translate(1,hy); ctx.rotate((P.headTilt||0)-(P.hit||0)*0.25); ctx.scale(0.8,0.8);
+  const HR=P.headR||5.8; ctx.fillStyle=skin; ctx.beginPath(); ctx.ellipse(0.3,0,HR*0.96,HR,0,0,7); ctx.fill(); ctx.beginPath(); ctx.moveTo(-2,HR*0.6); ctx.quadraticCurveTo(3,HR*1.32,HR*0.95,HR*0.3); ctx.lineTo(0,0); ctx.fill();
+  ctx.fillStyle=skinD; ctx.beginPath(); ctx.ellipse(-3.2,0.8,1.3,1.8,0,0,7); ctx.fill(); ctx.fillStyle='rgba(0,0,0,.12)'; ctx.beginPath(); ctx.ellipse(-2.6,1.6,2.6,3.4,0,0,7); ctx.fill();
+  ctx.fillStyle='rgba(225,120,100,.22)'; ctx.beginPath(); ctx.arc(4,1.8,1.4,0,7); ctx.fill();
   if(P.head) P.head(P.blink); else { ctx.fillStyle='#1E1A18'; ctx.beginPath(); ctx.arc(2.4,-0.8,.95,0,7); ctx.arc(5,-0.8,.85,0,7); ctx.fill(); }
   ctx.restore();
   // brazo delantero con su objeto
   const AF=armPts(g.arms[1],1.4); ctx.strokeStyle=P.topD||mix(P.top,'#000000',.2); ctx.lineWidth=P.armW||3.3; ctx.beginPath(); ctx.moveTo(1.4,shY+1); ctx.lineTo(AF.ex,AF.ey); ctx.lineTo(AF.hx,AF.hy); ctx.stroke();
   if(P.hand&&!(P.follow>0.15&&P.throws)){ ctx.save(); ctx.translate(AF.hx,AF.hy); P.hand(AF); ctx.restore(); }
-  ctx.fillStyle=skin; ctx.beginPath(); ctx.arc(AF.hx,AF.hy,1.8,0,7); ctx.fill();
+  ctx.fillStyle=skin; ctx.beginPath(); ctx.ellipse(AF.hx,AF.hy,1.7,2,AF.ang,0,7); ctx.fill(); ctx.fillStyle=skinD; ctx.beginPath(); ctx.arc(AF.hx+Math.cos(AF.ang)*1.2,AF.hy-Math.sin(AF.ang)*1.2,0.7,0,7); ctx.fill();
   ctx.restore();
   legDraw(1,true);
   if(P.front) { ctx.save(); ctx.rotate(lean); P.front(shY,hipY); ctx.restore(); }
 }
 function rigState(e,len){ return {wind:e.wind>0?1-e.wind/len:0, follow:e.throwT>0?e.throwT/14:0, hit:e.flash>0?e.flash/16:0, breath:Math.sin((S.t||0)*0.05+(e.x0||0))*0.5, blink:(S.t+(e.x0|0))%230<6}; }
-function eyes(blink,o={}){ ctx.fillStyle='#1E1A18'; if(blink){ ctx.fillRect(1.6,-1,2,.7); ctx.fillRect(4.4,-1,1.6,.7); } else { ctx.beginPath(); ctx.arc(2.6,-0.8,.95,0,7); ctx.arc(5.2,-0.8,.85,0,7); ctx.fill(); }
+function eyes(blink,o={}){ ctx.fillStyle='#1E1A18'; if(blink){ ctx.fillRect(1.6,-1,2,.7); ctx.fillRect(4.4,-1,1.6,.7); } else { ctx.fillStyle='#F6F1E8'; ctx.beginPath(); ctx.ellipse(2.7,-0.8,1.25,0.9,0,0,7); ctx.ellipse(5.3,-0.8,1.05,0.85,0,0,7); ctx.fill(); ctx.fillStyle='#2A1A12'; ctx.beginPath(); ctx.arc(3.05,-0.75,0.7,0,7); ctx.arc(5.6,-0.75,0.62,0,7); ctx.fill(); ctx.fillStyle='#fff'; ctx.fillRect(3.15,-1.25,0.35,0.35); ctx.fillRect(5.7,-1.25,0.3,0.3); }
+  ctx.strokeStyle='rgba(90,45,30,.6)'; ctx.lineWidth=0.6; ctx.beginPath(); ctx.moveTo(4.4,-0.2); ctx.quadraticCurveTo(5.4,1.2,4.6,1.5); ctx.stroke();
   ctx.strokeStyle=o.brow||'#2A1A12'; ctx.lineWidth=.8; ctx.beginPath(); if(o.angry){ ctx.moveTo(1.4,-3.4); ctx.lineTo(3.6,-2.4); ctx.moveTo(4.4,-2.4); ctx.lineTo(6.4,-3.2); } else { ctx.moveTo(1.4,-2.9); ctx.lineTo(3.6,-3.2); ctx.moveTo(4.4,-3.2); ctx.lineTo(6.4,-2.9); } ctx.stroke(); }
 function mouth(kind){ ctx.strokeStyle='#7A3A2A'; ctx.lineWidth=.85; ctx.beginPath(); if(kind==='smile') ctx.arc(3.8,1.6,1.7,0.15*Math.PI,0.85*Math.PI); else if(kind==='grin'){ ctx.fillStyle='#fff'; ctx.moveTo(1.2,2); ctx.quadraticCurveTo(4,5.6,7,2); ctx.closePath(); ctx.fill(); } else if(kind==='sly'){ ctx.moveTo(2,2.6); ctx.quadraticCurveTo(4,3.6,6.4,2); } else { ctx.moveTo(2.6,3); ctx.lineTo(5.4,3); } ctx.stroke(); }
 
@@ -1584,7 +1608,7 @@ function rigDraw(e,cx,fy,k,L,len,extra){
   const dd=e.flee||e.dir||-1, M=rigMotion(e,k,dd), st=rigState(e,len);
   const jit=e.tied&&e.tied<50?Math.sin(e.tied*1.9)*0.9*(1-e.tied/50):0;
   ctx.save(); ctx.translate(cx+jit,fy); ctx.scale(e.dirS*k,k); if(st.hit>0&&(S.t>>1)%2) ctx.globalAlpha=0.6;
-  drawPerson(Object.assign({throws:1},L,st,{ph:M.ph,spd:e.flee?Math.max(0.9,M.spd):M.spd},extra||{},e.tied?{tied:1,spd:0,wind:0,follow:0,hold:null,air:false,slam:null}:{}));
+  shaded(-32,-74,64,82,()=>drawPerson(Object.assign({throws:1},L,st,{ph:M.ph,spd:e.flee?Math.max(0.9,M.spd):M.spd},extra||{},e.tied?{tied:1,spd:0,wind:0,follow:0,hold:null,air:false,slam:null}:{})));
   ctx.restore(); if(e.tied) drawTied(e,cx,fy);
 }
 /* ---------- jefes con el rig ---------- */
@@ -3031,7 +3055,7 @@ function drawHiker(){
   if(rk==='carro'){ p.wheel=(p.wheel||0)+Math.abs(p.vx)/4.6; carBack(p); ctx.save(); ctx.beginPath(); ctx.rect(-40,-90,80,76); ctx.clip(); ctx.translate(-3,14); }
   ctx.translate(0,-lift);
   const pl=pila();
-  hikerBody(!p.onGround||!!rk, rk?0:Math.sin(p.walk), eco.color, {phase:p.walk, spd:rk||!moving?0:Math.min(1,Math.abs(p.vx)/3.3), climb:!!p.climb||!!p.caught, jp:rk?null:jp, lean, pack:p.pack, breath, vy:p.vy, gear:eco.gear, skin:eco.skin, head:eco.head, mood:mood(), blink, pila:pl, vx:p.vx, role:S.li});
+  shaded(-34,-72-(pl?pl.length:0)*18,68,80+(pl?pl.length:0)*18,()=>hikerBody(!p.onGround||!!rk, rk?0:Math.sin(p.walk), eco.color, {phase:p.walk, spd:rk||!moving?0:Math.min(1,Math.abs(p.vx)/3.3), climb:!!p.climb||!!p.caught, jp:rk?null:jp, lean, pack:p.pack, breath, vy:p.vy, gear:eco.gear, skin:eco.skin, head:eco.head, mood:mood(), blink, pila:pl, vx:p.vx, role:S.li}),{lit:.14,dark:.26});
   if(rk==='carro'){ ctx.restore(); carFront(p); }
   ctx.restore();
   if(p.ride){ const f=Math.max(0,p.ride.t/(p.ride.max||420)); ctx.fillStyle='rgba(0,0,0,.45)'; rr(x-14,y-60-lift,28,4,2); ctx.fill(); ctx.fillStyle='#F2B33D'; rr(x-14,y-60-lift,28*f,4,2); ctx.fill(); }
@@ -3349,11 +3373,13 @@ function profileForm(p){
     <div><label class="lb" for="gr">Grupo o curso</label><input type="text" id="gr" maxlength="12" value="${esc(p.grupo||'')}" placeholder="Ej. 10-2"></div>
     <div><label class="lb" for="ppais">País</label><select id="ppais">${opt(PAISES,p.pais||'Colombia')}</select></div>
     <div><label class="lb" for="pciu">Ciudad o municipio</label><input type="text" id="pciu" maxlength="30" value="${esc(p.ciudad||'')}" placeholder="Ej. Floridablanca" autocomplete="address-level2"></div>
+    <div class="full"><label class="lb" for="pcl">Código de clase (te lo da tu docente)</label><input type="text" id="pcl" maxlength="220" value="${esc(p.clase&&p.clase.code||'')}" placeholder="Ej. RAC-7K2QMX" autocomplete="off" spellcheck="false"><span class="muted" id="pclMsg" style="font-size:12px">${p.clase&&p.clase.doc?'✓ Clase de <b>'+esc(p.clase.doc)+'</b>'+(p.clase.col?' · '+esc(p.clase.col):''):''}</span></div>
    </div></fieldset>`;
 }
 function profRead(){
   const v=id=>{ const el=document.getElementById(id); return el?String(el.value||'').trim():''; };
   const p={name:(v('nm')||'Senderista').slice(0,16),colegio:v('pcol').slice(0,40),grado:v('pgrd'),grupo:v('gr').slice(0,12),pais:v('ppais')||'Colombia',ciudad:v('pciu').slice(0,30)};
+  const ce=v('pcl'), prev=profLoad().clase; p.clase=!ce?null:(CLASE_TMP&&(CLASE_TMP.code===ce.toUpperCase()||/^RAC1\./i.test(ce)))?CLASE_TMP:(prev&&prev.code===ce.toUpperCase()?prev:(/^RAC1\./i.test(ce)?claseParseLong(ce):null));
   profSave(p); return p;
 }
 function profLine(e){ e=e||eco||profLoad(); return [e.colegio,[e.grado,e.grupo].filter(Boolean).join(' · '),[e.ciudad,e.pais].filter(Boolean).join(', ')].filter(Boolean).join(' · '); }
@@ -3386,7 +3412,7 @@ function titleScreen(){
     const g=gr.dataset.g, v=b.dataset.v; if(g==='color') color=v; if(g==='skin') skin=+v; if(g==='head') head=v; if(g==='diff') diff=v; if(g==='ruta') ruta=v;
     gr.querySelectorAll('[data-v]').forEach(x=>x.setAttribute('aria-pressed',x===b)); }));
   const pf=()=>profRead();
-  document.getElementById('bNew').onclick=()=>{ const f=pf(); eco=newEco(f.name,color,Object.assign({skin,head,diff,ruta},f)); preTest(); };
+  document.getElementById('bNew').onclick=()=>{ const f=pf(); eco=newEco(f.name,color,Object.assign({skin,head,diff,ruta},f)); eco.clase=f.clase||null; claseImg(eco.clase); preTest(); };
   document.getElementById('bRank').onclick=()=>showRanking(titleScreen);
   if(sv) document.getElementById('bCont').onclick=()=>{ eco=sv.eco; Object.assign(eco,pf(),{color,skin,head,diff,ruta}); showMap(sv.li,{reveal:true}); };
 }
@@ -3801,9 +3827,10 @@ function certURL(){ // diploma: papel de seguridad, guilloche de oro, emblema, m
   M.forEach(([v,l],i)=>{ const x=mx0+i*mw, y=790; c.fillStyle='rgba(255,252,244,.85)'; c.beginPath(); c.arc(x,y,44,0,7); c.fill(); c.strokeStyle=ORO; c.lineWidth=2.4; c.beginPath(); c.arc(x,y,44,0,7); c.stroke(); c.strokeStyle='rgba(107,42,26,.5)'; c.lineWidth=0.8; c.beginPath(); c.arc(x,y,38,0,7); c.stroke();
     c.fillStyle=LAC; c.font='700 '+(String(v).length>4?22:28)+'px "IBM Plex Mono", monospace'; c.fillText(String(v),x,y+9); c.fillStyle=INK; c.font='800 11px Figtree, sans-serif'; c.fillText(l,x,y+66); });
   // firmas
-  const sigY=975; [[360,'Brian Suárez','Fundador · Ruta a la Cima'],[Wc-360,eco.colegio?'':'',(eco.colegio?'Docente · '+eco.colegio:'Docente acompañante')]].forEach(([x,n,r],i)=>{ c.strokeStyle=INK; c.lineWidth=1; c.beginPath(); c.moveTo(x-150,sigY); c.lineTo(x+150,sigY); c.stroke();
+  const CL=eco.clase, fimg=claseImg(CL), sigY=975; [[360,'Brian Suárez','Fundador · Ruta a la Cima',null],[Wc-360,CL?(fimg&&fimg.complete&&fimg.naturalWidth?'':CL.doc||''):'',CL?[CL.doc,CL.cargo].filter(Boolean).join(' · ')+(CL.col?' · '+CL.col:''):(eco.colegio?'Docente · '+eco.colegio:'Docente acompañante'),CL&&fimg&&fimg.complete&&fimg.naturalWidth?fimg:null]].forEach(([x,n,r,img],i)=>{ c.strokeStyle=INK; c.lineWidth=1; c.beginPath(); c.moveTo(x-150,sigY); c.lineTo(x+150,sigY); c.stroke();
+    if(img){ c.drawImage(img,x-120,sigY-78,240,80); }
     if(n){ c.save(); c.translate(x,sigY-10); c.transform(1,0,-0.25,1,0,0); c.fillStyle='#24324A'; c.font='40px "Young Serif", Georgia, serif'; c.fillText(n,0,0); c.restore(); }
-    c.fillStyle=INK; c.font='700 15px Figtree, sans-serif'; c.fillText(r,x,sigY+24); });
+    c.fillStyle=INK; c.font='700 '+(r.length>48?13:15)+'px Figtree, sans-serif'; c.fillText(r.length>70?r.slice(0,69)+'…':r,x,sigY+24); });
   // sello de lacre con cintas
   const sx=Wc/2, sy=960; c.fillStyle='#4A1A0E'; c.beginPath(); c.moveTo(sx-26,sy+20); c.lineTo(sx-44,sy+98); c.lineTo(sx-28,sy+86); c.lineTo(sx-16,sy+102); c.lineTo(sx-4,sy+24); c.fill(); c.beginPath(); c.moveTo(sx+26,sy+20); c.lineTo(sx+44,sy+98); c.lineTo(sx+28,sy+86); c.lineTo(sx+16,sy+102); c.lineTo(sx+4,sy+24); c.fill();
   c.fillStyle=LAC; c.beginPath(); c.moveTo(sx-22,sy+20); c.lineTo(sx-38,sy+92); c.lineTo(sx-26,sy+82); c.lineTo(sx-16,sy+96); c.lineTo(sx-6,sy+24); c.fill(); c.beginPath(); c.moveTo(sx+22,sy+20); c.lineTo(sx+38,sy+92); c.lineTo(sx+26,sy+82); c.lineTo(sx+16,sy+96); c.lineTo(sx+6,sy+24); c.fill();
@@ -3863,6 +3890,59 @@ function endingReport(){
 }
 
 
+/* ================= CÓDIGO DE CLASE: el docente crea un código; sus estudiantes lo escriben en el registro ================= */
+const CLASE_KEY='rac-clase-docente'; let CLASE_TMP=null; const CLASE_IMGS={};
+function claseMine(){ try{ return JSON.parse(localStorage.getItem(CLASE_KEY)||'null'); }catch(e){ return null; } }
+function claseNewCode(){ const A='ABCDEFGHJKMNPQRSTUVWXYZ23456789'; let s=''; const r=new Uint32Array(6); try{ crypto.getRandomValues(r); }catch(e){ for(let i=0;i<6;i++) r[i]=Math.random()*1e9; } for(let i=0;i<6;i++) s+=A[r[i]%A.length]; return 'RAC-'+s; }
+function b64u(str){ return btoa(unescape(encodeURIComponent(str))).replace(/\+/g,'-').replace(/\//g,'_').replace(/=+$/,''); }
+function claseLong(d){ return 'RAC1.'+b64u(JSON.stringify({c:d.code,n:d.doc,a:d.cargo,o:d.col,u:d.ciu})); }
+function claseParseLong(s){ try{ let b=s.slice(5).replace(/-/g,'+').replace(/_/g,'/'); while(b.length%4) b+='='; const j=JSON.parse(decodeURIComponent(escape(atob(b)))); return j&&j.c?{code:String(j.c).slice(0,12),doc:String(j.n||'').slice(0,50),cargo:String(j.a||'').slice(0,50),col:String(j.o||'').slice(0,60),ciu:String(j.u||'').slice(0,40)}:null; }catch(e){ return null; } }
+async function claseResolve(code){ code=String(code||'').trim(); if(!code) return null; if(/^RAC1\./i.test(code)) return claseParseLong(code); code=code.toUpperCase(); const mine=claseMine(); if(mine&&mine.code===code) return mine;
+  if(RK.db){ try{ const q=await RK.db.collection('clases').where('code','==',code).limit(1).get(); const d=q&&q.docs&&q.docs[0]; if(d){ const v=d.data()||{}; return {code,doc:String(v.doc||'').slice(0,50),cargo:String(v.cargo||'').slice(0,50),col:String(v.col||'').slice(0,60),ciu:String(v.ciu||'').slice(0,40),firma:typeof v.firma==='string'&&v.firma.startsWith('data:image/png')&&v.firma.length<60000?v.firma:''}; } }catch(e){} }
+  return null; }
+function claseImg(cl){ if(!cl||!cl.firma) return null; if(!CLASE_IMGS[cl.code]){ const im=new Image(); im.src=cl.firma; CLASE_IMGS[cl.code]=im; } return CLASE_IMGS[cl.code]; }
+async function claseCheck(){ const el=document.getElementById('pcl'), msg=document.getElementById('pclMsg'); if(!el||!msg) return; const v=el.value.trim(); if(!v){ CLASE_TMP=null; msg.textContent=''; return; }
+  msg.textContent='Buscando la clase…'; const cl=await claseResolve(v); if(el.value.trim()!==v) return;
+  if(cl){ CLASE_TMP=cl; claseImg(cl); msg.innerHTML='✓ Clase de <b>'+esc(cl.doc||'tu docente')+'</b>'+(cl.col?' · '+esc(cl.col):''); const pc=document.getElementById('pcol'); if(pc&&!pc.value.trim()&&cl.col) pc.value=cl.col; }
+  else { CLASE_TMP=null; msg.textContent=RK.db?'No encontramos ese código. Revisa con tu docente.':'Sin conexión al juego compartido: pide a tu docente el código largo (empieza por RAC1.).'; } }
+document.addEventListener('change',e=>{ if(e.target&&e.target.id==='pcl') claseCheck(); });
+document.addEventListener('input',e=>{ if(e.target&&e.target.id==='pcl'){ clearTimeout(claseCheck.t); claseCheck.t=setTimeout(claseCheck,500); } });
+function renderClaseDoc(){
+  const el=document.getElementById('claseDoc'); if(!el) return; const d=claseMine()||{};
+  el.innerHTML=`<div class="sec" style="border:1px solid var(--line);border-radius:14px;padding:14px;margin-bottom:14px"><h3 style="margin-top:0">Código de clase para tu colegio</h3>
+   <p class="muted">Crea un código para tus estudiantes. Al escribirlo en su registro, compiten en el <b>ranking de tu clase</b> y su <b>diploma sale con tus datos y tu firma</b>.</p>
+   <div class="reg-g">
+    <div class="full"><label class="lb" for="dNom">Nombre del docente</label><input type="text" id="dNom" maxlength="50" value="${esc(d.doc||'')}" placeholder="Ej. Prof. Marta Gómez"></div>
+    <div class="full"><label class="lb" for="dCar">Cargo o área</label><input type="text" id="dCar" maxlength="50" value="${esc(d.cargo||'')}" placeholder="Ej. Docente de Matemáticas"></div>
+    <div class="full"><label class="lb" for="dCol">Colegio o institución</label><input type="text" id="dCol" maxlength="60" value="${esc(d.col||'')}" placeholder="Ej. I. E. San Bernardo"></div>
+    <div class="full"><label class="lb" for="dCiu">Ciudad o municipio</label><input type="text" id="dCiu" maxlength="40" value="${esc(d.ciu||'')}" placeholder="Ej. Floridablanca"></div>
+   </div>
+   <p class="lb" style="margin:10px 0 4px">Tu firma (dibújala con el dedo o el ratón)</p>
+   <canvas id="dFirma" width="600" height="200" style="width:100%;max-width:360px;height:auto;aspect-ratio:3/1;background:#FBF7EC;border:1px dashed var(--line);border-radius:10px;touch-action:none;cursor:crosshair"></canvas>
+   <div class="row" style="margin-top:8px"><button class="btn sm alt" type="button" id="dBorrar">Borrar firma</button><button class="btn sm gold" type="button" id="dCrear">${d.code?'Actualizar mis datos':'Crear el código de clase'}</button></div>
+   <div id="dRes">${d.code?claseResHTML(d):''}</div></div>`;
+  const cv2=document.getElementById('dFirma'), c=cv2.getContext('2d'); let draw=false, dirty=false, last=null;
+  if(d.firma){ const im=new Image(); im.onload=()=>c.drawImage(im,0,0,600,200); im.src=d.firma; }
+  const pos=e=>{ const r=cv2.getBoundingClientRect(); return [(e.clientX-r.left)*600/r.width,(e.clientY-r.top)*200/r.height]; };
+  cv2.onpointerdown=e=>{ draw=true; dirty=true; last=pos(e); try{ cv2.setPointerCapture(e.pointerId); }catch(_){} };
+  cv2.onpointermove=e=>{ if(!draw) return; const p=pos(e); c.strokeStyle='#24324A'; c.lineWidth=4; c.lineCap='round'; c.lineJoin='round'; c.beginPath(); c.moveTo(last[0],last[1]); c.lineTo(p[0],p[1]); c.stroke(); last=p; };
+  cv2.onpointerup=cv2.onpointercancel=()=>{ draw=false; };
+  document.getElementById('dBorrar').onclick=()=>{ c.clearRect(0,0,600,200); dirty=true; d.firma=''; };
+  document.getElementById('dCrear').onclick=async()=>{
+    const v=id=>String(document.getElementById(id).value||'').trim();
+    const nd={code:d.code||claseNewCode(),doc:v('dNom').slice(0,50),cargo:v('dCar').slice(0,50),col:v('dCol').slice(0,60),ciu:v('dCiu').slice(0,40),firma:d.firma||''};
+    if(!nd.doc||!nd.col){ document.getElementById('dRes').innerHTML='<p class="fb no">Escribe al menos tu nombre y el colegio.</p>'; return; }
+    if(dirty){ const sm=document.createElement('canvas'); sm.width=300; sm.height=100; const sc=sm.getContext('2d'); sc.drawImage(cv2,0,0,300,100); const blank=!sc.getImageData(0,0,300,100).data.some((x,i)=>i%4===3&&x>0); nd.firma=blank?'':sm.toDataURL('image/png'); }
+    try{ localStorage.setItem(CLASE_KEY,JSON.stringify(nd)); }catch(e){}
+    let shared=false; if(RK.db&&RK.uid){ try{ await RK.db.doc('clases/'+RK.uid).set(Object.assign({},nd,{t:new Date().toISOString().slice(0,10)})); shared=true; }catch(e){} }
+    nd.shared=shared; try{ localStorage.setItem(CLASE_KEY,JSON.stringify(nd)); }catch(e){} snd('gate'); renderClaseDoc(); };
+}
+function claseResHTML(d){ const long=claseLong(d);
+  return `<div class="fb ok" style="margin-top:10px"><span class="muted">Código de tu clase</span><div style="font:800 28px var(--f-num);letter-spacing:2px;margin:4px 0">${esc(d.code)}</div>
+   ${d.shared?'Tus estudiantes escriben este código en su registro (botón Perfil).':'Este juego no está conectado al ranking compartido en este momento: comparte el <b>código largo</b> de abajo, que funciona en cualquier dispositivo (sin tu firma dibujada).'}
+   <div class="row" style="margin-top:6px"><button class="btn sm" type="button" onclick="navigator.clipboard&&navigator.clipboard.writeText('${d.code}');this.textContent='Copiado'">Copiar código</button></div>
+   <p class="muted" style="margin:8px 0 4px">Código largo (por si tus estudiantes juegan en otra página o sin conexión):</p><textarea readonly style="width:100%;min-height:54px;font:600 11px var(--f-num);background:var(--bg);color:var(--ink);border:1px solid var(--line);border-radius:8px;padding:6px">${esc(long)}</textarea></div>`; }
+
 /* ================= REGISTRO Y RANKING ================= */
 const RK_LOCAL='rac-ranking-local';
 const RK={db:null,uid:null,rows:[],shared:false,mine:[],canWrite:true,ready:false};
@@ -3887,7 +3967,7 @@ async function rkInit(){
 }
 function rkRows(){ if(RK.shared&&RK.ready) return RK.rows; const me=eco?String(eco.name||'').toLowerCase()+'|'+String(eco.grupo||'').toLowerCase():null; return rkLocal().filter(rkValid).map(r=>Object.assign({},r,{own:me!==null&&(String(r.a).toLowerCase()+'|'+String(r.g||'').toLowerCase())===me})); }
 async function rkSubmit(w,secs){
-  const run={m:eco.ruta==='fija'?'f':'v',a:String(eco.name||'Senderista').slice(0,16),g:String(eco.grupo||'').slice(0,12),c:String(eco.colegio||'').slice(0,40),gr:String(eco.grado||'').slice(0,20),pa:String(eco.pais||'').slice(0,24),w,t:Math.round(secs*10)/10,d:eco.diff,p:patrimonio(),f:new Date().toISOString().slice(0,10)};
+  const run={m:eco.ruta==='fija'?'f':'v',a:String(eco.name||'Senderista').slice(0,16),g:String(eco.grupo||'').slice(0,12),c:String(eco.colegio||'').slice(0,40),gr:String(eco.grado||'').slice(0,20),pa:String(eco.pais||'').slice(0,24),w,t:Math.round(secs*10)/10,d:eco.diff,p:patrimonio(),f:new Date().toISOString().slice(0,10),cl:String(eco.clase&&eco.clase.code||'').slice(0,12)};
   const loc=rkLocal(); const best=rkMerge(loc,run); rkSaveLocal(loc);
   if(RK.shared&&RK.db&&RK.uid&&RK.canWrite){ const mine=RK.mine.slice(); if(rkMerge(mine,run)){ try{ await RK.db.doc('ranking/'+RK.uid).set({runs:mine.slice(-80)}); RK.mine=mine; }catch(e){ if(e&&(e.code==='invalid_argument'||e.code==='not_granted')) RK.canWrite=false; } } }
   return {run,best};
@@ -3897,18 +3977,19 @@ const RK_UI={w:'0',d:'sen',g:''};
 function renderRanking(el){
   if(!el) return;
   const sel=(id,opts,v)=>`<select data-rk="${id}" style="font:600 13px var(--f-body);background:var(--bg);color:var(--ink);border:1px solid var(--line);border-radius:9px;padding:6px 8px">${opts.map(([k,n])=>`<option value="${k}" ${String(v)===String(k)?'selected':''}>${esc(n)}</option>`).join('')}</select>`;
-  const w=+RK_UI.w, d=RK_UI.d, g=RK_UI.g.trim().toLowerCase();
-  let list=rkRows().filter(r=>r.w===w&&(d==='all'||r.d===d)&&(!g||(String(r.g||'')+' '+String(r.c||'')+' '+String(r.gr||'')).toLowerCase().includes(g))).sort((a,b)=>a.t-b.t).slice(0,15);
+  const w=+RK_UI.w, d=RK_UI.d, g=RK_UI.g.trim().toLowerCase(), myCl=(eco&&eco.clase&&eco.clase.code)||(profLoad().clase&&profLoad().clase.code)||(claseMine()&&claseMine().code)||''; if(RK_UI.cl==null) RK_UI.cl=!!myCl;
+  let list=rkRows().filter(r=>(!RK_UI.cl||!myCl||r.cl===myCl)&&r.w===w&&(d==='all'||r.d===d)&&(!g||(String(r.g||'')+' '+String(r.c||'')+' '+String(r.gr||'')).toLowerCase().includes(g))).sort((a,b)=>a.t-b.t).slice(0,15);
   const medal=i=>i<3?`<span style="display:inline-grid;place-items:center;width:22px;height:22px;border-radius:50%;background:${['#F2B33D','#C9D3DA','#C98A5A'][i]};color:#2A1A00;font:800 12px var(--f-num)">${i+1}</span>`:`<span style="display:inline-block;width:22px;text-align:center;font:600 12px var(--f-num);color:var(--muted)">${i+1}</span>`;
   const DN={exp:'Explorador',sen:'Senderista',mon:'Montañista'};
   el.innerHTML=`<div class="row" style="gap:8px;margin-bottom:10px">
      ${sel('w',[...LV.map((L,i)=>[i,'Mundo '+(i+1)+' · '+L.name]),[8,'Ruta completa']],RK_UI.w)}
      ${sel('d',[['sen','Senderista'],['exp','Explorador'],['mon','Montañista'],['all','Todas las dificultades']],RK_UI.d)}
+     ${myCl?`<label style="display:flex;gap:6px;align-items:center;font:600 13px var(--f-body)"><input type="checkbox" id="rkCl" ${RK_UI.cl?'checked':''}> Solo mi clase (${esc(myCl)})</label>`:''}
      <input type="text" data-rk="g" placeholder="Filtrar por curso o colegio" value="${esc(RK_UI.g)}" style="width:150px;font-size:13px;padding:6px 10px">
    </div>
    <p class="muted" style="margin:0 0 8px;font-size:13px">${RK.shared&&RK.ready?'<b>Ranking compartido</b>: lo ven todos los que abren este juego.':'<b>Ranking de este dispositivo</b>: guarda los tiempos jugados aquí. El ranking compartido aparece cuando el juego se abre con sesión iniciada y permiso para participar.'} Gana el menor tiempo; el patrimonio muestra si se subió bien.</p>
    ${list.length?`<div class="tblwrap" style="margin:0"><table class="cur" style="min-width:0"><thead><tr><th>#</th><th>Senderista</th><th>Colegio · grado</th><th>Tiempo</th><th>Patrimonio</th>${d==='all'?'<th>Dificultad</th>':''}<th>Fecha</th></tr></thead><tbody>${list.map((r,i)=>`<tr style="${r.own?'background:rgba(242,179,61,.08)':''}"><td>${medal(i)}</td><td><b>${esc(r.a)}</b>${r.own?' <span class="tag" style="background:var(--gold)">tú</span>':''}</td><td>${esc([r.c,[r.gr,r.g].filter(Boolean).join(' ')].filter(Boolean).join(' · ')||'—')}</td><td style="font:600 13px var(--f-num)">${fmtT(r.t)}</td><td style="font:600 13px var(--f-num);color:${r.p>=0?'var(--ok)':'var(--bad)'}">${Number(r.p)||0}</td>${d==='all'?`<td>${DN[r.d]||''}</td>`:''}<td class="muted">${esc(String(r.f||''))}</td></tr>`).join('')}</tbody></table></div>`:'<p class="muted">Todavía no hay tiempos aquí. Termina un mundo para entrar al ranking.</p>'}`;
-  el.querySelectorAll('select[data-rk]').forEach(x=>x.onchange=()=>{ RK_UI[x.dataset.rk]=x.value; rkRefresh(); });
+  el.querySelectorAll('select[data-rk]').forEach(x=>x.onchange=()=>{ RK_UI[x.dataset.rk]=x.value; rkRefresh(); }); const ck=el.querySelector('#rkCl'); if(ck) ck.onchange=()=>{ RK_UI.cl=ck.checked; rkRefresh(); };
   const gi=el.querySelector('input[data-rk="g"]'); if(gi) gi.oninput=()=>{ RK_UI.g=gi.value; clearTimeout(gi._t); gi._t=setTimeout(()=>{ rkRefresh(); const n=document.querySelector('input[data-rk="g"]'); if(n){ n.focus(); n.setSelectionRange(n.value.length,n.value.length); } },350); };
 }
 function rkRefresh(){ document.querySelectorAll('[data-rankbox]').forEach(renderRanking); }
@@ -4186,7 +4267,7 @@ function buildMaterial(){
 }
 function buildInfo(){
   const gc=document.getElementById('gcards'); if(gc) gc.innerHTML=GUIAS.map((g,i)=>`<div class="gcard"><span class="n">${i+1}</span><div><b>${esc(g[0])}</b><span>${esc(g[1])} · ${esc(g[2])}</span></div></div>`).join('');
-  const dc=document.getElementById('docente'); if(dc) dc.innerHTML=`<div class="dcta"><div><b>Material docente por unidades</b><p>7 clases listas, una por guía: meta, actividad, mini quiz y tarea con la familia.</p></div><button class="mbtn pri" type="button" id="dGoMat">Abrir el material →</button></div><p class="muted">Ruta Financiera se alinea con las competencias de las orientaciones pedagógicas del MEN para la educación económica y financiera: <b>decidir, administrar, planear y gestionar</b>. Cada mundo tiene un resultado de aprendizaje, sale de una guía de Ruta a la Cima y tiene una evidencia que el juego mide sola. Al final, el juego entrega un resumen que se puede copiar.</p>
+  const dc=document.getElementById('docente'); if(dc) dc.innerHTML=`<div id="claseDoc"></div><div class="dcta"><div><b>Material docente por unidades</b><p>7 clases listas, una por guía: meta, actividad, mini quiz y tarea con la familia.</p></div><button class="mbtn pri" type="button" id="dGoMat">Abrir el material →</button></div><p class="muted">Ruta Financiera se alinea con las competencias de las orientaciones pedagógicas del MEN para la educación económica y financiera: <b>decidir, administrar, planear y gestionar</b>. Cada mundo tiene un resultado de aprendizaje, sale de una guía de Ruta a la Cima y tiene una evidencia que el juego mide sola. Al final, el juego entrega un resumen que se puede copiar.</p>
    <div class="tblwrap"><table class="cur"><thead><tr><th>Mundo</th><th>Resultado de aprendizaje</th><th>Competencia</th><th>Guía</th><th>Evidencia en el juego</th></tr></thead><tbody>${CURR.map((c,i)=>`<tr><td><b>${i+1}</b> ${esc(LV[i].name)}</td><td>${esc(c.ra)}</td><td>${esc(c.comp)}</td><td>${esc(c.g)}</td><td>${esc(c.ev)}</td></tr>`).join('')}</tbody></table></div>
    <h3>Una sesión de clase (45 a 60 minutos)</h3>
    <div class="hcards">
@@ -4207,6 +4288,7 @@ function buildInfo(){
    <p class="muted">Prueba inicial y final de 5 cartas (diagnóstica y sumativa), una carta formativa en cada campamento con repaso espaciado y una evidencia de desempeño por mundo. Todo aparece en el resumen para el docente al terminar la ruta.</p>`;
   buildMaterial(); buildMenu();
   const dg=document.getElementById('dGoMat'); if(dg) dg.onclick=()=>openPane('material',{scroll:true});
+  try{ renderClaseDoc(); }catch(e){}
   closeGuide();
   document.getElementById('icloseBtn').onclick=closeGuide;
   const tm=document.getElementById('tipMore'); if(tm) tm.onclick=()=>{ const el=document.getElementById('tip'), o=!el.classList.contains('open'); el.classList.toggle('open',o); tm.textContent=o?'Resumir':'Leer todo'; tm.setAttribute('aria-expanded',String(o)); try{cv.focus({preventScroll:true})}catch(e){} };

@@ -175,6 +175,8 @@ En el camino también aparecen **personas que te ayudan**, **cartas de concepto*
 
 ## 🏫 Para el aula
 
+**Código de clase.** En *Para el docente* cada profesor escribe su nombre, cargo, colegio y ciudad, dibuja su firma y crea un código (por ejemplo `RAC-7K2QMX`). Sus estudiantes lo escriben en su registro: compiten en el ranking de la clase y su diploma sale con los datos y la firma del docente. Si el juego no está conectado al ranking compartido, el docente comparte el código largo (`RAC1.…`), que funciona en cualquier dispositivo.
+
 Ruta Financiera nació en el aula y está pensada para usarse en ella.
 
 - 🎯 **Un resultado de aprendizaje por mundo**, alineado con las competencias de las orientaciones del MEN para la educación económica y financiera: **decidir, administrar, planear y gestionar**.
@@ -267,6 +269,7 @@ En **Settings → Pages**, elige **Deploy from a branch**, la rama `main` y la c
 | **Final** | El senderista sube la última ladera, clava la bandera de la cumbre al amanecer y aparece **¡Cima conquistada!** con un certificado descargable de **Excelente inteligencia financiera**, con papel de seguridad, guilloche de oro, emblema de la Ruta, medallas con los logros del jugador, firmas, sello de lacre, código de verificación y una marca de agua con sus activos, pasivos, ahorro, patrimonio e inversiones |
 | **Enemigos vencidos** | Quedan amarrados con un candado, reciben el sello rojo **PASIVO CONTROLADO** (con lo que controlaste: tiempo en el celular, deuda de la tarjeta, estafa denunciada…) y estallan en dinero |
 | **Alcancía viva** | Las monedas vuelan una a una hasta la alcancía, su vientre de vidrio se llena y brilla al completar el fondo de emergencia; con los golpes se agrieta y al tercero cae y se rompe en pedazos |
+| **Personajes** | Proporciones naturales (cabeza más pequeña, cuello, piernas más largas), ojos con brillo, nariz, manos y zapatos con volumen; todos se pintan con la luz de su mundo, luz de borde y contorno |
 | **Animación** | Todos los personajes comparten un esqueleto con cinemática inversa: pie fijo al apoyar (sin patinar), cadera que sube al caminar y baja al correr, brazos en oposición, lanzamientos con preparación y seguimiento, reacción al golpe y respiración. El puma trota en diagonal, la culebra ondula y la hormiga camina en trípode |
 | **Controles** | Teclado, ratón (clic para ir) y táctil |
 | **Guardado** | Progreso, ranking local y material docente en `localStorage` |
