@@ -482,6 +482,7 @@ body.est-cine .stage::after{content:"";position:absolute;inset:0;pointer-events:
     </div>
     <div class="ipane" data-p="guias" hidden><div class="gcards" id="gcards"></div></div>
     <div class="ipane" data-p="ranking" hidden><div data-rankbox></div></div>
+    <div class="ipane" data-p="consejos" hidden id="consejos"></div>
     <div class="ipane" data-p="docente" hidden id="docente"></div>
     <div class="ipane" data-p="material" hidden id="material"></div>
   </section>
@@ -498,6 +499,7 @@ const CH={
  lz_scroll:["                  ","                  ","                  ","                  ","  o            o  ","        T         ","##################","##################"],
  lz_vitrina:["                  ","                  ","                  ","                  ","  o            o  ","        O         ","##################","##################"],
  lz_tarjeta:["                  ","                  ","                  ","                  ","  o            o  ","        R         ","##################","##################"],
+ calle:["                ","                ","                ","                ","  o      y   o  ","################","################"],
  paciencia:["                ","                ","                ","                ","  o    l     o  ","################","################"],
  tiendas:["                    ","                    ","                    ","                    ","  o  j          o   ","####################","####################"],
  curso:["                ","                ","                ","                ","  o    i     o  ","################","################"],
@@ -558,35 +560,35 @@ const LV=[
  {name:'El Valle',role:'Desempleado',step:'Identificación de ingresos',theme:0,costo:0,
   lesson:'En El Valle todavía no tienes ingreso fijo. Las monedas son tu dinero: recógelas, pero tu mochila tiene un límite. Busca el <b>casco de Empleo</b> sobre una plataforma: te dará un salario en cada quincena. Hay 3 páginas del <b>Cuaderno de Ruta</b> escondidas en las alturas. Terreno nuevo: un <b>pantano</b> que frena, un <b>río</b> con piedras que se hunden y un <b>muro de escalada</b> (mantén la flecha hacia el muro). Doña Rosa te espera en el camino… y un <b>gota a gota</b> también.',
   req:'Tener un empleo (salario)',
-  chunks:['start','coins','pantano','billetes','job','ayuda','steps','page1','paciencia','colchon','rio','embalse','gap','vehiculo','bridge','lender','coins','page2','curso','embalse','muro','steps','coins','page3','camp']},
+  chunks:['start','coins','pantano','billetes','job','ayuda','steps','page1','paciencia','colchon','rio','embalse','gap','vehiculo','bridge','lender','coins','calle','page2','curso','embalse','muro','steps','coins','page3','camp']},
  {name:'Base de la Montaña',role:'Empleado',step:'Control de gastos',theme:1,costo:1,
   lesson:'Las <b>hormigas</b> son gastos hormiga: si te tocan se llevan monedas. Salta encima de ellas para recuperar una. Desde aquí el costo de vida cobra 1 moneda por quincena. Aparecen el <b>banco</b> que cobra comisiones, la <b>nube de inflación</b>, las <b>tarjetas pre-aprobadas</b> y una <b>culebra</b> escondida en el pasto.',
   req:'Llegar al campamento con 10 monedas o más en la mano',
-  chunks:['start','ants','billetes','pantano','vitrina','page1','tiendas','colchon','embalse','culebra','credito','fugas','antgap','ayuda','page2','paciencia','embalse','banco','cloud','rio','vitrina','antgap','curso','page3','ants','camp']},
+  chunks:['start','ants','billetes','pantano','vitrina','page1','tiendas','colchon','embalse','culebra','credito','fugas','antgap','ayuda','calle','page2','paciencia','embalse','banco','cloud','rio','vitrina','antgap','curso','page3','ants','camp']},
  {name:'Puntos de Observación',role:'Estratega',step:'Creación de ahorro',theme:2,costo:1,
   lesson:'Cada <b>alcancía</b> guarda la mitad de tus monedas apenas la tocas: págate primero. Si te golpean con la mano vacía, tu alcancía paga el golpe. Sin alcancía ni monedas, te quedas sin fondos.',
   req:'Tener 15 monedas o más en la alcancía',
-  chunks:['start','steps','billetes','embalse','muro','mercado','puma','page1','apuros','colchon','embalse','prima','lender','vehiculo','cloud','sueno','rio','bridge','page2','tiendas','embalse','banco','antgap','ayuda','pits','paciencia','page3','coins','camp']},
+  chunks:['start','steps','billetes','embalse','muro','mercado','puma','page1','apuros','colchon','embalse','prima','lender','vehiculo','cloud','sueno','rio','bridge','calle','page2','tiendas','embalse','banco','antgap','ayuda','pits','paciencia','page3','coins','camp']},
  {name:'Primer Campamento',role:'Emprendedor',step:'Inversiones inteligentes',theme:3,costo:1,
   lesson:'Llega a los <b>lotes de inversión</b> con las monedas que piden y siembra. Se vuelven manantiales que te pagan en cada quincena, para siempre. Cuidado con las nubes de inflación.',
   req:'Tener al menos 1 activo',
-  chunks:['start','invest','ants','mercado','cloud','rio','page1','tiendas','embalse','billetes','invest','vehiculo','credito','muro','sueno','page2','curso','cripto','embalse','banco','puma','ayuda','mercado','invest','pantano','page3','coins','camp']},
+  chunks:['start','invest','ants','mercado','cloud','rio','page1','tiendas','embalse','billetes','invest','vehiculo','credito','muro','sueno','calle','page2','curso','cripto','embalse','banco','puma','ayuda','mercado','invest','pantano','page3','coins','camp']},
  {name:'Campamento Avanzado',role:'Empresario',step:'Diversificación de recursos',theme:4,costo:2,
   lesson:'Bosque de niebla: ves poco (la <b>linterna</b> ayuda) y hay <b>costos ocultos</b>, zarzas que no se ven. Hay tres tipos de activo: <b>financiero</b>, <b>inmueble</b> y <b>emprendimiento</b>; no dependas de uno solo. Ojo con el <b>prestamista gota a gota</b>: da plata rápido, pero encadena.',
   req:'Tener activos de 2 tipos distintos',
-  chunks:['start','invest','mercado','moving','cloud','hidden','page1','fomo','embalse','credito','lender','pantano','duo','bridge','page2','tiendas','cripto','embalse','tower','banco','culebra','ayuda','invest','vehiculo','page3','coins','camp']},
+  chunks:['start','invest','mercado','moving','cloud','hidden','page1','fomo','embalse','credito','lender','pantano','duo','bridge','calle','page2','tiendas','cripto','embalse','tower','banco','culebra','ayuda','invest','vehiculo','page3','coins','camp']},
  {name:'La Cima',role:'Inversionista',step:'Eliminación de pasivos',theme:5,costo:2,
   lesson:'El páramo de los frailejones. Caen <b>rocas</b> de las laderas: un <b>casco</b> es un seguro que cuesta poco cada quincena. Aquí no se sube con cadenas: llega <b>sin deudas</b>. Las pirámides doradas prometen duplicar tu plata; ya sabes cómo terminan.',
   req:'Cero deudas',
-  chunks:['start','lender','credito','pyramid','rocks','page1','apuros','embalse','mercado','muro','lender','fugas','puma','cloud','page2','fomo','cripto','embalse','sueno','rio','rocks','duo','banco','hidden','ayuda','page3','coins','camp']},
+  chunks:['start','lender','credito','pyramid','rocks','page1','apuros','embalse','mercado','muro','lender','fugas','puma','cloud','calle','page2','fomo','cripto','embalse','sueno','rio','rocks','duo','banco','hidden','ayuda','page3','coins','camp']},
  {name:'Cumbre Personal',role:'Diversificador',step:'Construcción de patrimonio',theme:6,costo:2,
   lesson:'Tu <b>patrimonio</b> es todo lo que tienes (mano, alcancía y activos) menos lo que debes. Constrúyelo sin caer en trampas.',
   req:'Patrimonio de 80 o más',
-  chunks:['start','tower','mercado','invest','rocks','vehiculo','page1','fomo','embalse','sueno','pyramid','pantano','credito','lender','puma','page2','apuros','cripto','embalse','muro','billetes','rocks','banco','ayuda','prima','page3','coins','camp']},
+  chunks:['start','tower','mercado','invest','rocks','vehiculo','page1','fomo','embalse','sueno','pyramid','pantano','credito','lender','puma','calle','page2','apuros','cripto','embalse','muro','billetes','rocks','banco','ayuda','prima','page3','coins','camp']},
  {name:'La Cordillera',role:'Mentor',step:'Libertad financiera',theme:7,costo:3,
   lesson:'Hielo resbaloso (los <b>crampones</b> ayudan) y el costo de vida más alto de la ruta. Para ser <b>mentor</b> tu ingreso pasivo debe cubrir tu costo de vida sin trabajar, y debes superar la Prueba del Mentor.',
   req:'Ingreso pasivo igual o mayor que el costo de vida (3)',
-  chunks:['start','tower','mercado','moving','rocks','page1','fomo','embalse','cloud','vitrina','lender','muro','invest','sueno','page2','apuros','cripto','embalse','rio','hidden','puma','pyramid','ayuda','vehiculo','duo','page3','antgap','camp']},
+  chunks:['start','tower','mercado','moving','rocks','page1','fomo','embalse','cloud','vitrina','lender','muro','invest','sueno','calle','page2','apuros','cripto','embalse','rio','hidden','puma','pyramid','ayuda','vehiculo','duo','page3','antgap','camp']},
 ];
 
 const THEMES=[
@@ -712,6 +714,10 @@ const TIPS={
  ruina:{t:'El Gran Estafador',g:'Guía 5',x:'Promete rendimientos imposibles y se lleva todo lo que le entregas. Defiéndete: desconfía de lo “garantizado”, verifica con la Superfinanciera, diversifica, guarda en la alcancía y ten seguros.'},
  terremoto:{t:'Imprevisto: terremoto',g:'Guía 5',x:'La tierra se abre y las casas se dañan. Un seguro (el casco) cubre los daños de tu casa y un fondo de emergencia evita que el golpe te devuelva al valle.'},
  politica:{t:'Decisiones políticas y tu bolsillo',g:'Guía 6',x:'Un decreto o una ley puede subir el mercado, la gasolina o crear un impuesto. Por eso se vota informado, se exigen cuentas claras y se planea con margen en el presupuesto.'},
+ servicios:{t:'Servicios públicos',g:'Guía 2',x:'Luz, agua y gas suben de precio. Un presupuesto con margen y el ahorro en casa (apagar, desconectar, cerrar la llave) amortiguan el golpe.'},
+ alimentos:{t:'Alimentos más caros',g:'Guía 2',x:'Cuando sube el mercado, planear el menú, hacer lista y comparar precios protege tu bolsillo.'},
+ administracion:{t:'Cuota de administración',g:'Guía 2',x:'Vivir en conjunto tiene una cuota mensual que puede subir. Es un gasto fijo: va en el presupuesto antes que los gustos.'},
+ robo:{t:'Robos en la calle',g:'Guía 5',x:'Mostrar el celular o el dinero atrae a los ladrones. Lleva solo lo necesario, guarda el resto en la alcancía o el banco y mantente atento.'},
  paciencia:{t:'Paciencia (gratificación diferida)',g:'Guía 3',x:'Esperar por una recompensa mayor es la base del ahorro y la inversión: 2 hoy o 6 mañana. Quien sabe esperar, llega más alto.'},
  plan:{t:'Págate primero, en automático',g:'Guía 2',x:'Un presupuesto bien hecho se cumple solo: apenas llega el sueldo, una parte va directo al ahorro antes de gastar.'},
  credito:{t:'Historial crediticio (DataCrédito)',g:'Guía 6',x:'Cada cuota pagada a tiempo sube tu puntaje; un atraso o un acuerdo de pago lo baja. Con buen puntaje te prestan más barato; con mal puntaje, más caro o nada.'},
@@ -932,6 +938,7 @@ function buildLevel(li){
     if(ch==='G') ents.push({t:'gotaJefe',x:x-16,y:y+T-76,w:48,h:76,x0:x-16,hp:3,cd:70,dir:-1,flash:0,hitCd:0});
     if(ch==='K') ents.push({t:'creditoJefe',x:x-12,y:y+T-72,w:40,h:72,x0:x-12,hp:3,cd:90,roll:0,dir:-1,flash:0,hitCd:0});
     if(ch==='Y') ents.push({t:'bank',x:x-24,y:y+T-68,w:72,h:68,cd:60,lab:0});
+    if(ch==='y') ents.push({t:'ladron',x:x,y:y+T-40,w:20,h:40,x0:x,st:'acecho',dir:-1,flash:0,hitCd:0});
     if(ch==='l') ents.push({t:'paciencia',x:x-10,y:y+T-30,w:44,h:30,st:0});
     if(ch==='j'){ ents.push({t:'tienda',k:'A',x:x-4,y:y+T-34,w:40,h:34,grp:x}); ents.push({t:'tienda',k:'B',x:x+5*T,y:y+T-34,w:40,h:34,grp:x}); }
     if(ch==='i') ents.push({t:'curso',x:x-8,y:y+T-36,w:40,h:36,used:false});
@@ -1403,8 +1410,8 @@ function waveHit(){ const p=S.p; if(p.inv>0) return;
   for(let i=0;i<Math.min(10,lost);i++) S.loose.push({x:p.x+4,y:p.y+4,w:12,h:16,vx:(Math.random()-.5)*6,vy:-3-Math.random()*3,life:60,wait:999});
 }
 /* ---------- desastres por mundo ---------- */
-const DESASTRES=[['derrumbe','tormenta','enfermedad'],['inundacion','familiar','invierno'],['derrumbe','inundacion','sequia'],['terremoto','quiebra','reforma'],['inundacion','quiebra','enfermedad','guerra'],['terremoto','derrumbe','sequia','familiar'],['quiebra','inundacion','guerra','reforma'],['terremoto','derrumbe','tormenta','invierno']];
-const DES_TXT={terremoto:['¡TERREMOTO!','La tierra se abre y caen tejas: el casco (un seguro) te cubre'],tormenta:['¡TORMENTA ELÉCTRICA!','Viento y rayos: aléjate de las marcas brillantes'],sequia:['¡SEQUÍA!','Suben el agua, la luz y la comida por 2 quincenas'],invierno:['¡OLA INVERNAL!','Lluvias y daños en casa: el fondo de emergencia responde'],guerra:['GUERRA EN OTRO PAÍS','Suben el combustible y los alimentos por 3 quincenas'],enfermedad:['¡TE ENFERMASTE!','Vas más lento; la cita y la droga cuestan 3'],familiar:['FAMILIAR ENFERMO','Tu mamá necesita medicamentos: cuesta 3'],reforma:['REFORMA TRIBUTARIA','Nuevo impuesto: −1 por 3 quincenas'],inundacion:['¡INUNDACIÓN!','Sube a lo alto: el agua daña lo que llevas'],derrumbe:['¡DERRUMBE EN EL BARRANCO!','Salta las rocas que ruedan'],quiebra:['¡QUIEBRA!','Una empresa cerró: diversificar te protege']};
+const DESASTRES=[['derrumbe','tormenta','enfermedad','servicios'],['inundacion','familiar','invierno','alimentos','servicios'],['derrumbe','inundacion','sequia','alimentos','administracion'],['terremoto','quiebra','reforma','servicios','administracion'],['inundacion','quiebra','enfermedad','guerra','alimentos'],['terremoto','derrumbe','sequia','familiar','administracion'],['quiebra','inundacion','guerra','reforma','servicios'],['terremoto','derrumbe','tormenta','invierno','alimentos']];
+const DES_TXT={servicios:['¡SUBIERON LOS SERVICIOS!','Luz, agua y gas más caros: +1 por 3 quincenas'],alimentos:['¡SUBIERON LOS ALIMENTOS!','El mercado cuesta más: +1 por 2 quincenas'],administracion:['¡SUBIÓ LA ADMINISTRACIÓN!','La cuota del conjunto sube: +1 por 3 quincenas'],terremoto:['¡TERREMOTO!','La tierra se abre y caen tejas: el casco (un seguro) te cubre'],tormenta:['¡TORMENTA ELÉCTRICA!','Viento y rayos: aléjate de las marcas brillantes'],sequia:['¡SEQUÍA!','Suben el agua, la luz y la comida por 2 quincenas'],invierno:['¡OLA INVERNAL!','Lluvias y daños en casa: el fondo de emergencia responde'],guerra:['GUERRA EN OTRO PAÍS','Suben el combustible y los alimentos por 3 quincenas'],enfermedad:['¡TE ENFERMASTE!','Vas más lento; la cita y la droga cuestan 3'],familiar:['FAMILIAR ENFERMO','Tu mamá necesita medicamentos: cuesta 3'],reforma:['REFORMA TRIBUTARIA','Nuevo impuesto: −1 por 3 quincenas'],inundacion:['¡INUNDACIÓN!','Sube a lo alto: el agua daña lo que llevas'],derrumbe:['¡DERRUMBE EN EL BARRANCO!','Salta las rocas que ruedan'],quiebra:['¡QUIEBRA!','Una empresa cerró: diversificar te protege']};
 function payEvent(n,label,cat){ const p=S.p; let rest=n; const fe=Math.min(rest,eco.emb); eco.emb-=fe; rest-=fe; const fh=Math.min(rest,eco.hand); eco.hand-=fh; rest-=fh;
   if(S.ws) S.ws.lost[cat]=(S.ws.lost[cat]||0)+n; logD('Pérdida',label,-(n-rest));
   if(rest>0){ addDebt('Préstamo de urgencia: '+label.toLowerCase(),rest+1,1,'acuerdo'); addText(p.x-80,p.y-44,label+': sin fondo de emergencia, quedaste debiendo '+(rest+1),'#FF9A8C'); }
@@ -1414,7 +1421,7 @@ function desUpdate(){
   S.cracks=(S.cracks||[]).filter(c=>++c.t<150); S.cracks.forEach(c=>{ const op=crackOpen(c); if(!c.hit&&op>0.5&&p.onGround&&Math.abs(p.x+p.w/2-c.x)<c.w*op/2-3){ c.hit=true; p.vy=-5; hurt(1,'la tierra se abrió','golpes'); } });
   S.bolts=(S.bolts||[]).filter(b=>++b.t<48); S.bolts.forEach(b=>{ if(b.t===34){ S.flashSky=8; snd('hit'); S.shake=reduced?0:4; if(Math.abs(p.x+p.w/2-b.x)<16&&p.inv<=0){ if(has('casco')){ addText(p.x-40,p.y-20,'El rayo cayó cerca: el seguro te cubrió','#C9CEFF'); } else hurt(2,'un rayo','golpes'); } } });
   if(S.sick>0) S.sick--; if(S.flashSky>0) S.flashSky--;
-  if(!D.cur){ if(--D.next<=0&&p.onGround&&!S.busy){ const k=DESASTRES[S.li][rnd(DESASTRES[S.li].length)]; D.cur={k,t:0,warn:110,dur:{terremoto:300,inundacion:420,derrumbe:330,quiebra:110,tormenta:380,sequia:220,invierno:320,guerra:160,enfermedad:480,familiar:140,reforma:140}[k]}; snd('bad');
+  if(!D.cur){ if(--D.next<=0&&p.onGround&&!S.busy){ const k=DESASTRES[S.li][rnd(DESASTRES[S.li].length)]; D.cur={k,t:0,warn:110,dur:{servicios:140,alimentos:140,administracion:140,terremoto:300,inundacion:420,derrumbe:330,quiebra:110,tormenta:380,sequia:220,invierno:320,guerra:160,enfermedad:480,familiar:140,reforma:140}[k]}; snd('bad');
       if(k==='inundacion'){ const c=Math.floor((p.x+p.w/2)/T); D.cur.base=groundY(c); }
       learn(k); }
     return; }
@@ -1431,6 +1438,9 @@ function desUpdate(){
   else if(C.k==='sequia'&&tt===1){ addShock('Agua, luz y comida más caras (sequía)',1,2); addText(p.x-70,p.y-30,'Sequía: el costo de vida sube 1 por 2 quincenas','#FFC7BF'); logD('Gasto','Sequía: costo de vida +1 por 2 quincenas',0); }
   else if(C.k==='invierno'){ if(tt===1){ addShock('Reparaciones por la ola invernal',1,1); addText(p.x-70,p.y-30,'Ola invernal: arreglos de la casa −1 en la quincena','#9FD3FF'); } p.vx*=0.995; }
   else if(C.k==='guerra'&&tt===1){ addShock('Combustible y alimentos más caros (guerra lejana)',1,3); const car=(eco.lujos||[]).some(l=>/arro|oto/.test(l.n)); if(car) addShock('Gasolina más cara',1,2); addText(p.x-70,p.y-30,'Guerra lejana: combustible y comida más caros'+(car?' (y tu vehículo gasta más)':''),'#FFC7BF'); logD('Gasto','Crisis internacional: precios más altos',0); }
+  else if(C.k==='servicios'&&tt===1){ addShock('Servicios públicos más caros',1,3); addText(p.x-70,p.y-30,'Recibo de servicios: luz, agua y gas +1 por 3 quincenas','#FFC7BF'); logD('Gasto','Subieron los servicios públicos',0); }
+  else if(C.k==='alimentos'&&tt===1){ addShock('Alimentos más caros',1,2); addText(p.x-70,p.y-30,'El mercado subió: +1 por 2 quincenas','#FFC7BF'); logD('Gasto','Subieron los alimentos',0); }
+  else if(C.k==='administracion'&&tt===1){ addShock('Cuota de administración más alta',1,3); addText(p.x-70,p.y-30,'La administración del conjunto subió: +1 por 3 quincenas','#FFC7BF'); logD('Gasto','Subió la cuota de administración',0); }
   else if(C.k==='reforma'&&tt===1){ addShock('Nuevo impuesto (reforma tributaria)',1,3); if(eco.assets.some(a=>a.type==='inm')) addShock('Predial más alto',1,1); addText(p.x-70,p.y-30,'Reforma tributaria: −1 por 3 quincenas','#FFC7BF'); logD('Gasto','Reforma tributaria: nuevo impuesto',0); }
   else if(C.k==='inundacion'){ const rise=Math.min(1,tt/70), fall=Math.min(1,(C.dur-tt)/70); C.level=C.base+26-(40*Math.min(rise,fall)); if(p.y+p.h>C.level+4&&tt%45===0&&tt>40){ const l=takeCoins(1); if(S.ws) S.ws.lost.inundacion=(S.ws.lost.inundacion||0)+1; if(l){ addText(p.x-40,p.y-14,'−1 la inundación dañó tus cosas','#9FD3FF'); logD('Pérdida','Inundación',-1); } } if(tt%6===0) S.parts.push({x:S.cam+Math.random()*W,y:C.level,vx:0,vy:-0.3,life:20,col:'rgba(200,220,230,.6)'}); }
   else if(C.k==='derrumbe'){ S.boulders=S.boulders||[]; if(tt%75===5){ const bx=S.cam+W+30; const c=Math.min(S.L.w-1,Math.floor(bx/T)); S.boulders.push({x:bx,y:groundY(c)-18,r:9,vx:-2.6*Dif().enemy,rot:0}); } }
@@ -1637,6 +1647,31 @@ const LOOK_LENDER={top:'#2B2B33',pants:'#1E1E24',shoes:'#0E0E10',skin:'#E0AC7E',
   head:b=>{ ctx.fillStyle='#111'; rr(-1,-2.4,9,3,1.2); ctx.fill(); mouth('grin'); ctx.fillStyle='#111'; ctx.fillRect(-7,-6,14,2.4); ctx.fillRect(-4,-11,8,5.4); ctx.fillStyle='#B8323C'; ctx.fillRect(-4,-7.4,8,1.4); },
   torso:(sh,hp)=>{ ctx.fillStyle='#1B1B22'; rr(-7,sh-3,14,hp-sh+5,4); ctx.fill(); ctx.fillStyle='#2B2B33'; rr(-6,sh-3,12,hp-sh+4,4); ctx.fill(); ctx.fillStyle='#F2EBDD'; ctx.beginPath(); ctx.moveTo(-1.6,sh-2.6); ctx.lineTo(3,sh-2.6); ctx.lineTo(.7,sh+5); ctx.fill(); ctx.strokeStyle='#E2B04A'; ctx.lineWidth=.9; ctx.beginPath(); ctx.arc(.7,sh,3.4,0.3,Math.PI-0.3); ctx.stroke(); },
   hand:()=>{ ctx.rotate(Math.sin(S.t*0.1)*0.3); for(let i=0;i<3;i++){ ctx.save(); ctx.rotate(-1.2+i*0.3); ctx.fillStyle=i%2?'#F2B33D':'#E2A02A'; ctx.fillRect(0,-1.6,9,4.4); ctx.restore(); } }};
+const LOOK_LADRON={top:'#3A3D44',topD:'#24262C',pants:'#1E2228',shoes:'#E9ECEF',skin:'#B07A54',throws:0,lean:0.1,
+  head:b=>{ ctx.fillStyle='#1E1A18'; ctx.beginPath(); ctx.arc(2.6,-0.8,.9,0,7); ctx.arc(5.2,-0.8,.8,0,7); ctx.fill(); ctx.strokeStyle='#2A1A12'; ctx.lineWidth=.8; ctx.beginPath(); ctx.moveTo(1.4,-3.2); ctx.lineTo(3.6,-2.4); ctx.moveTo(4.4,-2.4); ctx.lineTo(6.4,-3); ctx.stroke(); ctx.fillStyle='#2B2F36'; ctx.beginPath(); ctx.arc(-0.4,-0.8,7.2,Math.PI*0.88,Math.PI*2.1); ctx.fill(); ctx.fillRect(-7.2,-1,4.4,10); ctx.fillStyle='#1B1E24'; rr(-1,2,9,4.4,1.6); ctx.fill(); },
+  torso:(sh,hp)=>{ ctx.fillStyle='#24262C'; rr(-7,sh-3,14,hp-sh+5,5); ctx.fill(); ctx.fillStyle='#3A3D44'; rr(-6,sh-3,12,hp-sh+4,5); ctx.fill(); ctx.fillStyle='#24262C'; rr(-4,hp-7,9,4,2); ctx.fill(); ctx.strokeStyle='#C9D3DA'; ctx.lineWidth=.5; ctx.beginPath(); ctx.moveTo(0.5,sh-2); ctx.lineTo(0.5,hp-1); ctx.stroke(); }};
+const ROBO=[['celular','Te robaron el celular',4],['billetera','Te robaron la billetera',0],['bolso','Te robaron el bolso',5],['dinero','Te arrebataron el dinero de la mano',0]];
+function backToStart(){ const p=S.p, y=groundY(2)-p.h; p.x=2*T; p.y=y; p.vx=0; p.vy=0; p.on=null; p.caught=null; p.ride=null; S.cam=0; S.camY=Math.max(0,p.y-H*0.58); p.inv=120; S.freeze=reduced?0:10; }
+function ladronUpdate(e,p){
+  if(e.flash>0) e.flash--; if(e.hitCd>0) e.hitCd--;
+  if(e.st==='huye'){ e.x+=e.dir*3.6; if(--e.fleeT<=0) e.dead=true; return; }
+  if(e.st==='preso'){ if(++e.pt>70){ e.dead=true; } return; }
+  const dx=(p.x+p.w/2)-(e.x+e.w/2), same=Math.abs((p.y+p.h)-(e.y+e.h))<60;
+  if(e.st==='acecho'){ e.x=e.x0+Math.sin(S.t*0.01+e.x0)*14; e.dir=Math.sin(S.t*0.01+e.x0+1.57)>0?1:-1; if(same&&dx>8&&dx<220){ e.st='sigue'; learn('robo'); addText(p.x-60,p.y-30,'¡Alguien te sigue! Corre o enfréntalo','#FFE18A'); snd('bad'); } }
+  else if(e.st==='sigue'){ e.dir=dx>0?1:-1; const sp=2.15*Dif().enemy; e.x+=Math.sign(dx)*Math.min(sp,Math.abs(dx)); e.y+=Math.max(-3,Math.min(3,((p.y+p.h)-(e.y+e.h))*0.08)); if(Math.abs(dx)>420||!same&&Math.abs(dx)>200){ e.st='acecho'; e.x0=e.x; } }
+  const body={x:e.x+3,y:e.y+4,w:e.w-6,h:e.h-4}, touch=overlap(p,body), stomp=touch&&p.vy>0&&(p.y+p.h-p.vy)<=e.y+12;
+  if(stomp&&!e.hitCd){ e.st='preso'; e.pt=0; p.vy=-8; snd('stomp'); eco.stats.ladrones=(eco.stats.ladrones||0)+1; eco.hand=Math.min(cap(),eco.hand+2); stampAt(e.x+10,e.y-12,'ROBO EVITADO','estuviste atento'); addText(e.x-50,e.y-30,'¡Lo detuviste! La policía se lo lleva: +2','#BFF5CF'); logD('Ahorro','Evitaste un robo',2); return; }
+  if(touch&&!e.hitCd&&p.inv<=0&&!S.busy){ const r=ROBO[rnd(ROBO.length)]; let lost=r[0]==='dinero'?eco.hand:r[0]==='billetera'?Math.ceil(eco.hand/2):Math.min(eco.hand,r[2]); eco.hand-=lost; if(r[0]==='celular'&&lost<r[2]){ const ex=Math.min(eco.emb,r[2]-lost); eco.emb-=ex; lost+=ex; }
+    if(S.ws) S.ws.lost.robos=(S.ws.lost.robos||0)+lost; eco.stats.robado=(eco.stats.robado||0)+1; logD('Pérdida',r[1],-lost); learn('robo'); snd('hit'); S.shake=reduced?0:6;
+    e.item=r[0]; e.st='huye'; e.dir=dx>0?-1:1; e.fleeT=120; e.hitCd=999;
+    backToStart(); addText(p.x-10,p.y-40,r[1]+(lost?': −'+lost:'')+'. Vuelves al inicio del mundo','#FF9A8C'); addText(p.x-10,p.y-54,'Guarda tu plata en la alcancía y mantente atento','#FFE18A'); }
+}
+function drawLadron(e,x,y){ const cx=x+e.w/2, fy=y+e.h; ctx.fillStyle='rgba(0,0,0,.26)'; ctx.beginPath(); ctx.ellipse(cx,fy,11,2.8,0,0,7); ctx.fill();
+  if(e.st==='preso'&&e.pt>40){ ctx.globalAlpha=Math.max(0,1-(e.pt-40)/30); }
+  rigDraw(e,cx,fy,1.12,LOOK_LADRON,16,e.st==='huye'&&e.item?{hold:2.6,holdB:0.3,hand:()=>{ if(e.item==='celular'){ ctx.fillStyle='#14171C'; rr(-1.6,-6,4,7,1); ctx.fill(); ctx.fillStyle='#7FD3FF'; ctx.fillRect(-1,-5.3,2.8,5.4); } else if(e.item==='bolso'){ ctx.fillStyle='#8A3A5A'; rr(-3,-5,8,6,1.6); ctx.fill(); ctx.strokeStyle='#5A2A3A'; ctx.lineWidth=.8; ctx.beginPath(); ctx.arc(1,-5,2.6,Math.PI,0); ctx.stroke(); } else if(e.item==='billetera'){ ctx.fillStyle='#5A3A22'; rr(-3,-4,7,5,1); ctx.fill(); } else { ctx.fillStyle='#EDE2C6'; ctx.fillRect(-3,-4,8,4.4); ctx.strokeStyle='#6B2A1A'; ctx.lineWidth=.4; ctx.strokeRect(-2.4,-3.4,6.8,3.2); } }}:{});
+  ctx.globalAlpha=1;
+  if(e.st==='sigue'&&S.t%30<20){ ctx.fillStyle='#FFE18A'; ctx.font='900 12px Figtree, sans-serif'; ctx.textAlign='center'; ctx.fillText('!',cx,y-6); ctx.textAlign='left'; }
+  if(e.st==='huye'){ ctx.fillStyle='#FF9A8C'; ctx.font='800 7px Figtree, sans-serif'; ctx.textAlign='center'; ctx.fillText('¡LADRÓN!',cx,y-6); ctx.textAlign='left'; } }
 const LOOK_COB={top:'#5A1E26',pants:'#22242C',shoes:'#0E0E10',skin:'#E0AC7E',throws:0,armW:3.6,
   head:b=>{ ctx.fillStyle='#111'; rr(-1,-2.6,9,3.2,1.2); ctx.fill(); ctx.strokeStyle='#111'; ctx.lineWidth=1; ctx.beginPath(); ctx.moveTo(1,-3.6); ctx.lineTo(4,-2.8); ctx.stroke(); mouth('flat'); ctx.fillStyle='#111'; ctx.beginPath(); ctx.arc(0,-2.4,6.2,Math.PI,0); ctx.fill(); ctx.fillRect(2,-3.4,9,2); },
   torso:(sh,hp)=>{ ctx.fillStyle='#3A1218'; rr(-7,sh-3,14,hp-sh+5,4); ctx.fill(); ctx.fillStyle='#5A1E26'; rr(-6,sh-3,12,hp-sh+4,4); ctx.fill(); ctx.fillStyle='#8C98A2'; ctx.fillRect(-1,sh-2,1.4,hp-sh); },
@@ -1761,7 +1796,7 @@ function drawEventFx(){ const C=S.dis&&S.dis.cur; if(S.flashSky>0){ ctx.fillStyl
   if(C.k==='tormenta'||C.k==='invierno'){ ctx.fillStyle='rgba(20,28,40,.35)'; ctx.fillRect(0,0,W,H); ctx.strokeStyle='rgba(180,200,225,.45)'; ctx.lineWidth=1; ctx.beginPath(); const wd=C.wd||-0.5; for(let i=0;i<120;i++){ const x=(i*53+S.t*(6+i%3))%(W+40)-20, y=(i*97+S.t*11)%H; ctx.moveTo(x,y); ctx.lineTo(x+wd*5-3,y+12); } ctx.stroke(); }
   else if(C.k==='sequia'){ ctx.fillStyle='rgba(230,140,50,.18)'; ctx.fillRect(0,0,W,H); ctx.fillStyle='rgba(255,220,150,.07)'; for(let i=0;i<6;i++){ ctx.fillRect(0,H-60+Math.sin(S.t*0.05+i)*3-i*8,W,2); } }
   else if(C.k==='enfermedad'){ ctx.fillStyle='rgba(120,190,130,.12)'; ctx.fillRect(0,0,W,H); }
-  else if(C.k==='guerra'||C.k==='reforma'||C.k==='familiar'){ const kind=C.k, y=H-74-Math.max(0,20-tt)*2; ctx.fillStyle='#F4ECD8'; rr(W-200,y,184,40,4); ctx.fill(); ctx.strokeStyle='#6B2A1A'; ctx.lineWidth=1; rr(W-200,y,184,40,4); ctx.stroke(); ctx.fillStyle='#6B2A1A'; ctx.font='800 8px Figtree, sans-serif'; ctx.fillText(kind==='guerra'?'EL PERIÓDICO':kind==='reforma'?'DIAN · NUEVO IMPUESTO':'LLAMADA DE MAMÁ',W-192,y+12); ctx.fillStyle='#3A2A20'; ctx.font='600 7px Figtree, sans-serif'; ctx.fillText(kind==='guerra'?'Sube el petróleo: gasolina y comida más caras':kind==='reforma'?'El Congreso aprobó un nuevo impuesto':'“Mijo, estoy enferma, necesito la droga”',W-192,y+24); ctx.fillText(kind==='familiar'?'Tu fondo de emergencia responde por ella':'Revisa tu presupuesto: tu bolsillo cambia',W-192,y+34); }
+  else if(['guerra','reforma','familiar','servicios','alimentos','administracion'].includes(C.k)){ const kind=C.k, y=H-74-Math.max(0,20-tt)*2; ctx.fillStyle='#F4ECD8'; rr(W-200,y,184,40,4); ctx.fill(); ctx.strokeStyle='#6B2A1A'; ctx.lineWidth=1; rr(W-200,y,184,40,4); ctx.stroke(); ctx.fillStyle='#6B2A1A'; ctx.font='800 8px Figtree, sans-serif'; ctx.fillText({guerra:'EL PERIÓDICO',reforma:'DIAN · NUEVO IMPUESTO',familiar:'LLAMADA DE MAMÁ',servicios:'RECIBO DE SERVICIOS PÚBLICOS',alimentos:'TIQUETE DEL MERCADO',administracion:'ADMINISTRACIÓN DEL CONJUNTO'}[kind],W-192,y+12); ctx.fillStyle='#3A2A20'; ctx.font='600 7px Figtree, sans-serif'; ctx.fillText({guerra:'Sube el petróleo: gasolina y comida más caras',reforma:'El Congreso aprobó un nuevo impuesto',familiar:'“Mijo, estoy enferma, necesito la droga”',servicios:'Energía, acueducto y gas: total más alto',alimentos:'Arroz, huevos y leche subieron de precio',administracion:'Asamblea: nueva cuota para el conjunto'}[kind],W-192,y+24); ctx.fillText(kind==='familiar'?'Tu fondo de emergencia responde por ella':'Revisa tu presupuesto: tu bolsillo cambia',W-192,y+34); }
   ctx.restore(); }
 function drawDisasterHud(){
   const C=S.dis&&S.dis.cur; if(!C) return; const T2=DES_TXT[C.k];
@@ -1936,6 +1971,7 @@ function update(){
     else if(e.t==='prima'){ if(overlap(p,e)){ e.dead=true; eco.hand=Math.min(cap(),eco.hand+5); if(S.ws) S.ws.coins+=5; addText(e.x-10,e.y-12,'Prima de servicios +5','#FFE18A'); snd('buy'); burst(e.x+10,e.y+8,'#FFE18A',10); } }
     else if(e.t==='job'){ if(overlap(p,e)){ e.dead=true; if(eco.salario<1){ eco.salario=1; addText(e.x-50,e.y-14,'¡Empleo! Salario +1 en cada quincena','#BFF5CF'); } else { eco.hand+=3; addText(e.x,e.y-12,'+3','#BFF5CF'); } snd('gate'); burst(e.x+9,e.y+8,'#F2B33D',14); } }
     else if(e.t==='lote') loteUpdate(e,p);
+    else if(e.t==='ladron') ladronUpdate(e,p);
     else if(e.t==='paciencia'){ if(e.st===1&&--e.timer<=0){ e.st=3; eco.hand=Math.min(cap(),eco.hand+6); eco.stats.paciencia=(eco.stats.paciencia||0)+1; addText(p.x-60,p.y-40,'¡Tu paciencia pagó! El cofre se abrió: +6','#BFF5CF'); snd('gate'); confetti(p.x+7,p.y,14); logD('Ahorro','Esperaste: 6 en vez de 2',6); }
       if(e.st===0&&overlap(p,e)){ const left=(p.x+p.w/2)<e.x+e.w/2; learn('paciencia'); if(left){ e.st=2; eco.hand=Math.min(cap(),eco.hand+2); eco.stats.impaciente=(eco.stats.impaciente||0)+1; addText(e.x-40,e.y-20,'+2 ya… si esperabas eran 6','#FFE18A'); snd('drop'); } else { e.st=1; e.timer=720; addText(e.x-50,e.y-20,'¡Esperas! El cofre te dará 6 en 12 s: sigue subiendo','#BFF5CF'); snd('save'); } } }
     else if(e.t==='tienda'){ const pair=S.L.ents.filter(q=>q.t==='tienda'&&q.grp===e.grp); if(!e.done&&overlap(p,e)&&!pair.some(q=>q.bought)){ e.bought=true; pair.forEach(q=>q.done=true); const up=(eco.shocks||[]).some(k=>/[Mm]ercado/.test(k.n))?1:0, tot=(e.k==='A'?6:5)+up; const l=takeCoins(tot); if(up) addText(e.x-40,e.y-34,'Con el decreto, el mercado cuesta 1 más','#FFC7BF'); learn('comparar'); logD('Gasto','Mercado en la tienda '+(e.k==='A'?'del aviso grande (4 + 2 de envío)':'sin recargos'),-l);
@@ -2087,7 +2123,7 @@ function drawGlobos(e,x,y){ globoInit(e); const kn=globoKnot(e), kx=kn.x-S.cam, 
   ctx.textAlign='left'; ctx.restore();
   if(lift){ const left=e.need; ctx.save(); ctx.font='800 8px Figtree, sans-serif'; ctx.textAlign='center'; ctx.fillStyle=S.t%30<18?'#FFE18A':'#fff'; ctx.fillText('¡SALTA! revienta '+left+' globo'+(left>1?'s':''),kx,y-22); ctx.restore(); }
 }
-const TIED_SUB={politico:'votaste informado',hacker:'clave protegida',scroll:'tiempo en el celular',vitrina:'compras por impulso',tarjeta:'deuda de la tarjeta',inflacion:'precios comparados',tahur:'apuestas bloqueadas',gotaJefe:'gota a gota denunciado',creditoJefe:'crédito impagable anulado',ruina:'estafa denunciada'};
+const TIED_SUB={ladron:'estuviste atento',politico:'votaste informado',hacker:'clave protegida',scroll:'tiempo en el celular',vitrina:'compras por impulso',tarjeta:'deuda de la tarjeta',inflacion:'precios comparados',tahur:'apuestas bloqueadas',gotaJefe:'gota a gota denunciado',creditoJefe:'crédito impagable anulado',ruina:'estafa denunciada'};
 function stampDraw(x,y,t,txt,sub,big){ if(t<0) return; const sc=Math.max(1,2.4-t*0.16)*(big?1:0.8), a=Math.min(1,t/4);
   ctx.save(); ctx.globalAlpha=a; ctx.translate(x,y); ctx.rotate(-0.16); ctx.scale(sc,sc); ctx.font='900 8px Figtree, sans-serif'; const w=ctx.measureText(txt).width+12;
   ctx.fillStyle='rgba(255,250,240,.88)'; rr(-w/2,-9,w,sub?19:13,2.5); ctx.fill(); ctx.strokeStyle='#C9283C'; ctx.lineWidth=1.6; rr(-w/2,-9,w,sub?19:13,2.5); ctx.stroke(); ctx.lineWidth=.6; rr(-w/2+2,-7,w-4,sub?15:9,1.6); ctx.stroke();
@@ -2781,6 +2817,7 @@ function drawEnts(only){
     else if(e.t==='emb'){ piggy(x,y,e.used,e); }
     else if(e.t==='lote') drawLote(e,x,y);
     else if(e.t==='colchon') drawColchon(e,x,y);
+    else if(e.t==='ladron') drawLadron(e,x,y);
     else if(e.t==='paciencia') drawPaciencia(e,x,y);
     else if(e.t==='tienda') drawTienda(e,x,y);
     else if(e.t==='curso') drawCurso(e,x,y);
@@ -3368,7 +3405,7 @@ function profileForm(p){
    <p class="reg-n">Así apareces en el ranking y en el informe para tu docente. Usa un apodo, no tu nombre completo: lo ven tus compañeros.</p>
    <div class="reg-g">
     <div class="full"><label class="lb" for="nm">Nombre o apodo *</label><input type="text" id="nm" maxlength="16" required value="${esc(p.name||'')}" placeholder="Ej. Sendero Ana" autocomplete="nickname"></div>
-    <div class="full"><label class="lb" for="pcol">Colegio o institución</label><input type="text" id="pcol" maxlength="40" value="${esc(p.colegio||'')}" placeholder="Ej. I. E. San Bernardo" autocomplete="organization"></div>
+    <div class="full"><label class="lb" for="pcol">Colegio o institución</label><input type="text" id="pcol" maxlength="40" value="${esc(p.colegio||'')}" placeholder="Nombre del colegio" autocomplete="organization"></div>
     <div><label class="lb" for="pgrd">Grado</label><select id="pgrd">${opt(GRADOS,p.grado||'')}</select></div>
     <div><label class="lb" for="gr">Grupo o curso</label><input type="text" id="gr" maxlength="12" value="${esc(p.grupo||'')}" placeholder="Ej. 10-2"></div>
     <div><label class="lb" for="ppais">País</label><select id="ppais">${opt(PAISES,p.pais||'Colombia')}</select></div>
@@ -3890,6 +3927,137 @@ function endingReport(){
 }
 
 
+/* ================= 100 CONSEJOS DE INTELIGENCIA FINANCIERA (tarjetas) ================= */
+const CONS_CAT={ahorro:['Ahorro','#4A8FD3'],presupuesto:['Presupuesto','#62C98A'],deuda:['Deudas y crédito','#C9475B'],inversion:['Inversión','#2F7A4A'],proteccion:['Protección y seguros','#9AA3F0'],consumo:['Consumo inteligente','#D9822B'],ingresos:['Ingresos y carrera','#B8862F'],mente:['Mentalidad y hábitos','#6B2A1A']};
+const CONSEJOS=[
+['ahorro','Págate primero','Apenas recibas dinero, separa una parte para ti antes de gastar.','Define un porcentaje fijo, aunque sea pequeño, y apártalo el mismo día.'],
+['ahorro','Ahorra para algo','El ahorro con nombre (una bicicleta, un curso) se cumple más que el ahorro sin meta.','Escribe tu meta, cuánto cuesta y para cuándo la quieres.'],
+['ahorro','Fondo de emergencia','Un colchón para imprevistos evita que un problema se vuelva deuda.','Empieza con una meta pequeña y crécela hasta varios meses de gastos.'],
+['ahorro','Lo pequeño suma','Ahorrar poco cada semana vale más que esperar a ahorrar mucho algún día.','Guarda una moneda fija cada vez que no compres algo que pensabas comprar.'],
+['ahorro','Automatiza','Lo que pasa solo no depende de tu fuerza de voluntad.','Programa una transferencia al ahorro el día que te pagan.'],
+['ahorro','Separa los bolsillos','Mezclar el dinero del ahorro con el del gasto hace que el ahorro desaparezca.','Usa una cuenta o alcancía distinta solo para ahorrar.'],
+['ahorro','No debajo del colchón','El efectivo escondido no gana intereses y se puede perder o dañar.','Guarda tus ahorros en una entidad vigilada por la Superfinanciera.'],
+['ahorro','Ahorra los aumentos','Cuando ganes más, sube primero tu ahorro y después tu gasto.','Destina al ahorro al menos la mitad de cada aumento.'],
+['ahorro','Reto de las 52 semanas','Los retos convierten el ahorro en juego.','Ahorra cada semana un poco más que la anterior durante un año.'],
+['ahorro','Revisa tu meta','Una meta que no se mira se olvida.','Cada mes mira cuánto llevas y cuánto te falta.'],
+['ahorro','Celebra sin gastarlo todo','Premiarte está bien, pero sin borrar lo que lograste.','Usa una parte pequeña para celebrar y deja el resto ahorrado.'],
+['ahorro','Ahorro con propósito','Ahorrar para estudiar o emprender es invertir en ti.','Separa una meta de ahorro solo para tu formación.'],
+['presupuesto','Anota todo','Lo que no se mide no se puede mejorar.','Durante un mes registra cada gasto, incluso los pequeños.'],
+['presupuesto','El semáforo 50/30/20','Una guía sencilla: necesidades, gustos y ahorro.','Reparte tu ingreso: 50 % necesario, 30 % gustos, 20 % ahorro e inversión.'],
+['presupuesto','Necesidad o deseo','No todo lo que quieres lo necesitas.','Antes de comprar pregúntate: ¿lo necesito o lo quiero?'],
+['presupuesto','Gastos hormiga','El café, la gaseosa y el domicilio diario suman mucho al mes.','Multiplica un gasto pequeño diario por 30 y decide si vale la pena.'],
+['presupuesto','Gastos fijos primero','Arriendo, servicios y transporte llegan siempre.','Apártalos apenas recibas el ingreso.'],
+['presupuesto','Planea los gastos grandes','Útiles, matrículas e impuestos llegan cada año.','Divide su valor entre los meses y ahorra esa cuota.'],
+['presupuesto','Deja un margen','Los precios suben y los imprevistos aparecen.','Deja un pequeño porcentaje sin asignar en tu presupuesto.'],
+['presupuesto','Revisa cada mes','Tu presupuesto cambia como cambia tu vida.','Dedica 15 minutos al mes a ajustarlo.'],
+['presupuesto','Presupuesto en familia','Las decisiones de dinero salen mejor conversadas.','Hablen en casa de metas y gastos una vez al mes.'],
+['presupuesto','Usa los sobres','Separar el dinero por destino evita gastarlo dos veces.','Divide tu ingreso en sobres o bolsillos: comida, transporte, ahorro.'],
+['presupuesto','Los recibos suben','Servicios, alimentos y administración cambian de precio.','Revisa tus recibos y busca formas de ahorrar agua y luz.'],
+['presupuesto','Cuenta tu tiempo','El dinero cuesta horas de trabajo.','Antes de comprar calcula cuántas horas de trabajo te cuesta.'],
+['deuda','La deuda cuesta','Pedir prestado significa pagar más de lo que recibes.','Antes de endeudarte suma todo lo que vas a pagar al final.'],
+['deuda','Compara la tasa E.A.','La tasa efectiva anual permite comparar créditos.','Pide siempre la tasa E.A. y el costo total del crédito.'],
+['deuda','Cuota que puedas pagar','Una cuota que no cabe en tu sueldo te ahoga.','Que tus cuotas no se coman una parte grande de tu ingreso.'],
+['deuda','Nunca el gota a gota','El préstamo informal cobra intereses abusivos y presiona con amenazas.','Si necesitas dinero acude a entidades vigiladas o cooperativas.'],
+['deuda','Paga el total de la tarjeta','Pagar solo el mínimo hace que la deuda crezca.','Si usas tarjeta, paga el total cada mes.'],
+['deuda','Cuidado con diferir','Diferir a muchas cuotas parece cómodo y sale caro.','Difiere a pocas cuotas o paga de contado.'],
+['deuda','Bola de nieve','Pagar primero la deuda más pequeña da impulso.','Paga el mínimo en todas y lo extra a la más pequeña.'],
+['deuda','Avalancha','Pagar primero la deuda más cara ahorra intereses.','Ordena tus deudas por tasa y ataca la más alta.'],
+['deuda','Tu historial cuenta','Pagar a tiempo construye un buen puntaje crediticio.','Programa recordatorios para no atrasarte en ninguna cuota.'],
+['deuda','Habla antes de atrasarte','Las entidades prefieren negociar que perder.','Si no puedes pagar, pide un acuerdo antes de la fecha.'],
+['deuda','No prestes tu nombre','Ser codeudor es comprometerte con una deuda ajena.','Antes de firmar como fiador, piensa si podrías pagarla tú.'],
+['deuda','Lee la letra pequeña','Seguros, comisiones y cuotas de manejo se esconden en el contrato.','No firmes nada sin leerlo completo y preguntar.'],
+['deuda','Deuda buena y mala','Endeudarse para estudiar o producir no es igual que para un gusto.','Pregúntate si la deuda te ayudará a ganar más en el futuro.'],
+['inversion','Invertir es sembrar','Invertir es poner tu dinero a trabajar para que dé frutos.','Empieza a aprender sobre un instrumento sencillo, como un CDT.'],
+['inversion','El tiempo es tu aliado','El interés compuesto crece más mientras más tiempo pasa.','Empieza joven, aunque sea con montos pequeños.'],
+['inversion','Regla del 72','Divide 72 entre la tasa anual y sabrás en cuántos años se duplica tu dinero.','Haz el cálculo con la tasa de tu ahorro actual.'],
+['inversion','Diversifica','No pongas todos los huevos en la misma canasta.','Reparte tu dinero en distintos tipos de inversión.'],
+['inversion','Riesgo y rentabilidad','Más rentabilidad casi siempre significa más riesgo.','Antes de invertir pregunta qué podrías perder.'],
+['inversion','Desconfía de lo garantizado','Ganancias altas, rápidas y seguras son señal de estafa.','Verifica si la entidad está vigilada por la Superfinanciera.'],
+['inversion','Invierte en lo que entiendes','Si no puedes explicarlo con tus palabras, no inviertas.','Pide que te expliquen cómo se gana el dinero y cuáles son los riesgos.'],
+['inversion','Nada de pirámides','Las pirámides pagan a los primeros con el dinero de los nuevos.','Si te piden traer más personas para ganar, aléjate.'],
+['inversion','Cripto con cuidado','Los criptoactivos suben y bajan mucho.','Invierte solo lo que puedas perder y guarda tu frase semilla.'],
+['inversion','No sigas a la manada','Comprar porque todos compran infla burbujas.','Decide con datos, no por miedo a quedarte por fuera.'],
+['inversion','Activos y pasivos','Un activo pone dinero en tu bolsillo; un pasivo lo saca.','Antes de comprar algo grande, pregúntate en cuál de los dos lados queda.'],
+['inversion','Invierte en ti','Estudiar y aprender habilidades suele ser la mejor inversión.','Elige un curso que pueda subir tus ingresos.'],
+['inversion','Paciencia','Las buenas inversiones necesitan tiempo.','No retires tu inversión en el primer susto del mercado.'],
+['proteccion','Un seguro es protección','Pagas una prima pequeña para evitar una pérdida grande.','Identifica qué pérdida grande no podrías pagar sola o solo.'],
+['proteccion','Afíliate a salud','La salud sin cobertura puede costar todos tus ahorros.','Verifica que tú y tu familia estén afiliados.'],
+['proteccion','Cuida tus claves','Ningún banco te pide la clave ni códigos por mensaje.','No compartas contraseñas, códigos ni fotos de tus tarjetas.'],
+['proteccion','Doble verificación','Una segunda llave protege tus cuentas aunque roben tu clave.','Activa la verificación en dos pasos en tus apps.'],
+['proteccion','Desconfía de los premios','Los mensajes de premios inesperados suelen ser fraudes.','No hagas clic en enlaces de desconocidos.'],
+['proteccion','Atento en la calle','Mostrar el celular o el dinero atrae a los ladrones.','Guarda tus cosas y lleva solo el efectivo necesario.'],
+['proteccion','Revisa tus movimientos','Detectar un cobro extraño a tiempo evita pérdidas mayores.','Revisa tu cuenta cada semana.'],
+['proteccion','Respaldo de documentos','Perder documentos cuesta tiempo y dinero.','Guarda copias digitales seguras de tus documentos importantes.'],
+['proteccion','Prepárate para lo inesperado','Desastres, enfermedades y crisis llegan sin avisar.','Ten un fondo de emergencia y conoce tus seguros.'],
+['proteccion','Pensión y cesantías','El ahorro obligatorio protege tu futuro.','Pregunta en tu trabajo dónde están tus aportes.'],
+['proteccion','Cuidado con las apuestas','La casa siempre gana a largo plazo.','Si sientes que no puedes parar de apostar, pide ayuda.'],
+['proteccion','Verifica antes de pagar','Las tiendas falsas en internet existen.','Compra en sitios conocidos y desconfía de precios demasiado bajos.'],
+['consumo','Espera 24 horas','Las compras por impulso se arrepienten.','Antes de una compra no planeada, espera un día.'],
+['consumo','Compara el precio total','El precio grande no siempre es el real.','Suma envío, recargos y cuotas antes de decidir.'],
+['consumo','Pide factura','La factura te protege y permite reclamar.','Pide siempre la factura y guárdala.'],
+['consumo','Calidad que dure','Lo barato puede salir caro si se daña pronto.','Compara cuánto dura algo, no solo cuánto cuesta.'],
+['consumo','Lista de mercado','Ir sin lista hace gastar de más.','Haz la lista en casa y cúmplela.'],
+['consumo','Cuidado con las ofertas','Un descuento en algo que no necesitas es un gasto.','Pregúntate si lo comprarías sin la oferta.'],
+['consumo','Ahorra en servicios','Agua y luz que no usas se pagan igual.','Apaga luces, desconecta cargadores y cierra la llave.'],
+['consumo','Antes de comprar, repara','Arreglar algo suele costar menos que cambiarlo.','Pregunta cuánto cuesta reparar antes de comprar nuevo.'],
+['consumo','Compra usado con criterio','Lo usado en buen estado puede ser una gran compra.','Revisa bien el estado y compara precios.'],
+['consumo','Menos suscripciones','Las mensualidades pequeñas se olvidan y se suman.','Cancela las suscripciones que no usaste el último mes.'],
+['consumo','Redes y presión social','Lo que ves en redes no es la vida real de nadie.','No compres para impresionar a otros.'],
+['consumo','Carros y motos cuestan','Un vehículo trae SOAT, impuestos, gasolina y repuestos.','Suma los costos anuales antes de comprar.'],
+['ingresos','Identifica tus ingresos','Saber de dónde viene tu dinero es el primer paso.','Escribe todas tus fuentes de ingreso, aunque sean pequeñas.'],
+['ingresos','Más de una fuente','Depender de un solo ingreso es riesgoso.','Piensa en una habilidad que podrías ofrecer como servicio.'],
+['ingresos','Ingreso activo y pasivo','El activo exige tu tiempo; el pasivo llega aunque no estés.','Busca, con los años, construir ingresos pasivos.'],
+['ingresos','Aprende a negociar','Negociar tu pago o un precio también es ganar.','Prepara tus argumentos y practica con alguien.'],
+['ingresos','Emprende con orden','Un negocio necesita cuentas claras desde el primer día.','Separa el dinero del negocio del dinero personal.'],
+['ingresos','Tu reputación vale','Cumplir lo que prometes atrae más trabajo.','Entrega a tiempo y con calidad.'],
+['ingresos','Capacítate siempre','Las habilidades nuevas abren mejores oportunidades.','Aprende algo nuevo cada mes.'],
+['ingresos','Conoce tus derechos','El salario, la prima y las cesantías son derechos del trabajador formal.','Revisa tu desprendible de pago y pregunta lo que no entiendas.'],
+['ingresos','La prima tiene destino','Los ingresos extra se esfuman sin plan.','Decide antes de recibirla cuánto ahorras, pagas y disfrutas.'],
+['ingresos','Valora tu trabajo','Cobrar muy barato también es perder.','Calcula tus costos antes de poner un precio.'],
+['ingresos','Red de apoyo','Las personas que te recomiendan también son un capital.','Ayuda a otros y mantén buenas relaciones.'],
+['ingresos','Impuestos al día','Cumplir con los impuestos evita multas e intereses.','Infórmate si debes declarar renta.'],
+['mente','Tu relación con el dinero','Lo que piensas del dinero guía lo que haces con él.','Escribe tres ideas sobre el dinero que aprendiste en casa.'],
+['mente','Metas SMART','Una meta clara, medible y con fecha se cumple más.','Escribe una meta financiera con cifra y fecha.'],
+['mente','Gratificación diferida','Esperar por algo mejor es la base de la riqueza.','Practica esperar antes de cada compra que no estaba en tu plan.'],
+['mente','Aprende de los errores','Equivocarse con el dinero enseña si lo analizas.','Escribe qué harías distinto la próxima vez.'],
+['mente','Compárate contigo','Tu ruta es tuya; no la midas con la de otros.','Compara tu patrimonio de hoy con el de hace un año.'],
+['mente','Edúcate siempre','La educación financiera te protege de golpes.','Lee una página sobre finanzas cada semana.'],
+['mente','Decide con calma','Las emociones fuertes llevan a malas decisiones de dinero.','No tomes decisiones grandes de dinero cuando estés triste o con rabia.'],
+['mente','Habla de dinero','Hablar de dinero en familia no es mala educación.','Pregunta en casa cómo organizan sus gastos.'],
+['mente','Generosidad con presupuesto','Ayudar a otros es parte de la cima, sin desfinanciarte.','Separa una parte pequeña para ayudar.'],
+['mente','Patrimonio, no apariencia','La riqueza es lo que guardas, no lo que muestras.','Mira tu patrimonio, no tus compras.'],
+['mente','Constancia','Los pequeños hábitos repetidos hacen las grandes cumbres.','Elige un hábito financiero y repítelo 30 días.'],
+['mente','Vota informado','Las decisiones políticas cambian precios e impuestos.','Infórmate de las propuestas y exige cuentas claras.'],
+['mente','Celebra cada avance','Reconocer tus logros te mantiene en la ruta.','Anota cada meta cumplida, por pequeña que sea.'],
+['mente','La vida es una serie de montañas','Cada cima alcanzada muestra la siguiente.','Cuando cumplas una meta, escribe la próxima.']];
+const CONS_UI={cat:'all',open:{}};
+function buildConsejos(){
+  const el=document.getElementById('consejos'); if(!el) return;
+  if(!document.getElementById('consStyle')){ const st=document.createElement('style'); st.id='consStyle'; st.textContent=`
+  .ccards{display:grid;grid-template-columns:repeat(auto-fill,minmax(min(100%,210px),1fr));gap:12px}
+  .ccard{perspective:900px;min-height:172px;cursor:pointer;border:0;background:none;padding:0;text-align:left;font:inherit;color:inherit}
+  .ccard .in{position:relative;width:100%;height:100%;min-height:172px;transition:transform .5s;transform-style:preserve-3d}
+  .ccard[aria-pressed=true] .in{transform:rotateY(180deg)}
+  .ccard .f,.ccard .b{position:absolute;inset:0;backface-visibility:hidden;-webkit-backface-visibility:hidden;border-radius:14px;padding:14px 14px 12px;display:flex;flex-direction:column;gap:6px;box-shadow:0 2px 0 rgba(0,0,0,.25)}
+  .ccard .f{background:linear-gradient(160deg,#F6EFDF,#EBDFC4);color:#3A2A20;border:1px solid #D9C9A6}
+  .ccard .b{background:linear-gradient(160deg,#2A1E1A,#1B2229);color:#F4ECD8;border:1px solid var(--line);transform:rotateY(180deg)}
+  .ccard .n{font:800 12px var(--f-num);opacity:.7}.ccard .cat{font:800 10px var(--f-body);letter-spacing:1px;text-transform:uppercase}
+  .ccard .t{font:400 20px/1.15 "Young Serif",Georgia,serif;color:#6B2A1A}.ccard .b .t{color:#E2B85A;font-size:16px}
+  .ccard .x{font:500 13px/1.4 var(--f-body)}.ccard .a{font:700 12.5px/1.4 var(--f-body);margin-top:auto;padding-top:6px;border-top:1px dashed rgba(244,236,216,.25)}
+  .ccard .hint{margin-top:auto;font:600 11px var(--f-body);opacity:.6}.ccard:focus-visible{outline:3px solid var(--gold);outline-offset:3px;border-radius:14px}
+  .cbar{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:12px}.cbar button{font:700 12px var(--f-body);border-radius:999px;padding:6px 11px;border:1px solid var(--line);background:var(--bg);color:var(--ink);cursor:pointer}.cbar button[aria-pressed=true]{background:var(--gold);color:#2A1A00;border-color:var(--gold)}
+  @media (prefers-reduced-motion:reduce){.ccard .in{transition:none}}`; document.head.appendChild(st); }
+  const cat=CONS_UI.cat, list=CONSEJOS.map((c,i)=>({c,i})).filter(o=>cat==='all'||o.c[0]===cat);
+  el.innerHTML=`<p class="muted" style="margin-top:0">100 consejos de <b>inteligencia financiera</b> para leer en clase o en casa. Toca una tarjeta para voltearla y ver qué hacer hoy.</p>
+   <div class="cbar"><button type="button" data-cc="all" aria-pressed="${cat==='all'}">Todas (100)</button>${Object.entries(CONS_CAT).map(([k,[n,c]])=>`<button type="button" data-cc="${k}" aria-pressed="${cat===k}" style="${cat===k?'':'border-color:'+c}">${esc(n)} (${CONSEJOS.filter(x=>x[0]===k).length})</button>`).join('')}<button type="button" id="ccRand">Consejo al azar</button></div>
+   <div class="ccards">${list.map(({c,i})=>{ const [k,t,x,a]=c, [cn,col]=CONS_CAT[k]; return `<button class="ccard" type="button" data-ci="${i}" aria-pressed="${!!CONS_UI.open[i]}" aria-label="Consejo ${i+1}: ${esc(t)}"><div class="in">
+     <div class="f"><span class="n">${String(i+1).padStart(3,'0')}</span><span class="cat" style="color:${col}">${esc(cn)}</span><span class="t">${esc(t)}</span><span class="hint">Toca para voltear</span><span style="position:absolute;right:12px;top:10px;width:26px;height:26px;border-radius:50%;background:${col};opacity:.85"></span></div>
+     <div class="b"><span class="cat" style="color:${col}">${esc(cn)} · ${i+1}</span><span class="t">${esc(t)}</span><span class="x">${esc(x)}</span><span class="a">Hoy: ${esc(a)}</span></div></div></button>`; }).join('')}</div>`;
+  el.querySelectorAll('[data-cc]').forEach(b=>b.onclick=()=>{ CONS_UI.cat=b.dataset.cc; buildConsejos(); });
+  el.querySelectorAll('.ccard').forEach(b=>b.onclick=()=>{ const i=+b.dataset.ci; CONS_UI.open[i]=!CONS_UI.open[i]; b.setAttribute('aria-pressed',String(!!CONS_UI.open[i])); });
+  document.getElementById('ccRand').onclick=()=>{ const i=Math.floor(Math.random()*CONSEJOS.length); CONS_UI.cat='all'; CONS_UI.open={}; CONS_UI.open[i]=true; buildConsejos(); const b=el.querySelector('[data-ci="'+i+'"]'); if(b){ b.scrollIntoView({behavior:'smooth',block:'center'}); try{ b.focus({preventScroll:true}); }catch(e){} } };
+}
+
 /* ================= CÓDIGO DE CLASE: el docente crea un código; sus estudiantes lo escriben en el registro ================= */
 const CLASE_KEY='rac-clase-docente'; let CLASE_TMP=null; const CLASE_IMGS={};
 function claseMine(){ try{ return JSON.parse(localStorage.getItem(CLASE_KEY)||'null'); }catch(e){ return null; } }
@@ -3914,12 +4082,12 @@ function renderClaseDoc(){
    <div class="reg-g">
     <div class="full"><label class="lb" for="dNom">Nombre del docente</label><input type="text" id="dNom" maxlength="50" value="${esc(d.doc||'')}" placeholder="Ej. Prof. Marta Gómez"></div>
     <div class="full"><label class="lb" for="dCar">Cargo o área</label><input type="text" id="dCar" maxlength="50" value="${esc(d.cargo||'')}" placeholder="Ej. Docente de Matemáticas"></div>
-    <div class="full"><label class="lb" for="dCol">Colegio o institución</label><input type="text" id="dCol" maxlength="60" value="${esc(d.col||'')}" placeholder="Ej. I. E. San Bernardo"></div>
+    <div class="full"><label class="lb" for="dCol">Colegio o institución</label><input type="text" id="dCol" maxlength="60" value="${esc(d.col||'')}" placeholder="Nombre del colegio"></div>
     <div class="full"><label class="lb" for="dCiu">Ciudad o municipio</label><input type="text" id="dCiu" maxlength="40" value="${esc(d.ciu||'')}" placeholder="Ej. Floridablanca"></div>
    </div>
-   <p class="lb" style="margin:10px 0 4px">Tu firma (dibújala con el dedo o el ratón)</p>
+   <p class="lb" style="margin:10px 0 4px">Tu firma: dibújala con el dedo o el ratón, o sube una imagen PNG con fondo transparente (si tiene fondo blanco, el juego lo quita)</p>
    <canvas id="dFirma" width="600" height="200" style="width:100%;max-width:360px;height:auto;aspect-ratio:3/1;background:#FBF7EC;border:1px dashed var(--line);border-radius:10px;touch-action:none;cursor:crosshair"></canvas>
-   <div class="row" style="margin-top:8px"><button class="btn sm alt" type="button" id="dBorrar">Borrar firma</button><button class="btn sm gold" type="button" id="dCrear">${d.code?'Actualizar mis datos':'Crear el código de clase'}</button></div>
+   <div class="row" style="margin-top:8px"><label class="btn sm" style="cursor:pointer">Subir firma (PNG)<input type="file" id="dFile" accept="image/png,image/jpeg,image/webp" hidden></label><button class="btn sm alt" type="button" id="dBorrar">Borrar firma</button><button class="btn sm gold" type="button" id="dCrear">${d.code?'Actualizar mis datos':'Crear el código de clase'}</button></div>
    <div id="dRes">${d.code?claseResHTML(d):''}</div></div>`;
   const cv2=document.getElementById('dFirma'), c=cv2.getContext('2d'); let draw=false, dirty=false, last=null;
   if(d.firma){ const im=new Image(); im.onload=()=>c.drawImage(im,0,0,600,200); im.src=d.firma; }
@@ -3928,6 +4096,10 @@ function renderClaseDoc(){
   cv2.onpointermove=e=>{ if(!draw) return; const p=pos(e); c.strokeStyle='#24324A'; c.lineWidth=4; c.lineCap='round'; c.lineJoin='round'; c.beginPath(); c.moveTo(last[0],last[1]); c.lineTo(p[0],p[1]); c.stroke(); last=p; };
   cv2.onpointerup=cv2.onpointercancel=()=>{ draw=false; };
   document.getElementById('dBorrar').onclick=()=>{ c.clearRect(0,0,600,200); dirty=true; d.firma=''; };
+  document.getElementById('dFile').onchange=ev=>{ const f=ev.target.files&&ev.target.files[0]; if(!f) return; const rd=new FileReader(); rd.onload=()=>{ const im=new Image(); im.onload=()=>{
+      c.clearRect(0,0,600,200); const k=Math.min(580/im.width,180/im.height), w=im.width*k, h=im.height*k; c.drawImage(im,(600-w)/2,(200-h)/2,w,h);
+      try{ const id=c.getImageData(0,0,600,200), D=id.data; for(let i=0;i<D.length;i+=4){ const mx=Math.max(D[i],D[i+1],D[i+2]), mn=Math.min(D[i],D[i+1],D[i+2]); if(mx>225&&mx-mn<28) D[i+3]=0; else if(mx>190&&mx-mn<28) D[i+3]=Math.min(D[i+3],Math.round((225-mx)/35*255)); } c.putImageData(id,0,0); }catch(e){}
+      dirty=true; }; im.src=rd.result; }; rd.readAsDataURL(f); };
   document.getElementById('dCrear').onclick=async()=>{
     const v=id=>String(document.getElementById(id).value||'').trim();
     const nd={code:d.code||claseNewCode(),doc:v('dNom').slice(0,50),cargo:v('dCar').slice(0,50),col:v('dCol').slice(0,60),ciu:v('dCiu').slice(0,40),firma:d.firma||''};
@@ -4136,7 +4308,7 @@ const UNITS=[
 ];
 
 const MICON={chat:'<path d="M4 5h16v10H9l-5 4z"/><path d="M8 9h8M8 12h5"/>',play:'<path d="M7 5v14l11-7z"/>',grid:'<rect x="4" y="4" width="7" height="7" rx="1.5"/><rect x="13" y="4" width="7" height="7" rx="1.5"/><rect x="4" y="13" width="7" height="7" rx="1.5"/><rect x="13" y="13" width="7" height="7" rx="1.5"/>',book:'<path d="M4 5a2 2 0 0 1 2-2h13v16H6a2 2 0 0 0-2 2z"/><path d="M4 19V5"/><path d="M9 7h6"/>',trophy:'<path d="M8 4h8v5a4 4 0 0 1-8 0z"/><path d="M16 6h3a3 3 0 0 1-3 4M8 6H5a3 3 0 0 0 3 4"/><path d="M12 13v4M8 20h8"/>',cap:'<path d="m2 9 10-5 10 5-10 5z"/><path d="M6 11v5c3 2 9 2 12 0v-5"/>',layers:'<path d="m12 3 9 5-9 5-9-5z"/><path d="m3 13 9 5 9-5"/>'};
-const IPANES=[{id:'jugar',lb:'Cómo jugar',d:'Controles, metas y consejos',ic:'play',c:'#5CC2EA',g:'Para jugar'},{id:'cosas',lb:'Qué es cada cosa',d:'Activos, pasivos y peligros',ic:'grid',c:'#62C98A'},{id:'guias',lb:'Las 7 guías',d:'De dónde sale cada mundo',ic:'book',c:'#C9475B'},{id:'ranking',lb:'Ranking',d:'Quién sube más rápido',ic:'trophy',c:'#F2B33D'},{id:'mentor',lb:'Pregúntale al Mentor',d:'Preguntas de finanzas resueltas con las guías',ic:'chat',c:'#9AA3F0',action:1,nuevo:1},{id:'docente',lb:'Para el docente',d:'Currículo, rúbrica y evaluación',ic:'cap',c:'#9AA3F0',g:'Para el docente'},{id:'material',lb:'Material docente por unidades',d:'7 unidades listas para la clase',ic:'layers',c:'#5FD0C4',nuevo:1}];
+const IPANES=[{id:'jugar',lb:'Cómo jugar',d:'Controles, metas y consejos',ic:'play',c:'#5CC2EA',g:'Para jugar'},{id:'cosas',lb:'Qué es cada cosa',d:'Activos, pasivos y peligros',ic:'grid',c:'#62C98A'},{id:'guias',lb:'Las 7 guías',d:'De dónde sale cada mundo',ic:'book',c:'#C9475B'},{id:'ranking',lb:'Ranking',d:'Quién sube más rápido',ic:'trophy',c:'#F2B33D'},{id:'mentor',lb:'Pregúntale al Mentor',d:'Preguntas de finanzas resueltas con las guías',ic:'chat',c:'#9AA3F0',action:1,nuevo:1},{id:'consejos',lb:'100 consejos de inteligencia financiera',d:'Tarjetas para voltear y poner en práctica',ic:'book',c:'#E2B85A',nuevo:1},{id:'docente',lb:'Para el docente',d:'Currículo, rúbrica y evaluación',ic:'cap',c:'#9AA3F0',g:'Para el docente'},{id:'material',lb:'Material docente por unidades',d:'7 unidades listas para la clase',ic:'layers',c:'#5FD0C4',nuevo:1}];
 const micon=(k,c)=>`<span class="mic" style="--c:${c}"><svg viewBox="0 0 24 24" aria-hidden="true">${MICON[k]}</svg></span>`;
 let MAT={}; try{ MAT=JSON.parse(localStorage.getItem('rac-mat')||'{}')||{}; }catch(e){ MAT={}; }
 function matSave(){ try{ localStorage.setItem('rac-mat',JSON.stringify(MAT)); }catch(e){} }
@@ -4286,7 +4458,7 @@ function buildInfo(){
    <p class="muted"><b>Matemáticas:</b> porcentajes del semáforo 50/30/20, interés y depreciación. <b>Sociales:</b> inflación, bancos y consumo responsable. <b>Ética:</b> presión social y decisiones con información. <b>Emprendimiento:</b> activos, negocios e ingresos pasivos.</p>
    <h3>Cómo se evalúa</h3>
    <p class="muted">Prueba inicial y final de 5 cartas (diagnóstica y sumativa), una carta formativa en cada campamento con repaso espaciado y una evidencia de desempeño por mundo. Todo aparece en el resumen para el docente al terminar la ruta.</p>`;
-  buildMaterial(); buildMenu();
+  buildMaterial(); try{ buildConsejos(); }catch(e){} buildMenu();
   const dg=document.getElementById('dGoMat'); if(dg) dg.onclick=()=>openPane('material',{scroll:true});
   try{ renderClaseDoc(); }catch(e){}
   closeGuide();

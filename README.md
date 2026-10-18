@@ -124,6 +124,7 @@ Cada mundo tiene **al menos dos enemigos distintos** que lanzan cosas de la vida
 | **Señor Scroll** (mucho tiempo en el celular) | Notificaciones | 1 moneda y 1 segundo distraído |
 | **El Vendedor de Vitrina** (compras por impulso) | Etiquetas de “¡solo hoy!” | 1 moneda |
 | **Doña Tarjeta Dorada** (deuda con tarjeta) | Tarjetas con interés del 30 % | 1 moneda y 2 de deuda |
+| **Ladrones en la calle** | Esperan en la calle y te siguen si los pasas; roban el celular, la billetera, el bolso o el dinero | Si te roban, pierdes eso y **vuelves al inicio del mundo**. Písalo para detenerlo: “ROBO EVITADO” y +2 |
 | **Don Político** (decretos) | Decretos que suben el mercado, la gasolina o crean un impuesto nuevo | −1 y un costo extra por 2 o 3 quincenas; el arroz de las tiendas también sube. Se vence con “¡Voto informado!” |
 | **El Hacker** (robo cibernético) | Correos de phishing: “¡Ganaste un premio! Dame tu clave” | −2 y puede vaciar media billetera de bitcoin. Se vence con “¡No comparto mis claves!” |
 | **Globos de la inflación** (arroz, pasaje, arriendo…) | Bajan hacia ti y, si alcanzan tu cabeza, te elevan | Mientras flotas pierdes poder de compra; salta 3 veces para reventarlos y soltarte (o písalos desde arriba). Con una inversión pierdes más lento |
@@ -175,7 +176,9 @@ En el camino también aparecen **personas que te ayudan**, **cartas de concepto*
 
 ## 🏫 Para el aula
 
-**Código de clase.** En *Para el docente* cada profesor escribe su nombre, cargo, colegio y ciudad, dibuja su firma y crea un código (por ejemplo `RAC-7K2QMX`). Sus estudiantes lo escriben en su registro: compiten en el ranking de la clase y su diploma sale con los datos y la firma del docente. Si el juego no está conectado al ranking compartido, el docente comparte el código largo (`RAC1.…`), que funciona en cualquier dispositivo.
+**100 consejos de inteligencia financiera.** En el menú inferior hay 100 tarjetas que se voltean, en 8 categorías (ahorro, presupuesto, deudas y crédito, inversión, protección, consumo, ingresos y mentalidad), cada una con una acción para hacer hoy y un botón de consejo al azar.
+
+**Código de clase.** En *Para el docente* cada profesor escribe su nombre, cargo, colegio y ciudad, dibuja su firma o la sube como PNG con fondo transparente (si tiene fondo blanco, el juego lo quita) y crea un código (por ejemplo `RAC-7K2QMX`). Sus estudiantes lo escriben en su registro: compiten en el ranking de la clase y su diploma sale con los datos y la firma del docente. Si el juego no está conectado al ranking compartido, el docente comparte el código largo (`RAC1.…`), que funciona en cualquier dispositivo.
 
 Ruta Financiera nació en el aula y está pensada para usarse en ella.
 
@@ -262,7 +265,7 @@ En **Settings → Pages**, elige **Deploy from a branch**, la rama `main` y la c
 | **Bitcoin y colchón** | Billetera de bitcoin cuyo valor sube y baja cada quincena; sin la **frase semilla** puedes olvidar la clave y perderlo todo. La plata **debajo del colchón** se la comen la humedad, los ratones y la inflación hasta que la llevas a una alcancía |
 | **Gastos hormiga** | Cada hormiga lleva girando encima su gasto: el café de la esquina, la gaseosa, la empanada, las papas, los chicles o el domicilio por app |
 | **Hábitos de inteligencia financiera** | **Cofre de paciencia** (2 ya o 6 si esperas), **dos tiendas** con el mismo arroz (el precio grande esconde el envío), **curso técnico** que sube el salario para siempre, **senderista en apuros** al que ayudas sin desfinanciarte, **kiosco de memecoin** con efecto manada que estalla, **interés compuesto** en los CDT, **pensión y cesantías** automáticas, **puntaje DataCrédito** que sube con cuotas a tiempo y baja con acuerdos de pago, y el presupuesto del campamento que se vuelve "págate primero" automático |
-| **Eventos de la vida** | Tormentas con rayos, sequía, ola invernal, guerra lejana que sube el combustible, enfermedad, familiar enfermo y reforma tributaria: el fondo de emergencia paga primero; sin él, quedas debiendo |
+| **Eventos de la vida** | Suben los servicios públicos, los alimentos o la cuota de administración; tormentas con rayos, sequía, ola invernal, guerra lejana que sube el combustible, enfermedad, familiar enfermo y reforma tributaria: el fondo de emergencia paga primero; sin él, quedas debiendo |
 | **Terremoto** | La tierra se abre en grietas y a las casas se les caen las tejas; si tienes casa, el seguro cubre la reparación |
 | **Drones** | Las plataformas que cuelgan las cargan drones de la Ruta y los carros sobre el vacío son carros voladores |
 | **Lotes de inversión** | En el suelo, con cerca de guadua y letrero de papel: llegas con las monedas que pide y siembras un árbol que te paga cada quincena |
