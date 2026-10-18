@@ -698,7 +698,7 @@ const TIPS={
  celular:{t:'Mucho tiempo en el celular',g:'Guía 4',x:'Las notificaciones roban tiempo y empujan a comprar. Cada minuto de scroll es un minuto que no trabajas en tus metas. Pon horarios y silencia lo que no necesitas.'},
  vitrinaL:{t:'Compra por impulso',g:'Guía 3 y 4',x:'“¡Solo hoy!” busca que compres sin pensar. Aplica la regla de las 24 horas y pregúntate si estaba en tu presupuesto.'},
  tarjetaL:{t:'La tarjeta de crédito',g:'Guía 3',x:'El cupo no es tu plata. Si pagas solo el mínimo, el interés (cerca del 30 % al año) hace crecer la deuda. Paga el total y usa menos del 30 % del cupo.'},
- inflacionL:{t:'Inflación',g:'Guía 5',x:'Los precios suben y la misma plata compra menos. Por eso conviene que el ahorro crezca, por ejemplo en un CDT, y comparar precios.'},
+ inflacionL:{t:'Inflación',g:'Guía 5',x:'Doña Inflación no te roba: sube los precios. Cada etiqueta +10 % hace que tu efectivo (en la mano y en la alcancía) compre menos. Si tienes una inversión que rinde, como un CDT, tu alcancía no pierde. Defensa: invertir el ahorro y comparar precios.'},
  ludopatia:{t:'Apuestas y ludopatía',g:'Guía 4 y 5',x:'En las apuestas y tragamonedas la casa siempre gana a la larga. Ganar una vez engancha y hace perder más. Si sientes que no puedes parar, pide ayuda.'},
  ruina:{t:'El Gran Estafador',g:'Guía 5',x:'Promete rendimientos imposibles y se lleva todo lo que le entregas. Defiéndete: desconfía de lo “garantizado”, verifica con la Superfinanciera, diversifica, guarda en la alcancía y ten seguros.'},
  terremoto:{t:'Imprevisto: terremoto',g:'Guía 5',x:'Los desastres no avisan. Un seguro (el casco) y un fondo de emergencia evitan que un golpe te devuelva al valle.'},
@@ -1207,12 +1207,22 @@ const LANZA={
   scroll:{n:'SEÑOR SCROLL',r:'mucho tiempo en el celular',item:'phone',lab:'NOTIFICACIÓN',dmg:1,w:26,h:40,col:'#5B4BB0',say:['¡Mira este video!','Solo cinco minutitos más…','¡Llegó otra notificación!'],no:['¡Suelto el celular!','¡Primero mis metas!']},
   vitrina:{n:'EL VENDEDOR DE VITRINA',r:'compras por impulso',item:'tag',lab:'¡SOLO HOY!',dmg:1,w:26,h:40,col:'#D9822B',say:['¡Solo hoy, 2×1!','¡Últimas unidades!','¡Lléveselo ya!'],no:['¡Espero 24 horas!','¡No está en mi presupuesto!']},
   tarjeta:{n:'DOÑA TARJETA DORADA',r:'deuda con tarjeta',item:'card',lab:'INTERÉS 30%',dmg:1,w:26,h:40,col:'#C9A23A',say:['¡Cupo preaprobado!','¡Pague solo el mínimo!','¡Difiéralo a 36 cuotas!'],no:['¡Pago el total!','¡No uso más del 30 %!']},
-  inflacion:{n:'DOÑA INFLACIÓN',r:'tu plata compra menos',item:'price',lab:'+10%',dmg:1,w:26,h:40,col:'#B8323C',say:['¡Todo subió!','¡Su plata vale menos!','¡El mercado está carísimo!'],no:['¡Mi ahorro crece en un CDT!','¡Comparo precios!']},
+  inflacion:{n:'DOÑA INFLACIÓN',r:'sube los precios',item:'price',lab:'PRECIOS +10%',dmg:1,w:26,h:40,col:'#B8323C',say:['¡Todo subió 10 %!','¡Ese billete ya no alcanza!','¡El arroz cuesta más que ayer!','¿Plata quieta? ¡Me la como!'],no:['¡Mi ahorro rinde en un CDT!','¡Comparo precios!']},
   tahur:{n:'EL TAHÚR',r:'apuestas y ludopatía',item:'chip',lab:'APUESTA',dmg:2,w:28,h:42,col:'#1F7A4A',say:['¡Apueste y duplique!','¡Esta vez sí gana!','¡Una ronda más!'],no:['¡No apuesto mi plata!','¡La casa siempre gana!']},
 };
-const PROJ_TXT={phone:'distraído en el celular',tag:'compra por impulso',card:'interés de la tarjeta',price:'la inflación se comió tu plata',chip:'apuesta perdida',bag:'estafa de Don Ruina'};
+const PROJ_TXT={phone:'distraído en el celular',tag:'compra por impulso',card:'interés de la tarjeta',price:'subieron los precios',chip:'apuesta perdida',bag:'estafa de Don Ruina'};
 function takeCoins(n){ let a=Math.min(n,eco.hand); eco.hand-=a; let r=n-a; const b=Math.min(r,eco.emb); eco.emb-=b; return a+b; }
+function inflaHit(f){ // la inflación no roba: hace que el dinero quieto compre menos. Lo que rinde (activos) la resiste
+  const p=S.p, inv=(eco.assets||[]).length>0, ph=eco.hand>0?Math.max(1,Math.round(eco.hand*0.1)):0, pe=inv?0:Math.floor(eco.emb*0.1);
+  eco.hand-=ph; eco.emb-=pe; const lost=ph+pe; p.inv=34; p.vy=Math.min(p.vy,-2); S.shake=reduced?0:2;
+  eco.inflaN=(eco.inflaN||0)+1; if(S.ws) S.ws.lost.inflacion=(S.ws.lost.inflacion||0)+lost;
+  logD('Pérdida','Inflación: los precios subieron 10 %; el efectivo quieto compra menos'+(inv?' (tus inversiones la resistieron)':''),-lost);
+  addText(p.x-60,p.y-14,'Precios +10 %: tu efectivo compra menos'+(lost?' (−'+lost+')':''),'#FFC7BF');
+  addText(p.x-60,p.y-28,inv?'Tu inversión rinde: la alcancía no perdió':(eco.emb>0?'La alcancía también pierde: plata quieta':'Con una inversión (CDT) tu ahorro resiste'),inv?'#BFF5CF':'#FFE18A');
+  snd('bad'); burst(p.x+7,p.y+10,'rgba(238,106,92,.8)',6); S.hudPop=12; learn('inflacionL');
+}
 function projHit(f){
+  if(f.icon==='price') return inflaHit(f);
   const p=S.p, dmg=f.dmg||1, lost=takeCoins(dmg); p.inv=34; p.vy=Math.min(p.vy,-3); S.shake=reduced?0:3;
   if(S.ws) S.ws.lost[f.fx]=(S.ws.lost[f.fx]||0)+dmg; logD('Pérdida',f.n.charAt(0)+f.n.slice(1).toLowerCase()+': '+(PROJ_TXT[f.icon]||''),-lost);
   addText(p.x-40,p.y-14,(lost?'−'+lost+' ':'')+(PROJ_TXT[f.icon]||f.n.toLowerCase()),'#FFC7BF'); snd('bad'); burst(p.x+7,p.y+10,'rgba(238,106,92,.8)',8);
@@ -1723,7 +1733,7 @@ function update(){
       if(overlap(p,e)){ e.dead=true; const add=Math.min(6,cap()-eco.hand); eco.hand+=add; addDebt('Tarjeta pre-aprobada',10,2,'tarjeta'); eco.stats.traps++; if(S.ws) S.ws.lost.credito=(S.ws.lost.credito||0)+4; addText(e.x-40,e.y-12,'+'+add+' “gratis”… ahora debes 10','#FFC7BF'); snd('bad'); burst(e.x+13,e.y+8,'#4A8FD3',10); logD('Deuda','Tarjeta pre-aprobada: +6 hoy, debes 10',-4); learn('tarjeta'); } }
   }
   // lluvia de inflación
-  S.rain.forEach(d=>{ d.y+=d.vy; const c=Math.floor((d.x+3)/T), r=Math.floor((d.y+d.h)/T); if(solid(c,r)||d.y>L.rows*T) d.dead=true; if(!d.dead&&overlap(p,d)&&p.inv<=0){ d.dead=true; if(eco.shield){ hurt(1,''); } else { const v=Math.min(1,eco.hand); eco.hand-=v; p.inv=30; if(S.ws) S.ws.lost.inflacion=(S.ws.lost.inflacion||0)+1; if(v) logD('Pérdida','Inflación',-1); learn('cloud'); addText(p.x,p.y-12,v?'Inflación −1':'Inflación','#FFC7BF'); snd('bad'); } } });
+  S.rain.forEach(d=>{ d.y+=d.vy; const c=Math.floor((d.x+3)/T), r=Math.floor((d.y+d.h)/T); if(solid(c,r)||d.y>L.rows*T) d.dead=true; if(!d.dead&&overlap(p,d)&&p.inv<=0){ d.dead=true; if(eco.shield){ hurt(1,''); } else { const v=Math.min(1,eco.hand); eco.hand-=v; p.inv=30; if(S.ws) S.ws.lost.inflacion=(S.ws.lost.inflacion||0)+1; if(v) logD('Pérdida','Inflación',-1); learn('cloud'); addText(p.x-30,p.y-12,v?'Inflación: tu efectivo compra menos −1':'Inflación: precios arriba','#FFC7BF'); snd('bad'); } } });
   S.rain=S.rain.filter(d=>!d.dead);
   // comisiones del banco
   S.fees.forEach(f=>{ f.x+=f.vx; f.y+=f.vy; f.vy=Math.min(f.vy+0.25,7); f.life--; if(f.life<=0||f.y>L.rows*T||(f.life<200&&solid(Math.floor(f.x/T),Math.floor((f.y+f.h)/T)))){ f.dead=true; burst(f.x,f.y,'rgba(238,106,92,.7)',4); return; }
@@ -2241,7 +2251,7 @@ function drawProj(f){ const fx=f.x-S.cam; ctx.save(); ctx.translate(fx,f.y); ctx
   if(f.icon==='phone'){ ctx.fillStyle='#1B1E26'; rr(-5,-8,10,16,2); ctx.fill(); ctx.fillStyle='#7FD3FF'; ctx.fillRect(-4,-6.5,8,11); ctx.fillStyle='#E04A4A'; ctx.beginPath(); ctx.arc(4,-7,3,0,7); ctx.fill(); ctx.fillStyle='#fff'; ctx.font='800 4px sans-serif'; ctx.textAlign='center'; ctx.fillText('9+',4,-5.6); }
   else if(f.icon==='tag'){ ctx.fillStyle='#F2B33D'; ctx.beginPath(); ctx.moveTo(-9,-5); ctx.lineTo(5,-5); ctx.lineTo(10,0); ctx.lineTo(5,5); ctx.lineTo(-9,5); ctx.fill(); ctx.fillStyle='#7A2A10'; ctx.font='800 4.4px sans-serif'; ctx.textAlign='center'; ctx.fillText('¡HOY!',-1,1.6); ctx.fillStyle='#fff'; ctx.beginPath(); ctx.arc(6,0,1.2,0,7); ctx.fill(); }
   else if(f.icon==='card'){ ctx.fillStyle='#D9B23A'; rr(-9,-6,18,12,2); ctx.fill(); ctx.fillStyle='#8A6A1A'; ctx.fillRect(-9,-3,18,2.4); ctx.fillStyle='#F4E3A0'; ctx.fillRect(-6,1,4,3); ctx.fillStyle='#5A3A00'; ctx.font='800 3.6px sans-serif'; ctx.textAlign='center'; ctx.fillText('30%',4,4); }
-  else if(f.icon==='price'){ ctx.fillStyle='#E04A4A'; ctx.beginPath(); ctx.arc(0,0,7,0,7); ctx.fill(); ctx.fillStyle='#fff'; ctx.font='800 5.5px sans-serif'; ctx.textAlign='center'; ctx.fillText('+%',0,2); ctx.strokeStyle='#7A1A1A'; ctx.beginPath(); ctx.moveTo(0,7); ctx.lineTo(0,12); ctx.stroke(); }
+  else if(f.icon==='price'){ ctx.rotate(Math.sin(S.t*0.3)*0.25); ctx.fillStyle='#FBF7EC'; ctx.beginPath(); ctx.moveTo(-9,-5); ctx.lineTo(6,-5); ctx.lineTo(10,0); ctx.lineTo(6,5); ctx.lineTo(-9,5); ctx.closePath(); ctx.fill(); ctx.strokeStyle='#B8323C'; ctx.lineWidth=.8; ctx.stroke(); ctx.fillStyle='#B8323C'; ctx.beginPath(); ctx.arc(6.4,0,1,0,7); ctx.fill(); ctx.font='800 4.6px sans-serif'; ctx.textAlign='center'; ctx.fillText('$↑10%',-1.6,1.7); ctx.textAlign='left'; }
   else if(f.icon==='chip'){ ctx.fillStyle='#1F7A4A'; ctx.beginPath(); ctx.arc(0,0,7,0,7); ctx.fill(); ctx.strokeStyle='#fff'; ctx.setLineDash([2.2,2.2]); ctx.lineWidth=1.6; ctx.beginPath(); ctx.arc(0,0,5.6,0,7); ctx.stroke(); ctx.setLineDash([]); ctx.fillStyle='#fff'; ctx.beginPath(); ctx.arc(0,0,3,0,7); ctx.fill(); ctx.fillStyle='#1F7A4A'; ctx.font='800 3.6px sans-serif'; ctx.textAlign='center'; ctx.fillText('$',0,1.4); }
   else if(f.icon==='bag'){ ctx.fillStyle='#6B4A2B'; ctx.beginPath(); ctx.ellipse(0,2,8,7,0,0,7); ctx.fill(); ctx.fillStyle='#4A3018'; ctx.fillRect(-3,-7,6,4); ctx.fillStyle='#F2C85A'; ctx.font='800 7px sans-serif'; ctx.textAlign='center'; ctx.fillText('$',0,5); }
   ctx.textAlign='left'; ctx.restore(); }
@@ -2624,11 +2634,12 @@ function drawHiker(){
   ctx.save(); ctx.translate(x,y); const sq=1+(p.squash-1)*0.45; ctx.scale(p.face*((2-sq)*0.5+0.5),sq);
   const blink=(S.t%220)<6;
   let lift=0; const rk=p.ride&&p.ride.k;
-  if(rk==='avion'){ icon('avion',0,-4,2.5); lift=6; } else if(rk==='cicla'||rk==='moto'){ icon(rk==='cicla'?'bici':'moto',0,-6,1.6); lift=9; } else if(rk==='carro') lift=8;
+  if(rk==='avion'){ icon('avion',0,-4,2.5); lift=6; } else if(rk==='cicla'||rk==='moto'){ icon(rk==='cicla'?'bici':'moto',0,-6,1.6); lift=9; }
+  if(rk==='carro'){ p.wheel=(p.wheel||0)+Math.abs(p.vx)/4.6; carBack(p); ctx.save(); ctx.beginPath(); ctx.rect(-40,-90,80,76); ctx.clip(); ctx.translate(-3,14); }
   ctx.translate(0,-lift);
   const pl=pila();
   hikerBody(!p.onGround||!!rk, rk?0:Math.sin(p.walk), eco.color, {phase:p.walk, spd:rk||!moving?0:Math.min(1,Math.abs(p.vx)/3.3), climb:!!p.climb, jp:rk?null:jp, lean, pack:p.pack, breath, vy:p.vy, gear:eco.gear, skin:eco.skin, head:eco.head, mood:mood(), blink, pila:pl, vx:p.vx, role:S.li});
-  if(rk==='carro'){ ctx.translate(0,lift); icon('carro',0,-8,2); }
+  if(rk==='carro'){ ctx.restore(); carFront(p); }
   ctx.restore();
   if(p.ride){ const f=Math.max(0,p.ride.t/(p.ride.max||420)); ctx.fillStyle='rgba(0,0,0,.45)'; rr(x-14,y-60-lift,28,4,2); ctx.fill(); ctx.fillStyle='#F2B33D'; rr(x-14,y-60-lift,28*f,4,2); ctx.fill(); }
   { const pn=pilaN(); if(pn>=4&&S.t%50<34){ ctx.fillStyle=pn>=6?'#FF9A8C':'#FFE18A'; ctx.font='800 9px Figtree, sans-serif'; ctx.textAlign='center'; ctx.fillText(pn>=6?'¡Se va a caer todo!':'¡Se va a caer!',x,y-62-Math.min(8,pl.length)*16); ctx.textAlign='left'; } }
@@ -2636,6 +2647,28 @@ function drawHiker(){
   if(eco.shield){ ctx.strokeStyle='rgba(185,192,255,'+(0.5+Math.sin(S.t*0.15)*0.3)+')'; ctx.lineWidth=2; ctx.beginPath(); ctx.ellipse(x,y-22,17,27,0,0,7); ctx.stroke(); }
 }
 
+/* Carro del senderista: dibujado mirando hacia +x (el sentido en que avanza), ruedas que giran según la velocidad,
+   el senderista sentado al volante. Detrás: cojinería; delante: carrocería, vidrio, luces y llantas. */
+function carBack(p){ const b=Math.abs(p.vx)>0.4?Math.sin(S.t*0.6)*0.4:0; ctx.save(); ctx.translate(0,b);
+  ctx.fillStyle='#7A1A22'; ctx.beginPath(); ctx.moveTo(-14,-14); ctx.lineTo(-10,-31); ctx.lineTo(7,-31); ctx.lineTo(13,-14); ctx.closePath(); ctx.fill(); // interior
+  ctx.fillStyle='#3A2A2A'; rr(-13,-26,6,14,2); ctx.fill(); ctx.restore(); }
+function carFront(p){ const mv=Math.abs(p.vx)>0.4, b=mv?Math.sin(S.t*0.6)*0.4:0, W2=p.wheel||0;
+  ctx.save(); ctx.translate(0,b);
+  // vidrios (dejan ver al conductor) y marco del techo
+  ctx.fillStyle='rgba(190,230,245,.28)'; ctx.beginPath(); ctx.moveTo(-12,-15); ctx.lineTo(-9,-29); ctx.lineTo(6,-29); ctx.lineTo(12,-15); ctx.closePath(); ctx.fill();
+  ctx.fillStyle='rgba(255,255,255,.35)'; ctx.beginPath(); ctx.moveTo(7,-27); ctx.lineTo(9.5,-27); ctx.lineTo(11,-17); ctx.lineTo(9,-17); ctx.fill();
+  ctx.strokeStyle='#A82830'; ctx.lineWidth=2.4; ctx.lineJoin='round'; ctx.beginPath(); ctx.moveTo(-14,-14); ctx.lineTo(-10,-30.5); ctx.lineTo(7,-30.5); ctx.lineTo(13.5,-14); ctx.stroke(); ctx.lineWidth=1.6; ctx.beginPath(); ctx.moveTo(-1.5,-30); ctx.lineTo(-1,-15); ctx.stroke();
+  // carrocería: maletero atrás (−x), capó adelante (+x)
+  ctx.fillStyle='#C8323C'; ctx.beginPath(); ctx.moveTo(-22,-5); ctx.lineTo(-22,-12); ctx.quadraticCurveTo(-21,-15.5,-16,-15.5); ctx.lineTo(14,-15.5); ctx.quadraticCurveTo(22,-14.5,24,-10); ctx.lineTo(24,-5); ctx.closePath(); ctx.fill();
+  ctx.fillStyle='rgba(255,255,255,.28)'; ctx.fillRect(-19,-14.6,30,1.2); ctx.fillStyle='rgba(0,0,0,.22)'; ctx.fillRect(-22,-8,46,3);
+  ctx.strokeStyle='rgba(0,0,0,.35)'; ctx.lineWidth=.6; ctx.beginPath(); ctx.moveTo(-1,-15); ctx.lineTo(-1,-6); ctx.stroke(); ctx.fillStyle='#7A1A22'; ctx.fillRect(3,-12.5,3,1); ctx.fillRect(-8,-12.5,3,1);
+  ctx.fillStyle='#FFE18A'; rr(21,-12.5,3.4,3,1); ctx.fill(); if(mv){ ctx.fillStyle='rgba(255,225,138,.18)'; ctx.beginPath(); ctx.moveTo(24,-12); ctx.lineTo(44,-17); ctx.lineTo(44,-4); ctx.fill(); }
+  ctx.fillStyle='#E04A4A'; ctx.fillRect(-22.5,-12.5,2,3); ctx.fillStyle='#2A2A30'; ctx.fillRect(-23,-6.5,4,2); ctx.fillRect(21,-6.5,4,2);
+  ctx.restore();
+  for(const wx of [-13,14]){ ctx.save(); ctx.translate(wx,-4.6); ctx.fillStyle='#1B1F24'; ctx.beginPath(); ctx.arc(0,0,4.8,0,7); ctx.fill(); ctx.fillStyle='#9AA3AE'; ctx.beginPath(); ctx.arc(0,0,2.2,0,7); ctx.fill();
+    ctx.rotate(W2); ctx.strokeStyle='#5A626C'; ctx.lineWidth=.9; ctx.beginPath(); for(let i=0;i<3;i++){ const a=i*2.094; ctx.moveTo(0,0); ctx.lineTo(Math.cos(a)*2.2,Math.sin(a)*2.2); } ctx.stroke(); ctx.restore(); }
+  if(mv&&S.mode==='play'&&S.t%6===0) S.parts.push({x:S.p.x+S.p.w/2-S.p.face*24,y:S.p.y+S.p.h-5,vx:-S.p.face*0.6,vy:-0.6,life:22,col:'rgba(200,200,200,.45)'});
+}
 /* ================= MAPA DE LA MONTAÑA ================= */
 const MAPN=[[132,322],[420,298],[196,262],[452,222],[238,182],[408,142],[266,104],[320,50]];
 const ease=t=>1-Math.pow(1-Math.max(0,Math.min(1,t)),3);

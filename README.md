@@ -124,7 +124,7 @@ Cada mundo tiene **al menos dos enemigos distintos** que lanzan cosas de la vida
 | **Señor Scroll** (mucho tiempo en el celular) | Notificaciones | 1 moneda y 1 segundo distraído |
 | **El Vendedor de Vitrina** (compras por impulso) | Etiquetas de “¡solo hoy!” | 1 moneda |
 | **Doña Tarjeta Dorada** (deuda con tarjeta) | Tarjetas con interés del 30 % | 1 moneda y 2 de deuda |
-| **Doña Inflación** (tu plata compra menos) | Precios que suben | 1 moneda |
+| **Doña Inflación** (sube los precios) | Etiquetas de precio +10 % | No te roba: el efectivo quieto compra 10 % menos (mano y alcancía). Si tienes una inversión, como un CDT, la alcancía no pierde |
 | **El Tahúr** (apuestas y ludopatía), junto a un **tragamonedas** | Fichas de apuesta | 2 monedas; el tragamonedas, 3 |
 
 **Don Ruina, el Gran Estafador** (Mundo 8) es **dos veces más grande** que el senderista: lanza sacos de “estafa” y salta para crear ondas de “TODO O NADA” que se llevan **todo lo que tienes en la mano**. La alcancía queda a salvo y un seguro (casco o cuerda) salva la mitad. Se vence pisando su sombrero cinco veces.
