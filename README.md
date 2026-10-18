@@ -108,6 +108,17 @@ flowchart LR
 
 Si tienes una duda, el **Mentor de la Cordillera** responde preguntas de finanzas con respuestas sacadas de las 7 guías (sin chat libre: el lenguaje está controlado y funciona sin internet).
 
+### 😈 Los jefes financieros
+
+| Personaje | Qué hace | Cómo se vence |
+|---|---|---|
+| **Don Gota**, prestamista ilegal | Lanza “cuotas del 20 %” y, si lo tocas, te “presta” a la fuerza y llega el cobrador | Salta 3 veces sobre él (“¡No le pido plata!”) o ten un fondo de emergencia de 10: así no lo necesitas |
+| **Crédito Fácil**, asesor de créditos impagables | Desenrolla un contrato “preaprobado”: si lo pisas, firmas una cuota más alta que tu sueldo | Salta 3 veces sobre él: “¡Leo la letra pequeña!”, “¡Calculo la cuota!”, “¡No firmo!” |
+
+### 🔀 Cada partida es distinta
+
+Los tramos de cada mundo se reordenan y cambian en cada partida, y los jefes aparecen en lugares distintos. Lo que enseña cada mundo (puntos de control, páginas del cuaderno, el empleo, la persona que ayuda) siempre está. Para competencias, en la portada se elige **Ruta fija**: igual para todos.
+
 En el camino también aparecen **personas que te ayudan**, **cartas de concepto** que se responden como en un juego de cartas, y el **Diario del viajero**, que te cuenta a dónde se fue tu dinero.
 
 ---

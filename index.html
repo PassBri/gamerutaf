@@ -495,6 +495,8 @@ const TYPE_N={fin:'Financiero',inm:'Inmueble',emp:'Emprendimiento'};
 const COLORS=['#B84A3C','#2C5D8F','#C77B1E','#3F7D5B','#6E4BAA','#C04F7A'];
 
 const CH={
+ jefeGota:["                        ","                        ","                        ","                        ","  o                  o  ","            G           ","########################","########################"],
+ jefeCredito:["                        ","                        ","                        ","                        ","  o                  o  ","            K           ","########################","########################"],
  start:["                    ","        o  o  o     ","                    ","####################","####################"],
  coins:["                ","    o o o o     ","                ","                ","################","################"],
  gap:["      o o       ","     o   o      ","                ","                ","######    ######","######    ######"],
@@ -687,6 +689,8 @@ const TIPS={
  frascoRoto:{t:'El ahorro en casa es frágil',g:'Guía 2 y 5',x:'Un frasco o una alcancía en la casa se rompen, se pierden o se “toman prestados”. Úsalos para empezar, pero lleva tu ahorro a una cuenta o a un CDT vigilado por la Superfinanciera.'},
  alcRota:{t:'Alcancía rota',g:'Guía 2 y 5',x:'Cada golpe que paga tu alcancía la agrieta. Si se rompe, pierdes parte del ahorro. Una alcancía nueva en el siguiente punto de control la reemplaza; un seguro o un fondo en el banco protegen mejor.'},
  carroGastos:{t:'Lo que cuesta tener carro',g:'Guía 3',x:'Además de comprarlo, el carro cobra: SOAT, revisión técnico-mecánica, impuesto vehicular, repuestos, aceite, gasolina y parqueadero. Por eso, si no produce dinero, es un pasivo.'},
+ gotaJefe:{t:'Don Gota, el gota a gota',g:'Guía 3 y 5',x:'Presta plata rápida sin papeles, pero cobra hasta 20 % diario y presiona con amenazas: es ilegal. Dile que no tres veces (salta sobre su gorra) o ten un fondo de emergencia de 10 o más: con él, no lo necesitas.'},
+ creditoJefe:{t:'Crédito Fácil: la cuota impagable',g:'Guía 3',x:'Ofrece un crédito “preaprobado” con una cuota más alta que tu sueldo. Si firmas (si te toca a él o a su contrato), cada quincena la cuota se come tu dinero y terminas en acuerdos de pago. Antes de firmar, lee la letra pequeña y calcula si la cuota cabe en tu presupuesto.'},
  tiempo:{t:'El tiempo también es dinero',g:'Guía 4',x:'Cambiar una llanta, ir al CDA o hacer fila para pagar impuestos te deja quieto mientras la quincena sigue corriendo. Los pasivos cobran en dinero y también en tiempo.'},
  casaGastos:{t:'Un activo también tiene costos',g:'Guía 1 y 6',x:'Una casa en arriendo te paga renta, pero también cobra impuesto predial y reparaciones. Sigue siendo un activo porque deja más de lo que cuesta.'},
  inv:{t:'Bloque de inversión',g:'Guía 1',x:'Invertir es sembrar una semilla: pones tu dinero a trabajar para que dé frutos cada quincena.'},
@@ -792,7 +796,7 @@ function nextQ(){
   return all[pick];
 }
 
-function newEco(name,color,o={}){ return {grupo:o.grupo||'',colegio:o.colegio||'',grado:o.grado||'',pais:o.pais||'',ciudad:o.ciudad||'',name,color,skin:o.skin??1,head:o.head||'gorra',diff:o.diff||'sen',hand:0,emb:0,salario:0,assets:[],debts:[],fijos:[],gear:o.diff==='exp'?['brujula']:[],shield:false,
+function newEco(name,color,o={}){ return {seed:(Math.random()*2e9)|0,ruta:o.ruta||'variada',grupo:o.grupo||'',colegio:o.colegio||'',grado:o.grado||'',pais:o.pais||'',ciudad:o.ciudad||'',name,color,skin:o.skin??1,head:o.head||'gorra',diff:o.diff||'sen',hand:0,emb:0,salario:0,assets:[],debts:[],fijos:[],gear:o.diff==='exp'?['brujula']:[],shield:false,
   pages:[0,0,0,0,0,0,0,0],stars:[0,0,0,0,0,0,0,0],pre:null,post:null,lujos:[],suenos:[],diario:[],seen:{},
   stats:{deaths:0,drops:0,quizOk:0,quizN:0,frames:0,stomps:0,traps:0,saved:0,invested:0}}; }
 const renta=()=>eco.assets.reduce((s,a)=>s+a.renta,0);
@@ -836,9 +840,25 @@ function snd(kind){
 
 /* ================= NIVEL ================= */
 function pad(rows){ const w=Math.max(...rows.map(r=>r.length)); const pr=Array(ROWS-rows.length).fill(' '.repeat(w)); return pr.concat(rows.map(r=>r.padEnd(w))); }
+function mulberry(a){ return ()=>{ a|=0; a=a+0x6D2B79F5|0; let t=Math.imul(a^a>>>15,1|a); t=t+Math.imul(t^t>>>7,61|t)^t; return ((t^t>>>14)>>>0)/4294967296; }; }
+const ANCLA=new Set(['start','camp','embalse','page1','page2','page3','job','ayuda','vehiculo','sueno']);
+const JEFE_P={jefeGota:[0,.75,.5,.35,.45,.8,.55,.35],jefeCredito:[0,.3,.6,.75,.7,.6,.65,.5]};
+function varyChunks(li){
+  const base=LV[li].chunks; if(!eco||eco.ruta==='fija') return base.slice();
+  if(eco.seed==null) eco.seed=(Math.random()*2e9)|0;
+  const R=mulberry((eco.seed>>>0)+li*7919);
+  const secs=[[]]; base.slice(1,-1).forEach(n=>{ if(n==='embalse') secs.push([]); else secs[secs.length-1].push(n); });
+  const pool=[...new Set(base.filter(n=>!ANCLA.has(n)))];
+  secs.forEach(sec=>{ for(let i=0;i<sec.length;i++) if(!ANCLA.has(sec[i])&&R()<0.3) sec[i]=pool[Math.floor(R()*pool.length)];
+    for(let i=sec.length-1;i>0;i--){ const j=Math.floor(R()*(i+1)); const t=sec[i]; sec[i]=sec[j]; sec[j]=t; } });
+  let jefes=Object.keys(JEFE_P).filter(k=>R()<JEFE_P[k][li]);
+  if(li>0&&!jefes.length) jefes=[R()<JEFE_P.jefeGota[li]/(JEFE_P.jefeGota[li]+JEFE_P.jefeCredito[li])?'jefeGota':'jefeCredito'];
+  jefes.forEach(j=>{ const sec=secs[1+Math.floor(R()*(secs.length-1))]||secs[0]; sec.splice(Math.floor(R()*(sec.length+1)),0,j); });
+  const out=['start']; secs.forEach((sec,i)=>{ if(i>0) out.push('embalse'); out.push(...sec); }); out.push('camp'); return out;
+}
 function buildLevel(li){
   const def=LV[li];
-  const parts=[]; def.chunks.forEach((n,i)=>{ if(i>0) parts.push({c:pad(CH.ramp),off:2*i-1}); parts.push({c:pad(CH[n]),off:2*i}); });
+  const parts=[]; varyChunks(li).forEach((n,i)=>{ if(i>0) parts.push({c:pad(CH.ramp),off:2*i-1}); parts.push({c:pad(CH[n]),off:2*i}); });
   const maxOff=parts[parts.length-1].off, R=ROWS+maxOff;
   const g=Array.from({length:R},()=>[]);
   parts.forEach(({c,off})=>{ const w=c[0].length, top=R-ROWS-off;
@@ -847,12 +867,14 @@ function buildLevel(li){
   const ents=[], mps=[], stones=[], blocks={}; let bi=0, pi=0; const oi={a:0,l:0,s:0};
   for(let r=0;r<R;r++) for(let c=0;c<w;c++){
     const ch=g[r][c], x=c*T, y=r*T;
-    if('oagcpHBEJFMkQbDALSWfCrPZNVY'.includes(ch)) g[r][c]=' ';
+    if('oagcpHBEJFMkQbDALSWfCrPZNVYGK'.includes(ch)) g[r][c]=' ';
     if(ch==='r') stones.push({x:x-3,y0:y+T-3,y:y+T-3,w:30,h:12,t:0,sink:0,gone:0,dx:0,stone:true});
     if(ch==='P') ents.push({t:'puma',x:x,y:y+T-16,w:26,h:16,vx:-.5,vy:0,st:'walk',cd:40,tm:0,dir:-1});
     if(ch==='Z') ents.push({t:'snake',x:x+2,y:y+T-12,w:20,h:12,st:'hide',tm:0,cd:0,dir:-1});
     if(ch==='N') ents.push({t:'npc',k:NPC_BY_WORLD[li],x:x+2,y:y+T-30,w:20,h:30,used:false});
     if(ch==='V'){ const vk=VEH_BY_WORLD[li], v=VEH[vk]; ents.push({t:'veh',k:vk,it:Object.assign({},v,{c:v.c+li}),x:x-6,y:y+T-26,w:36,h:26}); }
+    if(ch==='G') ents.push({t:'gotaJefe',x:x-16,y:y+T-76,w:48,h:76,x0:x-16,hp:3,cd:70,dir:-1,flash:0,hitCd:0});
+    if(ch==='K') ents.push({t:'creditoJefe',x:x-12,y:y+T-72,w:40,h:72,x0:x-12,hp:3,cd:90,roll:0,dir:-1,flash:0,hitCd:0});
     if(ch==='Y') ents.push({t:'bank',x:x-24,y:y+T-68,w:72,h:68,cd:60,lab:0});
     if(ch==='o') ents.push({t:'drop',x:x+6,y:y+4,w:12,h:16,ph:Math.random()*6});
     if(ch==='a') ents.push({t:'ant',x:x+3,y:y+T-12,w:18,h:12,vx:-.6*(eco?Dif().enemy:1),vy:0});
@@ -977,6 +999,7 @@ const MENTOR=[
  {k:'ahorro',tema:'Ahorro',q:'¿Qué son los gastos hormiga?',a:'Gastos pequeños y frecuentes que no notas: un paquete, una gaseosa, una recarga. Uno solo no pesa, pero $3.000 diarios son más de un millón de pesos al año.',p:'Anota un gasto hormiga tuyo y calcula cuánto suma en un año.',g:'Guía 3',w:[2]},
  {k:'deuda',tema:'Deudas y crédito',q:'¿Qué es el gota a gota?',a:'Un préstamo informal e ilegal: entrega plata rápido, pero cobra intereses altísimos y presiona con amenazas. Si necesitas dinero, busca una entidad vigilada, una cooperativa o pide ayuda a un adulto de confianza.',p:'¿Qué alternativas legales conoces en tu barrio?',g:'Guía 3 y 5',w:[1,6]},
  {k:'deuda',tema:'Deudas y crédito',q:'¿Qué pasa si solo pago el mínimo de la tarjeta?',a:'La deuda dura mucho más y pagas mucho más en intereses, porque el pago mínimo cubre casi solo intereses. La regla del sendero: paga el total cada mes y no uses más del 30 % del cupo.',p:'¿Por qué crees que los bancos ofrecen el pago mínimo?',g:'Guía 3',w:[6]},
+ {k:'deuda',tema:'Deudas y crédito',q:'¿Cómo sé si puedo pagar un crédito?',a:'Suma la cuota a tus gastos fijos y compárala con lo que ganas. Si la cuota se lleva más del 30 % de tu ingreso, o es más grande que tu sueldo, no cabe: terminarás pagando con deudas nuevas. Por eso Crédito Fácil es un enemigo: su cuota “cómoda” es más alta que tu sueldo.',p:'Si ganas $800.000, ¿cuál sería la cuota máxima sana?',g:'Guía 3',w:[3,4,5]},
  {k:'deuda',tema:'Deudas y crédito',q:'¿Existe una deuda “buena”?',a:'Una deuda puede ayudarte si financia algo que produce más de lo que cuesta, como una herramienta de trabajo. Endeudarse para lujos, ropa o vacaciones es una carga que te frena en la subida.',p:'Da un ejemplo de deuda que sí te ayudaría a subir.',g:'Guía 3',w:[4,6]},
  {k:'deuda',tema:'Deudas y crédito',q:'¿Qué es el pantano de la mora?',a:'Cuando te atrasas en las deudas, los intereses de mora te hunden: avanzas más lento y cada vez debes más. La salida es negociar, pagar primero las deudas más caras y no tomar deudas nuevas.',p:'¿Qué harías primero si tuvieras dos deudas atrasadas?',g:'Guía 3',w:[2,6]},
  {k:'bienes',tema:'Carros y casas',q:'¿Por qué el carro es un pasivo?',a:'Porque cuesta aunque no lo uses: SOAT, revisión técnico-mecánica, impuesto vehicular, repuestos, aceite, gasolina y parqueadero. Además pierde valor cada año. Solo es activo si lo usas para producir dinero, por ejemplo para trabajar.',p:'¿Cuánto crees que cuesta al mes tener una moto en tu ciudad?',g:'Guía 3 y 6',w:[2,4]},
@@ -1155,6 +1178,100 @@ function buyBlock(hit){
 
 const JUMP_ANT=4, JUMP_LAND=12;
 function doJump(p,inSwamp){ p.vy=inSwamp?-8.6:-10.4; p.coyote=0; p.on=null; p.onGround=false; p.squash=1.1; p.toT=10; p.jumpRun=Math.abs(p.vx)>=1.4; p.landT=0; snd('jump'); dust(p.x+7,p.y+28,p.jumpRun?3:6); }
+const JEFE_TXT={
+  gotaJefe:{n:'DON GOTA',r:'prestamista ilegal',say:['¡Plata rápida, sin papeles!','¡Solo 20 % diario, mijo!','¡Mañana paso a cobrarle!','¿Le presto pa’l mercado?'],no:['¡No le pido plata!','¡Tengo mi fondo de emergencia!','¡Lo denuncio!'],fin:'Don Gota se fue: +3 que no perdiste',hola:'¡Apareció Don Gota, el prestamista ilegal!'},
+  creditoJefe:{n:'CRÉDITO FÁCIL',r:'asesor de créditos impagables',say:['¡Crédito preaprobado!','¡Cuota cómoda, firme aquí!','¡Sin estudio de crédito!','¡Llévese el carro hoy!'],no:['¡Leo la letra pequeña!','¡Calculo la cuota!','¡No firmo!'],fin:'Crédito Fácil rompió el contrato: +3',hola:'¡Apareció Crédito Fácil, el de la cuota impagable!'}};
+function bossUpdate(e,p){
+  const sp=Dif().enemy, J=JEFE_TXT[e.t], dx=(p.x+p.w/2)-(e.x+e.w/2), near=Math.abs(dx)<250&&Math.abs((p.y+p.h)-(e.y+e.h))<150;
+  if(e.flee){ e.x+=e.flee*3.2; e.walk=(e.walk||0)+3.2; if(--e.fleeT<=0) e.dead=true; return; }
+  e.dir=dx<0?-1:1; if(e.flash>0) e.flash--; if(e.hitCd>0) e.hitCd--; if(e.throwT>0) e.throwT--; e.sayT=(e.sayT||0)+1;
+  if(!e.met&&near){ e.met=true; learn(e.t); addText(e.x-50,e.y-40,J.hola,'#FFC7BF'); snd('bad'); }
+  const ox=e.x, lim=110, spd=(e.t==='gotaJefe'?0.55:0.7)*sp;
+  if(near&&!e.peace) e.x=Math.max(e.x0-lim,Math.min(e.x0+lim,e.x+Math.sign(dx)*Math.min(spd,Math.abs(dx)))); else e.x+= (e.x0+Math.sin(S.t*0.012)*28-e.x)*0.03;
+  e.walk=(e.walk||0)+Math.abs(e.x-ox);
+  if(e.t==='gotaJefe'){
+    if(!e.peace&&eco.emb>=10&&near){ e.peace=true; e.sayT=0; e.peaceTxt=1; addText(e.x-60,e.y-40,'“Con ese fondo de emergencia, usted no me necesita…”','#9FD3FF'); }
+    if(near&&!e.peace&&--e.cd<=0){ e.cd=Math.round((140+rnd(50))/sp); const sx=e.x+e.w/2+e.dir*12, sy=e.y+18, tt=40; S.fees.push({x:sx,y:sy,w:16,h:12,vx:(p.x+p.w/2-sx)/tt,vy:((p.y+8)-sy)/tt-0.125*tt,n:'CUOTA 20%',life:220,gota:1}); e.throwT=16; } }
+  else { if(near&&Math.abs(dx)<170&&!e.roll&&--e.cd<=0){ e.cd=Math.round((170+rnd(60))/sp); e.roll=100; addText(e.x-20,e.y-6,'¡Firme aquí!','#FFE18A'); } if(e.roll>0) e.roll--; }
+  const body={x:e.x+3,y:e.y+4,w:e.w-6,h:e.h-4}, touch=overlap(p,body), stomp=touch&&p.vy>0&&(p.y+p.h-p.vy)<=e.y+12;
+  if(stomp&&!e.hitCd){ e.hp--; e.hitCd=26; e.flash=16; p.vy=-8.5; p.dj=has('bastones')?1:0; snd('stomp'); burst(e.x+e.w/2,e.y+4,'#FFE18A',12); S.shake=reduced?0:4;
+    addText(e.x-24,e.y-30,J.no[Math.min(2,2-e.hp)],'#BFF5CF');
+    if(e.hp<=0){ e.flee=e.dir>0?-1:1; e.fleeT=90; eco.hand=Math.min(cap(),eco.hand+3); eco.stats.jefes=(eco.stats.jefes||0)+1; if(S.ws) S.ws.jefes=(S.ws.jefes||0)+1;
+      logD('Ahorro',e.t==='gotaJefe'?'Le dijiste no a Don Gota (gota a gota)':'No firmaste el crédito impagable',3); addText(e.x-50,e.y-50,J.fin,'#BFF5CF'); confetti(e.x+e.w/2,e.y,26); snd('gate'); }
+    return; }
+  const contract=e.t==='creditoJefe'&&e.roll>0&&e.roll<70?{x:e.dir>0?e.x+e.w:e.x-72,y:e.y+e.h-7,w:72,h:7}:null;
+  if(e.hitCd||e.peace) return;
+  if(touch||(contract&&overlap(p,contract))){
+    e.hitCd=110; p.inv=Math.max(p.inv,70); p.vx=-Math.sign(dx||-1)*-3.5; p.vy=-5; S.shake=reduced?0:6;
+    if(e.t==='gotaJefe'){ const debt=Math.round(14*Dif().loan); eco.hand=Math.min(cap(),eco.hand+4); addDebt('Gota a gota de Don Gota',debt,3,'gota'); eco.stats.traps++; if(S.ws) S.ws.lost.gota=(S.ws.lost.gota||0)+(debt-4);
+      logD('Deuda','Don Gota “prestó” 4 a la fuerza: debes '+debt,4-debt); addText(p.x-50,p.y-30,'Don Gota te “prestó” 4… ahora debes '+debt,'#FFC7BF'); learn('lender'); snd('bad'); }
+    else { const sueldo=eco.salario||0, cuota=Math.max(2,sueldo+2), saldo=cuota*4; eco.hand=Math.min(cap(),eco.hand+6); addDebt('Crédito Fácil (cuota '+cuota+')',saldo,cuota,'credito'); eco.stats.traps++; if(S.ws) S.ws.lost.credito=(S.ws.lost.credito||0)+(saldo-6);
+      logD('Deuda','Firmaste un crédito: cuota '+cuota+' y tu sueldo es '+sueldo,6-saldo); addText(p.x-60,p.y-30,'Firmaste: cuota '+cuota+' por quincena y tu sueldo es '+sueldo,'#FFC7BF'); learn('creditoJefe'); snd('bad');
+      e.signed=true; e.flee=e.dir>0?-1:1; e.fleeT=110; addText(e.x-30,e.y-44,'“¡Un placer hacer negocios!”','#FFE18A'); }
+  }
+}
+function bubble(x,y,txt,col){ ctx.font='700 7.5px Figtree, sans-serif'; const tw=ctx.measureText(txt).width+12; const bx=Math.round(x-tw/2); ctx.fillStyle='rgba(255,250,240,.96)'; rr(bx,y-13,tw,13,5); ctx.fill(); ctx.beginPath(); ctx.moveTo(x-3,y); ctx.lineTo(x+3,y); ctx.lineTo(x,y+5); ctx.fill(); ctx.fillStyle=col||'#3A2A20'; ctx.textAlign='center'; ctx.fillText(txt,x,y-4); ctx.textAlign='left'; }
+function bossTag(e,x,y,J){ ctx.save(); ctx.font='800 8px Figtree, sans-serif'; const tw=Math.max(ctx.measureText(J.n).width,0)+18; const cx=x+e.w/2;
+  ctx.fillStyle='rgba(20,12,14,.82)'; rr(cx-tw/2,y-34,tw,20,5); ctx.fill(); ctx.strokeStyle='#C9475B'; ctx.lineWidth=1; rr(cx-tw/2,y-34,tw,20,5); ctx.stroke();
+  ctx.fillStyle='#fff'; ctx.textAlign='center'; ctx.fillText(J.n,cx,y-25); ctx.font='700 5.5px Figtree, sans-serif'; ctx.fillStyle='#FF9A8C'; ctx.fillText(J.r,cx,y-18);
+  for(let i=0;i<3;i++){ ctx.fillStyle=i<e.hp?'#C9475B':'rgba(255,255,255,.25)'; ctx.beginPath(); ctx.arc(cx-8+i*8,y-39,2.4,0,7); ctx.fill(); }
+  ctx.textAlign='left'; ctx.restore(); }
+function drawGota(e,x,y){
+  const J=JEFE_TXT.gotaJefe, cx=x+e.w/2, fy=y+e.h, ph=(e.walk||0)*0.16, sw=Math.sin(ph);
+  ctx.save(); ctx.fillStyle='rgba(0,0,0,.3)'; ctx.beginPath(); ctx.ellipse(cx,fy,24,4.5,0,0,7); ctx.fill();
+  ctx.translate(cx,fy); ctx.scale(e.dir*1.45,1.45); if(e.flee) ctx.rotate(-0.12);
+  // piernas (jean) y botas
+  for(const [k,c] of [[-1,'#2B3A55'],[1,'#34466A']]){ const fx=k*4+sw*k*4; ctx.strokeStyle=c; ctx.lineWidth=6; ctx.lineCap='round'; ctx.beginPath(); ctx.moveTo(k*4,-20); ctx.lineTo(fx,-3); ctx.stroke(); ctx.fillStyle='#3A2414'; rr(fx-4,-5,10,5,2); ctx.fill(); }
+  // chaqueta de cuero ancha
+  ctx.fillStyle='#231E1C'; ctx.beginPath(); ctx.moveTo(-14,-20); ctx.lineTo(-15,-38); ctx.quadraticCurveTo(0,-45,15,-38); ctx.lineTo(14,-20); ctx.closePath(); ctx.fill();
+  ctx.fillStyle='#3A322E'; ctx.fillRect(-13,-37,4,15); ctx.fillStyle='#F2EBDD'; ctx.beginPath(); ctx.moveTo(-3,-40); ctx.lineTo(5,-40); ctx.lineTo(1,-26); ctx.fill();
+  ctx.strokeStyle='#E2B04A'; ctx.lineWidth=1.6; ctx.beginPath(); ctx.arc(1,-36,5.5,0.2,Math.PI-0.2); ctx.stroke(); ctx.fillStyle='#F2C85A'; ctx.beginPath(); ctx.arc(1,-30.5,2.4,0,7); ctx.fill(); ctx.fillStyle='#7A5A1A'; ctx.font='800 3.5px sans-serif'; ctx.fillText('$',0,-29.3);
+  ctx.fillStyle='#1A1614'; ctx.fillRect(-14,-21,28,3);
+  // brazo con el abanico de billetes
+  const throwA=e.throwT>0?-1.3:0.3+Math.sin(S.t*0.08)*0.08;
+  ctx.save(); ctx.translate(10,-36); ctx.rotate(throwA); ctx.strokeStyle='#231E1C'; ctx.lineWidth=5.5; ctx.beginPath(); ctx.moveTo(0,0); ctx.lineTo(4,11); ctx.stroke(); ctx.fillStyle='#C08A5E'; ctx.beginPath(); ctx.arc(4.5,12.5,2.6,0,7); ctx.fill();
+  for(let i=0;i<4;i++){ ctx.save(); ctx.translate(5,13); ctx.rotate(-0.6+i*0.28); ctx.fillStyle=i%2?'#5FA868':'#4E9A5A'; ctx.fillRect(0,-1.5,11,5); ctx.fillStyle='rgba(255,255,255,.35)'; ctx.fillRect(2,0,3,2); ctx.restore(); } ctx.restore();
+  ctx.strokeStyle='#1E1A18'; ctx.lineWidth=5.5; ctx.beginPath(); ctx.moveTo(-11,-36); ctx.lineTo(-15,-27); ctx.lineTo(-11,-22); ctx.stroke();
+  // cabeza
+  ctx.fillStyle='#C08A5E'; ctx.beginPath(); ctx.arc(1,-47,7.6,0,7); ctx.fill(); ctx.fillStyle='#A8744C'; ctx.fillRect(-3,-41,9,3);
+  ctx.fillStyle='#111'; rr(-1,-50,11,3.2,1.4); ctx.fill(); ctx.fillStyle='rgba(120,180,220,.5)'; ctx.fillRect(1,-49.6,2,1);
+  ctx.fillStyle='#2A1A12'; ctx.beginPath(); ctx.ellipse(4.5,-44,4,1.4,0,0,7); ctx.fill();
+  ctx.fillStyle='#fff'; ctx.fillRect(2.5,-42.2,4,1.2); ctx.fillStyle='#F2C85A'; ctx.fillRect(4,-42.2,1.2,1.2);
+  ctx.fillStyle='#B8323C'; ctx.beginPath(); ctx.arc(1,-52,7.6,Math.PI,0); ctx.fill(); ctx.fillRect(-11,-53,6,2.6); ctx.fillStyle='#8A2028'; ctx.fillRect(-6,-53.4,13,1.6);
+  if(e.flash>0){ ctx.globalCompositeOperation='lighter'; ctx.fillStyle='rgba(255,255,255,'+(e.flash/30)+')'; ctx.fillRect(-16,-62,32,62); }
+  ctx.restore();
+  if(!e.flee){ bossTag(e,x,y+2,J); const t=(e.sayT||0)%260; if(e.met&&t<130) bubble(cx,y-38,e.peace?'Usted no me necesita…':J.say[Math.floor((e.sayT||0)/260)%J.say.length]); }
+}
+function drawCredito(e,x,y){
+  const J=JEFE_TXT.creditoJefe, cx=x+e.w/2, fy=y+e.h, ph=(e.walk||0)*0.18, sw=Math.sin(ph);
+  // contrato que se desenrolla por el suelo
+  if(e.roll>0&&!e.flee){ const k=e.roll>70?Math.min(.18,(100-e.roll)/60):Math.min(1,(70-e.roll)/10+.18)*(e.roll<15?e.roll/15:1), L=72*k, x0=e.dir>0?x+e.w:x+0-L;
+    ctx.fillStyle='rgba(0,0,0,.2)'; ctx.fillRect(x0+2,fy-1,L,2); ctx.fillStyle='#FBF7EC'; ctx.fillRect(x0,fy-7,L,6); ctx.fillStyle='#B9B2A2'; for(let i=4;i<L-6;i+=6){ ctx.fillRect(x0+i,fy-5,3.5,.6); ctx.fillRect(x0+i,fy-3.4,3,.6); }
+    if(L>40){ ctx.strokeStyle='#C9475B'; ctx.lineWidth=.8; const sx=e.dir>0?x0+L-20:x0+6; ctx.strokeRect(sx,fy-6.5,15,5); ctx.fillStyle='#C9475B'; ctx.font='800 3.4px sans-serif'; ctx.fillText('APROBADO',sx+1,fy-2.8); }
+    ctx.fillStyle='#E9E2D0'; ctx.beginPath(); ctx.ellipse(e.dir>0?x0+L:x0,fy-4,2,3.5,0,0,7); ctx.fill(); }
+  ctx.save(); ctx.fillStyle='rgba(0,0,0,.3)'; ctx.beginPath(); ctx.ellipse(cx,fy,18,4,0,0,7); ctx.fill();
+  ctx.translate(cx,fy); ctx.scale(e.dir*1.42,1.42); if(e.flee) ctx.rotate(-0.08);
+  for(const [k,c] of [[-1,'#24448E'],[1,'#2E5BBA']]){ const fx=k*3+sw*k*4; ctx.strokeStyle=c; ctx.lineWidth=4.4; ctx.lineCap='round'; ctx.beginPath(); ctx.moveTo(k*3,-22); ctx.lineTo(fx,-3); ctx.stroke(); ctx.fillStyle='#111'; rr(fx-3,-4,9,4,2); ctx.fill(); ctx.fillStyle='rgba(255,255,255,.5)'; ctx.fillRect(fx,-4,3,1); }
+  // traje brillante
+  ctx.fillStyle='#2E5BBA'; ctx.beginPath(); ctx.moveTo(-9,-22); ctx.lineTo(-10,-40); ctx.quadraticCurveTo(0,-45,10,-40); ctx.lineTo(9,-22); ctx.closePath(); ctx.fill();
+  ctx.fillStyle='rgba(255,255,255,.22)'; ctx.fillRect(4,-39,2,16);
+  ctx.fillStyle='#fff'; ctx.beginPath(); ctx.moveTo(-3,-41); ctx.lineTo(4,-41); ctx.lineTo(0.5,-30); ctx.fill(); ctx.fillStyle='#C9475B'; ctx.beginPath(); ctx.moveTo(0,-40); ctx.lineTo(1.6,-40); ctx.lineTo(2.2,-30); ctx.lineTo(0.8,-28); ctx.lineTo(-0.6,-30); ctx.fill();
+  ctx.fillStyle='#1E3F86'; ctx.beginPath(); ctx.moveTo(-3,-41); ctx.lineTo(-1,-33); ctx.lineTo(-5,-36); ctx.fill(); ctx.beginPath(); ctx.moveTo(4,-41); ctx.lineTo(2.2,-33); ctx.lineTo(6,-36); ctx.fill();
+  // brazo con la pluma gigante
+  const pen=Math.sin(S.t*0.1)*0.15+(e.roll>0?-0.5:0);
+  ctx.save(); ctx.translate(7,-38); ctx.rotate(0.5+pen); ctx.strokeStyle='#2E5BBA'; ctx.lineWidth=4; ctx.beginPath(); ctx.moveTo(0,0); ctx.lineTo(3,10); ctx.stroke(); ctx.fillStyle='#E0B08A'; ctx.beginPath(); ctx.arc(3.4,11.4,2.2,0,7); ctx.fill();
+  ctx.rotate(-1.1); ctx.fillStyle='#E2B04A'; ctx.fillRect(1,9,15,2.6); ctx.fillStyle='#1E1E1E'; ctx.beginPath(); ctx.moveTo(16,9); ctx.lineTo(20,10.3); ctx.lineTo(16,11.6); ctx.fill(); ctx.restore();
+  ctx.strokeStyle='#24448E'; ctx.lineWidth=4; ctx.beginPath(); ctx.moveTo(-7,-38); ctx.lineTo(-9,-28); ctx.stroke(); ctx.fillStyle='#FBF7EC'; ctx.fillRect(-14,-31,8,10); ctx.fillStyle='#C9475B'; ctx.fillRect(-13,-24,6,1.4);
+  // cabeza con sonrisa enorme
+  ctx.fillStyle='#E0B08A'; ctx.beginPath(); ctx.arc(1,-49,6.6,0,7); ctx.fill();
+  ctx.fillStyle='#14161C'; ctx.beginPath(); ctx.arc(0,-52,6.8,Math.PI*1.05,Math.PI*2.05); ctx.fill(); ctx.fillRect(-6,-53,4,4); ctx.fillStyle='rgba(255,255,255,.4)'; ctx.fillRect(-2,-57,5,1);
+  ctx.fillStyle='#1E1A18'; ctx.beginPath(); ctx.arc(2.5,-50.5,.9,0,7); ctx.arc(5.6,-50.5,.9,0,7); ctx.fill();
+  ctx.fillStyle='#fff'; ctx.beginPath(); ctx.moveTo(0.5,-46.5); ctx.quadraticCurveTo(4,-42.5,7.4,-46.8); ctx.closePath(); ctx.fill(); ctx.strokeStyle='#8A4A3A'; ctx.lineWidth=.6; ctx.stroke();
+  if(e.flash>0){ ctx.globalCompositeOperation='lighter'; ctx.fillStyle='rgba(255,255,255,'+(e.flash/30)+')'; ctx.fillRect(-12,-58,24,58); }
+  ctx.restore();
+  if(!e.flee){ bossTag(e,x,y+2,J); const t=(e.sayT||0)%240; if(e.met&&t<120) bubble(cx,y-38,J.say[Math.floor((e.sayT||0)/240)%J.say.length],'#1E3F86'); }
+  else if(e.signed) bubble(cx,y-38,'¡Firme aquí… ya firmó!','#1E3F86');
+}
 function update(){
   const p=S.p, L=S.L;
   if(S.freeze>0){ S.freeze--; return; }
@@ -1280,6 +1397,7 @@ function update(){
     else if(e.t==='bank'){ e.lab++; const dx=(p.x+p.w/2)-(e.x+e.w/2); if(Math.abs(dx)<300&&Math.abs(p.y-e.y)<220){ if(--e.cd<=0){ e.cd=Math.round((110+rnd(60))/Dif().enemy); const sx=e.x+e.w/2, sy=e.y+22, tt=42; S.fees.push({x:sx,y:sy,w:16,h:12,vx:(p.x+p.w/2-sx)/tt,vy:((p.y+8)-sy)/tt-0.125*tt,n:['CUOTA DE MANEJO','COMISIÓN','SEGURO NO PEDIDO'][rnd(3)],life:220}); learn('banco'); } } }
     else if(e.t==='cobrador'){ const sp=1.25*Dif().enemy; e.x+=Math.sign(p.x-e.x)*Math.min(sp,Math.abs(p.x-e.x)); e.y+=Math.sign(p.y-4-e.y)*Math.min(sp*0.7,Math.abs(p.y-4-e.y)); if(--e.life<=0||!chained()) e.dead=true;
       if(!e.dead&&overlap(p,e)){ e.dead=true; if(hurt(2,'el cobrador del gota a gota','gota')) logD('Pérdida','Cobrador del gota a gota',-2); learn('cobrador'); } }
+    else if(e.t==='gotaJefe'||e.t==='creditoJefe') bossUpdate(e,p);
     else if(e.t==='lender'){
       const sp=Dif().enemy; if(Math.abs(p.x-e.x0)<240) e.x0+=Math.sign(p.x-e.x0)*0.35*sp; e.x=e.x0+Math.sin(S.t*0.014*sp+e.ph)*55; e.y=e.y0+Math.sin(S.t*0.035*sp+e.ph)*34;
       if(overlap(p,e)){ e.dead=true; eco.hand+=8; const debt=Math.round(16*Dif().loan); addDebt('Gota a gota',debt,2,'gota'); if(S.ws) S.ws.lost.gota=(S.ws.lost.gota||0)+(debt-8); eco.stats.traps++; addText(e.x-30,e.y-10,'+8 monedas… y ahora debes '+debt,'#FFC7BF'); logD('Deuda','Gota a gota: +8 hoy, debes '+debt,8-debt); learn('lender'); snd('bad'); burst(e.x+10,e.y+10,'#C9475B',12); }
@@ -1306,7 +1424,7 @@ function update(){
   S.rain=S.rain.filter(d=>!d.dead);
   // comisiones del banco
   S.fees.forEach(f=>{ f.x+=f.vx; f.y+=f.vy; f.vy=Math.min(f.vy+0.25,7); f.life--; if(f.life<=0||f.y>L.rows*T||(f.life<200&&solid(Math.floor(f.x/T),Math.floor((f.y+f.h)/T)))){ f.dead=true; burst(f.x,f.y,'rgba(238,106,92,.7)',4); return; }
-    const fb={x:f.x-8,y:f.y-6,w:16,h:12}; if(overlap(p,fb)){ f.dead=true; if(p.vy>0&&prevBottom<=fb.y+6){ p.vy=-6; addText(p.x-30,p.y-12,'Comisión esquivada','#BFF5CF'); snd('stomp'); } else if(p.inv<=0){ if(eco.shield){ hurt(1,''); } else { const v=Math.min(1,eco.hand); eco.hand-=v; p.inv=30; if(S.ws) S.ws.lost.comisiones=(S.ws.lost.comisiones||0)+1; if(v) logD('Pérdida','Banco: '+f.n.toLowerCase(),-1); addText(p.x-30,p.y-12,(v?'−1 ':'')+f.n.toLowerCase(),'#FFC7BF'); snd('bad'); learn('banco'); } } } });
+    const fb={x:f.x-8,y:f.y-6,w:16,h:12}; if(overlap(p,fb)){ f.dead=true; if(p.vy>0&&prevBottom<=fb.y+6){ p.vy=-6; addText(p.x-30,p.y-12,'Comisión esquivada','#BFF5CF'); snd('stomp'); } else if(p.inv<=0&&f.gota){ hurt(1,'cuota diaria del gota a gota','gota'); } else if(p.inv<=0){ if(eco.shield){ hurt(1,''); } else { const v=Math.min(1,eco.hand); eco.hand-=v; p.inv=30; if(S.ws) S.ws.lost.comisiones=(S.ws.lost.comisiones||0)+1; if(v) logD('Pérdida','Banco: '+f.n.toLowerCase(),-1); addText(p.x-30,p.y-12,(v?'−1 ':'')+f.n.toLowerCase(),'#FFC7BF'); snd('bad'); learn('banco'); } } } });
   S.fees=S.fees.filter(f=>!f.dead);
   S.falling.forEach(f=>{ f.x+=f.vx; f.y+=f.vy; f.vy+=0.3; f.rot+=0.18*Math.sign(f.vx||1); f.life--; }); S.falling=S.falling.filter(f=>f.life>0);
   // rocas que caen
@@ -1888,6 +2006,8 @@ function drawEnts(only){
       ctx.strokeStyle='#5A2E12'; ctx.lineWidth=1.2; const k=Math.sin(S.t*0.4)*2; for(let j=-1;j<=1;j++){ ctx.beginPath(); ctx.moveTo(j*3,2); ctx.lineTo(j*3+k*(j%2?1:-1),7); ctx.stroke(); }
       ctx.beginPath(); ctx.moveTo(9,-3); ctx.lineTo(12,-8); ctx.stroke();
       drop(-4,-8,.6); ctx.restore(); }
+    else if(e.t==='gotaJefe') drawGota(e,x,y);
+    else if(e.t==='creditoJefe') drawCredito(e,x,y);
     else if(e.t==='lender'){ ctx.save(); ctx.translate(x+11,y);
       ctx.fillStyle='rgba(0,0,0,.25)'; ctx.beginPath(); ctx.ellipse(0,34,10,3,0,0,7); ctx.fill();
       ctx.fillStyle='#2B2B33'; ctx.beginPath(); ctx.moveTo(-10,28); ctx.lineTo(-8,10); ctx.lineTo(8,10); ctx.lineTo(10,28); ctx.fill();
@@ -2554,7 +2674,7 @@ function openProfile(){
 function titleScreen(){
   S={mode:'title'}; S.L=null; document.getElementById('mapBar').hidden=true;
   const sv=loadSave();
-  let color=sv?sv.eco.color:COLORS[1], skin=sv?sv.eco.skin:1, head=sv?sv.eco.head:'gorra', diff=sv?sv.eco.diff:'sen';
+  let ruta=sv?(sv.eco.ruta||'variada'):'variada', color=sv?sv.eco.color:COLORS[1], skin=sv?sv.eco.skin:1, head=sv?sv.eco.head:'gorra', diff=sv?sv.eco.diff:'sen';
   openOv(`<img class="hero" src="art/cima.jpg" alt="" onerror="this.remove()"><div class="eyebrow">Un juego de educación financiera de Ruta a la Cima · basado en sus 7 guías</div>
   <h2>Ruta Financiera</h2>
   <p>Sube del Valle a la Cordillera con tu mochila y tus bastones. Gana tu dinero, ahórralo, inviértelo y no te dejes encadenar por las deudas. Cada campamento solo se abre si tus finanzas están listas.</p>
@@ -2562,16 +2682,17 @@ function titleScreen(){
   <label class="lb">Color de la chaqueta</label><div class="swatches" data-g="color">${COLORS.map((c,i)=>`<button type="button" class="sw" style="background:${c}" data-v="${c}" aria-label="Chaqueta ${i+1}" aria-pressed="${c===color}"></button>`).join('')}</div>
   <label class="lb">Tono de piel</label><div class="swatches" data-g="skin">${SKINS.map((c,i)=>`<button type="button" class="sw" style="background:${c}" data-v="${i}" aria-label="Tono de piel ${i+1}" aria-pressed="${i===skin}"></button>`).join('')}</div>
   <label class="lb">En la cabeza</label><div class="row" data-g="head"><button type="button" class="btn sm alt" data-v="gorra" aria-pressed="${head==='gorra'}">Gorra</button><button type="button" class="btn sm alt" data-v="gorro" aria-pressed="${head==='gorro'}">Gorro de lana</button></div>
+  <label class="lb">Tipo de ruta</label><div class="row" data-g="ruta"><button type="button" class="btn sm alt" data-v="variada" aria-pressed="${ruta==='variada'}">Variada: cambia en cada partida</button><button type="button" class="btn sm alt" data-v="fija" aria-pressed="${ruta==='fija'}">Fija: igual para todos (competencias)</button></div>
   <label class="lb">Dificultad</label><div class="modes" data-g="diff">${Object.entries(DIFF).map(([k,d])=>`<button type="button" class="mode" data-v="${k}" aria-pressed="${k===diff}"><b>${d.n}</b><span>${d.d}</span></button>`).join('')}</div>
   <div class="keys"><span><kbd>←</kbd> <kbd>→</kbd></span><span>Caminar (también A y D)</span><span><kbd>Espacio</kbd> <kbd>↑</kbd></span><span>Saltar; mantén para saltar más alto</span><span><kbd>P</kbd></span><span>Pausa</span></div>
   <div class="row">${sv?`<button class="btn" id="bCont" type="button">Continuar en el mundo ${sv.li+1}</button><button class="btn alt" id="bNew" type="button">Empezar de nuevo</button>`:`<button class="btn" id="bNew" type="button">Empezar la ruta</button>`}<button class="btn alt" id="bRank" type="button">Ver ranking</button></div>`);
   box.querySelectorAll('[data-g]').forEach(gr=>gr.querySelectorAll('[data-v]').forEach(b=>b.onclick=()=>{
-    const g=gr.dataset.g, v=b.dataset.v; if(g==='color') color=v; if(g==='skin') skin=+v; if(g==='head') head=v; if(g==='diff') diff=v;
+    const g=gr.dataset.g, v=b.dataset.v; if(g==='color') color=v; if(g==='skin') skin=+v; if(g==='head') head=v; if(g==='diff') diff=v; if(g==='ruta') ruta=v;
     gr.querySelectorAll('[data-v]').forEach(x=>x.setAttribute('aria-pressed',x===b)); }));
   const pf=()=>profRead();
-  document.getElementById('bNew').onclick=()=>{ const f=pf(); eco=newEco(f.name,color,Object.assign({skin,head,diff},f)); preTest(); };
+  document.getElementById('bNew').onclick=()=>{ const f=pf(); eco=newEco(f.name,color,Object.assign({skin,head,diff,ruta},f)); preTest(); };
   document.getElementById('bRank').onclick=()=>showRanking(titleScreen);
-  if(sv) document.getElementById('bCont').onclick=()=>{ eco=sv.eco; Object.assign(eco,pf(),{color,skin,head,diff}); showMap(sv.li,{reveal:true}); };
+  if(sv) document.getElementById('bCont').onclick=()=>{ eco=sv.eco; Object.assign(eco,pf(),{color,skin,head,diff,ruta}); showMap(sv.li,{reveal:true}); };
 }
 function preTest(){
   openOv(`<div class="eyebrow">Antes de subir</div><h2>¿Cuánto sabes hoy?</h2>
@@ -2913,7 +3034,7 @@ async function rkInit(){
 }
 function rkRows(){ if(RK.shared&&RK.ready) return RK.rows; const me=eco?String(eco.name||'').toLowerCase()+'|'+String(eco.grupo||'').toLowerCase():null; return rkLocal().filter(rkValid).map(r=>Object.assign({},r,{own:me!==null&&(String(r.a).toLowerCase()+'|'+String(r.g||'').toLowerCase())===me})); }
 async function rkSubmit(w,secs){
-  const run={a:String(eco.name||'Senderista').slice(0,16),g:String(eco.grupo||'').slice(0,12),c:String(eco.colegio||'').slice(0,40),gr:String(eco.grado||'').slice(0,20),pa:String(eco.pais||'').slice(0,24),w,t:Math.round(secs*10)/10,d:eco.diff,p:patrimonio(),f:new Date().toISOString().slice(0,10)};
+  const run={m:eco.ruta==='fija'?'f':'v',a:String(eco.name||'Senderista').slice(0,16),g:String(eco.grupo||'').slice(0,12),c:String(eco.colegio||'').slice(0,40),gr:String(eco.grado||'').slice(0,20),pa:String(eco.pais||'').slice(0,24),w,t:Math.round(secs*10)/10,d:eco.diff,p:patrimonio(),f:new Date().toISOString().slice(0,10)};
   const loc=rkLocal(); const best=rkMerge(loc,run); rkSaveLocal(loc);
   if(RK.shared&&RK.db&&RK.uid&&RK.canWrite){ const mine=RK.mine.slice(); if(rkMerge(mine,run)){ try{ await RK.db.doc('ranking/'+RK.uid).set({runs:mine.slice(-80)}); RK.mine=mine; }catch(e){ if(e&&(e.code==='invalid_argument'||e.code==='not_granted')) RK.canWrite=false; } } }
   return {run,best};
@@ -2951,7 +3072,7 @@ function clearSave(){ try{ localStorage.removeItem('rac-financiera-v2'); }catch(
 /* ================= LEYENDA ================= */
 function legend(){
   const items=[['gana','drop','Moneda: tu dinero (la mochila tiene límite)'],['gana','bill','Billete: ingreso extra'],['gana','emb','Alcancía: ahorro y punto de control; cada golpe que paga la agrieta'],['gana','I','Bloque de inversión: golpéalo desde abajo'],['gana','offerA','Activo: casa, moto, tienda… trabaja por ti'],['gana','pCasa','Casa: un activo. Te paga arriendo, aunque a veces cobra predial o reparaciones'],['gana','pInv','CDT: la ganancia crece cada quincena que esperas (interés compuesto)'],['gana','pFrasco','Frasco de ahorro: te impulsa, pero si rebotas mucho se agrieta y se rompe'],['gana','page','Página del Cuaderno de Ruta'],['gana','npc','Persona que te ayuda: tu red de apoyo'],
-   ['pierde','pCarro','Carros: pasivos que cobran SOAT, tecnomecánica, impuesto y repuestos'],['pierde','ant','Gasto hormiga: salta encima'],['pierde','impulse','Vitrina “¡solo hoy!”: compra por impulso'],['pierde','offerL','Pasivo disfrazado: brilla, pero cuesta cada quincena'],['pierde','veh','Vehículo: rápido, pero cuesta y pesa en la mochila'],['pierde','lender','Gota a gota: plata rápida, cadena larga'],['pierde','cobrador','Cobrador del gota a gota: te persigue'],['pierde','card','Tarjeta pre-aprobada: crédito fácil'],['pierde','bank','Banco: legal, pero cobra comisiones'],['pierde','cloud','Nube de inflación: llueve y resta'],['pierde','pyr','Pirámide: “duplica tu plata”'],
+   ['pierde','pCarro','Carros: pasivos que cobran SOAT, tecnomecánica, impuesto y repuestos'],['pierde','ant','Gasto hormiga: salta encima'],['pierde','impulse','Vitrina “¡solo hoy!”: compra por impulso'],['pierde','offerL','Pasivo disfrazado: brilla, pero cuesta cada quincena'],['pierde','veh','Vehículo: rápido, pero cuesta y pesa en la mochila'],['pierde','lender','Gota a gota: plata rápida, cadena larga'],['riesgo','gotaJefe','Don Gota: salta 3 veces sobre él o ten fondo de emergencia'],['riesgo','creditoJefe','Crédito Fácil: no toques su contrato; salta 3 veces sobre él'],['pierde','cobrador','Cobrador del gota a gota: te persigue'],['pierde','card','Tarjeta pre-aprobada: crédito fácil'],['pierde','bank','Banco: legal, pero cobra comisiones'],['pierde','cloud','Nube de inflación: llueve y resta'],['pierde','pyr','Pirámide: “duplica tu plata”'],
    ['riesgo','puma','Fiera: un imprevisto (salta para espantarla)'],['riesgo','tDeuda','Cadenas de deuda: pinchan si las tocas'],['riesgo','tPantano','Pantano de la mora: frena si cargas deudas'],['riesgo','tMuro','Muro: mantén la flecha hacia él para trepar'],['riesgo','tRio','Río: las piedras se hunden, no te quedes quieto']];
   const main=ctx, keep={cam:S.cam,t:S.t,L:S.L,rain:S.rain,loose:S.loose};
   items.forEach(([g,k,txt])=>{
@@ -2968,6 +3089,7 @@ function legend(){
       else if(k==='tPantano'){ ctx.fillStyle='#4A4424'; ctx.fillRect(0,16,36,20); ctx.fillStyle='#7C7A3E'; ctx.fillRect(0,16,36,3); ctx.strokeStyle='rgba(200,200,130,.9)'; ctx.lineWidth=1; ctx.beginPath(); ctx.arc(12,24,2.5,0,7); ctx.stroke(); ctx.beginPath(); ctx.arc(24,27,1.8,0,7); ctx.stroke(); ctx.strokeStyle='#5E7A30'; ctx.lineWidth=1.4; ctx.beginPath(); ctx.moveTo(6,17); ctx.lineTo(4,4); ctx.moveTo(30,17); ctx.lineTo(32,6); ctx.stroke(); ctx.fillStyle='#6B4A2B'; ctx.fillRect(2,2,3,6); }
       else if(k==='tMuro'){ ctx.fillStyle='#5E5A55'; ctx.fillRect(9,2,20,34); ctx.fillStyle='#77726B'; ctx.fillRect(12,2,17,34); const hc=['#E04A4A','#F2B33D','#2E7BC4','#3FA868']; for(let i=0;i<4;i++){ ctx.fillStyle=hc[i]; ctx.beginPath(); ctx.ellipse(15+(i%2)*8,8+i*7,3,2.2,.4,0,7); ctx.fill(); } }
       else if(k==='tRio'){ ctx.fillStyle='#3B8CC4'; ctx.fillRect(0,20,36,16); ctx.fillStyle='#7FC1E8'; ctx.fillRect(0,20,36,3); ctx.fillStyle='rgba(255,255,255,.6)'; ctx.fillRect(4,27,8,1.5); ctx.fillRect(22,31,8,1.5); ctx.fillStyle='#4E5860'; ctx.beginPath(); ctx.ellipse(18,20,11,5,0,0,7); ctx.fill(); ctx.fillStyle='#97A1A8'; ctx.beginPath(); ctx.ellipse(17,18,9,3.5,0,0,7); ctx.fill(); }
+      else if(k==='gotaJefe'||k==='creditoJefe'){ ctx.save(); ctx.translate(2,0); ctx.scale(.44,.44); const e={t:k,x:4,y:2,w:k==='gotaJefe'?48:40,h:k==='gotaJefe'?76:72,hp:3,dir:1,flee:1,walk:0}; if(k==='gotaJefe') drawGota(e,e.x,e.y); else drawCredito(e,e.x,e.y); ctx.restore(); }
       else { const e={ant:{t:'ant',x:9,y:16,w:18,h:12,vx:1},lender:{t:'lender',x:7,y:6,w:22,h:30,ph:0},cloud:{t:'cloud',x:-10,y:8,w:56,h:22},pyr:{t:'pyr',x:8,y:8,w:20,h:20},emb:{t:'emb',x:2,y:0,w:32,h:34,used:true},page:{t:'page',x:9,y:8,w:18,h:20,idx:0},bill:{t:'bill',v:5,x:7,y:12,w:22,h:12,ph:0},offerA:{t:'offer',kind:'activo',it:ACTIVOS[0],x:3,y:4,w:30,h:32},offerL:{t:'offer',kind:'pasivo',it:PASIVOS[0],x:3,y:4,w:30,h:32},impulse:{t:'impulse',x:0,y:4,w:36,h:30},puma:{t:'puma',x:4,y:14,w:26,h:16,st:'walk',vx:1},npc:{t:'npc',k:'abuela',x:8,y:0,w:20,h:30,used:false},veh:{t:'veh',k:'carro',it:VEH.carro,x:0,y:10,w:36,h:26},cobrador:{t:'cobrador',x:7,y:8,w:22,h:30},card:{t:'card',x:5,y:14,w:26,h:16,ph:0}}[k];
         S.L={ents:[e],mps:[]}; drawEnts(); }
     }catch(err){}
