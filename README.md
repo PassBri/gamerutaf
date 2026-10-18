@@ -253,6 +253,7 @@ En **Settings → Pages**, elige **Deploy from a branch**, la rama `main` y la c
 | **Resolución** | Lienzo lógico de 640 × 360 que se escala a cualquier pantalla |
 | **Física** | Paso fijo a 60 Hz; el juego se recupera solo de cualquier error de dibujo |
 | **Arte** | Montañas con relieve por píxel, luz por mundo, niebla, grano y viñeta |
+| **Animación** | Todos los personajes comparten un esqueleto con cinemática inversa: pie fijo al apoyar (sin patinar), cadera que sube al caminar y baja al correr, brazos en oposición, lanzamientos con preparación y seguimiento, reacción al golpe y respiración. El puma trota en diagonal, la culebra ondula y la hormiga camina en trípode |
 | **Controles** | Teclado, ratón (clic para ir) y táctil |
 | **Guardado** | Progreso, ranking local y material docente en `localStorage` |
 | **Ranking en línea** | Base de datos compartida cuando corre como artifact de Claude; en otros sitios usa el ranking local |
