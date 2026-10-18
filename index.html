@@ -505,6 +505,9 @@ const CH={
  curso:["                ","                ","                ","                ","  o    i     o  ","################","################"],
  apuros:["                ","                ","                ","                ","  o    t     o  ","################","################"],
  fomo:["                  ","                  ","                  ","                  ","  o    s       o  ","##################","##################"],
+ poder:["                ","                ","                ","                ","   o   X    o   ","################","################"],
+ negocio:["                ","                ","                ","                ","  o   R      o  ","################","################"],
+ racha:["                ","                ","                ","        o  o    ","   O   ##  ##   ","################","################"],
  colchon:["                ","                ","                ","                ","  o    q     o  ","################","################"],
  cripto:["                ","          e     ","        ====    ","                ","   o  d     o   ","################","################"],
  lz_politico:["                  ","                  ","                  ","                  ","  o            o  ","        z         ","##################","##################"],
@@ -560,35 +563,35 @@ const LV=[
  {name:'El Valle',role:'Desempleado',step:'Identificación de ingresos',theme:0,costo:0,
   lesson:'En El Valle todavía no tienes ingreso fijo. Las monedas son tu dinero: recógelas, pero tu mochila tiene un límite. Busca el <b>casco de Empleo</b> sobre una plataforma: te dará un salario en cada quincena. Hay 3 páginas del <b>Cuaderno de Ruta</b> escondidas en las alturas. Terreno nuevo: un <b>pantano</b> que frena, un <b>río</b> con piedras que se hunden y un <b>muro de escalada</b> (mantén la flecha hacia el muro). Doña Rosa te espera en el camino… y un <b>gota a gota</b> también.',
   req:'Tener un empleo (salario)',
-  chunks:['start','coins','pantano','billetes','job','ayuda','steps','page1','paciencia','colchon','rio','embalse','gap','vehiculo','bridge','lender','coins','calle','page2','curso','embalse','muro','steps','coins','page3','camp']},
+  chunks:['start','poder','coins','pantano','billetes','job','ayuda','steps','page1','paciencia','colchon','rio','embalse','gap','vehiculo','bridge','lender','coins','calle','negocio','page2','curso','embalse','muro','steps','coins','racha','page3','camp']},
  {name:'Base de la Montaña',role:'Empleado',step:'Control de gastos',theme:1,costo:1,
   lesson:'Las <b>hormigas</b> son gastos hormiga: si te tocan se llevan monedas. Salta encima de ellas para recuperar una. Desde aquí el costo de vida cobra 1 moneda por quincena. Aparecen el <b>banco</b> que cobra comisiones, la <b>nube de inflación</b>, las <b>tarjetas pre-aprobadas</b> y una <b>culebra</b> escondida en el pasto.',
   req:'Llegar al campamento con 10 monedas o más en la mano',
-  chunks:['start','ants','billetes','pantano','vitrina','page1','tiendas','colchon','embalse','culebra','credito','fugas','antgap','ayuda','calle','page2','paciencia','embalse','banco','cloud','rio','vitrina','antgap','curso','page3','ants','camp']},
+  chunks:['start','poder','ants','billetes','pantano','vitrina','page1','tiendas','colchon','embalse','culebra','credito','fugas','antgap','ayuda','calle','negocio','page2','paciencia','embalse','banco','cloud','rio','vitrina','antgap','curso','racha','page3','ants','camp']},
  {name:'Puntos de Observación',role:'Estratega',step:'Creación de ahorro',theme:2,costo:1,
   lesson:'Cada <b>alcancía</b> guarda la mitad de tus monedas apenas la tocas: págate primero. Si te golpean con la mano vacía, tu alcancía paga el golpe. Sin alcancía ni monedas, te quedas sin fondos.',
   req:'Tener 15 monedas o más en la alcancía',
-  chunks:['start','steps','billetes','embalse','muro','mercado','puma','page1','apuros','colchon','embalse','prima','lender','vehiculo','cloud','sueno','rio','bridge','calle','page2','tiendas','embalse','banco','antgap','ayuda','pits','paciencia','page3','coins','camp']},
+  chunks:['start','poder','steps','billetes','embalse','muro','mercado','puma','page1','apuros','colchon','embalse','prima','lender','vehiculo','cloud','sueno','rio','bridge','calle','negocio','page2','tiendas','embalse','banco','antgap','ayuda','pits','paciencia','racha','page3','coins','camp']},
  {name:'Primer Campamento',role:'Emprendedor',step:'Inversiones inteligentes',theme:3,costo:1,
   lesson:'Llega a los <b>lotes de inversión</b> con las monedas que piden y siembra. Se vuelven manantiales que te pagan en cada quincena, para siempre. Cuidado con las nubes de inflación.',
   req:'Tener al menos 1 activo',
-  chunks:['start','invest','ants','mercado','cloud','rio','page1','tiendas','embalse','billetes','invest','vehiculo','credito','muro','sueno','calle','page2','curso','cripto','embalse','banco','puma','ayuda','mercado','invest','pantano','page3','coins','camp']},
+  chunks:['start','poder','invest','ants','mercado','cloud','rio','page1','tiendas','embalse','billetes','invest','vehiculo','credito','muro','sueno','calle','negocio','page2','curso','cripto','embalse','banco','puma','ayuda','mercado','invest','pantano','racha','page3','coins','camp']},
  {name:'Campamento Avanzado',role:'Empresario',step:'Diversificación de recursos',theme:4,costo:2,
   lesson:'Bosque de niebla: ves poco (la <b>linterna</b> ayuda) y hay <b>costos ocultos</b>, zarzas que no se ven. Hay tres tipos de activo: <b>financiero</b>, <b>inmueble</b> y <b>emprendimiento</b>; no dependas de uno solo. Ojo con el <b>prestamista gota a gota</b>: da plata rápido, pero encadena.',
   req:'Tener activos de 2 tipos distintos',
-  chunks:['start','invest','mercado','moving','cloud','hidden','page1','fomo','embalse','credito','lender','pantano','duo','bridge','calle','page2','tiendas','cripto','embalse','tower','banco','culebra','ayuda','invest','vehiculo','page3','coins','camp']},
+  chunks:['start','poder','invest','mercado','moving','cloud','hidden','page1','fomo','embalse','credito','lender','pantano','duo','bridge','calle','negocio','page2','tiendas','cripto','embalse','tower','banco','culebra','ayuda','invest','vehiculo','racha','page3','coins','camp']},
  {name:'La Cima',role:'Inversionista',step:'Eliminación de pasivos',theme:5,costo:2,
   lesson:'El páramo de los frailejones. Caen <b>rocas</b> de las laderas: un <b>casco</b> es un seguro que cuesta poco cada quincena. Aquí no se sube con cadenas: llega <b>sin deudas</b>. Las pirámides doradas prometen duplicar tu plata; ya sabes cómo terminan.',
   req:'Cero deudas',
-  chunks:['start','lender','credito','pyramid','rocks','page1','apuros','embalse','mercado','muro','lender','fugas','puma','cloud','calle','page2','fomo','cripto','embalse','sueno','rio','rocks','duo','banco','hidden','ayuda','page3','coins','camp']},
+  chunks:['start','poder','lender','credito','pyramid','rocks','page1','apuros','embalse','mercado','muro','lender','fugas','puma','cloud','calle','negocio','page2','fomo','cripto','embalse','sueno','rio','rocks','duo','banco','hidden','ayuda','racha','page3','coins','camp']},
  {name:'Cumbre Personal',role:'Diversificador',step:'Construcción de patrimonio',theme:6,costo:2,
   lesson:'Tu <b>patrimonio</b> es todo lo que tienes (mano, alcancía y activos) menos lo que debes. Constrúyelo sin caer en trampas.',
   req:'Patrimonio de 80 o más',
-  chunks:['start','tower','mercado','invest','rocks','vehiculo','page1','fomo','embalse','sueno','pyramid','pantano','credito','lender','puma','calle','page2','apuros','cripto','embalse','muro','billetes','rocks','banco','ayuda','prima','page3','coins','camp']},
+  chunks:['start','poder','tower','mercado','invest','rocks','vehiculo','page1','fomo','embalse','sueno','pyramid','pantano','credito','lender','puma','calle','negocio','page2','apuros','cripto','embalse','muro','billetes','rocks','banco','ayuda','prima','racha','page3','coins','camp']},
  {name:'La Cordillera',role:'Mentor',step:'Libertad financiera',theme:7,costo:3,
   lesson:'Hielo resbaloso (los <b>crampones</b> ayudan) y el costo de vida más alto de la ruta. Para ser <b>mentor</b> tu ingreso pasivo debe cubrir tu costo de vida sin trabajar, y debes superar la Prueba del Mentor.',
   req:'Ingreso pasivo igual o mayor que el costo de vida (3)',
-  chunks:['start','tower','mercado','moving','rocks','page1','fomo','embalse','cloud','vitrina','lender','muro','invest','sueno','calle','page2','apuros','cripto','embalse','rio','hidden','puma','pyramid','ayuda','vehiculo','duo','page3','antgap','camp']},
+  chunks:['start','poder','tower','mercado','moving','rocks','page1','fomo','embalse','cloud','vitrina','lender','muro','invest','sueno','calle','negocio','page2','apuros','cripto','embalse','rio','hidden','puma','pyramid','ayuda','vehiculo','duo','racha','page3','antgap','camp']},
 ];
 
 const THEMES=[
@@ -727,6 +730,9 @@ const TIPS={
  pension:{t:'Pensión y cesantías',g:'Guía 6',x:'Una parte del sueldo se guarda sola para la vejez (pensión) y el empleador consigna cesantías para vivienda o estudio. Es ahorro obligatorio que trabaja a largo plazo.'},
  generosidad:{t:'Generosidad con presupuesto',g:'Guía 7',x:'Ayudar a otros hace parte de la cima, pero sin desfinanciarte: primero aseguras lo tuyo y luego das lo que te sobra.'},
  fomo:{t:'Efecto manada (FOMO)',g:'Guía 5',x:'“Todos están comprando” no es un análisis. Las burbujas suben por el entusiasmo y estallan; invierte en lo que entiendes.'},
+ negocio:{t:'Oportunidad de negocio',g:'Guía 6',x:'Emprender es invertir en algo que tú manejas: pide capital propio, un plan y paciencia. El primer mes casi siempre solo cubre costos y los ingresos varían. Separa la plata del negocio de la tuya y reinvierte parte de la ganancia.'},
+ grande:{t:'Fondo de emergencia completo',g:'Guía 3',x:'Tener guardados de 3 a 6 meses de gastos te hace más grande frente a los imprevistos: un golpe no te tumba, solo te toca volver a llenar el fondo.'},
+ racha:{t:'Racha de disciplina',g:'Guía 4',x:'Cuando sostienes buenos hábitos (presupuesto, ahorro automático, cero gastos hormiga), los gastos impulsivos no te alcanzan. La disciplina es un poder que se entrena.'},
  colchon:{t:'Plata debajo del colchón',g:'Guía 3',x:'El efectivo escondido no gana intereses, la inflación lo encoge y se lo comen la humedad, los ratones o un robo. Guárdalo en una cuenta, la alcancía o un CDT.'},
  btc:{t:'Bitcoin y criptoactivos',g:'Guía 5',x:'Su precio sube y baja mucho (volatilidad). Invierte solo lo que puedas perder, nunca prestado, y guarda tu frase semilla: sin ella, si olvidas la clave, pierdes todo.'},
  btcClave:{t:'Clave olvidada',g:'Guía 5',x:'Una billetera cripto no tiene banco que te devuelva el acceso. La frase semilla de 12 palabras, escrita en papel y guardada en un lugar seguro, es tu única copia.'},
@@ -856,7 +862,7 @@ const renta=()=>eco.assets.reduce((s,a)=>s+a.renta,0);
 const debtTot=()=>eco.debts.reduce((s,d)=>s+d.saldo,0);
 const cuotas=()=>eco.debts.reduce((s,d)=>s+Math.min(d.cuota,d.saldo),0);
 const tipos=()=>new Set(eco.assets.map(a=>a.type)).size;
-const patrimonio=()=>eco.hand+eco.emb+(eco.colchon||0)+(eco.pension||0)+(eco.cesantias||0)+(eco.crypto&&!eco.crypto.lost?eco.crypto.v:0)+eco.assets.reduce((s,a)=>s+a.value,0)+(eco.lujos||[]).reduce((s,a)=>s+a.value,0)-debtTot();
+const patrimonio=()=>eco.hand+eco.emb+(eco.colchon||0)+(eco.negocio?eco.negocio.val:0)+(eco.pension||0)+(eco.cesantias||0)+(eco.crypto&&!eco.crypto.lost?eco.crypto.v:0)+eco.assets.reduce((s,a)=>s+a.value,0)+(eco.lujos||[]).reduce((s,a)=>s+a.value,0)-debtTot();
 const costo=()=>Math.round(LV[S.li].costo*Dif().cost);
 const flujo=()=>eco.salario+renta()-costo()-cuotas()-primas()-fijos();
 const chained=()=>eco.debts.some(d=>d.kind==='gota');
@@ -944,6 +950,9 @@ function buildLevel(li){
     if(ch==='i') ents.push({t:'curso',x:x-8,y:y+T-36,w:40,h:36,used:false});
     if(ch==='t') ents.push({t:'apuros',x:x,y:y+T-24,w:24,h:24,used:false});
     if(ch==='s') ents.push({t:'fomo',x:x-10,y:y+T-40,w:46,h:40,used:false});
+    if(ch==='R') ents.push({t:'negocio',k:(Math.floor(x/T)+li*2)%NEG.length,x:x-8,y:y+T-52,w:64,h:52,used:false,cd:0});
+    if(ch==='X') ents.push({t:'poder',k:'grande',x:x+2,y:y+T-48,w:20,h:48,ph:Math.random()*6});
+    if(ch==='O') ents.push({t:'poder',k:'racha',x:x+2,y:y+T-48,w:20,h:48,ph:Math.random()*6});
     if(ch==='q') ents.push({t:'colchon',x:x-8,y:y+T-16,w:40,h:16,used:false});
     if(ch==='d') ents.push({t:'btc',x:x+3,y:y+2,w:18,h:20,ph:Math.random()*6});
     if(ch==='e') ents.push({t:'semilla',x:x+4,y:y+4,w:16,h:18,ph:Math.random()*6});
@@ -1021,6 +1030,25 @@ function hazardAt(c,r){ const t=tileAt(c,r); return t==='v'||t==='x'; }
 function solid(c,r){ if(c<0||c>=S.L.w) return true; if(r<0||r>=S.L.rows) return false; const t=S.L.g[r][c]; return t==='#'||t==='I'||t==='U'||t==='|'; }
 function oneway(c,r){ if(c<0||c>=S.L.w||r<0||r>=S.L.rows) return false; const t=S.L.g[r][c]; return t==='-'||t==='='; } // casas, carros, frascos y cajas se atraviesan desde abajo y se pisan desde arriba
 function tileAt(c,r){ if(c<0||c>=S.L.w||r<0||r>=S.L.rows) return ' '; return S.L.g[r][c]; }
+const NEG=[{n:'Empanadas',k:'empanada'},{n:'Café de la finca',k:'cafe'},{n:'Tienda de barrio',k:'tienda'},{n:'Arreglo de celulares',k:'cel'},{n:'Tutorías',k:'tutor'},{n:'Bicitaller',k:'bici'}];
+function coinPopAt(p){ for(let i=0;i<5;i++) S.parts.push({x:p.x+p.w/2+(Math.random()-.5)*14,y:p.y-4,vx:(Math.random()-.5)*1.6,vy:-1.6-Math.random()*1.4,life:30,col:'#E8B64A'}); }
+function negocioTouch(e,p){ const NG=eco.negocio; if(e.cd>0) return;
+  if(NG){ if(eco.hand>=4){ e.used=true; eco.hand-=4; NG.nivel++; NG.renta++; NG.val+=4; eco.stats.invested=(eco.stats.invested||0)+4; if(S.ws) S.ws.invested+=4; busy(70,'Ampliando tu negocio'); logD('Inversión','Reinvertiste en tu negocio ('+NG.n+')',-4); addText(e.x-50,e.y-30,'¡Reinvertiste! Tu negocio sube a nivel '+NG.nivel+': +'+NG.renta+' por quincena','#BFF5CF'); confetti(e.x+32,e.y,16); snd('buy'); learn('negocio'); }
+    else { e.cd=180; addText(e.x-60,e.y-30,'Con 4 monedas puedes ampliar tu negocio: reinvierte parte de la ganancia','#FFE18A'); } return; }
+  if(eco.hand>=6){ const T0=NEG[e.k]; e.used=true; eco.hand-=6; eco.negocio={n:T0.n,k:T0.k,nivel:1,renta:2,val:6,q:0}; eco.stats.negocio=1; eco.stats.invested=(eco.stats.invested||0)+6; if(S.ws) S.ws.invested+=6;
+    busy(140,'Haciendo el estudio de mercado y el plan de negocio'); logD('Inversión','Abriste tu negocio: '+T0.n,-6); learn('negocio'); snd('gate'); confetti(e.x+32,e.y,26);
+    toast('Oportunidad de negocio · '+T0.n,'Invertiste 6 de capital propio, con plan y estudio de mercado. El primer mes solo cubre costos; después te deja +2 cada quincena (algunos meses, nada). Separa la plata del negocio de la tuya y reinvierte: más adelante puedes ampliarlo.'); }
+  else { e.cd=200; learn('negocio'); addText(e.x-70,e.y-30,'Necesitas 6 de capital propio. Ahorra primero: nunca emprendas con un gota a gota','#FFE18A'); } }
+function bigAbsorb(){ const p=S.p; if(!p||!p.big) return false; p.big=0; p.growT=40; p.inv=100; p.vy=-4; S.shake=reduced?0:5; snd('hit'); burst(p.x+p.w/2,p.y+8,'#9FD3FF',18); addText(p.x-70,p.y-30,'Tu fondo de emergencia absorbió el golpe: vuelves a tu tamaño','#9FD3FF'); logD('Ahorro','El fondo de emergencia te protegió de un golpe',0); return true; }
+function poderTake(e,p){ e.dead=true; snd('gate'); burst(e.x+10,e.y+10,e.k==='grande'?'#9FD3FF':'#FFD36B',22); confetti(e.x+10,e.y,12); eco.stats.poderes=(eco.stats.poderes||0)+1;
+  if(e.k==='grande'){ p.big=1; p.growT=44; learn('grande'); addText(p.x-70,p.y-40,'¡Fondo de emergencia completo! Creces y aguantas un golpe','#9FD3FF'); }
+  else { p.power=480; learn('racha'); addText(p.x-70,p.y-40,'¡Racha de disciplina! 8 s imparable: amarras los gastos que tocas','#FFE18A'); } }
+const POW_T={ant:1,puma:1,snake:1,lanza:1,ladron:1};
+function powerSweep(p){ const b={x:p.x-5,y:p.y-(p.big?12:2),w:p.w+10,h:p.h+(p.big?12:2)};
+  for(const e of S.L.ents){ if(e.dead||e.tied||!POW_T[e.t]||!overlap(b,e)) continue;
+    if(e.t==='ladron'){ if(e.st==='preso') continue; e.st='preso'; e.pt=0; eco.stats.ladrones=(eco.stats.ladrones||0)+1; eco.hand=Math.min(cap(),eco.hand+2); stampAt(e.x+10,e.y-12,'ROBO EVITADO','racha de disciplina'); logD('Ahorro','Evitaste un robo',2); snd('stomp'); continue; }
+    if(e.t==='lanza'){ e.tied=1; e.pw=1; e.flash=0; e.hp=0; eco.hand=Math.min(cap(),eco.hand+1); eco.stats.lanzadores=(eco.stats.lanzadores||0)+1; logD('Ahorro','Racha: amarraste un gasto',1); confetti(e.x+e.w/2,e.y,12); snd('stomp'); continue; }
+    e.dead=true; eco.hand=Math.min(cap(),eco.hand+1); eco.stats.stomps=(eco.stats.stomps||0)+1; stampAt(e.x+e.w/2,e.y-6,'GASTO EVITADO','racha de disciplina'); tiedPoof(e); snd('stomp'); burst(e.x+e.w/2,e.y+e.h/2,'#FFD36B',10); } }
 function overlap(a,b){ return a.x<b.x+b.w && a.x+a.w>b.x && a.y<b.y+b.h && a.y+a.h>b.y; }
 
 function canStep(e,c){
@@ -1140,6 +1168,7 @@ function hurt(n,why,cat){
   const p=S.p;
   if(p.inv>0||S.busy) return false;
   p.inv=90; p.ride=null; p.vy=-5; p.vx=-p.face*3; S.freeze=reduced?0:5; S.shake=reduced?0:7; p.flash=reduced?0:10;
+  if(bigAbsorb()) return false;
   if(eco.shield){ eco.shield=false; addText(p.x,p.y-10,'¡Tu educación financiera te protegió!','#C9CEFF'); snd('save'); return false; }
   pileFall();
   snd('hit');
@@ -1182,6 +1211,10 @@ function scoreAdd(n,why){ eco.score=Math.max(300,Math.min(900,(eco.score||650)+n
 function addDebt(name,saldo,cuota,kind){ if(kind==='acuerdo') scoreAdd(-60,'reportado por no pagar'); else if(kind==='tarjeta') scoreAdd(-6); else if(kind==='credito') scoreAdd(-25,'crédito por encima de tu capacidad'); const d=eco.debts.find(x=>x.kind===kind); if(d) d.saldo+=saldo; else eco.debts.push({name,saldo,cuota,kind}); }
 
 function pulseExtras(p){
+  const NG=eco.negocio; if(NG){ NG.q=(NG.q||0)+1;
+    if(NG.q===1){ addText(p.x-70,p.y-58,'Tu negocio arrancó: este mes solo cubrió costos (punto de equilibrio)','#FFE18A'); }
+    else if(Math.random()<0.2){ addText(p.x-70,p.y-58,'Mes flojo en '+NG.n.toLowerCase()+': no hubo ganancia. Los ingresos de un negocio varían','#FFC7BF'); logD('Ingreso','Negocio: mes flojo',0); }
+    else { const r=NG.renta, toH=Math.max(0,Math.min(r,cap()-eco.hand)); eco.hand+=toH; eco.emb+=r-toH; NG.ganado=(NG.ganado||0)+r; addText(p.x-60,p.y-58,'Tu negocio ('+NG.n.toLowerCase()+') dejó +'+r+(r-toH?' · '+(r-toH)+' a la alcancía':''),'#BFF5CF'); logD('Ingreso','Ganancia del negocio: '+NG.n,r); coinPopAt(p); } learn('negocio'); }
   if(eco.salario>0){ eco.pq=(eco.pq||0)+1; if(eco.pq%2===0){ eco.pension=(eco.pension||0)+1; eco.cesantias=(eco.cesantias||0)+1; eco.hand=Math.max(0,eco.hand-1); addText(p.x-50,p.y-72,'Aportes: pensión +1 (de tu sueldo) · cesantías +1 (del empleador)','#C9CEFF'); learn('pension'); } }
   if(eco.plan&&eco.plan.ok&&eco.hand>0){ eco.hand--; eco.emb++; addText(p.x-50,p.y-86,'Págate primero en automático: +1 a la alcancía','#9FD3FF'); learn('plan'); }
   if(eco.meme&&eco.meme.v>0){ const back=1; addText(p.x-70,p.y-100,'¡La burbuja de la memecoin estalló! De '+eco.meme.v+' te quedó '+back,'#FF9A8C'); logD('Pérdida','Memecoin: comprar porque todos compran',back-eco.meme.v); eco.hand+=back; eco.meme=null; learn('fomo'); snd('bad'); }
@@ -1274,6 +1307,86 @@ function drawTienda(e,x,y){ const fy=y+34, A=e.k==='A'; ctx.fillStyle='rgba(0,0,
   if(A){ ctx.fillStyle='#FFE18A'; ctx.font='900 11px Figtree, sans-serif'; ctx.textAlign='center'; ctx.fillText('ARROZ 4',x+20,fy-28); ctx.fillStyle='rgba(255,255,255,.55)'; ctx.font='600 3.2px Figtree, sans-serif'; ctx.fillText('*+2 de envío y recargo',x+20,fy-24.4); }
   else { ctx.fillStyle='#fff'; ctx.font='800 7.5px Figtree, sans-serif'; ctx.textAlign='center'; ctx.fillText('ARROZ 5',x+20,fy-28); ctx.font='700 4px Figtree, sans-serif'; ctx.fillStyle='#BFF5CF'; ctx.fillText('total, sin recargos',x+20,fy-24); }
   if(e.done){ ctx.fillStyle=e.bought?'#BFF5CF':'rgba(255,255,255,.5)'; ctx.font='800 5px Figtree, sans-serif'; ctx.fillText(e.bought?'✓ COMPRASTE AQUÍ':'CERRADO',x+20,fy+7); } else { ctx.fillStyle='#fff'; ctx.font='800 5px Figtree, sans-serif'; ctx.fillText('MERCADO · COMPARA',x+20,fy+7); } ctx.textAlign='left'; }
+function negProducts(k,x,fy){ // productos sobre el mostrador (fy = borde superior del mostrador)
+  ctx.save();
+  if(k==='empanada'){ for(let i=0;i<4;i++){ const px=x+6+i*10; ctx.fillStyle='#C9832A'; ctx.beginPath(); ctx.arc(px,fy,4.6,Math.PI,0); ctx.fill(); ctx.fillStyle='#E8B05A'; ctx.beginPath(); ctx.arc(px,fy-0.4,3.6,Math.PI,0); ctx.fill(); ctx.strokeStyle='#9A5A1E'; ctx.lineWidth=.6; for(let j=-3;j<=3;j+=1.5){ ctx.beginPath(); ctx.moveTo(px+j,fy); ctx.lineTo(px+j*1.08,fy-1.2); ctx.stroke(); } }
+    ctx.fillStyle='#F4ECD8'; rr(x+44,fy-7,8,7,1.5); ctx.fill(); ctx.fillStyle='#3E7A3A'; ctx.fillRect(x+45,fy-5,6,3); }
+  else if(k==='cafe'){ ctx.fillStyle='#C9B48A'; rr(x+2,fy-13,13,13,3); ctx.fill(); ctx.fillStyle='#6B2A1A'; ctx.font='800 3.6px Figtree, sans-serif'; ctx.textAlign='center'; ctx.fillText('CAFÉ',x+8.5,fy-5); for(let i=0;i<3;i++){ const px=x+22+i*9; ctx.fillStyle='#F4ECD8'; ctx.beginPath(); ctx.moveTo(px-3,fy-6); ctx.lineTo(px+3,fy-6); ctx.lineTo(px+2.2,fy); ctx.lineTo(px-2.2,fy); ctx.fill(); ctx.fillStyle='#5A2E14'; ctx.fillRect(px-2.6,fy-5.6,5.2,1.4);
+      ctx.strokeStyle='rgba(255,255,255,.5)'; ctx.lineWidth=.6; ctx.beginPath(); ctx.moveTo(px,fy-7); ctx.quadraticCurveTo(px-1.6+Math.sin(S.t*0.08+i),fy-9.5,px,fy-12); ctx.stroke(); } }
+  else if(k==='tienda'){ const C=['#B84A3C','#E8B64A','#3E7A3A','#2C5D8F']; for(let i=0;i<4;i++){ ctx.fillStyle=C[i]; rr(x+3+i*6,fy-10,4,10,1.4); ctx.fill(); ctx.fillStyle='rgba(255,255,255,.35)'; ctx.fillRect(x+3.8+i*6,fy-8,1,6); }
+    ctx.fillStyle='#C9A06A'; ctx.fillRect(x+30,fy-9,11,9); ctx.fillRect(x+42,fy-7,9,7); ctx.strokeStyle='#8A6A3A'; ctx.lineWidth=.6; ctx.strokeRect(x+30,fy-9,11,9); ctx.strokeRect(x+42,fy-7,9,7); }
+  else if(k==='cel'){ for(let i=0;i<3;i++){ const px=x+6+i*12; ctx.fillStyle='#14171C'; rr(px,fy-11,7,11,1.4); ctx.fill(); ctx.fillStyle=i===1?'#7FD3FF':'#2C3A48'; ctx.fillRect(px+1,fy-10,5,8); }
+    ctx.strokeStyle='#8A8F96'; ctx.lineWidth=1.2; ctx.beginPath(); ctx.moveTo(x+42,fy-1); ctx.lineTo(x+50,fy-9); ctx.stroke(); ctx.fillStyle='#B84A3C'; rr(x+40,fy-3,5,3,1); ctx.fill(); }
+  else if(k==='tutor'){ const C=['#6B2A1A','#2C5D8F','#3E7A3A']; for(let i=0;i<3;i++){ ctx.fillStyle=C[i]; ctx.fillRect(x+3+i,fy-3-i*3,16-i*2,3); }
+    ctx.fillStyle='#2F4A3A'; rr(x+24,fy-14,26,14,1.5); ctx.fill(); ctx.strokeStyle='#8A5A34'; ctx.lineWidth=1.2; ctx.strokeRect(x+24,fy-14,26,14); ctx.fillStyle='#EDE8DA'; ctx.font='700 5px Figtree, sans-serif'; ctx.textAlign='center'; ctx.fillText('a²+b²',x+37,fy-5.4); }
+  else if(k==='bici'){ ctx.strokeStyle='#2A2A2E'; ctx.lineWidth=1.6; ctx.beginPath(); ctx.arc(x+12,fy-7,6.5,0,7); ctx.stroke(); ctx.lineWidth=.5; for(let i=0;i<6;i++){ const a=i*Math.PI/3+S.t*0.03; ctx.beginPath(); ctx.moveTo(x+12,fy-7); ctx.lineTo(x+12+Math.cos(a)*6,fy-7+Math.sin(a)*6); ctx.stroke(); }
+    ctx.fillStyle='#8A8F96'; ctx.fillRect(x+26,fy-3,14,2.4); ctx.fillStyle='#B84A3C'; rr(x+42,fy-8,8,8,1.5); ctx.fill(); }
+  ctx.restore(); }
+function drawNegocio(e,x,y){ const NG=eco.negocio, mine=e.used&&NG, fy=y+e.h, cx=x+e.w/2, T0=NEG[e.k], k=mine?NG.k:T0.k;
+  ctx.save(); ctx.fillStyle='rgba(0,0,0,.24)'; ctx.beginPath(); ctx.ellipse(cx,fy,38,3.6,0,0,7); ctx.fill();
+  // brillo de oportunidad (aún no abierto)
+  if(!e.used){ const a=0.18+Math.sin(S.t*0.07)*0.08, g=ctx.createRadialGradient(cx,fy-40,4,cx,fy-40,52); g.addColorStop(0,'rgba(255,225,138,'+a+')'); g.addColorStop(1,'rgba(255,225,138,0)'); ctx.fillStyle=g; ctx.beginPath(); ctx.arc(cx,fy-40,52,0,7); ctx.fill(); }
+  // postes
+  ctx.fillStyle='#4E3220'; ctx.fillRect(x+3,fy-50,3.5,50); ctx.fillRect(x+e.w-6.5,fy-50,3.5,50);
+  // fondo de tela y estante
+  ctx.fillStyle='#E9DCC0'; ctx.fillRect(x+6.5,fy-44,e.w-13,24); ctx.fillStyle='rgba(107,42,26,.12)'; for(let i=0;i<5;i++) ctx.fillRect(x+9+i*11,fy-44,1,24);
+  ctx.fillStyle='#8A5A34'; ctx.fillRect(x+7,fy-33,e.w-14,2);
+  negProducts(k==='empanada'?'tienda':k==='tienda'?'cafe':'tienda',x+8,fy-33); // estante de atrás: surtido
+  // vendedor (solo si es tu negocio)
+  if(mine){ e.vend=e.vend||{x:e.x,dir:-1,dirS:-1}; e.vend.x=e.x; rigDraw(e.vend,cx+8,fy-8,0.74,Object.assign({top:'#6B2A1A',throws:0},LOOK_NPC.profe||{}),16,{wave:Math.sin(S.t*0.03)>0.6}); }
+  // mostrador
+  const gw=ctx.createLinearGradient(0,fy-21,0,fy); gw.addColorStop(0,'#9A6A3E'); gw.addColorStop(1,'#6E4626'); ctx.fillStyle=gw; rr(x+1,fy-20,e.w-2,20,2); ctx.fill();
+  ctx.strokeStyle='rgba(60,36,18,.45)'; ctx.lineWidth=.7; for(let i=1;i<4;i++){ ctx.beginPath(); ctx.moveTo(x+2,fy-20+i*5); ctx.lineTo(x+e.w-2,fy-20+i*5); ctx.stroke(); }
+  ctx.fillStyle='#B07C46'; ctx.fillRect(x-1,fy-22,e.w+2,3.4);
+  negProducts(k,x+6,fy-22);
+  // letrero del mostrador
+  ctx.fillStyle='#F4ECD8'; rr(x+9,fy-16,e.w-18,10,2); ctx.fill(); ctx.strokeStyle='#B8862F'; ctx.lineWidth=1; ctx.stroke();
+  ctx.fillStyle='#6B2A1A'; ctx.textAlign='center'; const lt=mine?NG.n.toUpperCase():(NG?(e.used?'AMPLIADO':'AMPLÍA: 4'):'CAPITAL: 6'); let fs=5.6; do{ ctx.font='800 '+fs+'px Figtree, sans-serif'; fs-=0.3; }while(ctx.measureText(lt).width>e.w-22&&fs>3);
+  ctx.fillText(lt,cx,fy-9.2);
+  // toldo a rayas lacre / crema con festón
+  const ax=x-5, aw=e.w+10, ay=fy-56, n=8, sw=aw/n;
+  for(let i=0;i<n;i++){ ctx.fillStyle=i%2?'#F4ECD8':'#6B2A1A'; ctx.beginPath(); ctx.moveTo(ax+i*sw+2,ay); ctx.lineTo(ax+(i+1)*sw+2,ay); ctx.lineTo(ax+(i+1)*sw,ay+9); ctx.arc(ax+i*sw+sw/2,ay+9,sw/2,0,Math.PI); ctx.closePath(); ctx.fill(); }
+  ctx.fillStyle='rgba(0,0,0,.14)'; ctx.fillRect(ax,ay+8,aw,1.2);
+  // tablero superior
+  const bt=mine?'TU NEGOCIO · NIVEL '+NG.nivel:'OPORTUNIDAD DE NEGOCIO'; ctx.font='800 6.4px Figtree, sans-serif'; const bw=ctx.measureText(bt).width+14, by=ay-14;
+  ctx.fillStyle='#4E3220'; ctx.fillRect(cx-bw/2+6,by+11,2,4); ctx.fillRect(cx+bw/2-8,by+11,2,4);
+  ctx.fillStyle='#F4ECD8'; rr(cx-bw/2,by,bw,12,2.5); ctx.fill(); ctx.strokeStyle='#B8862F'; ctx.lineWidth=1.4; ctx.stroke();
+  ctx.fillStyle='#6B2A1A'; ctx.fillText(bt,cx,by+8.6);
+  // etiqueta debajo
+  ctx.font='700 5.2px Figtree, sans-serif'; ctx.fillStyle='rgba(255,255,255,.92)';
+  const sub=mine?'+'+NG.renta+' por quincena · ganado '+(NG.ganado||0):(NG?'reinvierte parte de la ganancia':T0.n+' · con plan y estudio de mercado');
+  ctx.fillStyle='rgba(10,20,26,.55)'; const sw2=ctx.measureText(sub).width+10; rr(cx-sw2/2,fy+4,sw2,9,4); ctx.fill(); ctx.fillStyle='#FFE9B0'; ctx.fillText(sub,cx,fy+10.4);
+  // monedas que suben cuando está abierto
+  if(mine){ for(let i=0;i<3;i++){ const t=((S.t*0.6+i*40)%120)/120; ctx.globalAlpha=1-t; ctx.fillStyle='#E8B64A'; ctx.beginPath(); ctx.ellipse(cx-14+i*14,fy-24-t*30,3*Math.abs(Math.cos(S.t*0.1+i)),3,0,0,7); ctx.fill(); } ctx.globalAlpha=1;
+    ctx.fillStyle='#2F4A3A'; rr(x+e.w-2,fy-30,16,14,1.5); ctx.fill(); ctx.strokeStyle='#8A5A34'; ctx.lineWidth=1; ctx.strokeRect(x+e.w-2,fy-30,16,14); ctx.fillStyle='#BFF5CF'; ctx.font='800 4.4px Figtree, sans-serif'; ctx.fillText('ABIERTO',x+e.w+6,fy-21.6); ctx.fillStyle='#4E3220'; ctx.fillRect(x+e.w+1,fy-16,1.6,16); ctx.fillRect(x+e.w+10.4,fy-16,1.6,16); }
+  ctx.textAlign='left'; ctx.restore(); }
+function drawPoder(e,x,y){ const fy=y+e.h, cx=x+e.w/2, bob=Math.sin(S.t*0.06+e.ph)*2.2, iy=y+9+bob, gold=e.k==='racha';
+  ctx.save();
+  // apacheta (montón de piedras andino)
+  ctx.fillStyle='rgba(0,0,0,.22)'; ctx.beginPath(); ctx.ellipse(cx,fy,14,3,0,0,7); ctx.fill();
+  const ST=[[0,-3,13,5,'#8A8478'],[-5,-3,7,4,'#9A9488'],[5,-3,7,4,'#7A746A'],[0,-8.5,10,4,'#A39D90'],[-1,-13,7,3.4,'#8E887C'],[0.5,-16.6,4.5,2.6,'#B0AA9C']];
+  ST.forEach(([dx,dy,rw,rh,c])=>{ ctx.fillStyle=c; ctx.beginPath(); ctx.ellipse(cx+dx,fy+dy,rw,rh,0,0,7); ctx.fill(); ctx.fillStyle='rgba(255,255,255,.18)'; ctx.beginPath(); ctx.ellipse(cx+dx-rw*0.25,fy+dy-rh*0.35,rw*0.5,rh*0.35,0,0,7); ctx.fill(); });
+  // halo y rayos
+  const col=gold?'255,214,107':'159,211,255', r=16+Math.sin(S.t*0.1)*1.5, g=ctx.createRadialGradient(cx,iy,2,cx,iy,r+6); g.addColorStop(0,'rgba('+col+',.65)'); g.addColorStop(1,'rgba('+col+',0)'); ctx.fillStyle=g; ctx.beginPath(); ctx.arc(cx,iy,r+6,0,7); ctx.fill();
+  ctx.strokeStyle='rgba('+col+',.55)'; ctx.lineWidth=1; for(let i=0;i<10;i++){ const a=S.t*0.025+i*Math.PI/5; ctx.beginPath(); ctx.moveTo(cx+Math.cos(a)*9,iy+Math.sin(a)*9); ctx.lineTo(cx+Math.cos(a)*(r+2),iy+Math.sin(a)*(r+2)); ctx.stroke(); }
+  ctx.translate(cx,iy);
+  if(!gold){ // mochila de respaldo: fondo de emergencia
+    ctx.fillStyle='#2C5D8F'; rr(-6.5,-7,13,15,4); ctx.fill(); ctx.fillStyle='#3D7AB8'; rr(-5,-5.6,10,6,2.5); ctx.fill(); ctx.fillStyle='#1E3F66'; rr(-4.6,1.6,9.2,5,1.6); ctx.fill();
+    ctx.strokeStyle='#1E3F66'; ctx.lineWidth=1.4; ctx.beginPath(); ctx.arc(0,-7,3.4,Math.PI,0); ctx.stroke();
+    ctx.fillStyle='#E8B64A'; ctx.beginPath(); ctx.moveTo(0,-4.6); ctx.lineTo(3.4,-3.4); ctx.lineTo(3,0.4); ctx.quadraticCurveTo(0,2.6,0,2.6); ctx.quadraticCurveTo(0,2.6,-3,0.4); ctx.lineTo(-3.4,-3.4); ctx.closePath(); ctx.fill();
+    ctx.fillStyle='#6B2A1A'; ctx.font='800 3.6px Figtree, sans-serif'; ctx.textAlign='center'; ctx.fillText('FE',0,-0.6);
+    ctx.fillStyle='rgba(255,255,255,.35)'; rr(-5.6,-6.4,2,10,1); ctx.fill(); }
+  else { // pluma de cóndor dorada: racha de disciplina
+    ctx.rotate(-0.5+Math.sin(S.t*0.05+e.ph)*0.12); const gf=ctx.createLinearGradient(0,-10,0,10); gf.addColorStop(0,'#FFF3C4'); gf.addColorStop(0.5,'#E8B64A'); gf.addColorStop(1,'#B8862F'); ctx.fillStyle=gf;
+    ctx.beginPath(); ctx.moveTo(0,-11); ctx.quadraticCurveTo(6.5,-3,1.4,9); ctx.lineTo(-1.4,9); ctx.quadraticCurveTo(-6.5,-3,0,-11); ctx.fill();
+    ctx.strokeStyle='#8A5A1E'; ctx.lineWidth=.7; ctx.beginPath(); ctx.moveTo(0,-10); ctx.lineTo(0,12); ctx.stroke();
+    ctx.strokeStyle='rgba(138,90,30,.6)'; ctx.lineWidth=.45; for(let j=-7;j<7;j+=2.2){ ctx.beginPath(); ctx.moveTo(0,j); ctx.lineTo(3.6,j-2.4); ctx.moveTo(0,j); ctx.lineTo(-3.6,j-2.4); ctx.stroke(); }
+    ctx.fillStyle='#FFFDF0'; for(let i=0;i<3;i++){ const a=S.t*0.09+i*2.1; ctx.globalAlpha=0.5+0.5*Math.sin(a*1.7); ctx.beginPath(); ctx.arc(Math.cos(a)*8,Math.sin(a)*8,0.9,0,7); ctx.fill(); } ctx.globalAlpha=1; }
+  ctx.restore();
+  // rótulo
+  ctx.save(); ctx.font='800 5px Figtree, sans-serif'; ctx.textAlign='center'; const t=gold?'RACHA DE DISCIPLINA':'FONDO DE EMERGENCIA', tw=ctx.measureText(t).width+8;
+  ctx.fillStyle='rgba(10,20,26,.55)'; rr(cx-tw/2,y-9+bob,tw,8,3); ctx.fill(); ctx.fillStyle=gold?'#FFE18A':'#BFE3FF'; ctx.fillText(t,cx,y-3.2+bob); ctx.restore(); }
+
 function drawCurso(e,x,y){ const fy=y+36; ctx.fillStyle='rgba(0,0,0,.22)'; ctx.beginPath(); ctx.ellipse(x+20,fy,22,3,0,0,7); ctx.fill();
   ctx.fillStyle='#E8E2D6'; ctx.fillRect(x+4,fy-20,32,20); ctx.fillStyle='#6B2A1A'; ctx.beginPath(); ctx.moveTo(x,fy-20); ctx.lineTo(x+20,fy-32); ctx.lineTo(x+40,fy-20); ctx.fill(); ctx.fillStyle='#B8862F'; ctx.fillRect(x+2,fy-21,36,1.6);
   ctx.fillStyle='#5A3A22'; ctx.fillRect(x+16,fy-12,8,12); ctx.fillStyle='#7FC6E8'; ctx.fillRect(x+7,fy-16,6,5); ctx.fillRect(x+27,fy-16,6,5);
@@ -1368,6 +1481,7 @@ function inflaHit(f){ // la inflación no roba: hace que el dinero quieto compre
   snd('bad'); burst(p.x+7,p.y+10,'rgba(238,106,92,.8)',6); S.hudPop=12; learn('inflacionL');
 }
 function projHit(f){
+  if(bigAbsorb()) return;
   if(f.icon==='price') return inflaHit(f);
   const p=S.p, dmg=f.dmg||1, lost=takeCoins(dmg); p.inv=34; p.vy=Math.min(p.vy,-3); S.shake=reduced?0:3;
   if(S.ws) S.ws.lost[f.fx]=(S.ws.lost[f.fx]||0)+dmg; logD('Pérdida',f.n.charAt(0)+f.n.slice(1).toLowerCase()+': '+(PROJ_TXT[f.icon]||''),-lost);
@@ -1418,7 +1532,7 @@ function ruinaUpdate(e,p){
     return; }
   if(touch&&!e.hitCd&&p.inv<=0){ e.hitCd=70; projHit({n:'ESTAFA',icon:'bag',fx:'ruina',dmg:3}); p.vx=-Math.sign(dx||-1)*-4; }
 }
-function waveHit(){ const p=S.p; if(p.inv>0) return;
+function waveHit(){ const p=S.p; if(p.inv>0) return; if(bigAbsorb()) return;
   if(eco.shield){ eco.shield=false; addText(p.x-40,p.y-20,'Tu educación financiera te protegió de la onda','#C9CEFF'); p.inv=60; snd('save'); return; }
   const seguro=has('casco')||has('cuerda'), total=eco.hand, lost=seguro?Math.ceil(total/2):total; eco.hand-=lost; p.inv=70; p.vy=-6; S.shake=reduced?0:8;
   if(S.ws) S.ws.lost.ruina=(S.ws.lost.ruina||0)+lost; logD('Pérdida',seguro?'Don Ruina se llevó la mitad (el seguro protegió el resto)':'Don Ruina se llevó todo lo que tenías en la mano',-lost);
@@ -1677,7 +1791,7 @@ function ladronUpdate(e,p){
   else if(e.st==='sigue'){ e.dir=dx>0?1:-1; const sp=2.15*Dif().enemy; e.x+=Math.sign(dx)*Math.min(sp,Math.abs(dx)); e.y+=Math.max(-3,Math.min(3,((p.y+p.h)-(e.y+e.h))*0.08)); if(Math.abs(dx)>420||!same&&Math.abs(dx)>200){ e.st='acecho'; e.x0=e.x; } }
   const body={x:e.x+3,y:e.y+4,w:e.w-6,h:e.h-4}, touch=overlap(p,body), stomp=touch&&p.vy>0&&(p.y+p.h-p.vy)<=e.y+12;
   if(stomp&&!e.hitCd){ e.st='preso'; e.pt=0; p.vy=-8; snd('stomp'); eco.stats.ladrones=(eco.stats.ladrones||0)+1; eco.hand=Math.min(cap(),eco.hand+2); stampAt(e.x+10,e.y-12,'ROBO EVITADO','estuviste atento'); addText(e.x-50,e.y-30,'¡Lo detuviste! La policía se lo lleva: +2','#BFF5CF'); logD('Ahorro','Evitaste un robo',2); return; }
-  if(touch&&!e.hitCd&&p.inv<=0&&!S.busy){ const r=ROBO[rnd(ROBO.length)]; let lost=r[0]==='dinero'?eco.hand:r[0]==='billetera'?Math.ceil(eco.hand/2):Math.min(eco.hand,r[2]); eco.hand-=lost; if(r[0]==='celular'&&lost<r[2]){ const ex=Math.min(eco.emb,r[2]-lost); eco.emb-=ex; lost+=ex; }
+  if(touch&&!e.hitCd&&p.inv<=0&&!S.busy&&!(p.big&&bigAbsorb()&&(e.hitCd=120))){ const r=ROBO[rnd(ROBO.length)]; let lost=r[0]==='dinero'?eco.hand:r[0]==='billetera'?Math.ceil(eco.hand/2):Math.min(eco.hand,r[2]); eco.hand-=lost; if(r[0]==='celular'&&lost<r[2]){ const ex=Math.min(eco.emb,r[2]-lost); eco.emb-=ex; lost+=ex; }
     if(S.ws) S.ws.lost.robos=(S.ws.lost.robos||0)+lost; eco.stats.robado=(eco.stats.robado||0)+1; logD('Pérdida',r[1],-lost); learn('robo'); snd('hit'); S.shake=reduced?0:6;
     e.item=r[0]; e.st='huye'; e.dir=dx>0?-1:1; e.fleeT=120; e.hitCd=999;
     backToStart(); addText(p.x-10,p.y-40,r[1]+(lost?': −'+lost:'')+'. Vuelves al inicio del mundo','#FF9A8C'); addText(p.x-10,p.y-54,'Guarda tu plata en la alcancía y mantente atento','#FFE18A'); }
@@ -1869,7 +1983,7 @@ function update(){
   if(p.ride){ if(--p.ride.t<=0){ addText(p.x-30,p.y-20,p.ride.prest?'Devolviste la cicla: ¡gracias, Camila!':'Fin del paseo','#FFE18A'); p.ride=null; } }
   const rideF=p.ride?p.ride.spd:1;
   const swampF=inSwamp?Math.max(0.3,0.56-0.04*wt-(eco.debts.length?0.1:0)):1;
-  const speedMax=(chained()?2.6:3.3)*(has('botas')?1.12:1)*wf*rideF*swampF*(S.sick>0?0.72:1);
+  const speedMax=(chained()?2.6:3.3)*(has('botas')?1.12:1)*wf*rideF*swampF*(S.sick>0?0.72:1)*(p.power>0?1.3:1);
   if(inSwamp){ S.swampT++; learn('pantano'); if(S.t%14===0) S.parts.push({x:p.x+Math.random()*p.w,y:p.y+p.h-6,vx:0,vy:-0.4,life:24,col:'rgba(150,150,90,.8)'});
     if(eco.debts.length && S.swampT%150===0 && eco.hand>0){ eco.hand--; if(S.ws) S.ws.lost.mora=(S.ws.lost.mora||0)+1; addText(p.x-20,p.y-14,'Intereses de mora −1','#FFC7BF'); logD('Pérdida','Intereses de mora (pantano)',-1); } }
   const wdir=keys.right?1:keys.left?-1:0; p.climb=false;
@@ -1919,6 +2033,8 @@ function update(){
   p.squash+= (1-p.squash)*0.2;
   if(p.onGround && Math.abs(p.vx)>0.3) p.walk+=gaitStep(p.vx,3.3);
   if(p.inv>0) p.inv--; if(p.flash>0) p.flash--;
+  p.bigK=(p.bigK||1)+(((p.big?1.32:1))-(p.bigK||1))*0.14; if(p.growT>0) p.growT--;
+  if(p.power>0){ p.power--; p.inv=Math.max(p.inv,2); powerSweep(p); if(S.t%2===0) S.parts.push({x:p.x+Math.random()*p.w,y:p.y+Math.random()*p.h,vx:-p.vx*0.2,vy:-0.6-Math.random(),life:22,col:Math.random()<.5?'#FFD36B':'#FFF3C4'}); if(p.power===0){ addText(p.x-60,p.y-30,'La racha terminó: los hábitos se quedan contigo','#FFE18A'); p.inv=0; } }
   { const pt=patrimonio(); if(S.patPrev==null) S.patPrev=pt; if(pt!==S.patPrev){ S.patDelta=(S.patDeltaLife>0?S.patDelta:0)+(pt-S.patPrev); S.patDeltaLife=80; S.patPrev=pt; } if(S.patDeltaLife>0) S.patDeltaLife--; }
   // espinas
   const l=Math.floor((p.x+2)/T), r=Math.floor((p.x+p.w-2)/T), b=Math.floor((p.y+p.h-2)/T), tp=Math.floor((p.y+8)/T);
@@ -1935,6 +2051,9 @@ function update(){
   // entidades
   for(const e of L.ents){
     if(e.dead) continue;
+    if(e.pw&&e.tied){ if(++e.tied>78){ e.dead=true; tiedPoof(e); } continue; }
+    if(e.t==='negocio'){ if(e.cd>0) e.cd--; e.near=Math.abs(p.x-e.x)<140; if(!e.used&&overlap(p,e)) negocioTouch(e,p); continue; }
+    if(e.t==='poder'){ if(overlap(p,e)) poderTake(e,p); continue; }
     if(e.t==='drop'){ if(overlap(p,e)){ if(eco.hand>=cap()){ if(!S.fullMsg||S.t-S.fullMsg>120){ S.fullMsg=S.t; addText(p.x-30,p.y-20,'Mochila llena: ahorra en la alcancía o invierte','#FFE18A'); } } else { e.dead=true; eco.hand++; eco.stats.drops++; if(S.ws) S.ws.coins++; snd('drop'); burst(e.x+6,e.y+8,VALOR_C[e.k]||'#FFD36B',5); if(e.k&&e.k!=='moneda'&&(!S.valTxt||S.t-S.valTxt>40)){ S.valTxt=S.t; addText(e.x-8,e.y-8,'+1 '+VALOR_N[e.k],VALOR_C[e.k]); } S.pops.push({x:e.x+6,y:e.y+8,life:14}); S.hudPop=10; } } }
     else if(e.t==='page'){ if(overlap(p,e)){ e.dead=true; eco.pages[S.li]|=(1<<e.idx); snd('gate'); burst(e.x+9,e.y+10,'#B9A8FF',16); toast('Cuaderno de Ruta · página '+(e.idx+1)+' de 3',PAGES[S.li][e.idx]); } }
     else if(e.t==='rockgen'){
@@ -2833,6 +2952,8 @@ function drawEnts(only){
     else if(e.t==='emb'){ piggy(x,y,e.used,e); }
     else if(e.t==='lote') drawLote(e,x,y);
     else if(e.t==='colchon') drawColchon(e,x,y);
+    else if(e.t==='negocio') drawNegocio(e,x,y);
+    else if(e.t==='poder') drawPoder(e,x,y);
     else if(e.t==='ladron') drawLadron(e,x,y);
     else if(e.t==='paciencia') drawPaciencia(e,x,y);
     else if(e.t==='tienda') drawTienda(e,x,y);
@@ -3090,18 +3211,31 @@ function drawBusy(){
   const a=Math.sin((S.t||0)*.35)*.6; ctx.translate(cx+10,p.y+10); ctx.rotate(a); ctx.fillStyle='#C9D3DA'; ctx.fillRect(-1,-9,2,9); ctx.beginPath(); ctx.arc(0,-10,2.6,0,7); ctx.fill(); ctx.fillStyle='rgba(10,20,26,.9)'; ctx.fillRect(-1,-12.5,2,2.4);
   ctx.restore();
 }
+function powerAura(p,x,y){ const k=p.bigK||1, cy=y-26*k, a=p.power<90?(Math.floor(p.power/6)%2?0.35:0.8):0.8, r=30*k+Math.sin(S.t*0.3)*2;
+  ctx.save(); const g=ctx.createRadialGradient(x,cy,4,x,cy,r); g.addColorStop(0,'rgba(255,240,170,'+(0.85*a)+')'); g.addColorStop(0.55,'rgba(232,182,74,'+(0.42*a)+')'); g.addColorStop(1,'rgba(232,182,74,0)'); ctx.fillStyle=g; ctx.beginPath(); ctx.arc(x,cy,r,0,7); ctx.fill();
+  ctx.strokeStyle='rgba(255,236,160,'+(0.95*a)+')'; ctx.lineWidth=1.8; for(let i=0;i<8;i++){ const an=S.t*0.06+i*Math.PI/4, r0=r*0.72, r1=r*0.95; ctx.beginPath(); ctx.moveTo(x+Math.cos(an)*r0,cy+Math.sin(an)*r0); ctx.lineTo(x+Math.cos(an)*r1,cy+Math.sin(an)*r1); ctx.stroke(); }
+  if(Math.abs(p.vx)>1){ ctx.strokeStyle='rgba(255,236,170,'+(0.5*a)+')'; for(let i=0;i<4;i++){ const yy=y-8-i*11*k, len=10+((S.t*3+i*7)%14); ctx.beginPath(); ctx.moveTo(x-p.face*14,yy); ctx.lineTo(x-p.face*(14+len),yy); ctx.stroke(); } }
+  ctx.restore(); }
+function bigAura(p,x,y){ const k=p.bigK||1; ctx.save(); ctx.globalAlpha=0.5+Math.sin(S.t*0.08)*0.15; ctx.strokeStyle='#9FD3FF'; ctx.lineWidth=1.4; ctx.beginPath(); ctx.ellipse(x,y,16*k,4*k,0,0,7); ctx.stroke(); ctx.globalAlpha*=0.5; ctx.beginPath(); ctx.ellipse(x,y,20*k,5.4*k,0,0,7); ctx.stroke(); ctx.restore(); }
+function drawPowerHud(){ const p=S.p; if(!p) return; let yy=74;
+  const pill=(txt,col,frac)=>{ ctx.font='800 8px Figtree, sans-serif'; const w=ctx.measureText(txt).width+18; ctx.fillStyle='rgba(10,20,26,.62)'; rr(8,yy,w,13,6); ctx.fill(); if(frac!=null){ ctx.fillStyle=col; ctx.globalAlpha=0.35; rr(8,yy,w*frac,13,6); ctx.fill(); ctx.globalAlpha=1; } ctx.fillStyle=col; ctx.beginPath(); ctx.arc(15,yy+6.5,3,0,7); ctx.fill(); ctx.fillStyle='#fff'; ctx.fillText(txt,21,yy+9.5); yy+=16; };
+  if(p.power>0) pill('RACHA DE DISCIPLINA · '+Math.ceil(p.power/60)+' s','#E8B64A',p.power/480);
+  if(p.big) pill('FONDO DE EMERGENCIA · aguantas 1 golpe','#9FD3FF',null);
+  if(eco.negocio) pill('Negocio: '+eco.negocio.n+' · nivel '+eco.negocio.nivel+' · +'+eco.negocio.renta+'/quincena','#BFF5CF',null); }
 function drawHiker(){
   const p=S.p, x=Math.round(p.x+p.w/2-S.cam), y=Math.round(p.y+p.h+p.stepOff);
   // sombra de contacto
   if(p.onGround){ ctx.fillStyle='rgba(0,0,0,.28)'; ctx.beginPath(); ctx.ellipse(x-3,y,12,2.8,0,0,7); ctx.fill(); ctx.fillStyle='rgba(0,0,0,.12)'; ctx.beginPath(); ctx.ellipse(x-10,y,14,2.2,0,0,7); ctx.fill(); }
-  if(p.inv>0 && !p.caught && S.t%8<4 && !reduced) return drawChain(x,y);
+  if(p.inv>0 && !p.caught && !p.power && S.t%8<4 && !reduced) return drawChain(x,y);
+  if(p.power>0) powerAura(p,x,y);
+  if(p.big||p.bigK>1.02) bigAura(p,x,y);
   drawChain(x,y);
   const moving=Math.abs(p.vx)>0.3;
   const ant=p.antic>0?1-(p.antic-1)/JUMP_ANT:0, landE=p.landT>0?(p.landK||0)*Math.sin(Math.PI*Math.min(1,(JUMP_LAND-p.landT+2)/JUMP_LAND))*(p.landT>JUMP_LAND*0.5?1:p.landT/(JUMP_LAND*0.5)):0;
   const jp={antic:ant*(keys.jump?1:0.75),land:landE,to:p.toT||0,run:!!p.jumpRun,tuck:p.tuck||0};
   const lean=(ant*0.24+landE*0.28)+(p.onGround&&moving?0.04+0.14*Math.min(1,Math.abs(p.vx)/3.3):(p.vy<0?0.1:(p.vy>3?-0.04:0.04)))+(chained()?0.08:0)+(mood()==='tired'?0.06:0)+(p.climb?-0.22:0)+(peso()>=6?0.06:0);
   const breath=p.idle>0?Math.sin(p.idle*0.08)*0.8:0;
-  ctx.save(); ctx.translate(x,y); const sq=1+(p.squash-1)*0.45; ctx.scale(p.face*((2-sq)*0.5+0.5),sq);
+  ctx.save(); ctx.translate(x,y); const sq=1+(p.squash-1)*0.45, bk=(p.bigK||1)*(p.growT>0&&!reduced?1+Math.sin(p.growT*0.9)*0.06:1); ctx.scale(p.face*((2-sq)*0.5+0.5)*bk,sq*bk);
   const blink=(S.t%220)<6;
   let lift=0; const rk=p.ride&&p.ride.k;
   if(rk==='avion'){ icon('avion',0,-4,2.5); lift=6; } else if(rk==='cicla'||rk==='moto'){ icon(rk==='cicla'?'bici':'moto',0,-6,1.6); lift=9; }
@@ -3353,7 +3487,7 @@ function draw(){
   gradeScene();
   // viñeta suave
   const VIG=[.62,.42,.3,.3,.38,.28,.22,.2][S.li]||.25; const vg=ctx.createRadialGradient(W/2,H*.55,H*(S.li===0?.3:.42),W/2,H/2,W*0.66); vg.addColorStop(0,'rgba(0,0,0,0)'); vg.addColorStop(1,'rgba(4,6,10,'+VIG+')'); ctx.fillStyle=vg; ctx.fillRect(0,0,W,H); drawGrain();
-  drawEventFx(); drawHud(); drawScore(); drawDisasterHud(); drawGuides(); syncTip();
+  drawEventFx(); drawHud(); drawScore(); drawPowerHud(); drawDisasterHud(); drawGuides(); syncTip();
   if(S.coach>0&&S.mode==='play'){ const a=Math.min(1,S.coach/40); ctx.globalAlpha=a; const t1=isTouch()?'Usa los botones de abajo o toca donde quieres ir':'Flechas ← → para caminar · Espacio para saltar', t2=isTouch()?'Toca arriba del senderista para saltar':'También puedes hacer clic donde quieres ir (clic arriba de él = saltar)';
     ctx.font='800 13px Figtree, sans-serif'; const w1=Math.max(ctx.measureText(t1).width,ctx.measureText(t2).width)+28; ctx.fillStyle='rgba(10,20,26,.82)'; rr(W/2-w1/2,H/2-70,w1,48,12); ctx.fill(); ctx.strokeStyle='#F2B33D'; ctx.lineWidth=1.5; rr(W/2-w1/2,H/2-70,w1,48,12); ctx.stroke();
     ctx.textAlign='center'; ctx.fillStyle='#FFE18A'; ctx.fillText(t1,W/2,H/2-50); ctx.font='600 12px Figtree, sans-serif'; ctx.fillStyle='#EAF1F3'; ctx.fillText(t2,W/2,H/2-32); ctx.textAlign='left'; ctx.globalAlpha=1; }
