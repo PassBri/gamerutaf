@@ -124,6 +124,7 @@ Cada mundo tiene **al menos dos enemigos distintos** que lanzan cosas de la vida
 | **Señor Scroll** (mucho tiempo en el celular) | Notificaciones | 1 moneda y 1 segundo distraído |
 | **El Vendedor de Vitrina** (compras por impulso) | Etiquetas de “¡solo hoy!” | 1 moneda |
 | **Doña Tarjeta Dorada** (deuda con tarjeta) | Tarjetas con interés del 30 % | 1 moneda y 2 de deuda |
+| **Globos de la inflación** (arroz, pasaje, arriendo…) | Bajan hacia ti y, si alcanzan tu cabeza, te elevan | Mientras flotas pierdes poder de compra; salta 3 veces para reventarlos y soltarte (o písalos desde arriba). Con una inversión pierdes más lento |
 | **Doña Inflación** (sube los precios) | Etiquetas de precio +10 % | No te roba: el efectivo quieto compra 10 % menos (mano y alcancía). Si tienes una inversión, como un CDT, la alcancía no pierde |
 | **El Tahúr** (apuestas y ludopatía), junto a un **tragamonedas** | Fichas de apuesta | 2 monedas; el tragamonedas, 3 |
 
@@ -253,6 +254,7 @@ En **Settings → Pages**, elige **Deploy from a branch**, la rama `main` y la c
 | **Resolución** | Lienzo lógico de 640 × 360 que se escala a cualquier pantalla |
 | **Física** | Paso fijo a 60 Hz; el juego se recupera solo de cualquier error de dibujo |
 | **Arte** | Montañas con relieve por píxel, luz por mundo, niebla, grano y viñeta |
+| **Alcancía viva** | Las monedas vuelan una a una hasta la alcancía, su vientre de vidrio se llena y brilla al completar el fondo de emergencia; con los golpes se agrieta y al tercero cae y se rompe en pedazos |
 | **Animación** | Todos los personajes comparten un esqueleto con cinemática inversa: pie fijo al apoyar (sin patinar), cadera que sube al caminar y baja al correr, brazos en oposición, lanzamientos con preparación y seguimiento, reacción al golpe y respiración. El puma trota en diagonal, la culebra ondula y la hormiga camina en trípode |
 | **Controles** | Teclado, ratón (clic para ir) y táctil |
 | **Guardado** | Progreso, ranking local y material docente en `localStorage` |
