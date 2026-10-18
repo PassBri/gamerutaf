@@ -3561,7 +3561,7 @@ function endingReport(){
     openOv(`<div class="eyebrow">Libertad financiera</div>
     <h2>${esc(eco.name)}: excelente inteligencia financiera</h2>
     <img src="${cert}" alt="Certificado de Inteligencia Financiera de ${esc(eco.name)}" style="width:100%;border-radius:10px;border:1px solid var(--line);margin:6px 0 4px">
-    <div class="row" style="margin-bottom:8px"><a class="btn gold sm" style="text-decoration:none" download="certificado-ruta-financiera.png" href="${cert}">Descargar certificado</a></div>
+    <div class="row" style="margin-bottom:8px"><button class="btn gold sm" type="button" id="bCert">Descargar certificado</button><span class="muted" id="certMsg" style="font-size:12px"></span></div>
     <h3 style="margin-top:6px">Mentor de la Cordillera</h3>
     <p>Tu dinero ahora trabaja por ti: el ingreso pasivo cubre el costo de vida. Llegaste a la fase de impacto y legado: el mentor transforma su éxito personal en impacto colectivo. La vida es una serie de montañas; desde aquí te toca enseñarle el camino a otros. ${eco.mentorOk?'Y ya empezaste: tu consejo ayudó a otra persona a subir.':''}</p>
     <div class="stats">
@@ -3586,6 +3586,10 @@ function endingReport(){
     const bp=document.getElementById('bPost'); if(bp) bp.onclick=()=>runTest(sc=>{ eco.post=sc; clearSave(); show(); },'Prueba final');
     document.getElementById('bCopy').onclick=e=>{ const t=document.getElementById('rep'); try{ navigator.clipboard.writeText(t.value).then(()=>e.target.textContent='Copiado',()=>{t.select();}); }catch(_){ t.select(); } };
     document.getElementById('bAgain').onclick=titleScreen;
+    document.getElementById('bCert').onclick=async()=>{ const msg=document.getElementById('certMsg'), name='certificado-ruta-financiera-'+String(eco.name||'senderista').toLowerCase().replace(/[^a-z0-9áéíóúñ]+/gi,'-')+'.png';
+      const blob=await (await fetch(cert)).blob(); let dl=null; try{ dl=window.claude&&window.claude.use?await window.claude.use('downloads'):null; }catch(_){ dl=null; }
+      if(dl){ try{ await dl.save({filename:name,data:blob}); msg.textContent=' Listo.'; }catch(err){ msg.textContent=err&&err.code==='declined'?'':' No se pudo descargar aquí.'; } return; }
+      const a=document.createElement('a'); a.href=URL.createObjectURL(blob); a.download=name; document.body.appendChild(a); a.click(); setTimeout(()=>{ URL.revokeObjectURL(a.href); a.remove(); },500); };
   };
   clearSave(); rkSubmit(8,eco.stats.frames/60); show();
 }
