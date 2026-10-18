@@ -115,6 +115,35 @@ Si tienes una duda, el **Mentor de la Cordillera** responde preguntas de finanza
 | **Don Gota**, prestamista ilegal | Lanza “cuotas del 20 %” y, si lo tocas, te “presta” a la fuerza y llega el cobrador | Salta 3 veces sobre él (“¡No le pido plata!”) o ten un fondo de emergencia de 10: así no lo necesitas |
 | **Crédito Fácil**, asesor de créditos impagables | Desenrolla un contrato “preaprobado”: si lo pisas, firmas una cuota más alta que tu sueldo | Salta 3 veces sobre él: “¡Leo la letra pequeña!”, “¡Calculo la cuota!”, “¡No firmo!” |
 
+### 🎯 Enemigos que lanzan y te quitan plata
+
+Cada mundo tiene **al menos dos enemigos distintos** que lanzan cosas de la vida financiera. Se vencen saltando dos veces sobre ellos.
+
+| Personaje | Lanza | Te quita |
+|---|---|---|
+| **Señor Scroll** (mucho tiempo en el celular) | Notificaciones | 1 moneda y 1 segundo distraído |
+| **El Vendedor de Vitrina** (compras por impulso) | Etiquetas de “¡solo hoy!” | 1 moneda |
+| **Doña Tarjeta Dorada** (deuda con tarjeta) | Tarjetas con interés del 30 % | 1 moneda y 2 de deuda |
+| **Doña Inflación** (tu plata compra menos) | Precios que suben | 1 moneda |
+| **El Tahúr** (apuestas y ludopatía), junto a un **tragamonedas** | Fichas de apuesta | 2 monedas; el tragamonedas, 3 |
+
+**Don Ruina, el Gran Estafador** (Mundo 8) es **dos veces más grande** que el senderista: lanza sacos de “estafa” y salta para crear ondas de “TODO O NADA” que se llevan **todo lo que tienes en la mano**. La alcancía queda a salvo y un seguro (casco o cuerda) salva la mitad. Se vence pisando su sombrero cinco veces.
+
+### 🌪️ Desastres en cada mundo
+
+| Mundo | Desastres |
+|---|---|
+| 1 · El Valle | Derrumbe en el barranco |
+| 2 · Base de la Montaña | Inundación |
+| 3 · Puntos de Observación | Derrumbe e inundación |
+| 4 · Primer Campamento | Terremoto y quiebra |
+| 5 · Campamento Avanzado | Inundación y quiebra |
+| 6 · La Cima | Terremoto y derrumbe |
+| 7 · Cumbre Personal | Quiebra e inundación |
+| 8 · La Cordillera | Terremoto y derrumbe |
+
+Cada desastre avisa antes, tiene su lección (seguros, fondo de emergencia, diversificar) y se puede esquivar: subir a lo alto en la inundación, saltar las rocas del derrumbe, llevar casco en el terremoto, tener activos de dos tipos en la quiebra.
+
 ### 🔀 Cada partida es distinta
 
 Los tramos de cada mundo se reordenan y cambian en cada partida, y los jefes aparecen en lugares distintos. Lo que enseña cada mundo (puntos de control, páginas del cuaderno, el empleo, la persona que ayuda) siempre está. Para competencias, en la portada se elige **Ruta fija**: igual para todos.
