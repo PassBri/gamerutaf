@@ -120,6 +120,9 @@ En el camino también aparecen **personas que te ayudan**, **cartas de concepto*
 | Saltar (mantén para subir más) | <kbd>Espacio</kbd>, <kbd>↑</kbd>, <kbd>W</kbd> | Clic arriba del senderista | Botón **Saltar** |
 | Trepar un muro | Mantén la flecha hacia el muro | — | Mantén la dirección |
 | Pausa | <kbd>P</kbd> o <kbd>Esc</kbd> | Botón **Pausa** | Botón **Pausa** |
+| Pantalla completa | <kbd>F</kbd> | Botón **Pantalla** | Botón **Pantalla** |
+
+**Pantalla y estilo:** juega en pantalla completa y elige el estilo (Clásico, Vívido, Cálido, Cine, Alto contraste, Descanso visual o Retro) y el tamaño (Normal, Grande o Enfocado).
 
 **Tres niveles de dificultad:** Explorador (10 a 13 años), Senderista y Montañista.
 

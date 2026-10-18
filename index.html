@@ -379,6 +379,55 @@ table.cur td{padding:8px;border-bottom:1px dashed var(--line);vertical-align:top
  #printArea .sub{color:#555;margin:0 0 8pt}#printArea blockquote{margin:6pt 0;padding:6pt 10pt;border-left:3pt solid #999;font-style:italic}
 }
 
+
+/* ===== pantalla completa y estilos de pantalla ===== */
+#bScr{display:inline-flex;align-items:center;gap:6px}#bScr svg{width:15px;height:15px;fill:none;stroke:currentColor;stroke-width:2.2;stroke-linecap:round;stroke-linejoin:round}
+.scrp{position:fixed;z-index:60;width:min(360px,calc(100vw - 24px));background:#132229;color:var(--ink);border:1px solid var(--line);border-radius:18px;padding:14px;box-shadow:0 18px 50px rgba(0,0,0,.6);animation:menuIn .18s cubic-bezier(.2,.8,.2,1)}
+.scrp h3{font:400 19px var(--f-display);margin:0 0 10px}
+.scrp .lb{margin:12px 0 6px}
+.scrp .fsbig{display:flex;align-items:center;gap:10px;width:100%;font:700 15px var(--f-body);background:var(--gold);color:#2A1A00;border:0;border-radius:12px;padding:12px 14px;cursor:pointer}
+.scrp .fsbig svg{width:20px;height:20px;fill:none;stroke:currentColor;stroke-width:2.4;stroke-linecap:round;stroke-linejoin:round}
+.scrp .grid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
+.scrp .grid.two{grid-template-columns:repeat(3,1fr)}
+.scrp .opt2{display:flex;flex-direction:column;gap:5px;align-items:stretch;background:var(--bg);color:var(--ink);border:1px solid var(--line);border-radius:12px;padding:6px;cursor:pointer;font:700 12px var(--f-body);text-align:center}
+.scrp .opt2[aria-pressed=true]{border-color:var(--gold);box-shadow:0 0 0 1px var(--gold) inset}
+.scrp .opt2 i{display:block;height:38px;border-radius:8px;background:linear-gradient(180deg,#5C7FA8 0%,#E0A86A 55%,#3E6B3A 56%,#2E4E2A 100%)}
+.scrp .opt2 small{font-weight:500;color:var(--muted);font-size:10.5px}
+.scrp .hint{font-size:12px;color:var(--muted);margin:10px 0 0}
+.scrp button:focus-visible{outline:2px solid var(--gold);outline-offset:2px}
+.fsbar{display:none;position:absolute;right:10px;bottom:10px;z-index:6;gap:6px}
+.fsbar button{display:inline-flex;align-items:center;gap:4px;height:38px;min-width:38px;justify-content:center;border-radius:12px;border:1px solid rgba(255,255,255,.18);background:rgba(10,20,26,.55);color:#fff;cursor:pointer;backdrop-filter:blur(4px);padding:0 9px;opacity:.75;transition:opacity .2s}
+.fsbar button:hover,.fsbar button:focus-visible{opacity:1;outline:none;border-color:var(--gold)}
+.fsbar svg{width:18px;height:18px;fill:none;stroke:currentColor;stroke-width:2.2;stroke-linecap:round;stroke-linejoin:round}
+.fsbar b{font:800 11px var(--f-body);background:#9AA3F0;color:#14163A;border-radius:8px;padding:1px 5px}
+.fsbar .nuevo-c{animation:fsPing 1.2s ease-in-out 3;opacity:1;border-color:#9AA3F0}
+@keyframes fsPing{50%{box-shadow:0 0 0 6px rgba(154,163,240,.35)}}
+/* modos de tamaño */
+body.tam-grande .wrap{max-width:1560px}
+body.tam-enfocado .bar,body.tam-enfocado .info,body.tam-enfocado .kbhint{display:none}
+body.tam-enfocado .wrap{max-width:none}
+body.tam-enfocado .stagewrap{display:flex;flex-direction:column;align-items:center}
+body.tam-enfocado .fsbar{display:flex}
+/* pantalla completa (real o simulada en celulares sin soporte) */
+body.fs{overflow:hidden}
+body.fs .bar,body.fs .info,body.fs .kbhint,body.fs .tip,body.fs .rot{display:none!important}
+body.fs .wrap{max-width:none;padding:0;gap:0}
+body.fs .stagewrap{position:fixed;inset:0;z-index:30;background:#000;display:grid;place-items:center}
+body.fs .stage{border-radius:0;box-shadow:none}
+body.fs .fsbar{display:flex}
+body.fs .mapbar{position:fixed;left:12px;right:12px;bottom:12px;z-index:31}
+body.fs .touch{position:fixed;left:12px;right:12px;bottom:calc(10px + env(safe-area-inset-bottom,0px));z-index:32;opacity:.85}
+body.fs.has-touch .fsbar{position:fixed;top:auto;bottom:calc(16px + env(safe-area-inset-bottom,0px));right:50%;transform:translateX(50%);z-index:40}
+body.fs .touch{pointer-events:none}body.fs .touch .tbtn{pointer-events:auto}
+/* estilos visuales del juego */
+body.est-vivido #cv{filter:saturate(1.28) contrast(1.06)}
+body.est-calido #cv{filter:sepia(.2) saturate(1.12) hue-rotate(-6deg) brightness(1.03)}
+body.est-descanso #cv{filter:brightness(.86) sepia(.28) saturate(.82)}
+body.est-contraste #cv{filter:contrast(1.32) saturate(1.18) brightness(1.04)}
+body.est-retro #cv{image-rendering:pixelated;image-rendering:crisp-edges;filter:contrast(1.08) saturate(1.1)}
+body.est-cine #cv{filter:contrast(1.12) saturate(.9) sepia(.08)}
+body.est-cine .stage::after{content:"";position:absolute;inset:0;pointer-events:none;box-shadow:inset 0 0 80px rgba(0,0,0,.55);background:linear-gradient(180deg,rgba(0,0,0,.35) 0,transparent 7%,transparent 93%,rgba(0,0,0,.35) 100%)}
+@media (prefers-reduced-motion: reduce){.scrp{animation:none}.fsbar .nuevo-c{animation:none}}
 </style>
 
 <div class="wrap">
@@ -386,6 +435,7 @@ table.cur td{padding:8px;border-bottom:1px dashed var(--line);vertical-align:top
     <svg width="34" height="34" viewBox="0 0 100 100" aria-hidden="true"><path d="M50 4c6 0 9 5 15 6s11-1 14 4 1 10 4 15 9 7 9 13-6 8-6 14 5 10 2 15-9 4-13 8-4 10-10 12-10-3-15-3-9 5-15 3-6-8-10-12-11-3-13-8 2-10 2-15-6-8-6-14 7-8 9-13-1-10 4-15 9-2 14-4 9-6 15-6z" fill="#C9475B"/><path d="M27 64 L43 40 L50 50 L58 34 L74 64 Z" fill="#F4E9E1"/><path d="M27 70 Q38 66 50 70 T74 70" fill="none" stroke="#F4E9E1" stroke-width="3" stroke-linecap="round"/></svg>
     <h1>Ruta Financiera</h1>
     <span class="sp"></span>
+    <button class="ibtn" id="bScr" type="button" aria-haspopup="dialog" aria-expanded="false" title="Pantalla completa y estilos (tecla F)"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 9V4h5M20 9V4h-5M4 15v5h5M20 15v5h-5"/></svg>Pantalla</button>
     <button class="ibtn" id="bPerfil" type="button">Perfil</button>
     <button class="ibtn" id="bMute" type="button">Sonido</button>
     <button class="ibtn" id="bPause" type="button">Pausa</button>
@@ -393,6 +443,7 @@ table.cur td{padding:8px;border-bottom:1px dashed var(--line);vertical-align:top
   <div class="stagewrap">
   <div class="stage" id="stage">
     <canvas id="cv" tabindex="0" aria-label="Juego Ruta Financiera"></canvas>
+    <div class="fsbar" id="fsbar"><button type="button" id="fsPause" aria-label="Pausa"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 5v14M16 5v14"/></svg></button><button type="button" id="fsBook" aria-label="Cuaderno de ruta"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 4h12a2 2 0 0 1 2 2v14H7a2 2 0 0 1-2-2z"/><path d="M5 18a2 2 0 0 1 2-2h12"/></svg><b id="fsN">0</b></button><button type="button" id="fsStyle" aria-label="Estilo de pantalla"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="8"/><path d="M12 4v16M12 4a8 8 0 0 1 0 16"/></svg></button><button type="button" id="fsExit" aria-label="Salir de pantalla completa"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 4v5H4M15 4v5h5M9 20v-5H4M15 20v-5h5"/></svg></button></div>
     <div class="ov" id="ov"><div class="box" id="ovBox"></div></div>
   </div>
   <div class="tip quiet" id="tip" role="status" aria-live="polite"><span class="sl"><svg width="18" height="18" viewBox="0 0 100 100" aria-hidden="true"><path d="M20 72 L42 36 L52 50 L62 30 L82 72 Z" fill="#F4E9E1"/></svg></span><div class="nbt"><div class="tt">Cuaderno de ruta</div><div class="tx">Aquí aparecen los conceptos que descubres mientras subes, sin tapar el juego.</div></div><button class="nbb" type="button" id="tipMore" aria-expanded="false" hidden>Leer todo</button><button class="nbb" type="button" id="tipList">Cuaderno<b id="tipN">0</b></button><button class="nbb mnb" type="button" id="tipMentor">Mentor</button></div>
@@ -911,7 +962,7 @@ let tipShown=null;
 function syncTip(){ const el=document.getElementById('tip'); if(!el) return; const t=S.toast;
   if(t&&tipShown!==t){ tipShown=t; el.querySelector('.tt').textContent=t.title; el.querySelector('.tx').textContent=t.text; el.classList.remove('quiet','open'); el.classList.add('new'); clearTimeout(el._t); el._t=setTimeout(()=>el.classList.remove('new'),2600);
     const m=document.getElementById('tipMore'); m.hidden=false; m.textContent='Leer todo'; m.setAttribute('aria-expanded','false'); }
-  const n=eco&&eco.seen?Object.keys(eco.seen).length:0, nb=document.getElementById('tipN'); if(nb&&nb.textContent!==String(n)) nb.textContent=n; }
+  const n=eco&&eco.seen?Object.keys(eco.seen).length:0, nb=document.getElementById('tipN'); if(nb&&nb.textContent!==String(n)){ const fb=document.getElementById('fsN'); if(fb){ fb.textContent=n; if(nb.textContent!=='0'||n>0) document.getElementById('fsBook').classList.add('nuevo-c'); } nb.textContent=n; } }
 /* ================= PREGÚNTALE AL MENTOR ================= */
 // Preguntas y respuestas cerradas, escritas a partir de las 7 guías de Ruta a la Cima. No hay chat libre: el lenguaje está controlado.
 const MENTOR=[
@@ -2441,9 +2492,13 @@ function loop(now){
   try{ draw(); } catch(e){ if(loopErrs++<3) console.error('draw',e); try{ ctx.restore(); ctx.globalAlpha=1; ctx.globalCompositeOperation='source-over'; }catch(_){} }
 }
 function resize(){
-  const st=document.getElementById('stage'); const cssW=Math.max(280,st.clientWidth||640); const cssH=Math.round(cssW*H/W);
+  const st=document.getElementById('stage'), b=document.body; let cssW, cssH;
+  if(b.classList.contains('fs')||b.classList.contains('tam-enfocado')){
+    const touchH=b.classList.contains('has-touch')&&!b.classList.contains('fs')?90:0, vw=window.innerWidth, vh=window.innerHeight-(b.classList.contains('fs')?0:24)-touchH;
+    cssW=Math.max(280,Math.floor(Math.min(vw,vh*W/H))); cssH=Math.round(cssW*H/W); st.style.width=cssW+'px'; }
+  else { st.style.width=''; cssW=Math.max(280,st.clientWidth||640); cssH=Math.round(cssW*H/W); }
   cv.style.height=cssH+'px'; st.style.height=cssH+'px';
-  const dpr=Math.min(2,window.devicePixelRatio||1), maxW=1280; // tope de resolución interna: más fluido en pantallas grandes
+  const dpr=Math.min(2,window.devicePixelRatio||1), maxW=b.classList.contains('est-retro')?W:1600; // retro: resolución nativa de 640 px con píxeles nítidos
   const iw=Math.min(maxW,Math.round(cssW*dpr)); cv.width=iw; cv.height=Math.round(iw*H/W);
 }
 addEventListener('resize',resize);
@@ -3188,6 +3243,51 @@ document.getElementById('bMute').onclick=e=>{ muted=!muted; e.target.textContent
 document.getElementById('bPause').onclick=()=>{ if(S.mode==='play'||S.mode==='pause') togglePause(); };
 
 if(('ontouchstart' in window)||navigator.maxTouchPoints>0||matchMedia('(any-pointer:coarse)').matches) document.body.classList.add('has-touch');
+
+/* ================= PANTALLA COMPLETA Y ESTILOS ================= */
+const ESTILOS=[['clasico','Clásico','Como fue pintado',''],['vivido','Vívido','Colores intensos','saturate(1.3)'],['calido','Cálido','Luz de tarde','sepia(.35) saturate(1.2)'],['cine','Cine','Contraste y viñeta','contrast(1.2) saturate(.85)'],['contraste','Alto contraste','Para ver mejor','contrast(1.45)'],['descanso','Descanso visual','Menos luz azul','brightness(.85) sepia(.4)'],['retro','Retro','Píxeles nítidos','contrast(1.1)']];
+const TAMS=[['normal','Normal','Con la guía abajo'],['grande','Grande','Más ancho'],['enfocado','Enfocado','Solo el juego']];
+let SCR={est:'clasico',tam:'normal'}; try{ SCR=Object.assign(SCR,JSON.parse(localStorage.getItem('rac-pantalla')||'{}')); }catch(e){}
+function scrApply(){ const b=document.body; ESTILOS.forEach(e=>b.classList.toggle('est-'+e[0],SCR.est===e[0])); TAMS.forEach(t=>b.classList.toggle('tam-'+t[0],SCR.tam===t[0])); try{ localStorage.setItem('rac-pantalla',JSON.stringify(SCR)); }catch(e){} resize(); }
+const fsApi=()=>document.fullscreenElement||document.webkitFullscreenElement;
+function fsOn(){ return document.body.classList.contains('fs'); }
+async function fsToggle(force){
+  const want=force!=null?force:!fsOn(), el=document.documentElement;
+  if(want){ document.body.classList.add('fs'); try{ if(el.requestFullscreen) await el.requestFullscreen({navigationUI:'hide'}); else if(el.webkitRequestFullscreen) el.webkitRequestFullscreen(); }catch(e){}
+    try{ if(screen.orientation&&screen.orientation.lock&&document.body.classList.contains('has-touch')) await screen.orientation.lock('landscape'); }catch(e){} }
+  else { document.body.classList.remove('fs'); try{ if(fsApi()){ if(document.exitFullscreen) await document.exitFullscreen(); else if(document.webkitExitFullscreen) document.webkitExitFullscreen(); } }catch(e){} }
+  resize(); scrSync(); try{ cv.focus({preventScroll:true}); }catch(e){}
+}
+function onFsChange(){ if(!fsApi()&&fsOn()&&!document.body.classList.contains('fs-sim')){ document.body.classList.remove('fs'); } resize(); scrSync(); }
+document.addEventListener('fullscreenchange',onFsChange); document.addEventListener('webkitfullscreenchange',onFsChange);
+function scrSync(){ const b=document.getElementById('scrFs'); if(b) b.lastChild.textContent=fsOn()?' Salir de pantalla completa':' Jugar en pantalla completa'; }
+function scrPanel(anchor){
+  let p=document.getElementById('scrPanel'); if(p){ p.remove(); document.getElementById('bScr').setAttribute('aria-expanded','false'); return; }
+  p=document.createElement('div'); p.className='scrp'; p.id='scrPanel'; p.setAttribute('role','dialog'); p.setAttribute('aria-label','Pantalla y estilo');
+  p.innerHTML=`<h3>Pantalla y estilo</h3>
+   <button type="button" class="fsbig" id="scrFs"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 9V4h5M20 9V4h-5M4 15v5h5M20 15v5h-5"/></svg> Jugar en pantalla completa</button>
+   <label class="lb">Estilo de pantalla</label><div class="grid">${ESTILOS.map(e=>`<button type="button" class="opt2" data-est="${e[0]}" aria-pressed="${SCR.est===e[0]}"><i style="filter:${e[3]};${e[0]==='retro'?'image-rendering:pixelated;background-size:8px 8px':''}"></i>${e[1]}<small>${e[2]}</small></button>`).join('')}</div>
+   <label class="lb">Tamaño del juego</label><div class="grid two">${TAMS.map(t=>`<button type="button" class="opt2" data-tam="${t[0]}" aria-pressed="${SCR.tam===t[0]}">${t[1]}<small>${t[2]}</small></button>`).join('')}</div>
+   <p class="hint">Tecla <kbd>F</kbd>: pantalla completa · <kbd>Esc</kbd>: salir. La elección se guarda en este dispositivo.</p>`;
+  document.body.append(p);
+  const r=(anchor||document.getElementById('bScr')).getBoundingClientRect(); const pw=Math.min(360,innerWidth-24);
+  p.style.left=Math.max(12,Math.min(innerWidth-pw-12,r.right-pw))+'px'; const top=r.bottom+8; p.style.top=(top+p.offsetHeight>innerHeight-8?Math.max(8,r.top-p.offsetHeight-8):top)+'px';
+  document.getElementById('bScr').setAttribute('aria-expanded','true'); scrSync();
+  p.querySelector('#scrFs').onclick=()=>{ p.remove(); fsToggle(); };
+  p.querySelectorAll('[data-est]').forEach(b=>b.onclick=()=>{ SCR.est=b.dataset.est; p.querySelectorAll('[data-est]').forEach(x=>x.setAttribute('aria-pressed',String(x===b))); scrApply(); });
+  p.querySelectorAll('[data-tam]').forEach(b=>b.onclick=()=>{ SCR.tam=b.dataset.tam; p.querySelectorAll('[data-tam]').forEach(x=>x.setAttribute('aria-pressed',String(x===b))); scrApply(); });
+  setTimeout(()=>{ const out=e=>{ if(!p.isConnected){ document.removeEventListener('pointerdown',out,true); return; } if(!p.contains(e.target)&&!e.target.closest('#bScr,#fsStyle')){ p.remove(); document.getElementById('bScr').setAttribute('aria-expanded','false'); document.removeEventListener('pointerdown',out,true); } }; document.addEventListener('pointerdown',out,true); },0);
+  try{ p.querySelector('[aria-pressed=true]').focus({preventScroll:true}); }catch(e){}
+}
+document.getElementById('bScr').onclick=e=>scrPanel(e.currentTarget);
+document.getElementById('fsExit').onclick=()=>{ if(fsOn()) fsToggle(false); else { SCR.tam='normal'; scrApply(); } };
+document.getElementById('fsStyle').onclick=e=>scrPanel(e.currentTarget);
+document.getElementById('fsPause').onclick=()=>{ if(S.mode==='play'||S.mode==='pause') togglePause(); };
+document.getElementById('fsBook').onclick=()=>{ document.getElementById('fsBook').classList.remove('nuevo-c'); showCuaderno(); };
+addEventListener('keydown',e=>{ if(e.target&&(e.target.tagName==='INPUT'||e.target.tagName==='SELECT'||e.target.tagName==='TEXTAREA')) return;
+  if(e.code==='KeyF'&&!e.ctrlKey&&!e.metaKey&&!e.altKey){ e.preventDefault(); fsToggle(); }
+  if(e.key==='Escape'){ const p=document.getElementById('scrPanel'); if(p){ e.stopImmediatePropagation(); e.preventDefault(); p.remove(); document.getElementById('bScr').setAttribute('aria-expanded','false'); } } },true);
+scrApply();
 resize();
 legend();
 buildInfo();
