@@ -3649,7 +3649,7 @@ function renderCamp(msg){
   const pane={
    ruta:`${S.worldSec?`<div class="icard" style="--c:var(--gold);margin-bottom:10px;display:flex;gap:14px;align-items:center;flex-wrap:wrap"><div><span class="k">Tu tiempo en este mundo</span><p style="font:600 24px var(--f-num);margin:2px 0 0!important">${fmtT(Math.round(S.worldSec*10)/10)}</p></div><div class="muted" style="flex:1;min-width:180px;font-size:13.5px">${S.rkMsg?(S.rkMsg.best?'<b style="color:var(--gold)">¡Nuevo récord personal!</b> ':'')+(S.rkMsg.pos?'Puesto <b>#'+S.rkMsg.pos+'</b> de '+S.rkMsg.of+' en el ranking ('+esc(Dif().n)+').':''):'Guardando tu tiempo…'}</div><button class="btn sm alt" type="button" id="bCampRank">Ver ranking</button></div>`:''}
     <p class="muted">Estrellas: llegar · llegar sin deudas · las 3 páginas del Cuaderno de Ruta.</p>
-    <div class="sec"><h3>Reto financiero del campamento</h3>${reto}</div>
+    <div class="sec" id="retoSec"><h3>Reto financiero del campamento${S.retoRes?'':' <span class="tag" style="background:var(--gold);color:#2A1A00">elige una opción</span>'}</h3>${reto}</div>
     <div class="req"><span class="mk ${ok?'ok':'no'}">${ok?'✓':'✗'}</span><div><b>${esc(reqText(li))}.</b> ${esc(stat)}</div></div>
     <div class="stats">
       <div class="st"><b>${eco.hand}</b><span>Monedas en mano</span></div>
@@ -3686,9 +3686,10 @@ function renderCamp(msg){
   <div class="tabs" role="tablist">${T('ruta','Reto y meta'+(S.retoRes?'':' •'))}${T('balance','Mi balance')}${T('mercado','Mercado')}${T('aprender','Aprender')}</div>
   ${pane[tab]}
   <div class="foot">
-    ${final?`<button class="btn gold" type="button" id="bNext" ${canGo?'':'disabled'}>Presentar la Prueba del Mentor</button>`:`<button class="btn" type="button" id="bNext" ${canGo?'':'disabled'}>Seguir subiendo</button>`}
+    ${final?`<button class="btn gold" type="button" id="bNext" aria-disabled="${!canGo}" style="${canGo?'':'opacity:.6'}">Presentar la Prueba del Mentor</button>`:`<button class="btn" type="button" id="bNext" aria-disabled="${!canGo}" style="${canGo?'':'opacity:.6'}">Seguir subiendo</button>`}
     <button class="btn alt" type="button" id="bRetry">Repetir el mundo (conservas tus finanzas)</button>
-    ${!S.retoRes?'<span class="muted">Primero resuelve el reto del campamento (pestaña Reto y meta).</span>':(!ok?'<span class="muted">Te falta cumplir la meta del campamento.</span>':'')}
+    <button class="btn alt" type="button" id="bMapBack">Volver al mapa</button>
+    ${!S.retoRes?'<span class="muted" id="nextMsg">Para seguir, elige una opción del <b>reto financiero</b> (arriba, en Reto y meta).</span>':(!ok?'<span class="muted" id="nextMsg">Te falta cumplir la meta del campamento: usa Repetir el mundo o el Mercado.</span>':'<span id="nextMsg"></span>')}
   </div>`, true);
   box.querySelectorAll('[data-tab]').forEach(b=>b.onclick=()=>{ S.campTab=b.dataset.tab; renderCamp(); });
   { const br=document.getElementById('bCampRank'); if(br) br.onclick=()=>{ RK_UI.w=String(S.li); RK_UI.d=eco.diff; showRanking(()=>renderCamp()); }; }
@@ -3709,7 +3710,11 @@ function renderCamp(msg){
     eco.plan={v,a,r,ok}; if(ok){ eco.hand=Math.min(cap(),eco.hand+3); snd('buy'); }
     renderCamp({ok, html: ok?'¡Presupuesto equilibrado ('+v+'/'+a+'/'+r+')! +3 monedas. En el próximo mundo cada quincena pasará sola 1 moneda a tu alcancía: págate primero en automático.':'Tu reparto fue '+v+'/'+a+'/'+r+'. '+tip+' La guía propone 5/3/2.'}); };
   const bq=document.getElementById('bQuiz'); if(bq) bq.onclick=()=>askQuiz(false);
-  document.getElementById('bNext').onclick=()=>{ if(final) askQuiz(true); else { save(li+1); showMap(li+1,{from:li}); } };
+  document.getElementById('bNext').onclick=()=>{
+    if(!S.retoRes){ if((S.campTab||'ruta')!=='ruta'){ S.campTab='ruta'; renderCamp(); } const rs=document.getElementById('retoSec'); if(rs){ rs.scrollIntoView({behavior:'smooth',block:'center'}); rs.animate&&rs.animate([{boxShadow:'0 0 0 0 rgba(242,179,61,0)'},{boxShadow:'0 0 0 4px rgba(242,179,61,.9)'},{boxShadow:'0 0 0 0 rgba(242,179,61,0)'}],{duration:1400}); } return; }
+    if(!ok){ const m=document.getElementById('nextMsg'); if(m){ m.innerHTML='<b>Aún no cumples la meta:</b> '+esc(reqText(li))+'. Usa Repetir el mundo (conservas tus finanzas) o compra en el Mercado.'; m.style.color='var(--gold)'; } return; }
+    if(final) askQuiz(true); else { save(li+1); showMap(li+1,{from:li}); } };
+  document.getElementById('bMapBack').onclick=()=>{ save(li); showMap(li,{}); };
   document.getElementById('bRetry').onclick=()=>levelIntro(li);
   box.scrollTop=0;
 }
