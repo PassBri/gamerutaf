@@ -506,7 +506,7 @@ const CH={
  apuros:["                ","                ","                ","                ","  o    t     o  ","################","################"],
  fomo:["                  ","                  ","                  ","                  ","  o    s       o  ","##################","##################"],
  poder:["                ","                ","                ","                ","   o   X    o   ","################","################"],
- negocio:["                ","                ","                ","                ","  o   R      o  ","################","################"],
+ negocio:["                ","                ","                ","                ","   R          o ","################","################"],
  racha:["                ","                ","                ","        o  o    ","   O   ##  ##   ","################","################"],
  colchon:["                ","                ","                ","                ","  o    q     o  ","################","################"],
  cripto:["                ","          e     ","        ====    ","                ","   o  d     o   ","################","################"],
@@ -950,7 +950,7 @@ function buildLevel(li){
     if(ch==='i') ents.push({t:'curso',x:x-8,y:y+T-36,w:40,h:36,used:false});
     if(ch==='t') ents.push({t:'apuros',x:x,y:y+T-24,w:24,h:24,used:false});
     if(ch==='s') ents.push({t:'fomo',x:x-10,y:y+T-40,w:46,h:40,used:false});
-    if(ch==='R') ents.push({t:'negocio',k:(Math.floor(x/T)+li*2)%NEG.length,x:x-8,y:y+T-52,w:64,h:52,used:false,cd:0});
+    if(ch==='R') { const NT=NEG[Math.min(NEG.length-1,li)]; ents.push({t:'negocio',k:Math.min(NEG.length-1,li),x:x-8,y:y+T-NT.h,w:NT.w,h:NT.h,used:false,cd:0,hold:0}); }
     if(ch==='X') ents.push({t:'poder',k:'grande',x:x+2,y:y+T-48,w:20,h:48,ph:Math.random()*6});
     if(ch==='O') ents.push({t:'poder',k:'racha',x:x+2,y:y+T-48,w:20,h:48,ph:Math.random()*6});
     if(ch==='q') ents.push({t:'colchon',x:x-8,y:y+T-16,w:40,h:16,used:false});
@@ -1030,15 +1030,134 @@ function hazardAt(c,r){ const t=tileAt(c,r); return t==='v'||t==='x'; }
 function solid(c,r){ if(c<0||c>=S.L.w) return true; if(r<0||r>=S.L.rows) return false; const t=S.L.g[r][c]; return t==='#'||t==='I'||t==='U'||t==='|'; }
 function oneway(c,r){ if(c<0||c>=S.L.w||r<0||r>=S.L.rows) return false; const t=S.L.g[r][c]; return t==='-'||t==='='; } // casas, carros, frascos y cajas se atraviesan desde abajo y se pisan desde arriba
 function tileAt(c,r){ if(c<0||c>=S.L.w||r<0||r>=S.L.rows) return ' '; return S.L.g[r][c]; }
-const NEG=[{n:'Empanadas',k:'empanada'},{n:'Café de la finca',k:'cafe'},{n:'Tienda de barrio',k:'tienda'},{n:'Arreglo de celulares',k:'cel'},{n:'Tutorías',k:'tutor'},{n:'Bicitaller',k:'bici'}];
+const NEG=[
+ {n:'Carrito de empanadas',k:'carreta',cap:6,r:2,w:78,h:64,lec:'Empieza pequeño y comprueba que la gente sí compra.'},
+ {n:'Tienda de barrio',k:'tienda',cap:8,r:3,w:98,h:76,lec:'Un local fijo trae clientes de siempre, pero paga arriendo y servicios.'},
+ {n:'Café de la finca con mirador',k:'cafe',cap:10,r:3,w:112,h:82,lec:'Agregar valor (tostar y servir el café) paga más que vender solo el grano.'},
+ {n:'Food truck de arepas',k:'truck',cap:12,r:4,w:114,h:72,lec:'Ve adonde están los clientes: ferias, eventos y universidades.'},
+ {n:'Panadería del pueblo',k:'panaderia',cap:14,r:4,w:118,h:106,lec:'Con empleados capacitados, el negocio funciona aunque tú no estés.'},
+ {n:'Hostal de montaña',k:'hostal',cap:16,r:5,w:132,h:112,lec:'El turismo tiene temporadas: guarda en temporada alta para la baja.'},
+ {n:'Fábrica de chocolate de cacao',k:'fabrica',cap:18,r:5,w:142,h:114,lec:'Producir en mayor escala baja el costo de cada unidad.'},
+ {n:'Empresa de tecnología educativa',k:'oficina',cap:20,r:6,w:152,h:118,lec:'Un producto digital se vende muchas veces sin fabricarlo de nuevo.'}];
 function coinPopAt(p){ for(let i=0;i<5;i++) S.parts.push({x:p.x+p.w/2+(Math.random()-.5)*14,y:p.y-4,vx:(Math.random()-.5)*1.6,vy:-1.6-Math.random()*1.4,life:30,col:'#E8B64A'}); }
-function negocioTouch(e,p){ const NG=eco.negocio; if(e.cd>0) return;
-  if(NG){ if(eco.hand>=4){ e.used=true; eco.hand-=4; NG.nivel++; NG.renta++; NG.val+=4; eco.stats.invested=(eco.stats.invested||0)+4; if(S.ws) S.ws.invested+=4; busy(70,'Ampliando tu negocio'); logD('Inversión','Reinvertiste en tu negocio ('+NG.n+')',-4); addText(e.x-50,e.y-30,'¡Reinvertiste! Tu negocio sube a nivel '+NG.nivel+': +'+NG.renta+' por quincena','#BFF5CF'); confetti(e.x+32,e.y,16); snd('buy'); learn('negocio'); }
-    else { e.cd=180; addText(e.x-60,e.y-30,'Con 4 monedas puedes ampliar tu negocio: reinvierte parte de la ganancia','#FFE18A'); } return; }
-  if(eco.hand>=6){ const T0=NEG[e.k]; e.used=true; eco.hand-=6; eco.negocio={n:T0.n,k:T0.k,nivel:1,renta:2,val:6,q:0}; eco.stats.negocio=1; eco.stats.invested=(eco.stats.invested||0)+6; if(S.ws) S.ws.invested+=6;
-    busy(140,'Haciendo el estudio de mercado y el plan de negocio'); logD('Inversión','Abriste tu negocio: '+T0.n,-6); learn('negocio'); snd('gate'); confetti(e.x+32,e.y,26);
-    toast('Oportunidad de negocio · '+T0.n,'Invertiste 6 de capital propio, con plan y estudio de mercado. El primer mes solo cubre costos; después te deja +2 cada quincena (algunos meses, nada). Separa la plata del negocio de la tuya y reinvierte: más adelante puedes ampliarlo.'); }
-  else { e.cd=200; learn('negocio'); addText(e.x-70,e.y-30,'Necesitas 6 de capital propio. Ahorra primero: nunca emprendas con un gota a gota','#FFE18A'); } }
+function negOffer(e){ const T0=NEG[e.k], NG=eco.negocio;
+  if(!NG) return {tipo:'abrir',cost:T0.cap,txt:'Capital: '+T0.cap+' · deja +'+T0.r+' por quincena'};
+  if((NG.tier??0)<e.k){ const c=Math.max(4,T0.cap-Math.floor(NG.val/2)); return {tipo:'escalar',cost:c,txt:'Escala tu negocio: '+c+' · pasa a +'+(T0.r+NG.nivel-1)+' por quincena'}; }
+  return {tipo:'ampliar',cost:4,txt:'Amplía tu negocio: 4 · +1 por quincena'}; }
+function negPay(n){ const h=Math.min(n,eco.hand); eco.hand-=h; const em=n-h; eco.emb-=em; return em; }
+function negDoor(e){ return {x:e.x+e.w/2-18,y:e.y+e.h-36,w:36,h:36}; }
+function negocioUpdate(e,p){ if(e.cd>0) e.cd--; const dx=Math.abs((p.x+p.w/2)-(e.x+e.w/2)); e.near=dx<e.w*0.9;
+  if(e.used) return;
+  if(e.near&&!e.hinted&&dx<e.w*0.7){ e.hinted=1; const O=negOffer(e); addText(e.x-20,e.y-26,'Detente frente a la puerta para invertir · '+O.txt,'#FFE18A'); }
+  const at=overlap(p,negDoor(e))&&p.onGround&&Math.abs(p.vx)<0.9&&e.cd<=0;
+  if(at){ e.hold=(e.hold||0)+1; if(e.hold>=48){ e.hold=0; negocioAct(e,p); } } else e.hold=Math.max(0,(e.hold||0)-3); }
+function negocioAct(e,p){ const T0=NEG[e.k], NG=eco.negocio, O=negOffer(e);
+  if(eco.hand+eco.emb<O.cost){ e.cd=200; learn('negocio'); addText(e.x-40,e.y-30,'Te faltan '+(O.cost-eco.hand-eco.emb)+' de capital propio. Ahorra primero: nunca emprendas con un gota a gota','#FFE18A'); return; }
+  const fromE=negPay(O.cost); e.used=true; eco.stats.invested=(eco.stats.invested||0)+O.cost; if(S.ws) S.ws.invested+=O.cost; learn('negocio'); snd('gate'); confetti(e.x+e.w/2,e.y+10,30+e.k*4); S.shake=reduced?0:3;
+  const ahorro=fromE?' (usaste '+fromE+' de tu alcancía)':'';
+  if(O.tipo==='abrir'){ eco.negocio={n:T0.n,k:T0.k,tier:e.k,nivel:1,renta:T0.r,val:T0.cap,q:0}; eco.stats.negocio=1;
+    busy(140,'Haciendo el estudio de mercado y el plan de negocio'); logD('Inversión','Abriste tu negocio: '+T0.n,-O.cost);
+    toast('Oportunidad de negocio · '+T0.n,'Invertiste '+O.cost+' de capital propio'+ahorro+', con plan y estudio de mercado. El primer mes solo cubre costos; después deja +'+T0.r+' cada quincena (algunos meses nada, en temporada alta el doble). '+T0.lec+' En cada mundo hay una oportunidad más grande: puedes escalar.'); }
+  else if(O.tipo==='escalar'){ const old=NG.n, lv=NG.nivel; eco.negocio={n:T0.n,k:T0.k,tier:e.k,nivel:lv,renta:T0.r+lv-1,val:T0.cap+(lv-1)*4,q:1,ganado:NG.ganado||0};
+    busy(110,'Traspasando tu negocio y montando el nuevo'); logD('Inversión','Escalaste: de '+old+' a '+T0.n,-O.cost);
+    toast('¡Escalaste tu negocio! · '+T0.n,'Traspasaste '+old.toLowerCase()+' (recuperaste la mitad de lo invertido) y pusiste '+O.cost+ahorro+' para abrir algo más grande: ahora deja +'+eco.negocio.renta+' por quincena. '+T0.lec); }
+  else { NG.nivel++; NG.renta++; NG.val+=4; busy(70,'Ampliando tu negocio'); logD('Inversión','Reinvertiste en tu negocio ('+NG.n+')',-4); addText(e.x-40,e.y-30,'¡Reinvertiste! Nivel '+NG.nivel+': +'+NG.renta+' por quincena','#BFF5CF'); }
+  if(!eco.negocio.n) eco.negocio.n=T0.n; }
+function negPulse(p){ const NG=eco.negocio; if(!NG) return; NG.q=(NG.q||0)+1; const tier=NG.tier||0;
+  if(NG.q===1){ addText(p.x-70,p.y-58,'Tu negocio arrancó: este mes solo cubrió costos (punto de equilibrio)','#FFE18A'); }
+  else { const rr0=Math.random(), bad=0.14+tier*0.015;
+    if(rr0<bad){ addText(p.x-70,p.y-58,'Mes flojo en '+NG.n.toLowerCase()+': no hubo ganancia. Los ingresos de un negocio varían','#FFC7BF'); logD('Ingreso','Negocio: mes flojo',0); }
+    else { const alta=rr0>0.88, r=NG.renta*(alta?2:1), toH=Math.max(0,Math.min(r,cap()-eco.hand)); eco.hand+=toH; eco.emb+=r-toH; NG.ganado=(NG.ganado||0)+r;
+      addText(p.x-70,p.y-58,(alta?'¡Temporada alta! ':'')+'Tu negocio ('+NG.n.toLowerCase()+') dejó +'+r+(r-toH?' · '+(r-toH)+' a la alcancía':''),'#BFF5CF'); logD('Ingreso',(alta?'Temporada alta: ':'Ganancia del negocio: ')+NG.n,r); coinPopAt(p); } }
+  learn('negocio'); }
+// ---------- arte de los negocios ----------
+const NB={lacre:'#6B2A1A',oro:'#B8862F',crema:'#F4ECD8',madera:'#8A5A34',maderaO:'#5A3A22',teja:'#A8502E',muro:'#EFE6D2'};
+function nbWall(x,y,w,h,c,lines){ const g=ctx.createLinearGradient(x,0,x+w,0); g.addColorStop(0,c); g.addColorStop(1,shadeCol(c,-0.12)); ctx.fillStyle=g; ctx.fillRect(x,y,w,h); if(lines){ ctx.strokeStyle='rgba(0,0,0,.08)'; ctx.lineWidth=.6; for(let yy=y+lines;yy<y+h;yy+=lines){ ctx.beginPath(); ctx.moveTo(x,yy); ctx.lineTo(x+w,yy); ctx.stroke(); } } }
+function shadeCol(hex,f){ const n=parseInt(hex.slice(1),16); let r=n>>16,g=(n>>8)&255,b=n&255; const t=f<0?0:255, a=Math.abs(f); r=Math.round(r+(t-r)*a); g=Math.round(g+(t-g)*a); b=Math.round(b+(t-b)*a); return 'rgb('+r+','+g+','+b+')'; }
+function nbWin(x,y,w,h,open,frame){ ctx.fillStyle=frame||NB.maderaO; ctx.fillRect(x-1.2,y-1.2,w+2.4,h+2.4); const g=ctx.createLinearGradient(x,y,x,y+h); if(open){ g.addColorStop(0,'#FFE7A8'); g.addColorStop(1,'#E8A74A'); } else { g.addColorStop(0,'#9EC3D6'); g.addColorStop(1,'#4E7488'); } ctx.fillStyle=g; ctx.fillRect(x,y,w,h);
+  ctx.fillStyle='rgba(255,255,255,.28)'; ctx.beginPath(); ctx.moveTo(x+w*0.15,y); ctx.lineTo(x+w*0.45,y); ctx.lineTo(x+w*0.15,y+h); ctx.lineTo(x,y+h); ctx.lineTo(x,y+h*0.6); ctx.closePath(); ctx.fill();
+  ctx.strokeStyle=frame||NB.maderaO; ctx.lineWidth=.9; ctx.beginPath(); ctx.moveTo(x+w/2,y); ctx.lineTo(x+w/2,y+h); ctx.moveTo(x,y+h/2); ctx.lineTo(x+w,y+h/2); ctx.stroke(); }
+function nbAwning(x,y,w,n,c1,c2,dep){ const sw=w/n; dep=dep||9; for(let i=0;i<n;i++){ ctx.fillStyle=i%2?c2:c1; ctx.beginPath(); ctx.moveTo(x+i*sw,y); ctx.lineTo(x+(i+1)*sw,y); ctx.lineTo(x+(i+1)*sw,y+dep); ctx.arc(x+i*sw+sw/2,y+dep,sw/2,0,Math.PI); ctx.closePath(); ctx.fill(); } ctx.fillStyle='rgba(0,0,0,.15)'; ctx.fillRect(x,y+dep-1,w,1.2); }
+function nbTeja(x,y,w,h,over){ ctx.fillStyle='#7A3A22'; ctx.beginPath(); ctx.moveTo(x-over,y+h); ctx.lineTo(x+w*0.08,y); ctx.lineTo(x+w*0.92,y); ctx.lineTo(x+w+over,y+h); ctx.closePath(); ctx.fill();
+  ctx.save(); ctx.clip(); for(let r=0;r<h;r+=3.4){ ctx.fillStyle=r%6.8<3.4?NB.teja:'#C0663E'; ctx.fillRect(x-over,y+r,w+over*2,1.8); } ctx.strokeStyle='rgba(60,20,10,.35)'; ctx.lineWidth=.5; for(let c=x-over;c<x+w+over;c+=4){ ctx.beginPath(); ctx.moveTo(c,y); ctx.lineTo(c,y+h); ctx.stroke(); } ctx.restore(); }
+function nbDoor(x,y,w,h,open){ ctx.fillStyle=NB.maderaO; ctx.fillRect(x-1.4,y-1.4,w+2.8,h+1.4); ctx.fillStyle=open?'#3A2414':'#7A4E2C'; ctx.fillRect(x,y,w,h); if(open){ const g=ctx.createLinearGradient(0,y,0,y+h); g.addColorStop(0,'rgba(255,214,140,.55)'); g.addColorStop(1,'rgba(255,214,140,.1)'); ctx.fillStyle=g; ctx.fillRect(x,y,w,h); } else { ctx.strokeStyle='rgba(0,0,0,.25)'; ctx.lineWidth=.7; ctx.strokeRect(x+2,y+2,w/2-3,h/2-3); ctx.strokeRect(x+w/2+1,y+2,w/2-3,h/2-3); ctx.strokeRect(x+2,y+h/2+1,w/2-3,h/2-3); ctx.strokeRect(x+w/2+1,y+h/2+1,w/2-3,h/2-3); ctx.fillStyle=NB.oro; ctx.beginPath(); ctx.arc(x+w-3,y+h/2,0.9,0,7); ctx.fill(); } }
+function nbSign(cx,y,txt,fs,dark){ ctx.font='800 '+fs+'px Figtree, sans-serif'; const tw=ctx.measureText(txt).width+12; ctx.fillStyle=dark?NB.lacre:NB.crema; rr(cx-tw/2,y,tw,fs+6,2.5); ctx.fill(); ctx.strokeStyle=NB.oro; ctx.lineWidth=1.3; ctx.stroke(); ctx.fillStyle=dark?NB.crema:NB.lacre; ctx.textAlign='center'; ctx.fillText(txt,cx,y+fs+1.6); ctx.textAlign='left'; return tw; }
+function nbSmoke(x,y,n){ for(let i=0;i<n;i++){ const t=((S.t*0.5+i*37)%110)/110; ctx.fillStyle='rgba(235,235,235,'+(0.45*(1-t))+')'; ctx.beginPath(); ctx.arc(x+Math.sin(t*5+i)*3+t*8,y-t*34,2.5+t*6,0,7); ctx.fill(); } }
+function nbWheel(x,y,r){ ctx.fillStyle='#1E1E22'; ctx.beginPath(); ctx.arc(x,y,r,0,7); ctx.fill(); ctx.fillStyle='#9A9AA2'; ctx.beginPath(); ctx.arc(x,y,r*0.48,0,7); ctx.fill(); ctx.fillStyle='#55555C'; ctx.beginPath(); ctx.arc(x,y,r*0.18,0,7); ctx.fill(); }
+function nbCustomer(x,fy,c,ph,dir){ const w=Math.sin(ph)*2.4; ctx.save(); ctx.translate(x,fy); ctx.scale(dir,1); ctx.strokeStyle='#2A2A34'; ctx.lineWidth=2.2; ctx.lineCap='round'; ctx.beginPath(); ctx.moveTo(0,-11); ctx.lineTo(w,-1); ctx.moveTo(0,-11); ctx.lineTo(-w,-1); ctx.stroke();
+  ctx.fillStyle=c; rr(-3.6,-21,7.2,11,2.6); ctx.fill(); ctx.fillStyle='#D9A37A'; ctx.beginPath(); ctx.arc(0.4,-24.4,3.2,0,7); ctx.fill(); ctx.fillStyle='#2E2018'; ctx.beginPath(); ctx.arc(0.2,-25.4,3.2,Math.PI,0); ctx.fill(); ctx.fillStyle=NB.crema; rr(2.4,-15,3.6,4,1); ctx.fill(); ctx.restore(); }
+const NB_PAINT={
+ carreta(x,fy,w,h,o){ const cx=x+w/2; ctx.fillStyle=NB.maderaO; ctx.fillRect(cx-1,fy-h+6,2,h-20); // sombrilla
+   ctx.save(); ctx.translate(cx,fy-h+10); const n=8; for(let i=0;i<n;i++){ ctx.fillStyle=i%2?NB.crema:NB.lacre; ctx.beginPath(); ctx.moveTo(0,-6); ctx.lineTo(-w*0.48+i*w*0.96/n,6); ctx.lineTo(-w*0.48+(i+1)*w*0.96/n,6); ctx.closePath(); ctx.fill(); } ctx.fillStyle=NB.oro; ctx.beginPath(); ctx.arc(0,-6,1.8,0,7); ctx.fill(); ctx.restore();
+   const by=fy-30; const g=ctx.createLinearGradient(0,by,0,by+20); g.addColorStop(0,'#A8743F'); g.addColorStop(1,'#6E4626'); ctx.fillStyle=g; rr(x+6,by,w-12,20,2); ctx.fill(); ctx.fillStyle=NB.crema; rr(x+14,by+5,w-28,10,2); ctx.fill(); ctx.strokeStyle=NB.oro; ctx.lineWidth=1; ctx.stroke();
+   ctx.fillStyle=NB.lacre; ctx.font='800 6px Figtree, sans-serif'; ctx.textAlign='center'; ctx.fillText('EMPANADAS',cx,by+12.4); ctx.textAlign='left';
+   ctx.fillStyle='#B07C46'; ctx.fillRect(x+3,by-2,w-6,3); negProducts('empanada',x+10,by-2); ctx.fillStyle='#3A3A40'; rr(x+w-24,by-11,13,10,2); ctx.fill(); nbSmoke(x+w-18,by-12,3);
+   ctx.strokeStyle=NB.maderaO; ctx.lineWidth=2; ctx.beginPath(); ctx.moveTo(x+4,by+8); ctx.lineTo(x-6,by+2); ctx.stroke(); nbWheel(x+18,fy-7,7); nbWheel(x+w-18,fy-7,7); },
+ tienda(x,fy,w,h,o){ const top=fy-h+18; nbWall(x+4,top,w-8,h-18,NB.muro,0); ctx.fillStyle=NB.lacre; ctx.fillRect(x+4,fy-9,w-8,9); nbTeja(x+4,fy-h+4,w-8,15,6);
+   nbDoor(x+w/2-12,fy-34,24,34,o); if(o){ ctx.save(); ctx.beginPath(); ctx.rect(x+w/2-12,fy-34,24,34); ctx.clip(); ctx.fillStyle=NB.madera; ctx.fillRect(x+w/2-12,fy-24,24,1.6); ctx.fillRect(x+w/2-12,fy-14,24,1.6); negProducts('tienda',x+w/2-11,fy-24); negProducts('tienda',x+w/2-11,fy-14); ctx.restore(); }
+   nbWin(x+12,fy-34,20,16,o); nbWin(x+w-32,fy-34,20,16,o); ctx.strokeStyle='#2A2A2A'; ctx.lineWidth=.7; for(let i=1;i<5;i++){ ctx.beginPath(); ctx.moveTo(x+12+i*4,fy-34); ctx.lineTo(x+12+i*4,fy-18); ctx.moveTo(x+w-32+i*4,fy-34); ctx.lineTo(x+w-32+i*4,fy-18); ctx.stroke(); }
+   nbAwning(x+8,fy-44,w-16,9,NB.lacre,NB.crema,7); nbSign(x+w/2,top+1,'TIENDA DE BARRIO',5.4,true);
+   ctx.fillStyle='#C9A06A'; ctx.fillRect(x+w-12,fy-10,10,10); ctx.fillStyle='#3E7A3A'; ctx.beginPath(); ctx.arc(x+8,fy-4,4,0,7); ctx.fill(); },
+ cafe(x,fy,w,h,o){ const top=fy-h+16; nbWall(x+w*0.38,top,w*0.6,h-26,'#C9A06A',4); ctx.fillStyle='#5A3A22'; ctx.beginPath(); ctx.moveTo(x+w*0.34,top+2); ctx.lineTo(x+w*0.68,fy-h+2); ctx.lineTo(x+w+3,top+2); ctx.closePath(); ctx.fill();
+   nbWin(x+w*0.44,top+12,w*0.26,20,o); nbDoor(x+w*0.76,fy-38,15,28,o);
+   ctx.fillStyle='#7A5232'; ctx.fillRect(x,fy-10,w,4); ctx.fillStyle='#5A3A22'; for(let i=0;i<9;i++) ctx.fillRect(x+2+i*(w-4)/8,fy-22,1.6,12); ctx.fillRect(x,fy-22,w*0.38,1.8);
+   for(const tx of [x+10,x+30]){ ctx.fillStyle=NB.maderaO; ctx.fillRect(tx-0.8,fy-38,1.6,28); ctx.fillStyle=NB.oro; ctx.beginPath(); ctx.moveTo(tx-10,fy-36); ctx.quadraticCurveTo(tx,fy-46,tx+10,fy-36); ctx.closePath(); ctx.fill(); ctx.fillStyle=NB.crema; ctx.fillRect(tx-6,fy-18,12,2); if(o){ ctx.fillStyle='#F4ECD8'; ctx.fillRect(tx-3,fy-21,3,3); nbSmoke(tx-1.5,fy-22,2); } }
+   ctx.fillStyle='#C9B48A'; rr(x+w*0.38-14,fy-22,12,12,3); ctx.fill(); ctx.fillStyle=NB.lacre; ctx.font='800 3.4px Figtree, sans-serif'; ctx.fillText('CAFÉ',x+w*0.38-12.6,fy-15);
+   nbSign(x+w*0.68,top-4,'CAFÉ DE LA FINCA',5.4,true); ctx.fillStyle='#2F6B3A'; for(let i=0;i<3;i++){ ctx.beginPath(); ctx.arc(x+w-6-i*0,fy-12-i*6,4,0,7); ctx.fill(); } ctx.fillStyle='#B84A3C'; ctx.beginPath(); ctx.arc(x+w-4,fy-16,1.2,0,7); ctx.arc(x+w-8,fy-22,1.2,0,7); ctx.fill(); },
+ truck(x,fy,w,h,o){ const by=fy-14, bh=h-22; nbWheel(x+22,fy-8,8); nbWheel(x+w-26,fy-8,8);
+   const g=ctx.createLinearGradient(0,by-bh,0,by); g.addColorStop(0,'#FFF8E8'); g.addColorStop(1,'#E2D4B6'); ctx.fillStyle=g; rr(x+2,by-bh,w-26,bh,6); ctx.fill(); ctx.beginPath(); ctx.moveTo(x+w-26,by-bh*0.62); ctx.lineTo(x+w-8,by-bh*0.62); ctx.quadraticCurveTo(x+w-1,by-bh*0.55,x+w-1,by-bh*0.3); ctx.lineTo(x+w-1,by); ctx.lineTo(x+w-26,by); ctx.closePath(); ctx.fill();
+   ctx.fillStyle='#9EC3D6'; ctx.beginPath(); ctx.moveTo(x+w-24,by-bh*0.56); ctx.lineTo(x+w-9,by-bh*0.56); ctx.quadraticCurveTo(x+w-4,by-bh*0.5,x+w-4,by-bh*0.34); ctx.lineTo(x+w-24,by-bh*0.34); ctx.closePath(); ctx.fill();
+   ctx.fillStyle=NB.lacre; ctx.fillRect(x+2,by-12,w-3,5); ctx.fillStyle=NB.oro; ctx.fillRect(x+2,by-7,w-3,1.6);
+   ctx.fillStyle=o?'#3A2414':'#4E7488'; ctx.fillRect(x+16,by-bh+12,w-56,bh-28); if(o){ ctx.fillStyle='rgba(255,214,140,.45)'; ctx.fillRect(x+16,by-bh+12,w-56,bh-28); } ctx.fillStyle='#B07C46'; ctx.fillRect(x+13,by-16,w-50,3); negProducts('empanada',x+18,by-16);
+   ctx.fillStyle=NB.lacre; ctx.beginPath(); ctx.moveTo(x+12,by-bh+12); ctx.lineTo(x+w-36,by-bh+12); ctx.lineTo(x+w-32,by-bh+4); ctx.lineTo(x+8,by-bh+4); ctx.closePath(); ctx.fill();
+   nbSign(x+(w-24)/2,by-bh-11,'AREPAS · FOOD TRUCK',5.4,true); ctx.fillStyle='#2F4A3A'; rr(x-10,fy-30,14,20,1.5); ctx.fill(); ctx.fillStyle='#EDE8DA'; ctx.font='700 3.6px Figtree, sans-serif'; ctx.fillText('MENÚ',x-8,fy-24); ctx.fillRect(x-8,fy-21,9,0.8); ctx.fillRect(x-8,fy-18,7,0.8); ctx.fillRect(x-8,fy-15,9,0.8); nbSmoke(x+30,by-bh,3); },
+ panaderia(x,fy,w,h,o){ const top=fy-h+16; nbWall(x+4,top,w-8,h-16,'#E7CFA8',0); ctx.fillStyle='rgba(107,42,26,.9)'; ctx.fillRect(x+4,top+(h-16)*0.47,w-8,3); nbTeja(x+2,fy-h+2,w-4,15,6); ctx.fillStyle='#8A4A34'; ctx.fillRect(x+w-26,fy-h-8,9,14); nbSmoke(x+w-22,fy-h-9,4);
+   const my=top+(h-16)*0.47; for(let i=0;i<3;i++) nbWin(x+14+i*(w-28)/3+2,top+8,(w-28)/3-10,my-top-14,o); ctx.fillStyle=NB.maderaO; ctx.fillRect(x+8,my-6,w-16,1.6); for(let i=0;i<14;i++) ctx.fillRect(x+9+i*(w-18)/13,my-6,1,6); ctx.fillStyle='#C04F7A'; for(let i=0;i<4;i++){ ctx.beginPath(); ctx.arc(x+18+i*(w-36)/3,my-7,2.2,0,7); ctx.fill(); }
+   nbWin(x+10,fy-36,w*0.42,26,o,NB.lacre); ctx.fillStyle='#D9962F'; for(let i=0;i<5;i++){ ctx.beginPath(); ctx.ellipse(x+16+i*8,fy-13,3.6,2.2,0,0,7); ctx.fill(); } ctx.fillStyle='#B8762A'; for(let i=0;i<4;i++){ ctx.beginPath(); ctx.arc(x+20+i*8,fy-24,2.6,Math.PI,0); ctx.fill(); }
+   nbDoor(x+w-36,fy-34,22,34,o); nbAwning(x+6,fy-46,w*0.5,7,NB.lacre,NB.crema,7); nbSign(x+w/2,my+2,'PANADERÍA DEL PUEBLO',5.6,true); },
+ hostal(x,fy,w,h,o){ const top=fy-h+40; nbWall(x+8,top,w-16,h-40,'#9A6A3E',5); ctx.fillStyle='#4E3220'; ctx.beginPath(); ctx.moveTo(x-2,top+4); ctx.lineTo(x+w/2,fy-h); ctx.lineTo(x+w+2,top+4); ctx.lineTo(x+w-6,top+4); ctx.lineTo(x+w/2,fy-h+8); ctx.lineTo(x+6,top+4); ctx.closePath(); ctx.fill();
+   ctx.fillStyle='#B98452'; ctx.beginPath(); ctx.moveTo(x+6,top+4); ctx.lineTo(x+w/2,fy-h+8); ctx.lineTo(x+w-6,top+4); ctx.closePath(); ctx.fill(); nbWin(x+w/2-10,fy-h+20,20,16,o); ctx.fillStyle=NB.maderaO; ctx.fillRect(x+10,top+4,w-20,2.4); for(let i=0;i<18;i++) ctx.fillRect(x+11+i*(w-22)/17,top-4,1,8); ctx.fillRect(x+10,top-5,w-20,1.6);
+   nbWin(x+16,top+12,22,18,o); nbWin(x+w-38,top+12,22,18,o); nbDoor(x+w/2-12,fy-34,24,34,o); nbWin(x+16,fy-30,20,16,o); nbWin(x+w-36,fy-30,20,16,o);
+   ctx.fillStyle='#8A8478'; ctx.fillRect(x+6,fy-6,w-12,6); nbSign(x+w/2,top-20,'HOSTAL DE MONTAÑA',5.6,true);
+   ctx.strokeStyle='#3A3A40'; ctx.lineWidth=1; ctx.beginPath(); ctx.moveTo(x+w-6,fy); ctx.lineTo(x+w-6,fy-h+4); ctx.stroke(); ctx.fillStyle=NB.oro; const fl=Math.sin(S.t*0.12)*2; ctx.beginPath(); ctx.moveTo(x+w-6,fy-h+4); ctx.quadraticCurveTo(x+w+4,fy-h+6+fl,x+w+12,fy-h+6); ctx.lineTo(x+w+12,fy-h+14); ctx.quadraticCurveTo(x+w+4,fy-h+14+fl,x+w-6,fy-h+12); ctx.fill(); },
+ fabrica(x,fy,w,h,o){ const top=fy-h+34; nbWall(x+4,top,w-8,h-34,'#9A4A34',0); ctx.strokeStyle='rgba(60,20,10,.3)'; ctx.lineWidth=.5; for(let yy=top+3;yy<fy;yy+=3){ ctx.beginPath(); ctx.moveTo(x+4,yy); ctx.lineTo(x+w-4,yy); ctx.stroke(); }
+   ctx.fillStyle='#5A5A62'; const n=4, sw=(w-8)/n; for(let i=0;i<n;i++){ ctx.beginPath(); ctx.moveTo(x+4+i*sw,top); ctx.lineTo(x+4+i*sw,top-14); ctx.lineTo(x+4+(i+1)*sw,top); ctx.closePath(); ctx.fill(); ctx.fillStyle='#9EC3D6'; ctx.fillRect(x+5+i*sw,top-12,2.4,11); ctx.fillStyle='#5A5A62'; }
+   ctx.fillStyle='#7A3A2A'; ctx.fillRect(x+w-30,fy-h-6,12,h-36); ctx.fillStyle='#EDE8DA'; ctx.fillRect(x+w-30,fy-h,12,2); ctx.fillRect(x+w-30,fy-h+8,12,2); nbSmoke(x+w-24,fy-h-8,5);
+   for(let i=0;i<5;i++) nbWin(x+12+i*(w-24)/5,top+8,(w-24)/5-8,16,o,'#4A4A52'); ctx.fillStyle='#4A4A52'; ctx.fillRect(x+w/2-18,fy-30,36,30); ctx.strokeStyle='#6A6A72'; ctx.lineWidth=.8; for(let yy=fy-28;yy<fy;yy+=3){ ctx.beginPath(); ctx.moveTo(x+w/2-17,yy); ctx.lineTo(x+w/2+17,yy); ctx.stroke(); }
+   if(o){ ctx.fillStyle='#3A2414'; ctx.fillRect(x+w/2-17,fy-14,34,14); ctx.fillStyle='rgba(255,214,140,.5)'; ctx.fillRect(x+w/2-17,fy-14,34,14); }
+   ctx.fillStyle='#6B4226'; for(let i=0;i<3;i++){ rr(x+8+i*9,fy-10-(i%2)*2,8,10,2); ctx.fill(); } ctx.fillStyle='#C9A06A'; ctx.font='800 3px Figtree, sans-serif'; ctx.fillText('CACAO',x+8.6,fy-4);
+   nbSign(x+w/2,top+28,'CHOCOLATE DE CACAO',5.6,true); },
+ oficina(x,fy,w,h,o){ const top=fy-h+12; const g=ctx.createLinearGradient(x,top,x+w,fy); g.addColorStop(0,'#BFD8E4'); g.addColorStop(0.5,'#7FA6BA'); g.addColorStop(1,'#4E7488'); ctx.fillStyle=NB.lacre; ctx.fillRect(x+6,top-2,w-12,h-10); ctx.fillStyle=g; ctx.fillRect(x+10,top+2,w-20,h-20);
+   ctx.strokeStyle='rgba(107,42,26,.9)'; ctx.lineWidth=1.4; for(let c=x+10;c<=x+w-10;c+=(w-20)/6){ ctx.beginPath(); ctx.moveTo(c,top+2); ctx.lineTo(c,fy-18); ctx.stroke(); } for(let r=top+2;r<=fy-18;r+=(h-20)/4){ ctx.beginPath(); ctx.moveTo(x+10,r); ctx.lineTo(x+w-10,r); ctx.stroke(); }
+   if(o){ ctx.fillStyle='rgba(255,226,150,.35)'; for(let i=0;i<6;i++) for(let j=0;j<4;j++) if((i*3+j*5+Math.floor(S.t/90))%4) ctx.fillRect(x+11+i*(w-20)/6,top+3+j*(h-20)/4,(w-20)/6-2,(h-20)/4-2); }
+   ctx.fillStyle='rgba(255,255,255,.22)'; ctx.beginPath(); ctx.moveTo(x+14,top+2); ctx.lineTo(x+40,top+2); ctx.lineTo(x+18,fy-18); ctx.lineTo(x+10,fy-18); ctx.lineTo(x+10,top+30); ctx.closePath(); ctx.fill();
+   ctx.fillStyle='#2A3440'; for(let i=0;i<4;i++){ ctx.save(); ctx.translate(x+16+i*14,top-4); ctx.transform(1,0,-0.4,1,0,0); ctx.fillRect(0,0,12,4); ctx.restore(); }
+   ctx.fillStyle='#E9DCC0'; ctx.fillRect(x+6,fy-18,w-12,18); nbDoor(x+w/2-14,fy-18,28,18,o); ctx.fillStyle='rgba(159,211,255,.5)'; ctx.fillRect(x+w/2-13,fy-17,12,17); ctx.fillRect(x+w/2+1,fy-17,12,17);
+   ctx.save(); ctx.translate(x+w-28,top+10); ctx.fillStyle=NB.crema; ctx.beginPath(); ctx.arc(0,0,11,0,7); ctx.fill(); ctx.strokeStyle=NB.oro; ctx.lineWidth=1.4; ctx.stroke(); ctx.fillStyle=NB.lacre; ctx.beginPath(); ctx.moveTo(-7,5); ctx.lineTo(-1,-5); ctx.lineTo(2,-1); ctx.lineTo(4,-3); ctx.lineTo(8,5); ctx.closePath(); ctx.fill(); ctx.fillStyle=NB.oro; ctx.beginPath(); ctx.moveTo(-1,-5); ctx.lineTo(1,-8); ctx.lineTo(3,-6); ctx.closePath(); ctx.fill(); ctx.restore();
+   nbSign(x+w/2-10,fy-30,'EDUTECH RUTA A LA CIMA',5.4,true); }
+};
+function drawNegocio(e,x,y){ const NG=eco.negocio, mine=e.used&&NG, T0=NEG[e.k], fy=y+e.h, cx=x+e.w/2, o=!!mine, w=e.w, h=e.h;
+  ctx.save();
+  ctx.fillStyle='rgba(0,0,0,.25)'; ctx.beginPath(); ctx.ellipse(cx,fy,w*0.56,4.2,0,0,7); ctx.fill();
+  if(!e.used){ const a=0.2+Math.sin(S.t*0.07)*0.08, R=Math.max(w,h)*0.75, g=ctx.createRadialGradient(cx,fy-h*0.5,6,cx,fy-h*0.5,R); g.addColorStop(0,'rgba(255,225,138,'+a+')'); g.addColorStop(1,'rgba(255,225,138,0)'); ctx.fillStyle=g; ctx.beginPath(); ctx.arc(cx,fy-h*0.5,R,0,7); ctx.fill();
+    ctx.strokeStyle='rgba(255,230,150,'+(0.25+a)+')'; ctx.lineWidth=1.2; for(let i=0;i<10;i++){ const an=S.t*0.01+i*Math.PI/5; ctx.beginPath(); ctx.moveTo(cx+Math.cos(an)*R*0.55,fy-h*0.5+Math.sin(an)*R*0.55); ctx.lineTo(cx+Math.cos(an)*R*0.8,fy-h*0.5+Math.sin(an)*R*0.8); ctx.stroke(); } }
+  (NB_PAINT[T0.k]||NB_PAINT.carreta)(x,fy,w,h,o);
+  // clientes cuando está abierto
+  if(o){ const n=1+Math.min(3,Math.floor(e.k/2)+1), C=['#2C5D8F','#3E7A3A','#C04F7A','#B8862F']; for(let i=0;i<n;i++){ const t=((S.t*0.35+i*70)%(w+60))/(w+60); nbCustomer(x-20+t*(w+40),fy,C[i%4],S.t*0.25+i,1); }
+    for(let i=0;i<3;i++){ const t=((S.t*0.6+i*40)%120)/120; ctx.globalAlpha=1-t; ctx.fillStyle='#E8B64A'; ctx.beginPath(); ctx.ellipse(cx-16+i*16,fy-h*0.55-t*34,3.2*Math.abs(Math.cos(S.t*0.1+i)),3.2,0,0,7); ctx.fill(); } ctx.globalAlpha=1; }
+  // tablero superior y cinta
+  const tag=mine?'TU NEGOCIO · NIVEL '+NG.nivel:(e.k>0?'OPORTUNIDAD DE NEGOCIO · MUNDO '+(e.k+1):'OPORTUNIDAD DE NEGOCIO'); ctx.font='800 6.6px Figtree, sans-serif'; const tw=ctx.measureText(tag).width+16, ty=fy-h-26+Math.sin(S.t*0.05)*(e.used?0:1.2);
+  ctx.fillStyle=NB.oro; rr(cx-tw/2-1.5,ty-1.5,tw+3,15,3.5); ctx.fill(); ctx.fillStyle=mine?'#2F6B3A':NB.lacre; rr(cx-tw/2,ty,tw,12,3); ctx.fill(); ctx.fillStyle='#FFF3D6'; ctx.textAlign='center'; ctx.fillText(tag,cx,ty+8.6);
+  // placa con la oferta
+  const O=e.used?null:negOffer(e); const sub=mine?NG.n+' · +'+NG.renta+' por quincena · ganado '+(NG.ganado||0):(e.used?'Ampliado':T0.n+' · '+O.txt);
+  ctx.font='700 5.6px Figtree, sans-serif'; const sw=ctx.measureText(sub).width+12; ctx.fillStyle='rgba(10,20,26,.62)'; rr(cx-sw/2,fy+4,sw,10,4); ctx.fill(); ctx.fillStyle='#FFE9B0'; ctx.fillText(sub,cx,fy+11);
+  // anillo de "quédate para invertir"
+  if(!e.used&&e.near){ const D=negDoor(e), dx=D.x+D.w/2-S.cam+(x-(e.x-S.cam)), k=(e.hold||0)/48, ry=fy-h*0.45;
+    ctx.fillStyle='rgba(10,20,26,.55)'; ctx.beginPath(); ctx.arc(cx,ry,11,0,7); ctx.fill(); ctx.strokeStyle='rgba(255,255,255,.25)'; ctx.lineWidth=2.4; ctx.beginPath(); ctx.arc(cx,ry,9,0,7); ctx.stroke();
+    if(k>0){ ctx.strokeStyle='#FFD36B'; ctx.beginPath(); ctx.arc(cx,ry,9,-Math.PI/2,-Math.PI/2+k*Math.PI*2); ctx.stroke(); }
+    ctx.fillStyle='#FFE18A'; ctx.font='800 7px Figtree, sans-serif'; ctx.fillText('$',cx,ry+2.6); ctx.font='700 5px Figtree, sans-serif'; ctx.fillStyle='#fff'; ctx.fillText(k>0?'invirtiendo…':'quédate aquí',cx,ry+19); }
+  ctx.textAlign='left'; ctx.restore(); }
+
 function bigAbsorb(){ const p=S.p; if(!p||!p.big) return false; p.big=0; p.growT=40; p.inv=100; p.vy=-4; S.shake=reduced?0:5; snd('hit'); burst(p.x+p.w/2,p.y+8,'#9FD3FF',18); addText(p.x-70,p.y-30,'Tu fondo de emergencia absorbió el golpe: vuelves a tu tamaño','#9FD3FF'); logD('Ahorro','El fondo de emergencia te protegió de un golpe',0); return true; }
 function poderTake(e,p){ e.dead=true; snd('gate'); burst(e.x+10,e.y+10,e.k==='grande'?'#9FD3FF':'#FFD36B',22); confetti(e.x+10,e.y,12); eco.stats.poderes=(eco.stats.poderes||0)+1;
   if(e.k==='grande'){ p.big=1; p.growT=44; learn('grande'); addText(p.x-70,p.y-40,'¡Fondo de emergencia completo! Creces y aguantas un golpe','#9FD3FF'); }
@@ -1211,10 +1330,7 @@ function scoreAdd(n,why){ eco.score=Math.max(300,Math.min(900,(eco.score||650)+n
 function addDebt(name,saldo,cuota,kind){ if(kind==='acuerdo') scoreAdd(-60,'reportado por no pagar'); else if(kind==='tarjeta') scoreAdd(-6); else if(kind==='credito') scoreAdd(-25,'crédito por encima de tu capacidad'); const d=eco.debts.find(x=>x.kind===kind); if(d) d.saldo+=saldo; else eco.debts.push({name,saldo,cuota,kind}); }
 
 function pulseExtras(p){
-  const NG=eco.negocio; if(NG){ NG.q=(NG.q||0)+1;
-    if(NG.q===1){ addText(p.x-70,p.y-58,'Tu negocio arrancó: este mes solo cubrió costos (punto de equilibrio)','#FFE18A'); }
-    else if(Math.random()<0.2){ addText(p.x-70,p.y-58,'Mes flojo en '+NG.n.toLowerCase()+': no hubo ganancia. Los ingresos de un negocio varían','#FFC7BF'); logD('Ingreso','Negocio: mes flojo',0); }
-    else { const r=NG.renta, toH=Math.max(0,Math.min(r,cap()-eco.hand)); eco.hand+=toH; eco.emb+=r-toH; NG.ganado=(NG.ganado||0)+r; addText(p.x-60,p.y-58,'Tu negocio ('+NG.n.toLowerCase()+') dejó +'+r+(r-toH?' · '+(r-toH)+' a la alcancía':''),'#BFF5CF'); logD('Ingreso','Ganancia del negocio: '+NG.n,r); coinPopAt(p); } learn('negocio'); }
+  negPulse(p);
   if(eco.salario>0){ eco.pq=(eco.pq||0)+1; if(eco.pq%2===0){ eco.pension=(eco.pension||0)+1; eco.cesantias=(eco.cesantias||0)+1; eco.hand=Math.max(0,eco.hand-1); addText(p.x-50,p.y-72,'Aportes: pensión +1 (de tu sueldo) · cesantías +1 (del empleador)','#C9CEFF'); learn('pension'); } }
   if(eco.plan&&eco.plan.ok&&eco.hand>0){ eco.hand--; eco.emb++; addText(p.x-50,p.y-86,'Págate primero en automático: +1 a la alcancía','#9FD3FF'); learn('plan'); }
   if(eco.meme&&eco.meme.v>0){ const back=1; addText(p.x-70,p.y-100,'¡La burbuja de la memecoin estalló! De '+eco.meme.v+' te quedó '+back,'#FF9A8C'); logD('Pérdida','Memecoin: comprar porque todos compran',back-eco.meme.v); eco.hand+=back; eco.meme=null; learn('fomo'); snd('bad'); }
@@ -1322,44 +1438,6 @@ function negProducts(k,x,fy){ // productos sobre el mostrador (fy = borde superi
   else if(k==='bici'){ ctx.strokeStyle='#2A2A2E'; ctx.lineWidth=1.6; ctx.beginPath(); ctx.arc(x+12,fy-7,6.5,0,7); ctx.stroke(); ctx.lineWidth=.5; for(let i=0;i<6;i++){ const a=i*Math.PI/3+S.t*0.03; ctx.beginPath(); ctx.moveTo(x+12,fy-7); ctx.lineTo(x+12+Math.cos(a)*6,fy-7+Math.sin(a)*6); ctx.stroke(); }
     ctx.fillStyle='#8A8F96'; ctx.fillRect(x+26,fy-3,14,2.4); ctx.fillStyle='#B84A3C'; rr(x+42,fy-8,8,8,1.5); ctx.fill(); }
   ctx.restore(); }
-function drawNegocio(e,x,y){ const NG=eco.negocio, mine=e.used&&NG, fy=y+e.h, cx=x+e.w/2, T0=NEG[e.k], k=mine?NG.k:T0.k;
-  ctx.save(); ctx.fillStyle='rgba(0,0,0,.24)'; ctx.beginPath(); ctx.ellipse(cx,fy,38,3.6,0,0,7); ctx.fill();
-  // brillo de oportunidad (aún no abierto)
-  if(!e.used){ const a=0.18+Math.sin(S.t*0.07)*0.08, g=ctx.createRadialGradient(cx,fy-40,4,cx,fy-40,52); g.addColorStop(0,'rgba(255,225,138,'+a+')'); g.addColorStop(1,'rgba(255,225,138,0)'); ctx.fillStyle=g; ctx.beginPath(); ctx.arc(cx,fy-40,52,0,7); ctx.fill(); }
-  // postes
-  ctx.fillStyle='#4E3220'; ctx.fillRect(x+3,fy-50,3.5,50); ctx.fillRect(x+e.w-6.5,fy-50,3.5,50);
-  // fondo de tela y estante
-  ctx.fillStyle='#E9DCC0'; ctx.fillRect(x+6.5,fy-44,e.w-13,24); ctx.fillStyle='rgba(107,42,26,.12)'; for(let i=0;i<5;i++) ctx.fillRect(x+9+i*11,fy-44,1,24);
-  ctx.fillStyle='#8A5A34'; ctx.fillRect(x+7,fy-33,e.w-14,2);
-  negProducts(k==='empanada'?'tienda':k==='tienda'?'cafe':'tienda',x+8,fy-33); // estante de atrás: surtido
-  // vendedor (solo si es tu negocio)
-  if(mine){ e.vend=e.vend||{x:e.x,dir:-1,dirS:-1}; e.vend.x=e.x; rigDraw(e.vend,cx+8,fy-8,0.74,Object.assign({top:'#6B2A1A',throws:0},LOOK_NPC.profe||{}),16,{wave:Math.sin(S.t*0.03)>0.6}); }
-  // mostrador
-  const gw=ctx.createLinearGradient(0,fy-21,0,fy); gw.addColorStop(0,'#9A6A3E'); gw.addColorStop(1,'#6E4626'); ctx.fillStyle=gw; rr(x+1,fy-20,e.w-2,20,2); ctx.fill();
-  ctx.strokeStyle='rgba(60,36,18,.45)'; ctx.lineWidth=.7; for(let i=1;i<4;i++){ ctx.beginPath(); ctx.moveTo(x+2,fy-20+i*5); ctx.lineTo(x+e.w-2,fy-20+i*5); ctx.stroke(); }
-  ctx.fillStyle='#B07C46'; ctx.fillRect(x-1,fy-22,e.w+2,3.4);
-  negProducts(k,x+6,fy-22);
-  // letrero del mostrador
-  ctx.fillStyle='#F4ECD8'; rr(x+9,fy-16,e.w-18,10,2); ctx.fill(); ctx.strokeStyle='#B8862F'; ctx.lineWidth=1; ctx.stroke();
-  ctx.fillStyle='#6B2A1A'; ctx.textAlign='center'; const lt=mine?NG.n.toUpperCase():(NG?(e.used?'AMPLIADO':'AMPLÍA: 4'):'CAPITAL: 6'); let fs=5.6; do{ ctx.font='800 '+fs+'px Figtree, sans-serif'; fs-=0.3; }while(ctx.measureText(lt).width>e.w-22&&fs>3);
-  ctx.fillText(lt,cx,fy-9.2);
-  // toldo a rayas lacre / crema con festón
-  const ax=x-5, aw=e.w+10, ay=fy-56, n=8, sw=aw/n;
-  for(let i=0;i<n;i++){ ctx.fillStyle=i%2?'#F4ECD8':'#6B2A1A'; ctx.beginPath(); ctx.moveTo(ax+i*sw+2,ay); ctx.lineTo(ax+(i+1)*sw+2,ay); ctx.lineTo(ax+(i+1)*sw,ay+9); ctx.arc(ax+i*sw+sw/2,ay+9,sw/2,0,Math.PI); ctx.closePath(); ctx.fill(); }
-  ctx.fillStyle='rgba(0,0,0,.14)'; ctx.fillRect(ax,ay+8,aw,1.2);
-  // tablero superior
-  const bt=mine?'TU NEGOCIO · NIVEL '+NG.nivel:'OPORTUNIDAD DE NEGOCIO'; ctx.font='800 6.4px Figtree, sans-serif'; const bw=ctx.measureText(bt).width+14, by=ay-14;
-  ctx.fillStyle='#4E3220'; ctx.fillRect(cx-bw/2+6,by+11,2,4); ctx.fillRect(cx+bw/2-8,by+11,2,4);
-  ctx.fillStyle='#F4ECD8'; rr(cx-bw/2,by,bw,12,2.5); ctx.fill(); ctx.strokeStyle='#B8862F'; ctx.lineWidth=1.4; ctx.stroke();
-  ctx.fillStyle='#6B2A1A'; ctx.fillText(bt,cx,by+8.6);
-  // etiqueta debajo
-  ctx.font='700 5.2px Figtree, sans-serif'; ctx.fillStyle='rgba(255,255,255,.92)';
-  const sub=mine?'+'+NG.renta+' por quincena · ganado '+(NG.ganado||0):(NG?'reinvierte parte de la ganancia':T0.n+' · con plan y estudio de mercado');
-  ctx.fillStyle='rgba(10,20,26,.55)'; const sw2=ctx.measureText(sub).width+10; rr(cx-sw2/2,fy+4,sw2,9,4); ctx.fill(); ctx.fillStyle='#FFE9B0'; ctx.fillText(sub,cx,fy+10.4);
-  // monedas que suben cuando está abierto
-  if(mine){ for(let i=0;i<3;i++){ const t=((S.t*0.6+i*40)%120)/120; ctx.globalAlpha=1-t; ctx.fillStyle='#E8B64A'; ctx.beginPath(); ctx.ellipse(cx-14+i*14,fy-24-t*30,3*Math.abs(Math.cos(S.t*0.1+i)),3,0,0,7); ctx.fill(); } ctx.globalAlpha=1;
-    ctx.fillStyle='#2F4A3A'; rr(x+e.w-2,fy-30,16,14,1.5); ctx.fill(); ctx.strokeStyle='#8A5A34'; ctx.lineWidth=1; ctx.strokeRect(x+e.w-2,fy-30,16,14); ctx.fillStyle='#BFF5CF'; ctx.font='800 4.4px Figtree, sans-serif'; ctx.fillText('ABIERTO',x+e.w+6,fy-21.6); ctx.fillStyle='#4E3220'; ctx.fillRect(x+e.w+1,fy-16,1.6,16); ctx.fillRect(x+e.w+10.4,fy-16,1.6,16); }
-  ctx.textAlign='left'; ctx.restore(); }
 function drawPoder(e,x,y){ const fy=y+e.h, cx=x+e.w/2, bob=Math.sin(S.t*0.06+e.ph)*2.2, iy=y+9+bob, gold=e.k==='racha';
   ctx.save();
   // apacheta (montón de piedras andino)
@@ -2052,7 +2130,7 @@ function update(){
   for(const e of L.ents){
     if(e.dead) continue;
     if(e.pw&&e.tied){ if(++e.tied>78){ e.dead=true; tiedPoof(e); } continue; }
-    if(e.t==='negocio'){ if(e.cd>0) e.cd--; e.near=Math.abs(p.x-e.x)<140; if(!e.used&&overlap(p,e)) negocioTouch(e,p); continue; }
+    if(e.t==='negocio'){ negocioUpdate(e,p); continue; }
     if(e.t==='poder'){ if(overlap(p,e)) poderTake(e,p); continue; }
     if(e.t==='drop'){ if(overlap(p,e)){ if(eco.hand>=cap()){ if(!S.fullMsg||S.t-S.fullMsg>120){ S.fullMsg=S.t; addText(p.x-30,p.y-20,'Mochila llena: ahorra en la alcancía o invierte','#FFE18A'); } } else { e.dead=true; eco.hand++; eco.stats.drops++; if(S.ws) S.ws.coins++; snd('drop'); burst(e.x+6,e.y+8,VALOR_C[e.k]||'#FFD36B',5); if(e.k&&e.k!=='moneda'&&(!S.valTxt||S.t-S.valTxt>40)){ S.valTxt=S.t; addText(e.x-8,e.y-8,'+1 '+VALOR_N[e.k],VALOR_C[e.k]); } S.pops.push({x:e.x+6,y:e.y+8,life:14}); S.hudPop=10; } } }
     else if(e.t==='page'){ if(overlap(p,e)){ e.dead=true; eco.pages[S.li]|=(1<<e.idx); snd('gate'); burst(e.x+9,e.y+10,'#B9A8FF',16); toast('Cuaderno de Ruta · página '+(e.idx+1)+' de 3',PAGES[S.li][e.idx]); } }
