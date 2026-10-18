@@ -254,6 +254,8 @@ En **Settings → Pages**, elige **Deploy from a branch**, la rama `main` y la c
 | **Resolución** | Lienzo lógico de 640 × 360 que se escala a cualquier pantalla |
 | **Física** | Paso fijo a 60 Hz; el juego se recupera solo de cualquier error de dibujo |
 | **Arte** | Montañas con relieve por píxel, luz por mundo, niebla, grano y viñeta |
+| **Dinero propio** | Monedas bimetálicas de la Ruta (anillo plateado, centro dorado con una cumbre grabada), billetes, bonos, diamantes, lingotes de oro y joyas |
+| **Enemigos vencidos** | Quedan amarrados con un candado, reciben el sello rojo **PASIVO CONTROLADO** (con lo que controlaste: tiempo en el celular, deuda de la tarjeta, estafa denunciada…) y estallan en dinero |
 | **Alcancía viva** | Las monedas vuelan una a una hasta la alcancía, su vientre de vidrio se llena y brilla al completar el fondo de emergencia; con los golpes se agrieta y al tercero cae y se rompe en pedazos |
 | **Animación** | Todos los personajes comparten un esqueleto con cinemática inversa: pie fijo al apoyar (sin patinar), cadera que sube al caminar y baja al correr, brazos en oposición, lanzamientos con preparación y seguimiento, reacción al golpe y respiración. El puma trota en diagonal, la culebra ondula y la hormiga camina en trípode |
 | **Controles** | Teclado, ratón (clic para ir) y táctil |
