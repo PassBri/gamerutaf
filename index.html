@@ -505,6 +505,7 @@ const CH={
  fomo:["                  ","                  ","                  ","                  ","  o    s       o  ","##################","##################"],
  colchon:["                ","                ","                ","                ","  o    q     o  ","################","################"],
  cripto:["                ","          e     ","        ====    ","                ","   o  d     o   ","################","################"],
+ lz_politico:["                  ","                  ","                  ","                  ","  o            o  ","        z         ","##################","##################"],
  lz_hacker:["                  ","                  ","                  ","                  ","  o            o  ","        n         ","##################","##################"],
  lz_inflacion:["                  ","                  ","                  ","                  ","  o            o  ","        X         ","##################","##################"],
  lz_tahur:["                    ","                    ","                    ","                    ","  o              o  ","     m      h       ","####################","####################"],
@@ -710,6 +711,7 @@ const TIPS={
  ludopatia:{t:'Apuestas y ludopatía',g:'Guía 4 y 5',x:'En las apuestas y tragamonedas la casa siempre gana a la larga. Ganar una vez engancha y hace perder más. Si sientes que no puedes parar, pide ayuda.'},
  ruina:{t:'El Gran Estafador',g:'Guía 5',x:'Promete rendimientos imposibles y se lleva todo lo que le entregas. Defiéndete: desconfía de lo “garantizado”, verifica con la Superfinanciera, diversifica, guarda en la alcancía y ten seguros.'},
  terremoto:{t:'Imprevisto: terremoto',g:'Guía 5',x:'La tierra se abre y las casas se dañan. Un seguro (el casco) cubre los daños de tu casa y un fondo de emergencia evita que el golpe te devuelva al valle.'},
+ politica:{t:'Decisiones políticas y tu bolsillo',g:'Guía 6',x:'Un decreto o una ley puede subir el mercado, la gasolina o crear un impuesto. Por eso se vota informado, se exigen cuentas claras y se planea con margen en el presupuesto.'},
  paciencia:{t:'Paciencia (gratificación diferida)',g:'Guía 3',x:'Esperar por una recompensa mayor es la base del ahorro y la inversión: 2 hoy o 6 mañana. Quien sabe esperar, llega más alto.'},
  plan:{t:'Págate primero, en automático',g:'Guía 2',x:'Un presupuesto bien hecho se cumple solo: apenas llega el sueldo, una parte va directo al ahorro antes de gastar.'},
  credito:{t:'Historial crediticio (DataCrédito)',g:'Guía 6',x:'Cada cuota pagada a tiempo sube tu puntaje; un atraso o un acuerdo de pago lo baja. Con buen puntaje te prestan más barato; con mal puntaje, más caro o nada.'},
@@ -888,7 +890,7 @@ function pad(rows){ const w=Math.max(...rows.map(r=>r.length)); const pr=Array(R
 function mulberry(a){ return ()=>{ a|=0; a=a+0x6D2B79F5|0; let t=Math.imul(a^a>>>15,1|a); t=t+Math.imul(t^t>>>7,61|t)^t; return ((t^t>>>14)>>>0)/4294967296; }; }
 const ANCLA=new Set(['start','camp','embalse','page1','page2','page3','job','ayuda','vehiculo','sueno']);
 const JEFE_P={jefeGota:[0,.75,.5,.35,.45,.8,.55,.35],jefeCredito:[0,.3,.6,.75,.7,.6,.65,.5]};
-const LANZA_W=[['scroll','vitrina'],['vitrina','tarjeta','scroll'],['inflacion','tahur','scroll','hacker'],['tarjeta','hacker','inflacion','tahur'],['tahur','inflacion','scroll','hacker'],['tarjeta','tahur','vitrina','hacker'],['hacker','inflacion','tahur','tarjeta'],['inflacion','hacker','tahur','scroll']];
+const LANZA_W=[['scroll','vitrina'],['vitrina','politico','tarjeta','scroll'],['inflacion','tahur','scroll','hacker','politico'],['tarjeta','hacker','inflacion','tahur','politico'],['politico','tahur','inflacion','scroll','hacker'],['tarjeta','tahur','vitrina','hacker','politico'],['hacker','politico','inflacion','tahur','tarjeta'],['inflacion','hacker','politico','tahur','scroll']];
 function varyChunks(li){
   const base=LV[li].chunks;
   const secs=[[]]; base.slice(1,-1).forEach(n=>{ if(n==='embalse') secs.push([]); else secs[secs.length-1].push(n); });
@@ -924,7 +926,7 @@ function buildLevel(li){
     if(ch==='Z') ents.push({t:'snake',x:x+2,y:y+T-12,w:20,h:12,st:'hide',tm:0,cd:0,dir:-1});
     if(ch==='N') ents.push({t:'npc',k:NPC_BY_WORLD[li],x:x+2,y:y+T-30,w:20,h:30,used:false});
     if(ch==='V'){ const vk=VEH_BY_WORLD[li], v=VEH[vk]; ents.push({t:'veh',k:vk,it:Object.assign({},v,{c:v.c+li}),x:x-6,y:y+T-26,w:36,h:26}); }
-    { const lk={T:'scroll',O:'vitrina',R:'tarjeta',X:'inflacion',h:'tahur',n:'hacker'}[ch]; if(lk){ const D=LANZA[lk]; ents.push({t:'lanza',k:lk,x:x-6,y:y+T-D.h,w:D.w,h:D.h,x0:x-6,hp:2,cd:50+rnd(70),dir:-1,flash:0,hitCd:0}); } }
+    { const lk={T:'scroll',O:'vitrina',R:'tarjeta',X:'inflacion',h:'tahur',n:'hacker',z:'politico'}[ch]; if(lk){ const D=LANZA[lk]; ents.push({t:'lanza',k:lk,x:x-6,y:y+T-D.h,w:D.w,h:D.h,x0:x-6,hp:2,cd:50+rnd(70),dir:-1,flash:0,hitCd:0}); } }
     if(ch==='m') ents.push({t:'slot',x:x-4,y:y+T-40,w:30,h:40,cd:0,spin:0,res:null});
     if(ch==='u') ents.push({t:'ruina',x:x-22,y:y+T-92,w:60,h:92,x0:x-22,hp:5,cd:100,slamCd:260,dir:-1,flash:0,hitCd:0,vy:0,air:false});
     if(ch==='G') ents.push({t:'gotaJefe',x:x-16,y:y+T-76,w:48,h:76,x0:x-16,hp:3,cd:70,dir:-1,flash:0,hitCd:0});
@@ -1327,10 +1329,11 @@ const LANZA={
   vitrina:{n:'EL VENDEDOR DE VITRINA',r:'compras por impulso',item:'tag',lab:'¡SOLO HOY!',dmg:1,w:26,h:40,col:'#D9822B',say:['¡Solo hoy, 2×1!','¡Últimas unidades!','¡Lléveselo ya!'],no:['¡Espero 24 horas!','¡No está en mi presupuesto!']},
   tarjeta:{n:'DOÑA TARJETA DORADA',r:'deuda con tarjeta',item:'card',lab:'INTERÉS 30%',dmg:1,w:26,h:40,col:'#C9A23A',say:['¡Cupo preaprobado!','¡Pague solo el mínimo!','¡Difiéralo a 36 cuotas!'],no:['¡Pago el total!','¡No uso más del 30 %!']},
   inflacion:{n:'DOÑA INFLACIÓN',r:'sube los precios',item:'price',lab:'PRECIOS +10%',dmg:1,w:26,h:40,col:'#B8323C',say:['¡Todo subió 10 %!','¡Ese billete ya no alcanza!','¡El arroz cuesta más que ayer!','¿Plata quieta? ¡Me la como!'],no:['¡Mi ahorro rinde en un CDT!','¡Comparo precios!']},
+  politico:{n:'DON POLÍTICO',r:'decretos a tu bolsillo',item:'decreto',lab:'DECRETO',dmg:1,w:26,h:42,col:'#24448E',say:['¡Nuevo impuesto, por el bien de todos!','¡Sube la gasolina desde mañana!','¡El mercado sube un poquito!','¡Vote por mí y le prometo todo!'],no:['¡Voto informado!','¡Exijo cuentas claras!']},
   hacker:{n:'EL HACKER',r:'robo cibernético',item:'mail',lab:'PHISHING',dmg:2,w:26,h:40,col:'#1E2A3A',say:['¡Ganaste un premio! Dame tu clave','Tu cuenta fue bloqueada: haz clic aquí','Soy del banco, dígame el código'],no:['¡No comparto mis claves!','¡Activo la doble verificación!']},
   tahur:{n:'EL TAHÚR',r:'apuestas y ludopatía',item:'chip',lab:'APUESTA',dmg:2,w:28,h:42,col:'#1F7A4A',say:['¡Apueste y duplique!','¡Esta vez sí gana!','¡Una ronda más!'],no:['¡No apuesto mi plata!','¡La casa siempre gana!']},
 };
-const PROJ_TXT={phone:'distraído en el celular',tag:'compra por impulso',card:'interés de la tarjeta',price:'subieron los precios',chip:'apuesta perdida',mail:'robo cibernético',bag:'estafa de Don Ruina'};
+const PROJ_TXT={phone:'distraído en el celular',tag:'compra por impulso',card:'interés de la tarjeta',price:'subieron los precios',chip:'apuesta perdida',mail:'robo cibernético',decreto:'un decreto te subió los costos',bag:'estafa de Don Ruina'};
 function takeCoins(n){ let a=Math.min(n,eco.hand); eco.hand-=a; let r=n-a; const b=Math.min(r,eco.emb); eco.emb-=b; return a+b; }
 function inflaHit(f){ // la inflación no roba: hace que el dinero quieto compre menos. Lo que rinde (activos) la resiste
   const p=S.p, inv=(eco.assets||[]).length>0, ph=eco.hand>0?Math.max(1,Math.round(eco.hand*0.1)):0, pe=inv?0:Math.floor(eco.emb*0.1);
@@ -1346,6 +1349,7 @@ function projHit(f){
   const p=S.p, dmg=f.dmg||1, lost=takeCoins(dmg); p.inv=34; p.vy=Math.min(p.vy,-3); S.shake=reduced?0:3;
   if(S.ws) S.ws.lost[f.fx]=(S.ws.lost[f.fx]||0)+dmg; logD('Pérdida',f.n.charAt(0)+f.n.slice(1).toLowerCase()+': '+(PROJ_TXT[f.icon]||''),-lost);
   addText(p.x-40,p.y-14,(lost?'−'+lost+' ':'')+(PROJ_TXT[f.icon]||f.n.toLowerCase()),'#FFC7BF'); snd('bad'); burst(p.x+7,p.y+10,'rgba(238,106,92,.8)',8);
+  if(f.icon==='decreto'){ learn('politica'); const opts=[['Mercado más caro (decreto)','El decreto subió el mercado: +1 por 2 quincenas',2,'mercado'],['Gasolina y pasajes más caros (decreto)','Subió la gasolina: transporte +1 por 2 quincenas',2,'gasolina'],['Nuevo impuesto (decreto)','Nuevo impuesto: −1 por 3 quincenas',3,'impuesto']], o=opts[rnd(3)]; addShock(o[0],1,o[2]); eco.politicaK=o[3]; addText(p.x-70,p.y-30,o[1],'#FFC7BF'); }
   if(f.icon==='mail'){ learn('phishing'); if(eco.crypto&&!eco.crypto.lost&&eco.crypto.v>0&&Math.random()<0.5){ const st=Math.ceil(eco.crypto.v/2); eco.crypto.v-=st; addText(p.x-60,p.y-30,'El hacker vació media billetera de bitcoin: −'+st+' ₿','#FF9A8C'); logD('Pérdida','Robo cibernético a la billetera cripto',-st); } }
   if(f.icon==='phone'){ busy(55,'Revisando el celular'); learn('celular'); }
   else if(f.icon==='card'){ addDebt('Tarjeta de crédito',2,1,'tarjeta'); addText(p.x-40,p.y-28,'+2 de deuda en la tarjeta','#FF9A8C'); learn('tarjetaL'); }
@@ -1356,7 +1360,7 @@ function lanzaUpdate(e,p){
   const D=LANZA[e.k], sp=Dif().enemy, dx=(p.x+p.w/2)-(e.x+e.w/2), near=Math.abs(dx)<270&&Math.abs((p.y+p.h)-(e.y+e.h))<170;
   if(e.flee){ e.x+=e.flee*3; e.walk=(e.walk||0)+3; if(--e.fleeT<=0) e.dead=true; return; }
   e.dir=dx<0?-1:1; if(e.flash>0) e.flash--; if(e.hitCd>0) e.hitCd--; if(e.throwT>0) e.throwT--; e.sayT=(e.sayT||0)+1;
-  if(!e.met&&near){ e.met=true; learn({scroll:'celular',vitrina:'vitrinaL',tarjeta:'tarjetaL',inflacion:'inflacionL',tahur:'ludopatia',hacker:'phishing'}[e.k]); }
+  if(!e.met&&near){ e.met=true; learn({scroll:'celular',vitrina:'vitrinaL',tarjeta:'tarjetaL',inflacion:'inflacionL',tahur:'ludopatia',hacker:'phishing',politico:'politica'}[e.k]); }
   const ox=e.x; if(near) e.x=Math.max(e.x0-70,Math.min(e.x0+70,e.x+Math.sign(dx)*Math.min(0.45*sp,Math.abs(dx)>60?1:0))); else e.x+=(e.x0+Math.sin(S.t*0.015+e.x0)*24-e.x)*0.03; e.walk=(e.walk||0)+Math.abs(e.x-ox);
   if(e.wind>0){ if(--e.wind===0){ const sx=e.x+e.w/2+e.dir*10, sy=e.y+10, tt=38+rnd(10); S.fees.push({x:sx,y:sy,w:16,h:12,vx:(p.x+p.w/2-sx)/tt,vy:((p.y+8)-sy)/tt-0.125*tt,n:D.lab,icon:D.item,fx:e.k,dmg:D.dmg,life:220}); e.throwT=14; } }
   else if(near&&--e.cd<=0){ e.cd=Math.round((150+rnd(70))/sp); e.wind=16; }
@@ -1560,6 +1564,11 @@ const LOOK={
    torso:(sh,hp)=>{ ctx.fillStyle='#7A1A22'; ctx.beginPath(); ctx.moveTo(-7,sh-3); ctx.lineTo(7,sh-3); ctx.lineTo(9,hp+7); ctx.lineTo(-9,hp+7); ctx.closePath(); ctx.fill(); ctx.fillStyle='#B8323C'; ctx.beginPath(); ctx.moveTo(-6,sh-3); ctx.lineTo(6,sh-3); ctx.lineTo(8,hp+6); ctx.lineTo(-7,hp+6); ctx.closePath(); ctx.fill(); ctx.fillStyle='#F2C85A'; for(let i=0;i<3;i++){ ctx.beginPath(); ctx.arc(1.6,sh+2+i*4,.8,0,7); ctx.fill(); } },
    hand:()=>{ ctx.fillStyle='#E04A4A'; ctx.beginPath(); ctx.arc(2,0,3.2,0,7); ctx.fill(); ctx.fillStyle='#fff'; ctx.font='800 3.4px sans-serif'; ctx.fillText('%',0.6,1.2); },
    handB:()=>{ ctx.strokeStyle='#7A1A1A'; ctx.lineWidth=.5; ctx.beginPath(); ctx.moveTo(0,0); ctx.quadraticCurveTo(-4,-10,-3,-20); ctx.stroke(); const bs=1+0.12*Math.sin(S.t*0.08); ctx.fillStyle='#E04A4A'; ctx.beginPath(); ctx.ellipse(-3,-26,5.5*bs,6.5*bs,0,0,7); ctx.fill(); ctx.fillStyle='rgba(255,255,255,.35)'; ctx.beginPath(); ctx.ellipse(-5,-28,1.4,2.4,-.4,0,7); ctx.fill(); ctx.fillStyle='#fff'; ctx.font='800 6px sans-serif'; ctx.fillText('%',-5.4,-23.6); }},
+ politico:{top:'#24448E',topD:'#18306A',pants:'#1E2430',shoes:'#0E0E10',skin:'#D6A07A',legScale:1.1,
+   head:b=>{ eyes(b); mouth('grin'); ctx.fillStyle='#C9C9D2'; ctx.beginPath(); ctx.arc(-0.4,-2,6.4,Math.PI*1.02,Math.PI*1.98); ctx.fill(); ctx.fillRect(-6.4,-2.4,2.6,5); },
+   torso:(sh,hp)=>{ ctx.fillStyle='#18306A'; rr(-7,sh-3,14,hp-sh+5,4); ctx.fill(); ctx.fillStyle='#24448E'; rr(-6,sh-3,12,hp-sh+4,4); ctx.fill(); ctx.fillStyle='#fff'; ctx.beginPath(); ctx.moveTo(-2,sh-2.6); ctx.lineTo(3,sh-2.6); ctx.lineTo(.5,sh+6); ctx.fill(); ctx.fillStyle='#C9283C'; ctx.fillRect(0,sh-2,1.2,8); ctx.fillStyle='#F2C230'; ctx.beginPath(); ctx.arc(-3.6,sh+3,1.8,0,7); ctx.fill(); ctx.fillStyle='#C9283C'; ctx.beginPath(); ctx.arc(-3.6,sh+3,0.8,0,7); ctx.fill(); },
+   hand:()=>{ ctx.rotate(-0.5); ctx.fillStyle='#E0E3E8'; ctx.beginPath(); ctx.moveTo(0,-1.6); ctx.lineTo(8,-4.4); ctx.lineTo(8,4.4); ctx.lineTo(0,1.6); ctx.fill(); ctx.fillStyle='#C9283C'; ctx.fillRect(-2,-1.6,3,3.2); },
+   handB:()=>{ ctx.fillStyle='#F4ECD8'; ctx.fillRect(-1,-1,7,9); ctx.fillStyle='#24448E'; ctx.fillRect(0,1,5,0.8); ctx.fillRect(0,3,4,0.8); }},
  hacker:{top:'#1E2A3A',topD:'#121A26',pants:'#22242C',shoes:'#0E0E10',skin:'#C9A07A',lean:0.08,
    head:b=>{ ctx.fillStyle='#0E1218'; rr(0.8,-2.4,7.4,2.6,1); ctx.fill(); ctx.fillStyle='rgba(98,255,160,.65)'; ctx.fillRect(1.6,-2,2.2,1.2); ctx.fillRect(5,-2,2.2,1.2); mouth('sly'); ctx.fillStyle='#121A26'; ctx.beginPath(); ctx.arc(0,-0.6,7.2,Math.PI*0.9,Math.PI*2.1); ctx.fill(); ctx.fillRect(-7.2,-1,4.4,9); },
    torso:(sh,hp)=>{ ctx.fillStyle='#121A26'; rr(-7,sh-3,14,hp-sh+5,5); ctx.fill(); ctx.fillStyle='#1E2A3A'; rr(-6,sh-3,12,hp-sh+4,5); ctx.fill(); ctx.fillStyle='rgba(98,255,160,.5)'; ctx.font='800 3px monospace'; ctx.fillText('01',-3,sh+5); ctx.fillText('10',0,sh+9); },
@@ -1652,6 +1661,19 @@ function drawSnake(e,x,y){
   ctx.restore();
   if(e.st==='warn'){ ctx.fillStyle='#FFE18A'; ctx.font='800 8px Figtree, sans-serif'; ctx.textAlign='center'; ctx.fillText('¡tsss! ¡IMPREVISTO!',x+10,y-14); ctx.textAlign='left'; }
 }
+const ANT_K=['cafe','gaseosa','empanada','papas','chicle','domicilio'];
+const ANT_N={cafe:'el café de la esquina',gaseosa:'la gaseosa',empanada:'la empanada',papas:'el paquete de papas',chicle:'los chicles',domicilio:'el domicilio por app'};
+function antKind(e){ return e.k!=null?e.k:(e.k=(Math.floor(e.x/T)*5+Math.floor(e.y/T))%ANT_K.length); }
+function antIcon(k,x,y,a){ // ícono que gira sobre su eje, como una moneda
+  const sx=Math.cos(a), back=sx<0; ctx.save(); ctx.translate(x,y); ctx.fillStyle='rgba(255,236,190,.22)'; ctx.beginPath(); ctx.arc(0,0,8.5,0,7); ctx.fill(); ctx.scale(Math.max(0.15,Math.abs(sx)),1);
+  if(k==='cafe'){ ctx.fillStyle=back?'#C9BBA0':'#F4ECD8'; ctx.beginPath(); ctx.moveTo(-5,-3); ctx.lineTo(5,-3); ctx.lineTo(4,5); ctx.lineTo(-4,5); ctx.fill(); ctx.fillStyle='#6B2A1A'; ctx.fillRect(-4.6,-1,9.2,2.4); ctx.strokeStyle='#F4ECD8'; ctx.lineWidth=1.2; ctx.beginPath(); ctx.arc(5,1,2,-1.2,1.2); ctx.stroke(); ctx.fillStyle='#3A2418'; ctx.fillRect(-5,-4.4,10,1.6);
+    ctx.strokeStyle='rgba(255,255,255,.7)'; ctx.lineWidth=.8; ctx.beginPath(); ctx.moveTo(-1.6,-5.6); ctx.quadraticCurveTo(-3,-7.6,-1.4,-9.4); ctx.moveTo(1.6,-5.6); ctx.quadraticCurveTo(0.4,-7.6,2,-9.4); ctx.stroke(); }
+  else if(k==='gaseosa'){ ctx.fillStyle=back?'#8A1C2A':'#C9283C'; rr(-3.4,-6,6.8,12,1.6); ctx.fill(); ctx.fillStyle='#C9D3DA'; ctx.fillRect(-3.4,-6,6.8,1.6); ctx.fillStyle='#F4ECD8'; ctx.fillRect(-3.4,-1,6.8,2.4); }
+  else if(k==='empanada'){ ctx.fillStyle=back?'#B8862F':'#E0A84A'; ctx.beginPath(); ctx.arc(0,2,6,Math.PI,0); ctx.closePath(); ctx.fill(); ctx.strokeStyle='#A8761A'; ctx.lineWidth=.8; ctx.beginPath(); for(let i=-5;i<=5;i+=2){ ctx.moveTo(i,2); ctx.lineTo(i+0.6,0.6); } ctx.stroke(); }
+  else if(k==='papas'){ ctx.fillStyle=back?'#B8862F':'#F2C230'; ctx.beginPath(); ctx.moveTo(-4.6,-6); ctx.lineTo(4.6,-6); ctx.lineTo(4,6); ctx.lineTo(-4,6); ctx.fill(); ctx.fillStyle='#C9283C'; ctx.fillRect(-4.4,-2,8.8,3); ctx.fillStyle='#E0A84A'; ctx.beginPath(); ctx.ellipse(0,3.6,2.2,1.2,0,0,7); ctx.fill(); }
+  else if(k==='chicle'){ ctx.fillStyle=back?'#B85A7A':'#E07AA0'; rr(-5,-3,10,6,1.4); ctx.fill(); ctx.fillStyle='#fff'; ctx.fillRect(-5,-0.5,10,1); }
+  else { ctx.fillStyle=back?'#4A1A0E':'#6B2A1A'; rr(-5,-5,10,9,1.4); ctx.fill(); ctx.fillStyle='#F4ECD8'; ctx.font='800 4px Figtree, sans-serif'; ctx.textAlign='center'; ctx.fillText('APP',0,1.4); ctx.textAlign='left'; }
+  ctx.restore(); }
 function drawAnt(e,x,y){
   const dir=e.vx>0?1:-1; e.gph=(e.gph||0)+Math.abs(e.vx||0.6)*0.5; const ph=e.gph; ctx.save(); ctx.translate(x+9,y+7); ctx.scale(dir,1);
   ctx.fillStyle='rgba(0,0,0,.2)'; ctx.beginPath(); ctx.ellipse(1,5,9,1.6,0,0,7); ctx.fill();
@@ -1661,7 +1683,8 @@ function drawAnt(e,x,y){
   const bb=Math.sin(ph*2)*0.4; ctx.fillStyle='#5A2E12'; ctx.beginPath(); ctx.ellipse(-5,0+bb,5,4,0.15,0,7); ctx.fill(); ctx.beginPath(); ctx.ellipse(1.5,0,2.8,2.6,0,0,7); ctx.fill(); ctx.beginPath(); ctx.ellipse(6.6,-1-bb,3.4,3.1,0,0,7); ctx.fill();
   ctx.fillStyle='rgba(255,255,255,.25)'; ctx.beginPath(); ctx.ellipse(-6,-2+bb,2,1,0,0,7); ctx.fill(); ctx.fillStyle='#fff'; ctx.fillRect(7.6,-2.4-bb,1,1);
   const an=Math.sin(S.t*0.3)*1.2; ctx.strokeStyle='#5A2E12'; ctx.lineWidth=0.9; ctx.beginPath(); ctx.moveTo(8.4,-3.4-bb); ctx.quadraticCurveTo(10,-7+an,12.6,-7.4+an); ctx.moveTo(7.6,-3.6-bb); ctx.quadraticCurveTo(8.6,-8-an,10.4,-9-an); ctx.stroke();
-  drop(-4,-8+bb,.6); ctx.restore();
+  ctx.restore();
+  antIcon(ANT_K[antKind(e)],x+9,y-9+Math.sin(S.t*0.08+e.x)*1.5,S.t*0.07+e.x*0.1);
 }
 
 function drawLanza(e,x,y){
@@ -1848,8 +1871,8 @@ function update(){
       if(e.onGround){ const ahead=e.vx>0?Math.floor((e.x+e.w+1)/T):Math.floor((e.x-1)/T); const below=Math.floor((e.y+e.h+2)/T); if(!solid(ahead,below)&&!oneway(ahead,below)) e.vx=-e.vx; }
       if(e.y>L.rows*T+40) e.dead=true;
       if(overlap(p,e)){
-        if(p.vy>0 && prevBottom<=e.y+8){ e.dead=true; p.vy=-7; eco.hand++; eco.stats.stomps++; stampAt(e.x+9,e.y-6,'GASTO EVITADO','gasto hormiga'); addText(e.x,e.y-8,'+1 gasto evitado','#BFF5CF'); snd('stomp'); burst(e.x+9,e.y+6,'#C08A55',8); }
-        else { if(hurt(2,'gasto hormiga','hormigas')) logD('Pérdida','Gasto hormiga',-2); }
+        if(p.vy>0 && prevBottom<=e.y+8){ e.dead=true; p.vy=-7; eco.hand++; eco.stats.stomps++; stampAt(e.x+9,e.y-6,'GASTO EVITADO','gasto hormiga'); addText(e.x-30,e.y-8,'+1: evitaste '+ANT_N[ANT_K[antKind(e)]],'#BFF5CF'); snd('stomp'); burst(e.x+9,e.y+6,'#C08A55',8); }
+        else { if(hurt(2,ANT_N[ANT_K[antKind(e)]],'hormigas')) logD('Pérdida','Gasto hormiga: '+ANT_N[ANT_K[antKind(e)]],-2); }
         learn('ant');
       }
     }
@@ -1891,7 +1914,7 @@ function update(){
     else if(e.t==='lote') loteUpdate(e,p);
     else if(e.t==='paciencia'){ if(e.st===1&&--e.timer<=0){ e.st=3; eco.hand=Math.min(cap(),eco.hand+6); eco.stats.paciencia=(eco.stats.paciencia||0)+1; addText(p.x-60,p.y-40,'¡Tu paciencia pagó! El cofre se abrió: +6','#BFF5CF'); snd('gate'); confetti(p.x+7,p.y,14); logD('Ahorro','Esperaste: 6 en vez de 2',6); }
       if(e.st===0&&overlap(p,e)){ const left=(p.x+p.w/2)<e.x+e.w/2; learn('paciencia'); if(left){ e.st=2; eco.hand=Math.min(cap(),eco.hand+2); eco.stats.impaciente=(eco.stats.impaciente||0)+1; addText(e.x-40,e.y-20,'+2 ya… si esperabas eran 6','#FFE18A'); snd('drop'); } else { e.st=1; e.timer=720; addText(e.x-50,e.y-20,'¡Esperas! El cofre te dará 6 en 12 s: sigue subiendo','#BFF5CF'); snd('save'); } } }
-    else if(e.t==='tienda'){ const pair=S.L.ents.filter(q=>q.t==='tienda'&&q.grp===e.grp); if(!e.done&&overlap(p,e)&&!pair.some(q=>q.bought)){ e.bought=true; pair.forEach(q=>q.done=true); const tot=e.k==='A'?6:5; const l=takeCoins(tot); learn('comparar'); logD('Gasto','Mercado en la tienda '+(e.k==='A'?'del aviso grande (4 + 2 de envío)':'sin recargos'),-l);
+    else if(e.t==='tienda'){ const pair=S.L.ents.filter(q=>q.t==='tienda'&&q.grp===e.grp); if(!e.done&&overlap(p,e)&&!pair.some(q=>q.bought)){ e.bought=true; pair.forEach(q=>q.done=true); const up=(eco.shocks||[]).some(k=>/[Mm]ercado/.test(k.n))?1:0, tot=(e.k==='A'?6:5)+up; const l=takeCoins(tot); if(up) addText(e.x-40,e.y-34,'Con el decreto, el mercado cuesta 1 más','#FFC7BF'); learn('comparar'); logD('Gasto','Mercado en la tienda '+(e.k==='A'?'del aviso grande (4 + 2 de envío)':'sin recargos'),-l);
         addText(e.x-50,e.y-20,e.k==='A'?'Decía 4… pero con envío fueron 6. La otra cobraba 5':'Total 5, sin letra pequeña: comparaste bien',e.k==='A'?'#FFC7BF':'#BFF5CF'); eco.stats.compara=(eco.stats.compara||0)+(e.k==='B'?1:0); snd(e.k==='A'?'bad':'buy'); }
       if(e.k==='B'&&!e.done&&p.x>e.x+3*T){ pair.forEach(q=>q.done=true); const l=takeCoins(4); learn('comparar'); addText(p.x-60,p.y-30,'Sin mercado: comiste en la calle −4. Lo necesario se planea','#FFC7BF'); logD('Gasto','Comida en la calle por no hacer mercado',-l); } }
     else if(e.t==='curso'){ if(!e.used&&overlap(p,e)){ if(eco.hand>=4){ e.used=true; eco.hand-=4; eco.salario+=1; eco.stats.cursos=(eco.stats.cursos||0)+1; busy(150,'Estudiando el curso técnico'); learn('curso'); addText(e.x-50,e.y-24,'¡Te certificaste! Salario +1 por quincena, para siempre','#BFF5CF'); logD('Inversión','Curso técnico (capital humano)',-4); confetti(e.x+20,e.y,14); }
@@ -2040,7 +2063,7 @@ function drawGlobos(e,x,y){ globoInit(e); const kn=globoKnot(e), kx=kn.x-S.cam, 
   ctx.textAlign='left'; ctx.restore();
   if(lift){ const left=e.need; ctx.save(); ctx.font='800 8px Figtree, sans-serif'; ctx.textAlign='center'; ctx.fillStyle=S.t%30<18?'#FFE18A':'#fff'; ctx.fillText('¡SALTA! revienta '+left+' globo'+(left>1?'s':''),kx,y-22); ctx.restore(); }
 }
-const TIED_SUB={hacker:'clave protegida',scroll:'tiempo en el celular',vitrina:'compras por impulso',tarjeta:'deuda de la tarjeta',inflacion:'precios comparados',tahur:'apuestas bloqueadas',gotaJefe:'gota a gota denunciado',creditoJefe:'crédito impagable anulado',ruina:'estafa denunciada'};
+const TIED_SUB={politico:'votaste informado',hacker:'clave protegida',scroll:'tiempo en el celular',vitrina:'compras por impulso',tarjeta:'deuda de la tarjeta',inflacion:'precios comparados',tahur:'apuestas bloqueadas',gotaJefe:'gota a gota denunciado',creditoJefe:'crédito impagable anulado',ruina:'estafa denunciada'};
 function stampDraw(x,y,t,txt,sub,big){ if(t<0) return; const sc=Math.max(1,2.4-t*0.16)*(big?1:0.8), a=Math.min(1,t/4);
   ctx.save(); ctx.globalAlpha=a; ctx.translate(x,y); ctx.rotate(-0.16); ctx.scale(sc,sc); ctx.font='900 8px Figtree, sans-serif'; const w=ctx.measureText(txt).width+12;
   ctx.fillStyle='rgba(255,250,240,.88)'; rr(-w/2,-9,w,sub?19:13,2.5); ctx.fill(); ctx.strokeStyle='#C9283C'; ctx.lineWidth=1.6; rr(-w/2,-9,w,sub?19:13,2.5); ctx.stroke(); ctx.lineWidth=.6; rr(-w/2+2,-7,w-4,sub?15:9,1.6); ctx.stroke();
@@ -2554,6 +2577,7 @@ function drawProj(f){ const fx=f.x-S.cam; ctx.save(); ctx.translate(fx,f.y); ctx
   else if(f.icon==='tag'){ ctx.fillStyle='#F2B33D'; ctx.beginPath(); ctx.moveTo(-9,-5); ctx.lineTo(5,-5); ctx.lineTo(10,0); ctx.lineTo(5,5); ctx.lineTo(-9,5); ctx.fill(); ctx.fillStyle='#7A2A10'; ctx.font='800 4.4px sans-serif'; ctx.textAlign='center'; ctx.fillText('¡HOY!',-1,1.6); ctx.fillStyle='#fff'; ctx.beginPath(); ctx.arc(6,0,1.2,0,7); ctx.fill(); }
   else if(f.icon==='card'){ ctx.fillStyle='#D9B23A'; rr(-9,-6,18,12,2); ctx.fill(); ctx.fillStyle='#8A6A1A'; ctx.fillRect(-9,-3,18,2.4); ctx.fillStyle='#F4E3A0'; ctx.fillRect(-6,1,4,3); ctx.fillStyle='#5A3A00'; ctx.font='800 3.6px sans-serif'; ctx.textAlign='center'; ctx.fillText('30%',4,4); }
   else if(f.icon==='price'){ ctx.rotate(Math.sin(S.t*0.3)*0.25); ctx.fillStyle='#FBF7EC'; ctx.beginPath(); ctx.moveTo(-9,-5); ctx.lineTo(6,-5); ctx.lineTo(10,0); ctx.lineTo(6,5); ctx.lineTo(-9,5); ctx.closePath(); ctx.fill(); ctx.strokeStyle='#B8323C'; ctx.lineWidth=.8; ctx.stroke(); ctx.fillStyle='#B8323C'; ctx.beginPath(); ctx.arc(6.4,0,1,0,7); ctx.fill(); ctx.font='800 4.6px sans-serif'; ctx.textAlign='center'; ctx.fillText('$↑10%',-1.6,1.7); ctx.textAlign='left'; }
+  else if(f.icon==='decreto'){ ctx.fillStyle='#F4ECD8'; ctx.fillRect(-7,-8,14,16); ctx.fillStyle='#E9DFC8'; ctx.beginPath(); ctx.ellipse(0,-8,7.4,1.8,0,0,7); ctx.ellipse(0,8,7.4,1.8,0,0,7); ctx.fill(); ctx.fillStyle='#24448E'; ctx.font='800 3.2px sans-serif'; ctx.textAlign='center'; ctx.fillText('DECRETO',0,-3.6); ctx.fillStyle='#C9283C'; ctx.font='800 4.4px sans-serif'; ctx.fillText('+$',0,2); ctx.fillStyle='#B8862F'; ctx.beginPath(); ctx.arc(3.6,5,1.8,0,7); ctx.fill(); }
   else if(f.icon==='mail'){ ctx.fillStyle='#F4ECD8'; rr(-9,-6,18,12,1.5); ctx.fill(); ctx.strokeStyle='#6B2A1A'; ctx.lineWidth=0.9; ctx.beginPath(); ctx.moveTo(-9,-6); ctx.lineTo(0,1); ctx.lineTo(9,-6); ctx.stroke(); ctx.strokeStyle='#C9D3DA'; ctx.lineWidth=1.2; ctx.beginPath(); ctx.moveTo(6,4); ctx.lineTo(6,10); ctx.arc(3.6,10,2.4,0,Math.PI); ctx.stroke(); ctx.fillStyle='#E04A4A'; ctx.beginPath(); ctx.arc(7,-6,3,0,7); ctx.fill(); ctx.fillStyle='#fff'; ctx.font='800 4px sans-serif'; ctx.textAlign='center'; ctx.fillText('!',7,-4.6); }
   else if(f.icon==='chip'){ ctx.fillStyle='#1F7A4A'; ctx.beginPath(); ctx.arc(0,0,7,0,7); ctx.fill(); ctx.strokeStyle='#fff'; ctx.setLineDash([2.2,2.2]); ctx.lineWidth=1.6; ctx.beginPath(); ctx.arc(0,0,5.6,0,7); ctx.stroke(); ctx.setLineDash([]); ctx.fillStyle='#fff'; ctx.beginPath(); ctx.arc(0,0,3,0,7); ctx.fill(); ctx.fillStyle='#1F7A4A'; ctx.font='800 3.6px sans-serif'; ctx.textAlign='center'; ctx.fillText('$',0,1.4); }
   else if(f.icon==='bag'){ ctx.fillStyle='#6B4A2B'; ctx.beginPath(); ctx.ellipse(0,2,8,7,0,0,7); ctx.fill(); ctx.fillStyle='#4A3018'; ctx.fillRect(-3,-7,6,4); ctx.fillStyle='#F2C85A'; ctx.font='800 7px sans-serif'; ctx.textAlign='center'; ctx.fillText('$',0,5); }
@@ -3703,22 +3727,38 @@ function drawFinale(){
   if(t>470){ ctx.fillStyle=t%50<32?'#F4ECD8':'rgba(244,236,216,.55)'; ctx.font='700 9px Figtree, sans-serif'; ctx.textAlign='center'; ctx.fillText('Toca o pulsa una tecla para ver tu certificado',W/2,H-8); ctx.textAlign='left'; }
   if(t>1100) endingReport();
 }
-function certPattern(c,x0,y0,w,h,al){ x0=x0??50; y0=y0??50; w=w??1100; h=h??750; al=al??0.085; // marca de agua tipo fondo de chat: lo que este jugador construyó (activos, pasivos, ahorro, patrimonio, inversiones)
-  const it=[]; const tn={fin:'cdt',inm:'casa',emp:'tienda'};
-  (eco.assets||[]).forEach(a=>it.push({ic:a.ic||tn[a.type]||'cdt',t:'ACTIVO · '+a.n}));
-  (eco.lujos||[]).forEach(l=>it.push({ic:l.ic||'carro',t:'PASIVO · '+l.n}));
-  it.push({g:'alc',t:'AHORRO '+eco.emb}); it.push({g:'pat',t:'PATRIMONIO '+patrimonio()}); it.push({g:'arb',t:'INVERTIDO '+(eco.stats.invested||0)});
-  if(eco.crypto&&(eco.crypto.v>0||eco.crypto.lost)) it.push({g:'btc',t:eco.crypto.lost?'₿ CLAVE PERDIDA':'₿ '+eco.crypto.v}); it.push({g:'mon',t:'RUTA A LA CIMA'});
-  const main=ctx; ctx=c; c.save(); c.beginPath(); c.rect(x0,y0,w,h); c.clip(); c.translate(x0+w/2,y0+h/2); c.rotate(-0.32); let n=0;
-  for(let gy=-900;gy<900;gy+=118) for(let gx=-1100;gx<1100;gx+=150){ const q=it[(n++)%it.length], ox=((gy/118)%2?75:0); c.save(); c.translate(gx+ox,gy); c.globalAlpha=al;
-    if(q.ic){ icon(q.ic,0,0,2.4); }
-    else if(q.g==='alc'){ c.fillStyle='#4A8FD3'; c.beginPath(); c.ellipse(0,0,22,16,0,0,7); c.fill(); c.fillRect(18,-5,8,10); c.fillRect(-12,12,6,8); c.fillRect(6,12,6,8); c.fillStyle='#F4ECD8'; c.fillRect(-6,-14,14,3); }
-    else if(q.g==='pat'){ c.strokeStyle='#2F7A4A'; c.lineWidth=4; c.lineCap='round'; c.beginPath(); c.moveTo(-24,14); c.lineTo(-8,0); c.lineTo(2,8); c.lineTo(22,-14); c.stroke(); c.beginPath(); c.moveTo(12,-15); c.lineTo(23,-15); c.lineTo(23,-4); c.stroke(); }
-    else if(q.g==='arb'){ c.fillStyle='#6B4A2B'; c.fillRect(-2,-2,5,20); c.fillStyle='#2F7A4A'; c.beginPath(); c.arc(0,-10,14,0,7); c.arc(-11,-2,9,0,7); c.arc(11,-3,9,0,7); c.fill(); }
-    else if(q.g==='btc'){ c.fillStyle='#F7931A'; c.beginPath(); c.arc(0,0,18,0,7); c.fill(); c.fillStyle='#F4ECD8'; c.font='800 22px sans-serif'; c.textAlign='center'; c.fillText('₿',0,8); }
-    else if(q.g==='mon'){ drop(0,0,2.6); }
-    c.globalAlpha=al*1.3; c.fillStyle='#6B2A1A'; c.font='800 11px Figtree, sans-serif'; c.textAlign='center'; c.fillText(q.t.length>26?q.t.slice(0,25)+'…':q.t,0,40); c.restore(); }
-  c.restore(); ctx=main; c.textAlign='center'; }
+function certPattern(c,x0,y0,w,h,al){ // marca de agua orgánica, como el fondo de un chat: garabatos de línea dispersos y girados, con lo que este jugador construyó
+  x0=x0??50; y0=y0??50; w=w??1100; h=h??750; al=al??0.1;
+  const own=[]; const tn={fin:'cdt',inm:'casa',emp:'tienda'};
+  (eco.assets||[]).forEach(a=>own.push(a.ic==='moto'?'moto':tn[a.type]||'cdt')); (eco.lujos||[]).forEach(l=>own.push(/oto/.test(l.n||'')?'moto':'carro'));
+  if(eco.emb>0) own.push('alcancia'); if((eco.stats.invested||0)>0) own.push('arbol'); if(eco.crypto&&(eco.crypto.v>0||eco.crypto.lost)) own.push('btc');
+  const base=['moneda','grafica','montana','billete','diamante','alcancia','arbol','moneda','montana'];
+  const pool=own.concat(own,base);
+  const labels=[...(eco.assets||[]).map(a=>a.n.toLowerCase()),...(eco.lujos||[]).map(l=>l.n.toLowerCase()),'ahorro '+eco.emb,'patrimonio '+patrimonio(),'invertido '+(eco.stats.invested||0),'¡a la cima!'];
+  const R=mulberry(((eco.name||'s').length*977+patrimonio()*31)|0), pts=[];
+  for(let t=0;t<2600&&pts.length<170;t++){ const x=x0+R()*w, y=y0+R()*h, r=30+R()*22; if(pts.every(q=>Math.hypot(q.x-x,q.y-y)>(q.r+r)*0.9)) pts.push({x,y,r}); }
+  c.save(); c.beginPath(); c.rect(x0,y0,w,h); c.clip(); c.strokeStyle='#6B2A1A'; c.fillStyle='#6B2A1A'; c.lineCap='round'; c.lineJoin='round';
+  let li=0;
+  pts.forEach((q,i)=>{ c.save(); c.translate(q.x,q.y); c.rotate((R()-.5)*1.4); const k=q.r/34; c.scale(k,k); c.globalAlpha=al*(0.75+R()*0.5); c.lineWidth=2.2/k;
+    const kind=R()<0.22?'chispa':pool[Math.floor(R()*pool.length)];
+    if(kind==='chispa'){ const n=Math.floor(R()*3); if(n===0){ c.beginPath(); c.moveTo(-8,0); c.lineTo(8,0); c.moveTo(0,-8); c.lineTo(0,8); c.stroke(); } else if(n===1){ c.beginPath(); c.arc(0,0,4,0,7); c.stroke(); c.beginPath(); c.arc(12,8,2,0,7); c.stroke(); } else { c.beginPath(); for(let j=0;j<5;j++){ const a=j/5*Math.PI*2-Math.PI/2; c.lineTo(Math.cos(a)*10,Math.sin(a)*10); c.lineTo(Math.cos(a+0.63)*4,Math.sin(a+0.63)*4); } c.closePath(); c.stroke(); } }
+    else if(kind==='casa'){ c.beginPath(); c.moveTo(-18,0); c.lineTo(0,-16); c.lineTo(18,0); c.moveTo(-14,-3); c.lineTo(-14,16); c.lineTo(14,16); c.lineTo(14,-3); c.stroke(); c.strokeRect(-4,4,8,12); c.strokeRect(6,0,5,5); }
+    else if(kind==='carro'){ c.beginPath(); c.moveTo(-20,6); c.lineTo(-20,-2); c.lineTo(-10,-3); c.lineTo(-5,-12); c.lineTo(9,-12); c.lineTo(14,-3); c.lineTo(20,-1); c.lineTo(20,6); c.stroke(); c.beginPath(); c.arc(-11,7,5,0,7); c.stroke(); c.beginPath(); c.arc(11,7,5,0,7); c.stroke(); }
+    else if(kind==='moto'){ c.beginPath(); c.arc(-12,6,7,0,7); c.stroke(); c.beginPath(); c.arc(13,6,7,0,7); c.stroke(); c.beginPath(); c.moveTo(-12,6); c.lineTo(-3,-3); c.lineTo(8,-3); c.lineTo(13,6); c.moveTo(8,-3); c.lineTo(10,-11); c.lineTo(15,-11); c.stroke(); }
+    else if(kind==='tienda'){ c.strokeRect(-16,-4,32,20); c.beginPath(); c.moveTo(-18,-4); for(let j=0;j<4;j++) c.arc(-13.5+j*9,-4,4.5,Math.PI,0,true); c.stroke(); c.beginPath(); c.moveTo(-18,-4); c.lineTo(-14,-14); c.lineTo(14,-14); c.lineTo(18,-4); c.stroke(); }
+    else if(kind==='cdt'){ c.strokeRect(-12,-16,24,32); c.beginPath(); for(let j=0;j<4;j++){ c.moveTo(-7,-9+j*5); c.lineTo(7,-9+j*5); } c.stroke(); c.beginPath(); c.arc(5,10,4,0,7); c.stroke(); }
+    else if(kind==='alcancia'){ c.beginPath(); c.ellipse(0,0,18,12,0,0,7); c.stroke(); c.beginPath(); c.moveTo(16,-4); c.lineTo(22,-4); c.lineTo(22,4); c.lineTo(16,4); c.moveTo(-10,-10); c.lineTo(-7,-17); c.lineTo(-3,-11); c.moveTo(-9,10); c.lineTo(-9,16); c.moveTo(8,10); c.lineTo(8,16); c.moveTo(-4,-12); c.lineTo(5,-12); c.stroke(); }
+    else if(kind==='arbol'){ c.beginPath(); c.moveTo(0,18); c.lineTo(0,0); c.moveTo(0,6); c.lineTo(-6,0); c.stroke(); c.beginPath(); c.arc(0,-8,10,Math.PI*0.8,Math.PI*2.2); c.arc(-9,-2,6,Math.PI*0.6,Math.PI*1.7); c.stroke(); c.beginPath(); c.arc(4,-8,2.2,0,7); c.arc(-5,-12,2.2,0,7); c.stroke(); }
+    else if(kind==='moneda'){ c.beginPath(); c.arc(0,0,14,0,7); c.stroke(); c.beginPath(); c.arc(0,0,9,0,7); c.stroke(); c.beginPath(); c.moveTo(-6,4); c.lineTo(-2,-2); c.lineTo(0,0); c.lineTo(3,-4); c.lineTo(6,4); c.stroke(); }
+    else if(kind==='grafica'){ c.beginPath(); c.moveTo(-16,-14); c.lineTo(-16,14); c.lineTo(18,14); c.moveTo(-12,8); c.lineTo(-4,0); c.lineTo(2,5); c.lineTo(14,-10); c.moveTo(8,-10); c.lineTo(14,-10); c.lineTo(14,-4); c.stroke(); }
+    else if(kind==='montana'){ c.beginPath(); c.moveTo(-20,12); c.lineTo(-8,-4); c.lineTo(-3,2); c.lineTo(6,-12); c.lineTo(20,12); c.moveTo(6,-12); c.lineTo(6,-22); c.lineTo(14,-19); c.lineTo(6,-16); c.stroke(); }
+    else if(kind==='billete'){ c.strokeRect(-18,-9,36,18); c.beginPath(); c.arc(-6,0,5,0,7); c.stroke(); c.beginPath(); c.moveTo(4,-3); c.lineTo(13,-3); c.moveTo(4,3); c.lineTo(11,3); c.stroke(); }
+    else if(kind==='diamante'){ c.beginPath(); c.moveTo(-12,-4); c.lineTo(-6,-11); c.lineTo(6,-11); c.lineTo(12,-4); c.lineTo(0,12); c.closePath(); c.moveTo(-12,-4); c.lineTo(12,-4); c.moveTo(-4,-4); c.lineTo(0,12); c.lineTo(4,-4); c.stroke(); }
+    else if(kind==='btc'){ c.beginPath(); c.arc(0,0,14,0,7); c.stroke(); c.beginPath(); c.moveTo(-4,-8); c.lineTo(-4,8); c.moveTo(-4,-8); c.lineTo(3,-8); c.quadraticCurveTo(7,-6,3,-1); c.lineTo(-4,-1); c.moveTo(3,-1); c.quadraticCurveTo(8,2,3,8); c.lineTo(-4,8); c.moveTo(-1,-11); c.lineTo(-1,-8); c.moveTo(-1,8); c.lineTo(-1,11); c.stroke(); }
+    c.restore();
+    if(i%17===5&&labels.length){ c.save(); c.translate(q.x+q.r*0.4,q.y+q.r*0.9); c.rotate((R()-.5)*0.6); c.globalAlpha=al*1.15; c.font='italic 600 15px "Young Serif", Georgia, serif'; c.textAlign='center'; c.fillText(labels[li++%labels.length],0,0); c.restore(); }
+  });
+  c.restore(); c.globalAlpha=1; c.textAlign='center'; }
 function certURL(){ // diploma: papel de seguridad, guilloche de oro, emblema, medallas de logros, firmas y código de verificación
   const Wc=1600, Hc=1131, c0=document.createElement('canvas'); c0.width=Wc; c0.height=Hc; const c=c0.getContext('2d'); const R=mulberry(5);
   const LAC='#6B2A1A', ORO='#B8862F', ORO2='#D9B26A', INK='#3A2A20', PAP='#F6EFDF';
@@ -3735,7 +3775,8 @@ function certURL(){ // diploma: papel de seguridad, guilloche de oro, emblema, m
   [[gx+band,gy+band],[gx+gw-band,gy+band],[gx+band,gy+gh-band],[gx+gw-band,gy+gh-band]].forEach(([x,y])=>{ c.fillStyle=PAP; c.beginPath(); c.arc(x,y,30,0,7); c.fill(); rosette(x,y,26,.9,8); c.fillStyle=LAC; c.beginPath(); c.arc(x,y,5,0,7); c.fill(); });
   // panel interior: marca de agua con lo que construyó el jugador y gran roseta central
   const px0=gx+band+14, py0=gy+band+14, pw=gw-2*band-28, ph=gh-2*band-28;
-  certPattern(c,px0,py0,pw,ph,0.055);
+  certPattern(c,px0,py0,pw,ph,0.09);
+  { const fade=c.createRadialGradient(Wc/2,520,120,Wc/2,520,560); fade.addColorStop(0,'rgba(246,239,223,.82)'); fade.addColorStop(1,'rgba(246,239,223,0)'); c.fillStyle=fade; c.fillRect(px0,py0,pw,ph); }
   rosette(Wc/2,500,250,.10,18);
   const pts=[finRidge(3,110,Hc-90,Wc),finRidge(9,80,Hc-62,Wc)]; c.save(); c.beginPath(); c.rect(px0,py0,pw,ph); c.clip(); ['rgba(169,191,207,.32)','rgba(51,72,90,.18)'].forEach((col,i)=>{ c.fillStyle=col; c.beginPath(); c.moveTo(0,Hc); pts[i].forEach(p=>c.lineTo(p[0],p[1])); c.lineTo(Wc,Hc); c.fill(); }); c.restore();
   // emblema: medalla de oro con la cordillera y la bandera

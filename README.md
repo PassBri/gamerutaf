@@ -124,6 +124,7 @@ Cada mundo tiene **al menos dos enemigos distintos** que lanzan cosas de la vida
 | **Señor Scroll** (mucho tiempo en el celular) | Notificaciones | 1 moneda y 1 segundo distraído |
 | **El Vendedor de Vitrina** (compras por impulso) | Etiquetas de “¡solo hoy!” | 1 moneda |
 | **Doña Tarjeta Dorada** (deuda con tarjeta) | Tarjetas con interés del 30 % | 1 moneda y 2 de deuda |
+| **Don Político** (decretos) | Decretos que suben el mercado, la gasolina o crean un impuesto nuevo | −1 y un costo extra por 2 o 3 quincenas; el arroz de las tiendas también sube. Se vence con “¡Voto informado!” |
 | **El Hacker** (robo cibernético) | Correos de phishing: “¡Ganaste un premio! Dame tu clave” | −2 y puede vaciar media billetera de bitcoin. Se vence con “¡No comparto mis claves!” |
 | **Globos de la inflación** (arroz, pasaje, arriendo…) | Bajan hacia ti y, si alcanzan tu cabeza, te elevan | Mientras flotas pierdes poder de compra; salta 3 veces para reventarlos y soltarte (o písalos desde arriba). Con una inversión pierdes más lento |
 | **Doña Inflación** (sube los precios) | Etiquetas de precio +10 % | No te roba: el efectivo quieto compra 10 % menos (mano y alcancía). Si tienes una inversión, como un CDT, la alcancía no pierde |
@@ -257,6 +258,7 @@ En **Settings → Pages**, elige **Deploy from a branch**, la rama `main` y la c
 | **Arte** | Montañas con relieve por píxel, luz por mundo, niebla, grano y viñeta |
 | **Dinero propio** | Moneda de la Ruta (canto de oro y centro de lacre con la cordillera y la bandera), billetes de papel crema, bonos con sello, diamantes, lingotes y joyas; carros, motos, ciclas y aviones en lacre, oro y crema |
 | **Bitcoin y colchón** | Billetera de bitcoin cuyo valor sube y baja cada quincena; sin la **frase semilla** puedes olvidar la clave y perderlo todo. La plata **debajo del colchón** se la comen la humedad, los ratones y la inflación hasta que la llevas a una alcancía |
+| **Gastos hormiga** | Cada hormiga lleva girando encima su gasto: el café de la esquina, la gaseosa, la empanada, las papas, los chicles o el domicilio por app |
 | **Hábitos de inteligencia financiera** | **Cofre de paciencia** (2 ya o 6 si esperas), **dos tiendas** con el mismo arroz (el precio grande esconde el envío), **curso técnico** que sube el salario para siempre, **senderista en apuros** al que ayudas sin desfinanciarte, **kiosco de memecoin** con efecto manada que estalla, **interés compuesto** en los CDT, **pensión y cesantías** automáticas, **puntaje DataCrédito** que sube con cuotas a tiempo y baja con acuerdos de pago, y el presupuesto del campamento que se vuelve "págate primero" automático |
 | **Eventos de la vida** | Tormentas con rayos, sequía, ola invernal, guerra lejana que sube el combustible, enfermedad, familiar enfermo y reforma tributaria: el fondo de emergencia paga primero; sin él, quedas debiendo |
 | **Terremoto** | La tierra se abre en grietas y a las casas se les caen las tejas; si tienes casa, el seguro cubre la reparación |
