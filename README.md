@@ -124,6 +124,7 @@ Cada mundo tiene **al menos dos enemigos distintos** que lanzan cosas de la vida
 | **Señor Scroll** (mucho tiempo en el celular) | Notificaciones | 1 moneda y 1 segundo distraído |
 | **El Vendedor de Vitrina** (compras por impulso) | Etiquetas de “¡solo hoy!” | 1 moneda |
 | **Doña Tarjeta Dorada** (deuda con tarjeta) | Tarjetas con interés del 30 % | 1 moneda y 2 de deuda |
+| **El Hacker** (robo cibernético) | Correos de phishing: “¡Ganaste un premio! Dame tu clave” | −2 y puede vaciar media billetera de bitcoin. Se vence con “¡No comparto mis claves!” |
 | **Globos de la inflación** (arroz, pasaje, arriendo…) | Bajan hacia ti y, si alcanzan tu cabeza, te elevan | Mientras flotas pierdes poder de compra; salta 3 veces para reventarlos y soltarte (o písalos desde arriba). Con una inversión pierdes más lento |
 | **Doña Inflación** (sube los precios) | Etiquetas de precio +10 % | No te roba: el efectivo quieto compra 10 % menos (mano y alcancía). Si tienes una inversión, como un CDT, la alcancía no pierde |
 | **El Tahúr** (apuestas y ludopatía), junto a un **tragamonedas** | Fichas de apuesta | 2 monedas; el tragamonedas, 3 |
@@ -255,8 +256,12 @@ En **Settings → Pages**, elige **Deploy from a branch**, la rama `main` y la c
 | **Física** | Paso fijo a 60 Hz; el juego se recupera solo de cualquier error de dibujo |
 | **Arte** | Montañas con relieve por píxel, luz por mundo, niebla, grano y viñeta |
 | **Dinero propio** | Moneda de la Ruta (canto de oro y centro de lacre con la cordillera y la bandera), billetes de papel crema, bonos con sello, diamantes, lingotes y joyas; carros, motos, ciclas y aviones en lacre, oro y crema |
+| **Bitcoin y colchón** | Billetera de bitcoin cuyo valor sube y baja cada quincena; sin la **frase semilla** puedes olvidar la clave y perderlo todo. La plata **debajo del colchón** se la comen la humedad, los ratones y la inflación hasta que la llevas a una alcancía |
+| **Eventos de la vida** | Tormentas con rayos, sequía, ola invernal, guerra lejana que sube el combustible, enfermedad, familiar enfermo y reforma tributaria: el fondo de emergencia paga primero; sin él, quedas debiendo |
+| **Terremoto** | La tierra se abre en grietas y a las casas se les caen las tejas; si tienes casa, el seguro cubre la reparación |
+| **Drones** | Las plataformas que cuelgan las cargan drones de la Ruta y los carros sobre el vacío son carros voladores |
 | **Lotes de inversión** | En el suelo, con cerca de guadua y letrero de papel: llegas con las monedas que pide y siembras un árbol que te paga cada quincena |
-| **Final** | El senderista sube la última ladera, clava la bandera de la cumbre al amanecer y aparece **¡Cima conquistada!** con un certificado descargable de **Excelente inteligencia financiera** |
+| **Final** | El senderista sube la última ladera, clava la bandera de la cumbre al amanecer y aparece **¡Cima conquistada!** con un certificado descargable de **Excelente inteligencia financiera**, cuya marca de agua muestra los activos, pasivos, ahorro, patrimonio e inversiones de cada jugador |
 | **Enemigos vencidos** | Quedan amarrados con un candado, reciben el sello rojo **PASIVO CONTROLADO** (con lo que controlaste: tiempo en el celular, deuda de la tarjeta, estafa denunciada…) y estallan en dinero |
 | **Alcancía viva** | Las monedas vuelan una a una hasta la alcancía, su vientre de vidrio se llena y brilla al completar el fondo de emergencia; con los golpes se agrieta y al tercero cae y se rompe en pedazos |
 | **Animación** | Todos los personajes comparten un esqueleto con cinemática inversa: pie fijo al apoyar (sin patinar), cadera que sube al caminar y baja al correr, brazos en oposición, lanzamientos con preparación y seguimiento, reacción al golpe y respiración. El puma trota en diagonal, la culebra ondula y la hormiga camina en trípode |

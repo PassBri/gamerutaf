@@ -498,6 +498,9 @@ const CH={
  lz_scroll:["                  ","                  ","                  ","                  ","  o            o  ","        T         ","##################","##################"],
  lz_vitrina:["                  ","                  ","                  ","                  ","  o            o  ","        O         ","##################","##################"],
  lz_tarjeta:["                  ","                  ","                  ","                  ","  o            o  ","        R         ","##################","##################"],
+ colchon:["                ","                ","                ","                ","  o    q     o  ","################","################"],
+ cripto:["                ","          e     ","        ====    ","                ","   o  d     o   ","################","################"],
+ lz_hacker:["                  ","                  ","                  ","                  ","  o            o  ","        n         ","##################","##################"],
  lz_inflacion:["                  ","                  ","                  ","                  ","  o            o  ","        X         ","##################","##################"],
  lz_tahur:["                    ","                    ","                    ","                    ","  o              o  ","     m      h       ","####################","####################"],
  jefeRuina:["                                  ","                                  ","                                  ","                                  ","                                  ","  o  o                      o  o  ","                 u                ","##################################","##################################"],
@@ -549,35 +552,35 @@ const LV=[
  {name:'El Valle',role:'Desempleado',step:'Identificación de ingresos',theme:0,costo:0,
   lesson:'En El Valle todavía no tienes ingreso fijo. Las monedas son tu dinero: recógelas, pero tu mochila tiene un límite. Busca el <b>casco de Empleo</b> sobre una plataforma: te dará un salario en cada quincena. Hay 3 páginas del <b>Cuaderno de Ruta</b> escondidas en las alturas. Terreno nuevo: un <b>pantano</b> que frena, un <b>río</b> con piedras que se hunden y un <b>muro de escalada</b> (mantén la flecha hacia el muro). Doña Rosa te espera en el camino… y un <b>gota a gota</b> también.',
   req:'Tener un empleo (salario)',
-  chunks:['start','coins','pantano','billetes','job','ayuda','steps','page1','rio','embalse','gap','vehiculo','bridge','lender','coins','page2','embalse','muro','steps','coins','page3','camp']},
+  chunks:['start','coins','pantano','billetes','job','ayuda','steps','page1','colchon','rio','embalse','gap','vehiculo','bridge','lender','coins','page2','embalse','muro','steps','coins','page3','camp']},
  {name:'Base de la Montaña',role:'Empleado',step:'Control de gastos',theme:1,costo:1,
   lesson:'Las <b>hormigas</b> son gastos hormiga: si te tocan se llevan monedas. Salta encima de ellas para recuperar una. Desde aquí el costo de vida cobra 1 moneda por quincena. Aparecen el <b>banco</b> que cobra comisiones, la <b>nube de inflación</b>, las <b>tarjetas pre-aprobadas</b> y una <b>culebra</b> escondida en el pasto.',
   req:'Llegar al campamento con 10 monedas o más en la mano',
-  chunks:['start','ants','billetes','pantano','vitrina','page1','embalse','culebra','credito','fugas','antgap','ayuda','page2','embalse','banco','cloud','rio','vitrina','antgap','page3','ants','camp']},
+  chunks:['start','ants','billetes','pantano','vitrina','page1','colchon','embalse','culebra','credito','fugas','antgap','ayuda','page2','embalse','banco','cloud','rio','vitrina','antgap','page3','ants','camp']},
  {name:'Puntos de Observación',role:'Estratega',step:'Creación de ahorro',theme:2,costo:1,
   lesson:'Cada <b>alcancía</b> guarda la mitad de tus monedas apenas la tocas: págate primero. Si te golpean con la mano vacía, tu alcancía paga el golpe. Sin alcancía ni monedas, te quedas sin fondos.',
   req:'Tener 15 monedas o más en la alcancía',
-  chunks:['start','steps','billetes','embalse','muro','mercado','puma','page1','embalse','prima','lender','vehiculo','cloud','sueno','rio','bridge','page2','embalse','banco','antgap','ayuda','pits','page3','coins','camp']},
+  chunks:['start','steps','billetes','embalse','muro','mercado','puma','page1','colchon','embalse','prima','lender','vehiculo','cloud','sueno','rio','bridge','page2','embalse','banco','antgap','ayuda','pits','page3','coins','camp']},
  {name:'Primer Campamento',role:'Emprendedor',step:'Inversiones inteligentes',theme:3,costo:1,
   lesson:'Llega a los <b>lotes de inversión</b> con las monedas que piden y siembra. Se vuelven manantiales que te pagan en cada quincena, para siempre. Cuidado con las nubes de inflación.',
   req:'Tener al menos 1 activo',
-  chunks:['start','invest','ants','mercado','cloud','rio','page1','embalse','billetes','invest','vehiculo','credito','muro','sueno','page2','embalse','banco','puma','ayuda','mercado','invest','pantano','page3','coins','camp']},
+  chunks:['start','invest','ants','mercado','cloud','rio','page1','embalse','billetes','invest','vehiculo','credito','muro','sueno','page2','cripto','embalse','banco','puma','ayuda','mercado','invest','pantano','page3','coins','camp']},
  {name:'Campamento Avanzado',role:'Empresario',step:'Diversificación de recursos',theme:4,costo:2,
   lesson:'Bosque de niebla: ves poco (la <b>linterna</b> ayuda) y hay <b>costos ocultos</b>, zarzas que no se ven. Hay tres tipos de activo: <b>financiero</b>, <b>inmueble</b> y <b>emprendimiento</b>; no dependas de uno solo. Ojo con el <b>prestamista gota a gota</b>: da plata rápido, pero encadena.',
   req:'Tener activos de 2 tipos distintos',
-  chunks:['start','invest','mercado','moving','cloud','hidden','page1','embalse','credito','lender','pantano','duo','bridge','page2','embalse','tower','banco','culebra','ayuda','invest','vehiculo','page3','coins','camp']},
+  chunks:['start','invest','mercado','moving','cloud','hidden','page1','embalse','credito','lender','pantano','duo','bridge','page2','cripto','embalse','tower','banco','culebra','ayuda','invest','vehiculo','page3','coins','camp']},
  {name:'La Cima',role:'Inversionista',step:'Eliminación de pasivos',theme:5,costo:2,
   lesson:'El páramo de los frailejones. Caen <b>rocas</b> de las laderas: un <b>casco</b> es un seguro que cuesta poco cada quincena. Aquí no se sube con cadenas: llega <b>sin deudas</b>. Las pirámides doradas prometen duplicar tu plata; ya sabes cómo terminan.',
   req:'Cero deudas',
-  chunks:['start','lender','credito','pyramid','rocks','page1','embalse','mercado','muro','lender','fugas','puma','cloud','page2','embalse','sueno','rio','rocks','duo','banco','hidden','ayuda','page3','coins','camp']},
+  chunks:['start','lender','credito','pyramid','rocks','page1','embalse','mercado','muro','lender','fugas','puma','cloud','page2','cripto','embalse','sueno','rio','rocks','duo','banco','hidden','ayuda','page3','coins','camp']},
  {name:'Cumbre Personal',role:'Diversificador',step:'Construcción de patrimonio',theme:6,costo:2,
   lesson:'Tu <b>patrimonio</b> es todo lo que tienes (mano, alcancía y activos) menos lo que debes. Constrúyelo sin caer en trampas.',
   req:'Patrimonio de 80 o más',
-  chunks:['start','tower','mercado','invest','rocks','vehiculo','page1','embalse','sueno','pyramid','pantano','credito','lender','puma','page2','embalse','muro','billetes','rocks','banco','ayuda','prima','page3','coins','camp']},
+  chunks:['start','tower','mercado','invest','rocks','vehiculo','page1','embalse','sueno','pyramid','pantano','credito','lender','puma','page2','cripto','embalse','muro','billetes','rocks','banco','ayuda','prima','page3','coins','camp']},
  {name:'La Cordillera',role:'Mentor',step:'Libertad financiera',theme:7,costo:3,
   lesson:'Hielo resbaloso (los <b>crampones</b> ayudan) y el costo de vida más alto de la ruta. Para ser <b>mentor</b> tu ingreso pasivo debe cubrir tu costo de vida sin trabajar, y debes superar la Prueba del Mentor.',
   req:'Ingreso pasivo igual o mayor que el costo de vida (3)',
-  chunks:['start','tower','mercado','moving','rocks','page1','embalse','cloud','vitrina','lender','muro','invest','sueno','page2','embalse','rio','hidden','puma','pyramid','ayuda','vehiculo','duo','page3','antgap','camp']},
+  chunks:['start','tower','mercado','moving','rocks','page1','embalse','cloud','vitrina','lender','muro','invest','sueno','page2','cripto','embalse','rio','hidden','puma','pyramid','ayuda','vehiculo','duo','page3','antgap','camp']},
 ];
 
 const THEMES=[
@@ -701,7 +704,19 @@ const TIPS={
  inflacionL:{t:'Inflación',g:'Guía 5',x:'Doña Inflación no te roba: sube los precios. Cada etiqueta +10 % hace que tu efectivo (en la mano y en la alcancía) compre menos. Si tienes una inversión que rinde, como un CDT, tu alcancía no pierde. Defensa: invertir el ahorro y comparar precios.'},
  ludopatia:{t:'Apuestas y ludopatía',g:'Guía 4 y 5',x:'En las apuestas y tragamonedas la casa siempre gana a la larga. Ganar una vez engancha y hace perder más. Si sientes que no puedes parar, pide ayuda.'},
  ruina:{t:'El Gran Estafador',g:'Guía 5',x:'Promete rendimientos imposibles y se lleva todo lo que le entregas. Defiéndete: desconfía de lo “garantizado”, verifica con la Superfinanciera, diversifica, guarda en la alcancía y ten seguros.'},
- terremoto:{t:'Imprevisto: terremoto',g:'Guía 5',x:'Los desastres no avisan. Un seguro (el casco) y un fondo de emergencia evitan que un golpe te devuelva al valle.'},
+ terremoto:{t:'Imprevisto: terremoto',g:'Guía 5',x:'La tierra se abre y las casas se dañan. Un seguro (el casco) cubre los daños de tu casa y un fondo de emergencia evita que el golpe te devuelva al valle.'},
+ colchon:{t:'Plata debajo del colchón',g:'Guía 3',x:'El efectivo escondido no gana intereses, la inflación lo encoge y se lo comen la humedad, los ratones o un robo. Guárdalo en una cuenta, la alcancía o un CDT.'},
+ btc:{t:'Bitcoin y criptoactivos',g:'Guía 5',x:'Su precio sube y baja mucho (volatilidad). Invierte solo lo que puedas perder, nunca prestado, y guarda tu frase semilla: sin ella, si olvidas la clave, pierdes todo.'},
+ btcClave:{t:'Clave olvidada',g:'Guía 5',x:'Una billetera cripto no tiene banco que te devuelva el acceso. La frase semilla de 12 palabras, escrita en papel y guardada en un lugar seguro, es tu única copia.'},
+ semilla:{t:'Frase semilla',g:'Guía 5',x:'Las 12 palabras que recuperan tu billetera cripto. En papel, nunca en fotos ni en chats, y jamás se le dan a nadie.'},
+ phishing:{t:'Robo cibernético (phishing)',g:'Guía 5',x:'Correos y mensajes falsos que piden tu clave o un código. Ningún banco te los pide. Activa la doble verificación y no hagas clic en enlaces de premios.'},
+ tormenta:{t:'Tormenta',g:'Guía 5',x:'El viento y los rayos causan daños. Un seguro y un fondo de emergencia convierten la tormenta en un susto.'},
+ sequia:{t:'Sequía',g:'Guía 5',x:'Sin lluvia sube el precio del agua, la luz y la comida. Un presupuesto con margen y un fondo de emergencia aguantan los meses difíciles.'},
+ invierno:{t:'Ola invernal',g:'Guía 5',x:'Lluvias que inundan vías y casas. Las reparaciones llegan sin avisar: por eso existe el fondo de emergencia.'},
+ guerra:{t:'Guerra y crisis lejanas',g:'Guía 5',x:'Una guerra en otro país sube el combustible y los alimentos aquí. Diversificar y tener ahorro te protege de lo que no controlas.'},
+ enfermedad:{t:'Enfermedad',g:'Guía 5',x:'Enfermarse cuesta: citas, medicamentos y días sin trabajar. Afiliarse a salud y tener fondo de emergencia evita endeudarse.'},
+ familiar:{t:'Familiar enfermo',g:'Guía 7',x:'Cuando alguien de la familia se enferma, ayudar cuesta. Con fondo de emergencia ayudas sin caer en el gota a gota.'},
+ reforma:{t:'Políticas e impuestos',g:'Guía 6',x:'Una reforma tributaria o un nuevo impuesto cambia tu presupuesto. Infórmate, pide la factura y planea con margen.'},
  inundacion:{t:'Imprevisto: inundación',g:'Guía 5',x:'Cuando el agua sube, lo que está abajo se daña. Proteger tus bienes y tener reservas en un lugar seguro reduce las pérdidas.'},
  derrumbe:{t:'Imprevisto: derrumbe',g:'Guía 5',x:'Un barranco que se viene abajo es como una crisis: llega rápido. Atento, ágil y con reservas, la saltas.'},
  quiebra:{t:'Quiebra',g:'Guía 1 y 4',x:'Una empresa puede cerrar. Si toda tu plata depende de una sola, lo pierdes todo; con activos de dos tipos o más (diversificar), pierdes poco.'},
@@ -819,7 +834,7 @@ const renta=()=>eco.assets.reduce((s,a)=>s+a.renta,0);
 const debtTot=()=>eco.debts.reduce((s,d)=>s+d.saldo,0);
 const cuotas=()=>eco.debts.reduce((s,d)=>s+Math.min(d.cuota,d.saldo),0);
 const tipos=()=>new Set(eco.assets.map(a=>a.type)).size;
-const patrimonio=()=>eco.hand+eco.emb+eco.assets.reduce((s,a)=>s+a.value,0)+(eco.lujos||[]).reduce((s,a)=>s+a.value,0)-debtTot();
+const patrimonio=()=>eco.hand+eco.emb+(eco.colchon||0)+(eco.crypto&&!eco.crypto.lost?eco.crypto.v:0)+eco.assets.reduce((s,a)=>s+a.value,0)+(eco.lujos||[]).reduce((s,a)=>s+a.value,0)-debtTot();
 const costo=()=>Math.round(LV[S.li].costo*Dif().cost);
 const flujo=()=>eco.salario+renta()-costo()-cuotas()-primas()-fijos();
 const chained=()=>eco.debts.some(d=>d.kind==='gota');
@@ -859,7 +874,7 @@ function pad(rows){ const w=Math.max(...rows.map(r=>r.length)); const pr=Array(R
 function mulberry(a){ return ()=>{ a|=0; a=a+0x6D2B79F5|0; let t=Math.imul(a^a>>>15,1|a); t=t+Math.imul(t^t>>>7,61|t)^t; return ((t^t>>>14)>>>0)/4294967296; }; }
 const ANCLA=new Set(['start','camp','embalse','page1','page2','page3','job','ayuda','vehiculo','sueno']);
 const JEFE_P={jefeGota:[0,.75,.5,.35,.45,.8,.55,.35],jefeCredito:[0,.3,.6,.75,.7,.6,.65,.5]};
-const LANZA_W=[['scroll','vitrina'],['vitrina','tarjeta','scroll'],['inflacion','tahur','scroll'],['tarjeta','inflacion','tahur'],['tahur','inflacion','scroll'],['tarjeta','tahur','vitrina'],['inflacion','tahur','tarjeta'],['inflacion','tahur','scroll']];
+const LANZA_W=[['scroll','vitrina'],['vitrina','tarjeta','scroll'],['inflacion','tahur','scroll','hacker'],['tarjeta','hacker','inflacion','tahur'],['tahur','inflacion','scroll','hacker'],['tarjeta','tahur','vitrina','hacker'],['hacker','inflacion','tahur','tarjeta'],['inflacion','hacker','tahur','scroll']];
 function varyChunks(li){
   const base=LV[li].chunks;
   const secs=[[]]; base.slice(1,-1).forEach(n=>{ if(n==='embalse') secs.push([]); else secs[secs.length-1].push(n); });
@@ -895,12 +910,15 @@ function buildLevel(li){
     if(ch==='Z') ents.push({t:'snake',x:x+2,y:y+T-12,w:20,h:12,st:'hide',tm:0,cd:0,dir:-1});
     if(ch==='N') ents.push({t:'npc',k:NPC_BY_WORLD[li],x:x+2,y:y+T-30,w:20,h:30,used:false});
     if(ch==='V'){ const vk=VEH_BY_WORLD[li], v=VEH[vk]; ents.push({t:'veh',k:vk,it:Object.assign({},v,{c:v.c+li}),x:x-6,y:y+T-26,w:36,h:26}); }
-    { const lk={T:'scroll',O:'vitrina',R:'tarjeta',X:'inflacion',h:'tahur'}[ch]; if(lk){ const D=LANZA[lk]; ents.push({t:'lanza',k:lk,x:x-6,y:y+T-D.h,w:D.w,h:D.h,x0:x-6,hp:2,cd:50+rnd(70),dir:-1,flash:0,hitCd:0}); } }
+    { const lk={T:'scroll',O:'vitrina',R:'tarjeta',X:'inflacion',h:'tahur',n:'hacker'}[ch]; if(lk){ const D=LANZA[lk]; ents.push({t:'lanza',k:lk,x:x-6,y:y+T-D.h,w:D.w,h:D.h,x0:x-6,hp:2,cd:50+rnd(70),dir:-1,flash:0,hitCd:0}); } }
     if(ch==='m') ents.push({t:'slot',x:x-4,y:y+T-40,w:30,h:40,cd:0,spin:0,res:null});
     if(ch==='u') ents.push({t:'ruina',x:x-22,y:y+T-92,w:60,h:92,x0:x-22,hp:5,cd:100,slamCd:260,dir:-1,flash:0,hitCd:0,vy:0,air:false});
     if(ch==='G') ents.push({t:'gotaJefe',x:x-16,y:y+T-76,w:48,h:76,x0:x-16,hp:3,cd:70,dir:-1,flash:0,hitCd:0});
     if(ch==='K') ents.push({t:'creditoJefe',x:x-12,y:y+T-72,w:40,h:72,x0:x-12,hp:3,cd:90,roll:0,dir:-1,flash:0,hitCd:0});
     if(ch==='Y') ents.push({t:'bank',x:x-24,y:y+T-68,w:72,h:68,cd:60,lab:0});
+    if(ch==='q') ents.push({t:'colchon',x:x-8,y:y+T-16,w:40,h:16,used:false});
+    if(ch==='d') ents.push({t:'btc',x:x+3,y:y+2,w:18,h:20,ph:Math.random()*6});
+    if(ch==='e') ents.push({t:'semilla',x:x+4,y:y+4,w:16,h:18,ph:Math.random()*6});
     if(ch==='o') ents.push({t:'drop',x:x+6,y:y+4,w:12,h:16,ph:Math.random()*6,k:VALOR[(Math.floor(x/T)*7+Math.floor(y/T)*3+li)%VALOR.length]});
     if(ch==='a') ents.push({t:'ant',x:x+3,y:y+T-12,w:18,h:12,vx:-.6*(eco?Dif().enemy:1),vy:0});
     if(ch==='k') ents.push({t:'rockgen',x:x,y:y,w:T,h:T,cd:60+rnd(120),warn:0});
@@ -965,7 +983,7 @@ function startLevel(li){
   S.li=li; S.L=buildLevel(li); S.mode='play';
   S.p=newHiker();
   S.cam=0; S.camY=Math.max(0,S.p.y-H*0.58); S.parts=[]; S.texts=[]; S.rain=[]; S.loose=[]; S.pops=[]; S.t=0; S.pulse=0; S.check={x:S.p.x,y:S.p.y};
-  S.freeze=0; S.shake=0; S.hudPop=0; S.coinFly=[]; S.pigFx=[]; S.shards=[]; S.flashes=[]; S.loot=[]; S.stamps=[]; if(S.p) S.p.caught=null; S.embPop=0; S.amb=null; S.rocks=[]; S.fees=[]; S.falling=[]; S.swampT=0; S.tgt=null; S.jumpHold=0; S.coach=li===0?600:240; S.toast=null; S.busy=null; S.dis=null; S.boulders=[]; S.waves=[]; S.safe=null; if(S.p){ S.p.antic=0; S.p.landT=0; S.p.toT=0; S.p.tuck=0; } S.wdeaths=0; S.retoDone=false;
+  S.freeze=0; S.shake=0; S.hudPop=0; S.coinFly=[]; S.pigFx=[]; S.shards=[]; S.flashes=[]; S.loot=[]; S.stamps=[]; S.cracks=[]; S.bolts=[]; S.sick=0; S.flashSky=0; if(S.p) S.p.caught=null; S.embPop=0; S.amb=null; S.rocks=[]; S.fees=[]; S.falling=[]; S.swampT=0; S.tgt=null; S.jumpHold=0; S.coach=li===0?600:240; S.toast=null; S.busy=null; S.dis=null; S.boulders=[]; S.waves=[]; S.safe=null; if(S.p){ S.p.antic=0; S.p.landT=0; S.p.toT=0; S.p.tuck=0; } S.wdeaths=0; S.retoDone=false;
   S.ws={coins:0,salary:0,rent:0,cost:0,cuotas:0,primas:0,fijos:0,saved:0,invested:0,lost:{},hist:[0]}; S.ws.hist=[patrimonio()];
   S.arrivalHand=0; S.quizDone=false; S.campRes=null; S.banner=150;
   save(li);
@@ -1134,12 +1152,21 @@ function respawn(){ const p=S.p; p.x=S.check.x; p.y=S.check.y; p.vx=0; p.vy=0; p
 function adaptiveHelp(){ S.wdeaths=(S.wdeaths||0)+1; if(S.wdeaths===3){ const tip=!has('cuerda')&&S.li>=2?'Consejo: la cuerda y arnés es un seguro barato contra las caídas al río.':'Consejo: guarda monedas en la alcancía; es tu fondo de emergencia cuando te golpean.'; toast('Cuaderno de Ruta','Caer no es el final. '+tip); } }
 function addDebt(name,saldo,cuota,kind){ const d=eco.debts.find(x=>x.kind===kind); if(d) d.saldo+=saldo; else eco.debts.push({name,saldo,cuota,kind}); }
 
+function pulseExtras(p){
+  if(eco.colchon>0){ const l=Math.max(1,Math.ceil(eco.colchon*0.2)); eco.colchon=Math.max(0,eco.colchon-l); const why=['la humedad dañó los billetes','los ratones se comieron un fajo','el comején llegó al colchón','la inflación encogió el efectivo','alguien encontró el escondite'][rnd(5)];
+    addText(p.x-60,p.y-44,'Colchón: '+why+' −'+l,'#FFC7BF'); logD('Pérdida','Plata debajo del colchón: '+why,-l); learn('colchon'); }
+  const C=eco.crypto; if(C&&!C.lost&&C.v>0){ const v0=C.v; C.v=Math.max(0,Math.round(C.v*(0.45+Math.random()*1.15))); const d=C.v-v0;
+    if(!C.seed&&Math.random()<0.12){ addText(p.x-70,p.y-58,'¡Olvidaste la clave de la billetera! Perdiste '+C.v+' ₿ para siempre','#FF9A8C'); logD('Pérdida','Clave de la billetera cripto olvidada',-C.v); C.lost=true; C.v=0; learn('btcClave'); snd('bad'); }
+    else addText(p.x-40,p.y-58,'₿ '+(d>=0?'subió +':'bajó ')+d+': vale '+C.v,d>=0?'#FFE18A':'#FFC7BF'); }
+}
+function addShock(n,c,q){ eco.shocks=eco.shocks||[]; eco.shocks.push({n,c,q}); }
 function doPulse(){
   const p=S.p, ws=S.ws;
   if(S.L&&S.L.plats) S.L.plats.forEach(q=>{ if(q.type==='inversion'&&!q.paid){ q.q=(q.q||0)+1; if(q.acc<6){ q.acc++; q.grow=40; const qx=q.c0*T, qy=q.r*T; if(qx>S.cam-20&&qx<S.cam+W+20) addText(qx-10,qy-34-q.acc*2.2,'+1 interés CDT','#9BF0B8'); } } });
   const sal=eco.salario, ren=renta(); const inc=sal+ren; eco.hand+=inc;
   if(ws){ ws.salary+=sal; ws.rent+=ren; }
-  let cost=costo(), cu=0, pr=primas(), fj=fijos();
+  let cost=costo()+(eco.shocks||[]).reduce((a,k)=>a+k.c,0), cu=0, pr=primas(), fj=fijos(); (eco.shocks||[]).forEach(k=>k.q--); eco.shocks=(eco.shocks||[]).filter(k=>k.q>0);
+  pulseExtras(p);
   eco.debts.forEach(d=>{ if(d.kind==='gota' && Dif().loan>1) d.saldo+=1; const c=Math.min(d.cuota,d.saldo); cu+=c; d.saldo-=c; });
   eco.debts=eco.debts.filter(d=>d.saldo>0); prunePila();
   if(eco.debts.some(d=>d.kind==='gota') && S.L && !S.L.ents.some(e=>e.t==='cobrador'&&!e.dead)){ S.L.ents.push({t:'cobrador',x:p.x-W*0.55,y:p.y-70,w:22,h:30,life:560}); addText(p.x-40,p.y-40,'¡Llegó el cobrador del gota a gota!','#FF9A8C'); }
@@ -1200,6 +1227,17 @@ function loteUpdate(e,p){ if(e.cd>0) e.cd--; if(e.shake>0) e.shake--; if(e.used|
     const name={fin:'Bonos',inm:'Arriendo',emp:'Negocio'}[e.type]; eco.assets.push({n:name+' del camino',type:e.type,value:e.cost,renta:1});
     addText(e.x-20,e.y-14,'¡Sembraste tu inversión! +1 por quincena','#9BF0B8'); logD('Inversión','Lote de inversión: '+name.toLowerCase()+' (+1 por quincena)',-e.cost); confetti(e.x+18,e.y,14); learn('inv'); burst(e.x+18,e.y+10,'#62C98A',14); snd('buy'); }
   else { e.cd=90; e.shake=16; addText(e.x-24,e.y-14,'Este lote pide '+e.cost+': ahorra y vuelve','#FFC7BF'); snd('bad'); learn('inv'); } }
+function drawColchon(e,x,y){ const fy=y+16; ctx.fillStyle='rgba(0,0,0,.22)'; ctx.beginPath(); ctx.ellipse(x+20,fy,22,3,0,0,7); ctx.fill();
+  ctx.fillStyle='#6B4A2B'; ctx.fillRect(x,fy-5,40,5); ctx.fillStyle='#E9DFC8'; rr(x+1,fy-14,38,9,3); ctx.fill(); ctx.strokeStyle='#B9AE95'; ctx.lineWidth=.6; for(let i=1;i<6;i++){ ctx.beginPath(); ctx.moveTo(x+1+i*6.3,fy-14); ctx.lineTo(x+1+i*6.3,fy-5); ctx.stroke(); }
+  ctx.fillStyle='#F4ECD8'; rr(x+3,fy-18,10,5,2); ctx.fill();
+  const n=e.used?(eco.colchon||0):3; for(let i=0;i<Math.min(4,Math.max(1,Math.ceil(n/2)));i++){ ctx.save(); ctx.translate(x+22+i*4,fy-7); ctx.rotate(-0.2+i*0.15); ctx.fillStyle=e.used&&eco.colchon<3?'#9A9278':'#EDE2C6'; ctx.fillRect(-4,-2,9,4.4); ctx.strokeStyle='#6B2A1A'; ctx.lineWidth=.4; ctx.strokeRect(-3.4,-1.4,7.8,3.2); ctx.restore(); }
+  if(e.used&&eco.colchon>0&&S.t%60<30){ ctx.fillStyle='#5A4A40'; ctx.beginPath(); ctx.ellipse(x+36,fy-2,2.4,1.6,0,0,7); ctx.fill(); ctx.strokeStyle='#5A4A40'; ctx.lineWidth=.5; ctx.beginPath(); ctx.moveTo(x+34,fy-2); ctx.quadraticCurveTo(x+31,fy-4,x+30,fy-1); ctx.stroke(); }
+  ctx.fillStyle='#fff'; ctx.font='800 6px Figtree, sans-serif'; ctx.textAlign='center'; ctx.fillText(e.used?'COLCHÓN · '+(eco.colchon||0):'¿DEBAJO DEL COLCHÓN?',x+20,fy+9); ctx.textAlign='left'; }
+function drawBtc(x,y){ ctx.save(); ctx.translate(x+9,y+10); ctx.fillStyle='rgba(247,147,26,.18)'; ctx.beginPath(); ctx.arc(0,0,13,0,7); ctx.fill();
+  ctx.fillStyle='#2B2F36'; rr(-7,-9,14,18,3); ctx.fill(); ctx.fillStyle='#14171C'; rr(-5.4,-7.4,10.8,7,1.5); ctx.fill(); ctx.fillStyle='#F7931A'; ctx.font='800 6px sans-serif'; ctx.textAlign='center'; ctx.fillText('₿',0,-2); ctx.fillStyle='#6B2A1A'; ctx.beginPath(); ctx.arc(-2.6,4,1.6,0,7); ctx.arc(2.6,4,1.6,0,7); ctx.fill(); ctx.fillStyle='#B8862F'; ctx.fillRect(-1,9,2,3); ctx.textAlign='left';
+  ctx.fillStyle='#FFE18A'; ctx.font='800 5px Figtree, sans-serif'; ctx.textAlign='center'; ctx.fillText('BILLETERA ₿',0,-13); ctx.textAlign='left'; ctx.restore(); }
+function drawSemilla(x,y){ ctx.save(); ctx.translate(x+8,y+9); ctx.rotate(-0.08); ctx.fillStyle='rgba(0,0,0,.2)'; ctx.fillRect(-6,-7,14,17); ctx.fillStyle='#F4ECD8'; ctx.fillRect(-7,-8,14,17); ctx.strokeStyle='#6B2A1A'; ctx.lineWidth=.6; ctx.strokeRect(-6,-7,12,15);
+  ctx.fillStyle='#6B2A1A'; ctx.font='800 3px sans-serif'; ctx.textAlign='center'; ctx.fillText('12 PALABRAS',0,-3.6); ctx.fillStyle='#8A7A6A'; for(let i=0;i<4;i++){ ctx.fillRect(-4.6,-1.6+i*2.2,4,0.6); ctx.fillRect(0.8,-1.6+i*2.2,4,0.6); } ctx.textAlign='left'; ctx.restore(); }
 function drawLote(e,x,y){ const fy=y+30, cx=x+18, sh=e.shake?Math.sin(e.shake*1.6)*1.4:0;
   ctx.fillStyle='rgba(0,0,0,.22)'; ctx.beginPath(); ctx.ellipse(cx,fy,20,3,0,0,7); ctx.fill();
   if(!e.used){ const gl=.5+.5*Math.sin(S.t*0.07+x); ctx.save(); ctx.globalCompositeOperation='lighter'; ctx.fillStyle='rgba(98,201,138,'+(0.08+0.08*gl)+')'; ctx.beginPath(); ctx.ellipse(cx,fy-6,22,12,0,0,7); ctx.fill(); ctx.restore(); }
@@ -1238,9 +1276,10 @@ const LANZA={
   vitrina:{n:'EL VENDEDOR DE VITRINA',r:'compras por impulso',item:'tag',lab:'¡SOLO HOY!',dmg:1,w:26,h:40,col:'#D9822B',say:['¡Solo hoy, 2×1!','¡Últimas unidades!','¡Lléveselo ya!'],no:['¡Espero 24 horas!','¡No está en mi presupuesto!']},
   tarjeta:{n:'DOÑA TARJETA DORADA',r:'deuda con tarjeta',item:'card',lab:'INTERÉS 30%',dmg:1,w:26,h:40,col:'#C9A23A',say:['¡Cupo preaprobado!','¡Pague solo el mínimo!','¡Difiéralo a 36 cuotas!'],no:['¡Pago el total!','¡No uso más del 30 %!']},
   inflacion:{n:'DOÑA INFLACIÓN',r:'sube los precios',item:'price',lab:'PRECIOS +10%',dmg:1,w:26,h:40,col:'#B8323C',say:['¡Todo subió 10 %!','¡Ese billete ya no alcanza!','¡El arroz cuesta más que ayer!','¿Plata quieta? ¡Me la como!'],no:['¡Mi ahorro rinde en un CDT!','¡Comparo precios!']},
+  hacker:{n:'EL HACKER',r:'robo cibernético',item:'mail',lab:'PHISHING',dmg:2,w:26,h:40,col:'#1E2A3A',say:['¡Ganaste un premio! Dame tu clave','Tu cuenta fue bloqueada: haz clic aquí','Soy del banco, dígame el código'],no:['¡No comparto mis claves!','¡Activo la doble verificación!']},
   tahur:{n:'EL TAHÚR',r:'apuestas y ludopatía',item:'chip',lab:'APUESTA',dmg:2,w:28,h:42,col:'#1F7A4A',say:['¡Apueste y duplique!','¡Esta vez sí gana!','¡Una ronda más!'],no:['¡No apuesto mi plata!','¡La casa siempre gana!']},
 };
-const PROJ_TXT={phone:'distraído en el celular',tag:'compra por impulso',card:'interés de la tarjeta',price:'subieron los precios',chip:'apuesta perdida',bag:'estafa de Don Ruina'};
+const PROJ_TXT={phone:'distraído en el celular',tag:'compra por impulso',card:'interés de la tarjeta',price:'subieron los precios',chip:'apuesta perdida',mail:'robo cibernético',bag:'estafa de Don Ruina'};
 function takeCoins(n){ let a=Math.min(n,eco.hand); eco.hand-=a; let r=n-a; const b=Math.min(r,eco.emb); eco.emb-=b; return a+b; }
 function inflaHit(f){ // la inflación no roba: hace que el dinero quieto compre menos. Lo que rinde (activos) la resiste
   const p=S.p, inv=(eco.assets||[]).length>0, ph=eco.hand>0?Math.max(1,Math.round(eco.hand*0.1)):0, pe=inv?0:Math.floor(eco.emb*0.1);
@@ -1256,6 +1295,7 @@ function projHit(f){
   const p=S.p, dmg=f.dmg||1, lost=takeCoins(dmg); p.inv=34; p.vy=Math.min(p.vy,-3); S.shake=reduced?0:3;
   if(S.ws) S.ws.lost[f.fx]=(S.ws.lost[f.fx]||0)+dmg; logD('Pérdida',f.n.charAt(0)+f.n.slice(1).toLowerCase()+': '+(PROJ_TXT[f.icon]||''),-lost);
   addText(p.x-40,p.y-14,(lost?'−'+lost+' ':'')+(PROJ_TXT[f.icon]||f.n.toLowerCase()),'#FFC7BF'); snd('bad'); burst(p.x+7,p.y+10,'rgba(238,106,92,.8)',8);
+  if(f.icon==='mail'){ learn('phishing'); if(eco.crypto&&!eco.crypto.lost&&eco.crypto.v>0&&Math.random()<0.5){ const st=Math.ceil(eco.crypto.v/2); eco.crypto.v-=st; addText(p.x-60,p.y-30,'El hacker vació media billetera de bitcoin: −'+st+' ₿','#FF9A8C'); logD('Pérdida','Robo cibernético a la billetera cripto',-st); } }
   if(f.icon==='phone'){ busy(55,'Revisando el celular'); learn('celular'); }
   else if(f.icon==='card'){ addDebt('Tarjeta de crédito',2,1,'tarjeta'); addText(p.x-40,p.y-28,'+2 de deuda en la tarjeta','#FF9A8C'); learn('tarjetaL'); }
   else if(f.icon==='price') learn('inflacionL'); else if(f.icon==='chip') learn('ludopatia'); else if(f.icon==='tag') learn('vitrinaL'); else if(f.icon==='bag') learn('ruina');
@@ -1265,7 +1305,7 @@ function lanzaUpdate(e,p){
   const D=LANZA[e.k], sp=Dif().enemy, dx=(p.x+p.w/2)-(e.x+e.w/2), near=Math.abs(dx)<270&&Math.abs((p.y+p.h)-(e.y+e.h))<170;
   if(e.flee){ e.x+=e.flee*3; e.walk=(e.walk||0)+3; if(--e.fleeT<=0) e.dead=true; return; }
   e.dir=dx<0?-1:1; if(e.flash>0) e.flash--; if(e.hitCd>0) e.hitCd--; if(e.throwT>0) e.throwT--; e.sayT=(e.sayT||0)+1;
-  if(!e.met&&near){ e.met=true; learn({scroll:'celular',vitrina:'vitrinaL',tarjeta:'tarjetaL',inflacion:'inflacionL',tahur:'ludopatia'}[e.k]); }
+  if(!e.met&&near){ e.met=true; learn({scroll:'celular',vitrina:'vitrinaL',tarjeta:'tarjetaL',inflacion:'inflacionL',tahur:'ludopatia',hacker:'phishing'}[e.k]); }
   const ox=e.x; if(near) e.x=Math.max(e.x0-70,Math.min(e.x0+70,e.x+Math.sign(dx)*Math.min(0.45*sp,Math.abs(dx)>60?1:0))); else e.x+=(e.x0+Math.sin(S.t*0.015+e.x0)*24-e.x)*0.03; e.walk=(e.walk||0)+Math.abs(e.x-ox);
   if(e.wind>0){ if(--e.wind===0){ const sx=e.x+e.w/2+e.dir*10, sy=e.y+10, tt=38+rnd(10); S.fees.push({x:sx,y:sy,w:16,h:12,vx:(p.x+p.w/2-sx)/tt,vy:((p.y+8)-sy)/tt-0.125*tt,n:D.lab,icon:D.item,fx:e.k,dmg:D.dmg,life:220}); e.throwT=14; } }
   else if(near&&--e.cd<=0){ e.cd=Math.round((150+rnd(70))/sp); e.wind=16; }
@@ -1308,18 +1348,35 @@ function waveHit(){ const p=S.p; if(p.inv>0) return;
   for(let i=0;i<Math.min(10,lost);i++) S.loose.push({x:p.x+4,y:p.y+4,w:12,h:16,vx:(Math.random()-.5)*6,vy:-3-Math.random()*3,life:60,wait:999});
 }
 /* ---------- desastres por mundo ---------- */
-const DESASTRES=[['derrumbe'],['inundacion'],['derrumbe','inundacion'],['terremoto','quiebra'],['inundacion','quiebra'],['terremoto','derrumbe'],['quiebra','inundacion'],['terremoto','derrumbe']];
-const DES_TXT={terremoto:['¡TERREMOTO!','Caen rocas: el casco (un seguro) te protege'],inundacion:['¡INUNDACIÓN!','Sube a lo alto: el agua daña lo que llevas'],derrumbe:['¡DERRUMBE EN EL BARRANCO!','Salta las rocas que ruedan'],quiebra:['¡QUIEBRA!','Una empresa cerró: diversificar te protege']};
+const DESASTRES=[['derrumbe','tormenta','enfermedad'],['inundacion','familiar','invierno'],['derrumbe','inundacion','sequia'],['terremoto','quiebra','reforma'],['inundacion','quiebra','enfermedad','guerra'],['terremoto','derrumbe','sequia','familiar'],['quiebra','inundacion','guerra','reforma'],['terremoto','derrumbe','tormenta','invierno']];
+const DES_TXT={terremoto:['¡TERREMOTO!','La tierra se abre y caen tejas: el casco (un seguro) te cubre'],tormenta:['¡TORMENTA ELÉCTRICA!','Viento y rayos: aléjate de las marcas brillantes'],sequia:['¡SEQUÍA!','Suben el agua, la luz y la comida por 2 quincenas'],invierno:['¡OLA INVERNAL!','Lluvias y daños en casa: el fondo de emergencia responde'],guerra:['GUERRA EN OTRO PAÍS','Suben el combustible y los alimentos por 3 quincenas'],enfermedad:['¡TE ENFERMASTE!','Vas más lento; la cita y la droga cuestan 3'],familiar:['FAMILIAR ENFERMO','Tu mamá necesita medicamentos: cuesta 3'],reforma:['REFORMA TRIBUTARIA','Nuevo impuesto: −1 por 3 quincenas'],inundacion:['¡INUNDACIÓN!','Sube a lo alto: el agua daña lo que llevas'],derrumbe:['¡DERRUMBE EN EL BARRANCO!','Salta las rocas que ruedan'],quiebra:['¡QUIEBRA!','Una empresa cerró: diversificar te protege']};
+function payEvent(n,label,cat){ const p=S.p; let rest=n; const fe=Math.min(rest,eco.emb); eco.emb-=fe; rest-=fe; const fh=Math.min(rest,eco.hand); eco.hand-=fh; rest-=fh;
+  if(S.ws) S.ws.lost[cat]=(S.ws.lost[cat]||0)+n; logD('Pérdida',label,-(n-rest));
+  if(rest>0){ addDebt('Préstamo de urgencia: '+label.toLowerCase(),rest+1,1,'acuerdo'); addText(p.x-80,p.y-44,label+': sin fondo de emergencia, quedaste debiendo '+(rest+1),'#FF9A8C'); }
+  else addText(p.x-80,p.y-44,label+': −'+n+(fe?' (lo pagó tu fondo de emergencia)':''),fe?'#9FD3FF':'#FFC7BF'); snd('bad'); }
 function desUpdate(){
   const p=S.p, D=S.dis||(S.dis={next:1300+rnd(700),cur:null});
-  if(!D.cur){ if(--D.next<=0&&p.onGround&&!S.busy){ const k=DESASTRES[S.li][rnd(DESASTRES[S.li].length)]; D.cur={k,t:0,warn:110,dur:{terremoto:260,inundacion:420,derrumbe:330,quiebra:110}[k]}; snd('bad');
+  S.cracks=(S.cracks||[]).filter(c=>++c.t<150); S.cracks.forEach(c=>{ const op=crackOpen(c); if(!c.hit&&op>0.5&&p.onGround&&Math.abs(p.x+p.w/2-c.x)<c.w*op/2-3){ c.hit=true; p.vy=-5; hurt(1,'la tierra se abrió','golpes'); } });
+  S.bolts=(S.bolts||[]).filter(b=>++b.t<48); S.bolts.forEach(b=>{ if(b.t===34){ S.flashSky=8; snd('hit'); S.shake=reduced?0:4; if(Math.abs(p.x+p.w/2-b.x)<16&&p.inv<=0){ if(has('casco')){ addText(p.x-40,p.y-20,'El rayo cayó cerca: el seguro te cubrió','#C9CEFF'); } else hurt(2,'un rayo','golpes'); } } });
+  if(S.sick>0) S.sick--; if(S.flashSky>0) S.flashSky--;
+  if(!D.cur){ if(--D.next<=0&&p.onGround&&!S.busy){ const k=DESASTRES[S.li][rnd(DESASTRES[S.li].length)]; D.cur={k,t:0,warn:110,dur:{terremoto:300,inundacion:420,derrumbe:330,quiebra:110,tormenta:380,sequia:220,invierno:320,guerra:160,enfermedad:480,familiar:140,reforma:140}[k]}; snd('bad');
       if(k==='inundacion'){ const c=Math.floor((p.x+p.w/2)/T); D.cur.base=groundY(c); }
       learn(k); }
     return; }
   const C=D.cur; C.t++;
   if(C.t<C.warn){ if(C.k==='terremoto'&&C.t>60) S.shake=Math.max(S.shake,reduced?0:1.2); return; }
   const tt=C.t-C.warn;
-  if(C.k==='terremoto'){ S.shake=Math.max(S.shake,reduced?0:3); if(tt%24===0){ S.rocks.push({x:p.x-80+rnd(260),y:S.camY-30,w:18,h:16,vy:1,rot:0,dmg:1}); } if(p.onGround&&tt%40===0) p.vx+=(Math.random()-.5)*2.4; }
+  if(C.k==='terremoto'){ S.shake=Math.max(S.shake,reduced?0:3); if(p.onGround&&tt%40===0) p.vx+=(Math.random()-.5)*2.4;
+    if(tt%46===2){ const cx=p.x+p.w/2+(p.face||1)*(34+rnd(80)); S.cracks.push({x:cx,t:0,w:24+rnd(14)}); }
+    if(tt%30===0) (S.L.plats||[]).forEach(pl=>{ if(pl.type!=='casa'||pl.broken) return; const px=pl.c0*T; if(px<S.cam-40||px>S.cam+W+40) return; pl.wob=18; const n=1+rnd(2); for(let i=0;i<n;i++) S.rocks.push({x:px+rnd((pl.c1-pl.c0+1)*T-10),y:pl.r*T-6,w:10,h:6,vy:-1.4,rot:0,dmg:1,k:'teja'}); if(S.t%2) for(let i=0;i<3;i++) debris(px+rnd((pl.c1-pl.c0+1)*T),pl.r*T,'teja'); });
+    if(tt===70&&eco.assets.some(a=>a.type==='inm')){ if(has('casco')){ addText(p.x-70,p.y-40,'Tu casa se agrietó: el seguro cubrió la reparación','#C9CEFF'); snd('save'); } else { payEvent(2,'Reparar tu casa después del terremoto','terremoto'); } } }
+  else if(C.k==='tormenta'){ if(!C.wd) C.wd=Math.random()<.5?-1:1; p.vx+=C.wd*0.07; if(tt%70===10){ S.bolts.push({x:p.x+p.w/2+(Math.random()-.5)*150,t:0}); } }
+  else if(C.k==='enfermedad'){ S.sick=C.dur-tt; if(tt===1) payEvent(3,'Cita médica y medicamentos','salud'); if(tt%50===0){ addText(p.x-10,p.y-14,'¡Achís!','#D9F2DF'); for(let i=0;i<5;i++) S.parts.push({x:p.x+p.w/2+(p.face||1)*8,y:p.y+8,vx:(p.face||1)*(1+Math.random()*2),vy:(Math.random()-.5),life:20,col:'rgba(200,240,200,.8)'}); } }
+  else if(C.k==='familiar'&&tt===1){ payEvent(3,'Medicamentos y transporte para tu mamá','familia'); }
+  else if(C.k==='sequia'&&tt===1){ addShock('Agua, luz y comida más caras (sequía)',1,2); addText(p.x-70,p.y-30,'Sequía: el costo de vida sube 1 por 2 quincenas','#FFC7BF'); logD('Gasto','Sequía: costo de vida +1 por 2 quincenas',0); }
+  else if(C.k==='invierno'){ if(tt===1){ addShock('Reparaciones por la ola invernal',1,1); addText(p.x-70,p.y-30,'Ola invernal: arreglos de la casa −1 en la quincena','#9FD3FF'); } p.vx*=0.995; }
+  else if(C.k==='guerra'&&tt===1){ addShock('Combustible y alimentos más caros (guerra lejana)',1,3); const car=(eco.lujos||[]).some(l=>/arro|oto/.test(l.n)); if(car) addShock('Gasolina más cara',1,2); addText(p.x-70,p.y-30,'Guerra lejana: combustible y comida más caros'+(car?' (y tu vehículo gasta más)':''),'#FFC7BF'); logD('Gasto','Crisis internacional: precios más altos',0); }
+  else if(C.k==='reforma'&&tt===1){ addShock('Nuevo impuesto (reforma tributaria)',1,3); if(eco.assets.some(a=>a.type==='inm')) addShock('Predial más alto',1,1); addText(p.x-70,p.y-30,'Reforma tributaria: −1 por 3 quincenas','#FFC7BF'); logD('Gasto','Reforma tributaria: nuevo impuesto',0); }
   else if(C.k==='inundacion'){ const rise=Math.min(1,tt/70), fall=Math.min(1,(C.dur-tt)/70); C.level=C.base+26-(40*Math.min(rise,fall)); if(p.y+p.h>C.level+4&&tt%45===0&&tt>40){ const l=takeCoins(1); if(S.ws) S.ws.lost.inundacion=(S.ws.lost.inundacion||0)+1; if(l){ addText(p.x-40,p.y-14,'−1 la inundación dañó tus cosas','#9FD3FF'); logD('Pérdida','Inundación',-1); } } if(tt%6===0) S.parts.push({x:S.cam+Math.random()*W,y:C.level,vx:0,vy:-0.3,life:20,col:'rgba(200,220,230,.6)'}); }
   else if(C.k==='derrumbe'){ S.boulders=S.boulders||[]; if(tt%75===5){ const bx=S.cam+W+30; const c=Math.min(S.L.w-1,Math.floor(bx/T)); S.boulders.push({x:bx,y:groundY(c)-18,r:9,vx:-2.6*Dif().enemy,rot:0}); } }
   else if(C.k==='quiebra'&&tt===1){ const pct=tipos()>=2?0.1:0.3, l=Math.ceil(eco.hand*pct); eco.hand-=l; if(S.ws) S.ws.lost.quiebra=(S.ws.lost.quiebra||0)+l; logD('Pérdida','Quiebra de una empresa'+(tipos()>=2?' (diversificado: perdiste poco)':''),-l); addText(p.x-60,p.y-30,'Quiebra: −'+l+(tipos()>=2?' · ¡diversificar te protegió!':' · con activos de 2 tipos perderías menos'),'#FFC7BF'); S.shake=reduced?0:5; }
@@ -1452,6 +1509,11 @@ const LOOK={
    torso:(sh,hp)=>{ ctx.fillStyle='#7A1A22'; ctx.beginPath(); ctx.moveTo(-7,sh-3); ctx.lineTo(7,sh-3); ctx.lineTo(9,hp+7); ctx.lineTo(-9,hp+7); ctx.closePath(); ctx.fill(); ctx.fillStyle='#B8323C'; ctx.beginPath(); ctx.moveTo(-6,sh-3); ctx.lineTo(6,sh-3); ctx.lineTo(8,hp+6); ctx.lineTo(-7,hp+6); ctx.closePath(); ctx.fill(); ctx.fillStyle='#F2C85A'; for(let i=0;i<3;i++){ ctx.beginPath(); ctx.arc(1.6,sh+2+i*4,.8,0,7); ctx.fill(); } },
    hand:()=>{ ctx.fillStyle='#E04A4A'; ctx.beginPath(); ctx.arc(2,0,3.2,0,7); ctx.fill(); ctx.fillStyle='#fff'; ctx.font='800 3.4px sans-serif'; ctx.fillText('%',0.6,1.2); },
    handB:()=>{ ctx.strokeStyle='#7A1A1A'; ctx.lineWidth=.5; ctx.beginPath(); ctx.moveTo(0,0); ctx.quadraticCurveTo(-4,-10,-3,-20); ctx.stroke(); const bs=1+0.12*Math.sin(S.t*0.08); ctx.fillStyle='#E04A4A'; ctx.beginPath(); ctx.ellipse(-3,-26,5.5*bs,6.5*bs,0,0,7); ctx.fill(); ctx.fillStyle='rgba(255,255,255,.35)'; ctx.beginPath(); ctx.ellipse(-5,-28,1.4,2.4,-.4,0,7); ctx.fill(); ctx.fillStyle='#fff'; ctx.font='800 6px sans-serif'; ctx.fillText('%',-5.4,-23.6); }},
+ hacker:{top:'#1E2A3A',topD:'#121A26',pants:'#22242C',shoes:'#0E0E10',skin:'#C9A07A',lean:0.08,
+   head:b=>{ ctx.fillStyle='#0E1218'; rr(0.8,-2.4,7.4,2.6,1); ctx.fill(); ctx.fillStyle='rgba(98,255,160,.65)'; ctx.fillRect(1.6,-2,2.2,1.2); ctx.fillRect(5,-2,2.2,1.2); mouth('sly'); ctx.fillStyle='#121A26'; ctx.beginPath(); ctx.arc(0,-0.6,7.2,Math.PI*0.9,Math.PI*2.1); ctx.fill(); ctx.fillRect(-7.2,-1,4.4,9); },
+   torso:(sh,hp)=>{ ctx.fillStyle='#121A26'; rr(-7,sh-3,14,hp-sh+5,5); ctx.fill(); ctx.fillStyle='#1E2A3A'; rr(-6,sh-3,12,hp-sh+4,5); ctx.fill(); ctx.fillStyle='rgba(98,255,160,.5)'; ctx.font='800 3px monospace'; ctx.fillText('01',-3,sh+5); ctx.fillText('10',0,sh+9); },
+   hand:()=>{ ctx.fillStyle='#F4ECD8'; rr(-1,-4,9,6,1); ctx.fill(); ctx.strokeStyle='#6B2A1A'; ctx.lineWidth=.6; ctx.beginPath(); ctx.moveTo(-1,-4); ctx.lineTo(3.5,-0.6); ctx.lineTo(8,-4); ctx.stroke(); },
+   handB:()=>{ ctx.fillStyle='#2B3440'; rr(-2,-1,12,8,1); ctx.fill(); ctx.fillStyle='rgba(98,255,160,.8)'; ctx.fillRect(-1,0,10,5.4); ctx.fillStyle='#0E1218'; for(let i=0;i<3;i++) ctx.fillRect(0,1+i*1.6,4+(i*3)%5,0.6); }},
  tahur:{top:'#F2F0EA',topD:'#C9C5BA',pants:'#22242C',shoes:'#0E0E10',skin:'#A8744C',
    head:b=>{ eyes(b,{angry:true}); mouth('sly'); ctx.fillStyle='#1F7A4A'; ctx.beginPath(); ctx.ellipse(2,-4.2,8.6,2,0,0,7); ctx.fill(); ctx.fillStyle='rgba(31,122,74,.75)'; ctx.fillRect(-4,-7.6,10,3.6); ctx.fillStyle='#2A1A12'; ctx.fillRect(-5.6,-3.4,3,5); },
    torso:(sh,hp)=>{ ctx.fillStyle='#C9C5BA'; rr(-7,sh-3,14,hp-sh+4,4); ctx.fill(); ctx.fillStyle='#F2F0EA'; rr(-6,sh-3,12,hp-sh+3,4); ctx.fill(); ctx.fillStyle='#1F7A4A'; ctx.beginPath(); ctx.moveTo(-6,sh-2); ctx.lineTo(-1,sh-2); ctx.lineTo(0,hp); ctx.lineTo(-6,hp); ctx.fill(); ctx.beginPath(); ctx.moveTo(6,sh-2); ctx.lineTo(2,sh-2); ctx.lineTo(1,hp); ctx.lineTo(6,hp); ctx.fill(); ctx.fillStyle='#B8323C'; ctx.beginPath(); ctx.moveTo(-1.6,sh-2); ctx.lineTo(1.6,sh-.5); ctx.lineTo(1.6,sh-3.5); ctx.lineTo(-1.6,sh-2); ctx.fill(); ctx.fillStyle='#F2C85A'; ctx.beginPath(); ctx.arc(-3,sh+5,.8,0,7); ctx.arc(-3,sh+8,.8,0,7); ctx.fill(); },
@@ -1577,7 +1639,15 @@ function drawRuina(e,x,y){
     for(let i=0;i<5;i++){ ctx.fillStyle=i<e.hp?'#C9475B':'rgba(255,255,255,.25)'; ctx.beginPath(); ctx.arc(cx-12+i*6,ty-22,2.2,0,7); ctx.fill(); } ctx.textAlign='left'; ctx.restore();
     const t=(e.sayT||0)%280; if(e.met&&t<120) bubble(cx,y-56,['¡Inversión garantizada al 300 %!','¡Deme todo y se lo multiplico!','¡Nadie se ha quejado… todavía!'][Math.floor((e.sayT||0)/280)%3],'#5A1A1A'); }
 }
+function crackOpen(c){ return c.t<22?c.t/22:c.t>120?Math.max(0,(150-c.t)/30):1; }
 function drawWorldHazards(){
+  (S.cracks||[]).forEach(c=>{ const op=crackOpen(c), col=Math.max(0,Math.min(S.L.w-1,Math.floor(c.x/T))), gy=groundY(col), x=c.x-S.cam, hw=c.w*op/2; if(op<=0) return;
+    ctx.fillStyle='#140C08'; ctx.beginPath(); ctx.moveTo(x-hw,gy); for(let k=1;k<=4;k++) ctx.lineTo(x-hw*(1-k/5)+(k%2?2:-2),gy+k*5*op); ctx.lineTo(x,gy+26*op); for(let k=4;k>=1;k--) ctx.lineTo(x+hw*(1-k/5)+(k%2?-2:2),gy+k*5*op); ctx.lineTo(x+hw,gy); ctx.fill();
+    ctx.strokeStyle='rgba(255,220,170,.35)'; ctx.lineWidth=1; ctx.beginPath(); ctx.moveTo(x-hw-2,gy); ctx.lineTo(x+hw+2,gy); ctx.stroke(); ctx.strokeStyle='#140C08'; ctx.beginPath(); ctx.moveTo(x+hw,gy+1); ctx.lineTo(x+hw+9,gy+4); ctx.moveTo(x-hw,gy+1); ctx.lineTo(x-hw-8,gy+5); ctx.stroke();
+    if(c.t<24&&S.t%3===0) S.parts.push({x:c.x+(Math.random()-.5)*c.w,y:gy,vx:(Math.random()-.5)*1.2,vy:-1-Math.random(),life:20,col:'rgba(150,130,110,.7)'}); });
+  (S.bolts||[]).forEach(b=>{ const col=Math.max(0,Math.min(S.L.w-1,Math.floor(b.x/T))), gy=groundY(col), x=b.x-S.cam;
+    if(b.t<34){ const a=0.3+0.5*((b.t>>2)%2); ctx.fillStyle='rgba(255,236,150,'+a+')'; ctx.beginPath(); ctx.ellipse(x,gy,14,3,0,0,7); ctx.fill(); }
+    else { ctx.strokeStyle='rgba(255,250,220,'+(1-(b.t-34)/14)+')'; ctx.lineWidth=2.4; ctx.beginPath(); let yy=S.camY-10, xx=x+(Math.random()-.5)*10; ctx.moveTo(xx,yy); while(yy<gy){ yy+=18; xx=x+(Math.random()-.5)*16; ctx.lineTo(xx,Math.min(gy,yy)); } ctx.stroke(); } });
   (S.boulders||[]).forEach(b=>{ ctx.save(); ctx.translate(b.x-S.cam,b.y+b.r); ctx.rotate(b.rot); ctx.fillStyle='#6E655C'; ctx.beginPath(); for(let i=0;i<8;i++){ const a=i/8*Math.PI*2, rr2=b.r*(0.85+0.15*((i*7)%3)/2); ctx.lineTo(Math.cos(a)*rr2,Math.sin(a)*rr2); } ctx.fill(); ctx.fillStyle='#8E857A'; ctx.beginPath(); ctx.arc(-2,-3,b.r*0.45,0,7); ctx.fill(); ctx.restore();
     if(S.t%5===0) S.parts.push({x:b.x+b.r,y:b.y+b.r*2,vx:1,vy:-0.4,life:18,col:'rgba(160,140,120,.6)'}); });
   (S.waves||[]).forEach(w=>{ const x=w.x-S.cam; ctx.save(); ctx.globalAlpha=Math.min(1,w.life/30); ctx.fillStyle='rgba(201,71,91,.85)'; ctx.beginPath(); ctx.moveTo(x-10,w.y); ctx.quadraticCurveTo(x,w.y-14,x+10,w.y); ctx.fill(); ctx.fillStyle='rgba(255,210,150,.9)'; ctx.font='800 6px Figtree, sans-serif'; ctx.textAlign='center'; ctx.fillText('TODO',x,w.y-15); ctx.textAlign='left'; ctx.restore(); });
@@ -1585,6 +1655,14 @@ function drawWorldHazards(){
     ctx.strokeStyle='rgba(220,235,240,.8)'; ctx.lineWidth=1.4; ctx.beginPath(); for(let xx=0;xx<=W;xx+=8) ctx.lineTo(xx,top+Math.sin(xx*0.08+S.t*0.12)*1.8); ctx.stroke();
     for(let i=0;i<4;i++){ const dx=((i*173+S.t*0.6)%(W+40))-20; ctx.fillStyle='#6B4A2B'; ctx.fillRect(dx,top-2+Math.sin(S.t*0.1+i)*1.5,12,3); } ctx.restore(); }
 }
+function drawEventFx(){ const C=S.dis&&S.dis.cur; if(S.flashSky>0){ ctx.fillStyle='rgba(255,255,240,'+(S.flashSky/8*0.55)+')'; ctx.fillRect(0,0,W,H); }
+  if(!C||C.t<C.warn-30) return; const tt=C.t-C.warn, a=Math.min(1,(C.t-C.warn+30)/40)*Math.min(1,(C.dur-tt+10)/40);
+  if(a<=0) return; ctx.save(); ctx.globalAlpha=Math.max(0,a);
+  if(C.k==='tormenta'||C.k==='invierno'){ ctx.fillStyle='rgba(20,28,40,.35)'; ctx.fillRect(0,0,W,H); ctx.strokeStyle='rgba(180,200,225,.45)'; ctx.lineWidth=1; ctx.beginPath(); const wd=C.wd||-0.5; for(let i=0;i<120;i++){ const x=(i*53+S.t*(6+i%3))%(W+40)-20, y=(i*97+S.t*11)%H; ctx.moveTo(x,y); ctx.lineTo(x+wd*5-3,y+12); } ctx.stroke(); }
+  else if(C.k==='sequia'){ ctx.fillStyle='rgba(230,140,50,.18)'; ctx.fillRect(0,0,W,H); ctx.fillStyle='rgba(255,220,150,.07)'; for(let i=0;i<6;i++){ ctx.fillRect(0,H-60+Math.sin(S.t*0.05+i)*3-i*8,W,2); } }
+  else if(C.k==='enfermedad'){ ctx.fillStyle='rgba(120,190,130,.12)'; ctx.fillRect(0,0,W,H); }
+  else if(C.k==='guerra'||C.k==='reforma'||C.k==='familiar'){ const kind=C.k, y=H-74-Math.max(0,20-tt)*2; ctx.fillStyle='#F4ECD8'; rr(W-200,y,184,40,4); ctx.fill(); ctx.strokeStyle='#6B2A1A'; ctx.lineWidth=1; rr(W-200,y,184,40,4); ctx.stroke(); ctx.fillStyle='#6B2A1A'; ctx.font='800 8px Figtree, sans-serif'; ctx.fillText(kind==='guerra'?'EL PERIÓDICO':kind==='reforma'?'DIAN · NUEVO IMPUESTO':'LLAMADA DE MAMÁ',W-192,y+12); ctx.fillStyle='#3A2A20'; ctx.font='600 7px Figtree, sans-serif'; ctx.fillText(kind==='guerra'?'Sube el petróleo: gasolina y comida más caras':kind==='reforma'?'El Congreso aprobó un nuevo impuesto':'“Mijo, estoy enferma, necesito la droga”',W-192,y+24); ctx.fillText(kind==='familiar'?'Tu fondo de emergencia responde por ella':'Revisa tu presupuesto: tu bolsillo cambia',W-192,y+34); }
+  ctx.restore(); }
 function drawDisasterHud(){
   const C=S.dis&&S.dis.cur; if(!C) return; const T2=DES_TXT[C.k];
   if(C.t<C.warn+40){ const a=Math.min(1,C.t/12)*(C.t>C.warn+20?Math.max(0,1-(C.t-C.warn-20)/20):1); ctx.save(); ctx.globalAlpha=a; const blink=C.t<C.warn&&(C.t>>3)%2===0;
@@ -1640,7 +1718,7 @@ function update(){
   if(p.ride){ if(--p.ride.t<=0){ addText(p.x-30,p.y-20,p.ride.prest?'Devolviste la cicla: ¡gracias, Camila!':'Fin del paseo','#FFE18A'); p.ride=null; } }
   const rideF=p.ride?p.ride.spd:1;
   const swampF=inSwamp?Math.max(0.3,0.56-0.04*wt-(eco.debts.length?0.1:0)):1;
-  const speedMax=(chained()?2.6:3.3)*(has('botas')?1.12:1)*wf*rideF*swampF;
+  const speedMax=(chained()?2.6:3.3)*(has('botas')?1.12:1)*wf*rideF*swampF*(S.sick>0?0.72:1);
   if(inSwamp){ S.swampT++; learn('pantano'); if(S.t%14===0) S.parts.push({x:p.x+Math.random()*p.w,y:p.y+p.h-6,vx:0,vy:-0.4,life:24,col:'rgba(150,150,90,.8)'});
     if(eco.debts.length && S.swampT%150===0 && eco.hand>0){ eco.hand--; if(S.ws) S.ws.lost.mora=(S.ws.lost.mora||0)+1; addText(p.x-20,p.y-14,'Intereses de mora −1','#FFC7BF'); logD('Pérdida','Intereses de mora (pantano)',-1); } }
   const wdir=keys.right?1:keys.left?-1:0; p.climb=false;
@@ -1758,7 +1836,12 @@ function update(){
     else if(e.t==='prima'){ if(overlap(p,e)){ e.dead=true; eco.hand=Math.min(cap(),eco.hand+5); if(S.ws) S.ws.coins+=5; addText(e.x-10,e.y-12,'Prima de servicios +5','#FFE18A'); snd('buy'); burst(e.x+10,e.y+8,'#FFE18A',10); } }
     else if(e.t==='job'){ if(overlap(p,e)){ e.dead=true; if(eco.salario<1){ eco.salario=1; addText(e.x-50,e.y-14,'¡Empleo! Salario +1 en cada quincena','#BFF5CF'); } else { eco.hand+=3; addText(e.x,e.y-12,'+3','#BFF5CF'); } snd('gate'); burst(e.x+9,e.y+8,'#F2B33D',14); } }
     else if(e.t==='lote') loteUpdate(e,p);
-    else if(e.t==='emb'){ if(overlap(p,e)&&!e.used){ e.used=true; if(eco.embCrack){ eco.embCrack=0; addText(e.x-30,e.y-26,'Alcancía nueva: sin grietas','#9FD3FF'); } S.check={x:e.x+8,y:e.y+e.h-28}; const dep=Math.floor(eco.hand/2); eco.hand-=dep; eco.emb+=dep; eco.stats.saved+=dep; if(S.ws) S.ws.saved+=dep; if(dep){ logD('Ahorro','Págate primero: a la alcancía',dep); coinFly(dep,e); } learn('emb'); addText(e.x-30,e.y-14,dep?'Págate primero: +'+dep+' a la alcancía':'Punto de control','#9FD3FF'); snd('save'); } }
+    else if(e.t==='colchon'){ if(!e.used&&overlap(p,e)){ e.used=true; const n=Math.floor(eco.hand/2); eco.hand-=n; eco.colchon=(eco.colchon||0)+n; learn('colchon'); snd('drop');
+        addText(e.x-40,e.y-22,n?'Escondiste '+n+' debajo del colchón… sin intereses y en riesgo':'Un colchón: mal lugar para ahorrar','#FFE18A'); if(n) addText(e.x-40,e.y-36,'Llévala a la próxima alcancía','#9FD3FF'); } }
+    else if(e.t==='btc'){ if(overlap(p,e)){ e.dead=true; eco.crypto=eco.crypto&&!eco.crypto.lost?eco.crypto:{v:0,seed:!!(eco.crypto&&eco.crypto.seed)}; eco.crypto.v+=6; eco.crypto.lost=false; learn('btc'); snd('buy'); burst(e.x+9,e.y+8,'#F7931A',10);
+        addText(e.x-50,e.y-14,'Billetera de bitcoin: hoy vale '+eco.crypto.v+'… mañana, quién sabe','#FFE18A'); if(!eco.crypto.seed) addText(e.x-50,e.y-28,'Busca su frase semilla o puedes perderla','#FFC7BF'); } }
+    else if(e.t==='semilla'){ if(overlap(p,e)){ e.dead=true; eco.crypto=eco.crypto||{v:0}; eco.crypto.seed=true; learn('semilla'); snd('save'); addText(e.x-50,e.y-14,'Frase semilla en papel: tu billetera está respaldada','#BFF5CF'); } }
+    else if(e.t==='emb'){ if(overlap(p,e)&&!e.used){ e.used=true; if(eco.embCrack){ eco.embCrack=0; addText(e.x-30,e.y-26,'Alcancía nueva: sin grietas','#9FD3FF'); } if(eco.colchon>0){ eco.emb+=eco.colchon; addText(e.x-50,e.y-40,'Sacaste '+eco.colchon+' del colchón y los guardaste seguros','#9FD3FF'); eco.colchon=0; } S.check={x:e.x+8,y:e.y+e.h-28}; const dep=Math.floor(eco.hand/2); eco.hand-=dep; eco.emb+=dep; eco.stats.saved+=dep; if(S.ws) S.ws.saved+=dep; if(dep){ logD('Ahorro','Págate primero: a la alcancía',dep); coinFly(dep,e); } learn('emb'); addText(e.x-30,e.y-14,dep?'Págate primero: +'+dep+' a la alcancía':'Punto de control','#9FD3FF'); snd('save'); } }
     else if(e.t==='camp'){ if(p.x+p.w>e.x+12){ enterCamp(); return; } }
     else if(e.t==='bill'){ if(overlap(p,e)){ if(eco.hand>=cap()){ if(!S.fullMsg||S.t-S.fullMsg>120){ S.fullMsg=S.t; addText(p.x-30,p.y-20,'Mochila llena: ahorra o invierte','#FFE18A'); } } else { e.dead=true; const v=Math.min(e.v,cap()-eco.hand); eco.hand+=v; if(S.ws) S.ws.coins+=v; snd('buy'); burst(e.x+11,e.y+6,'#7FD39A',8); addText(e.x-6,e.y-8,'+'+v+' billete','#9BF0B8'); S.hudPop=12; logD('Ingreso','Billete de '+e.v,v); learn('bill'); } } }
     else if(e.t==='offer'){ if(e.cd>0) e.cd--; if(overlap(p,e)&&e.cd<=0) takeOffer(e); }
@@ -1893,7 +1976,7 @@ function drawGlobos(e,x,y){ globoInit(e); const kn=globoKnot(e), kx=kn.x-S.cam, 
   ctx.textAlign='left'; ctx.restore();
   if(lift){ const left=e.need; ctx.save(); ctx.font='800 8px Figtree, sans-serif'; ctx.textAlign='center'; ctx.fillStyle=S.t%30<18?'#FFE18A':'#fff'; ctx.fillText('¡SALTA! revienta '+left+' globo'+(left>1?'s':''),kx,y-22); ctx.restore(); }
 }
-const TIED_SUB={scroll:'tiempo en el celular',vitrina:'compras por impulso',tarjeta:'deuda de la tarjeta',inflacion:'precios comparados',tahur:'apuestas bloqueadas',gotaJefe:'gota a gota denunciado',creditoJefe:'crédito impagable anulado',ruina:'estafa denunciada'};
+const TIED_SUB={hacker:'clave protegida',scroll:'tiempo en el celular',vitrina:'compras por impulso',tarjeta:'deuda de la tarjeta',inflacion:'precios comparados',tahur:'apuestas bloqueadas',gotaJefe:'gota a gota denunciado',creditoJefe:'crédito impagable anulado',ruina:'estafa denunciada'};
 function stampDraw(x,y,t,txt,sub,big){ if(t<0) return; const sc=Math.max(1,2.4-t*0.16)*(big?1:0.8), a=Math.min(1,t/4);
   ctx.save(); ctx.globalAlpha=a; ctx.translate(x,y); ctx.rotate(-0.16); ctx.scale(sc,sc); ctx.font='900 8px Figtree, sans-serif'; const w=ctx.measureText(txt).width+12;
   ctx.fillStyle='rgba(255,250,240,.88)'; rr(-w/2,-9,w,sub?19:13,2.5); ctx.fill(); ctx.strokeStyle='#C9283C'; ctx.lineWidth=1.6; rr(-w/2,-9,w,sub?19:13,2.5); ctx.stroke(); ctx.lineWidth=.6; rr(-w/2+2,-7,w-4,sub?15:9,1.6); ctx.stroke();
@@ -1941,6 +2024,19 @@ function platLand(wasAir){
 }
 function plab(fn){ if(S.plabels){ S.plabels.push([fn,ctx.getTransform()]); } else fn(); }
 function drawPlatLabels(){ const L=S.plabels; S.plabels=null; if(!L) return; for(const [fn,m] of L){ ctx.save(); ctx.setTransform(m); try{ fn(); }catch(e){} ctx.restore(); } }
+function drone(x,y,s){ // dron de carga de la Ruta: cuerpo de lacre, filete de oro, cuatro hélices
+  ctx.save(); ctx.translate(x,y); ctx.scale(s,s); const sp=S.t*0.9;
+  ctx.strokeStyle='#2B2F36'; ctx.lineWidth=1.4; ctx.beginPath(); ctx.moveTo(-11,-1); ctx.lineTo(11,-1); ctx.stroke();
+  for(const px of [-12,12]){ ctx.fillStyle='#2B2F36'; ctx.fillRect(px-1,-4,2,3); ctx.fillStyle='rgba(200,210,220,.5)'; ctx.beginPath(); ctx.ellipse(px,-4.5,7*Math.abs(Math.cos(sp+px)),1.2,0,0,7); ctx.fill(); ctx.fillStyle='rgba(200,210,220,.22)'; ctx.beginPath(); ctx.ellipse(px,-4.5,7,1.4,0,0,7); ctx.fill(); }
+  ctx.fillStyle='#4A1A0E'; rr(-7,-2.6,14,7,3); ctx.fill(); ctx.fillStyle='#6B2A1A'; rr(-6.4,-2.6,12.8,5.6,2.6); ctx.fill(); ctx.fillStyle='#B8862F'; ctx.fillRect(-5,0.4,10,0.8);
+  ctx.fillStyle='#14171C'; ctx.beginPath(); ctx.arc(0,3.6,1.6,0,7); ctx.fill(); ctx.fillStyle=S.t%40<20?'#62C98A':'#2F5E4C'; ctx.beginPath(); ctx.arc(5,-1.4,0.7,0,7); ctx.fill();
+  ctx.restore(); }
+function flyKit(x,y,wpx){ // carro volador: brazos con rotores a los lados y empuje hacia abajo
+  const yy=y+T+2, sp=S.t*0.9;
+  for(const [px,dir] of [[x-7,-1],[x+wpx+7,1]]){ ctx.strokeStyle='#2B2F36'; ctx.lineWidth=2; ctx.beginPath(); ctx.moveTo(px-dir*8,yy); ctx.lineTo(px,yy-3); ctx.stroke();
+    ctx.fillStyle='#4A1A0E'; rr(px-4,yy-5,8,5,2); ctx.fill(); ctx.fillStyle='#B8862F'; ctx.fillRect(px-3,yy-3.4,6,0.8);
+    ctx.fillStyle='rgba(200,210,220,.5)'; ctx.beginPath(); ctx.ellipse(px,yy-6.5,9*Math.abs(Math.cos(sp+px)),1.3,0,0,7); ctx.fill(); ctx.fillStyle='rgba(200,210,220,.22)'; ctx.beginPath(); ctx.ellipse(px,yy-6.5,9,1.5,0,0,7); ctx.fill(); }
+  ctx.save(); ctx.globalCompositeOperation='lighter'; const g=ctx.createLinearGradient(0,yy+4,0,yy+30); g.addColorStop(0,'rgba(150,210,255,.28)'); g.addColorStop(1,'rgba(150,210,255,0)'); ctx.fillStyle=g; ctx.beginPath(); ctx.moveTo(x+6,yy+4); ctx.lineTo(x+wpx-6,yy+4); ctx.lineTo(x+wpx+4,yy+30); ctx.lineTo(x-4,yy+30); ctx.fill(); ctx.restore(); }
 function drawPlatObj(type,x,y,len,bodyH,pl,o){
   // x,y: esquina superior izquierda de la superficie que se pisa; len en baldosas; bodyH: alto del cuerpo hasta el suelo
   o=o||{}; const wpx=len*T, dark=o.dark, snow=o.snow, t=S.t||0;
@@ -1967,7 +2063,7 @@ plab(()=>{    { const done=pl&&pl.n>=CASA_EV.length, ev=pl?casaNext(pl):CASA_EV[
     const wob=pl&&pl.wob?Math.sin(pl.wob*1.3)*pl.wob*.012:0; const cols=['#B8323C','#E0B030','#1E2A3A','#7A3FA0','#C8CDD2'];
     // debajo del carro: grúa (si cuelga), elevador de taller (si es bajo) o parqueadero de varios pisos (si es alto)
     if(o.hang||bodyH<=T*1.3){
-      if(o.hang){ ctx.fillStyle='#4A5058'; ctx.fillRect(x+2,y+T,wpx-4,4); ctx.fillStyle='#E0B030'; for(let k=x+4;k<x+wpx-6;k+=10) ctx.fillRect(k,y+T,5,4); }
+      if(o.hang){ ctx.fillStyle='#4A1A0E'; rr(x+1,y+T-1,wpx-2,6,3); ctx.fill(); ctx.fillStyle='#6B2A1A'; rr(x+2,y+T-1,wpx-4,4,2); ctx.fill(); ctx.fillStyle='#B8862F'; ctx.fillRect(x+4,y+T,wpx-8,1); }
       else { const base=y+T+bodyH; ctx.fillStyle='#3A4048'; ctx.fillRect(x+wpx/2-10,base-4,20,4); ctx.fillStyle='#9AA3AA'; ctx.fillRect(x+wpx/2-3,y+T,6,bodyH-4); ctx.fillStyle='#C9D3DA'; ctx.fillRect(x+wpx/2-2,y+T,1.4,bodyH-4);
         ctx.fillStyle='#E0B030'; ctx.fillRect(x+4,y+T-1,wpx-8,3); ctx.fillStyle='#2A2A2A'; for(let k=x+6;k<x+wpx-8;k+=8) ctx.fillRect(k,y+T-1,4,3); }
     } else {
@@ -2032,8 +2128,10 @@ function drawPlats(th){
   for(const pl of L.plats){ if(pl.broken) continue; const x=pl.c0*T-S.cam, wpx=(pl.c1-pl.c0+1)*T; if(x>W+40||x+wpx<-40) continue; const y=pl.r*T; if(y>S.camY+H+60||y<S.camY-200) continue;
     if(pl.wob>0) pl.wob--;
     const bodyH=pl.ground>=0?Math.min(T*6,(pl.ground-pl.r-1)*T):T*1.2;
-    if(pl.ground<0||(pl.ground-pl.r)>7){ ctx.strokeStyle=dark?'rgba(150,160,170,.55)':'rgba(70,60,50,.6)'; ctx.lineWidth=1.2; ctx.beginPath(); ctx.moveTo(x+6,y-14); ctx.lineTo(x+6,S.camY-10); ctx.moveTo(x+wpx-6,y-14); ctx.lineTo(x+wpx-6,S.camY-10); ctx.stroke(); ctx.fillStyle='#5A5048'; ctx.fillRect(x+4,y-16,4,3); ctx.fillRect(x+wpx-8,y-16,4,3); }
-    drawPlatObj(pl.type,Math.round(x),y,pl.c1-pl.c0+1,Math.max(0,bodyH),pl,{dark,snow,hang:pl.ground<0||(pl.ground-pl.r)>7}); }
+    const hang=pl.ground<0||(pl.ground-pl.r)>7;
+    if(hang&&pl.type!=='carro'){ const nd=Math.max(2,Math.round((pl.c1-pl.c0+1)/2)); for(let k=0;k<nd;k++){ const dx=x+8+k*(wpx-16)/(nd-1), bob=Math.sin(S.t*0.08+k+pl.c0)*1.5, dy=y-38+bob; ctx.strokeStyle='rgba(40,36,32,.75)'; ctx.lineWidth=0.9; ctx.beginPath(); ctx.moveTo(dx-3,dy+5); ctx.lineTo(dx-5,y-1); ctx.moveTo(dx+3,dy+5); ctx.lineTo(dx+5,y-1); ctx.stroke(); drone(dx,dy,1); } }
+    drawPlatObj(pl.type,Math.round(x),y,pl.c1-pl.c0+1,Math.max(0,bodyH),pl,{dark,snow,hang});
+    if(hang&&pl.type==='carro') flyKit(Math.round(x),y,wpx); }
   drawDebris();
 }
 function drawDebris(){
@@ -2064,7 +2162,7 @@ const LIGHT=[
  {hora:'luz fría de altura',sun:[.72,50],warm:'#F2F6FF',grade:'#9EC3E6',ga:.06,ray:.035},
  {hora:'luz difusa de niebla',sun:[.7,60],warm:'#F4F1DD',grade:'#C9D8D2',ga:.06,ray:0},
  {hora:'atardecer dorado',sun:[.8,96],warm:'#FFC27A',grade:'#F0A050',ga:.11,ray:.07},
- {hora:'cielo de islas flotantes',sun:[.7,60],warm:'#FFF0D6',grade:'#B8D0F0',ga:.07,ray:.05},
+ {hora:'mesetas de la cumbre',sun:[.7,60],warm:'#FFF0D6',grade:'#B8D0F0',ga:.07,ray:.05},
  {hora:'amanecer dorado en la nieve',sun:[.74,70],warm:'#FFE2B0',grade:'#F6C88A',ga:.09,ray:.07}];
 const BGW=1280;
 function ridgeP(x,w,seed,amp,base){ // ruido "ridged" periódico: crestas afiladas y sin costuras al repetir
@@ -2129,14 +2227,15 @@ function buildScenery(li){
     if(li!==4){ c.strokeStyle=dark?'#0B0F14':'#33404E'; c.lineWidth=1; for(let px=40;px<BGW;px+=150){ c.beginPath(); c.moveTo(px,H-40); c.lineTo(px,H-128); c.moveTo(px-9,H-122); c.lineTo(px+9,H-122); c.stroke(); c.beginPath(); c.moveTo(px-9,H-122); c.quadraticCurveTo(px+66,H-104,px+141,H-122); c.stroke(); }
       if(dark){ for(let px=40;px<BGW;px+=300){ const gl=c.createRadialGradient(px+8,H-118,0,px+8,H-118,40); gl.addColorStop(0,'rgba(255,200,120,.35)'); gl.addColorStop(1,'rgba(255,200,120,0)'); c.fillStyle=gl; c.fillRect(px-32,H-158,80,80); } } }
     out.city=cv2; }
-  if(li===6){ // islas flotantes del diversificador
-    out.isles=[0,1,2].map(v=>{ const cv2=document.createElement('canvas'); cv2.width=170; cv2.height=150; const c=cv2.getContext('2d');
-      c.fillStyle='#6A5A62'; c.beginPath(); c.moveTo(10,40); c.lineTo(160,40); c.lineTo(110+hash(v)*20,120); c.lineTo(85,146); c.lineTo(60,118); c.closePath(); c.fill();
-      c.fillStyle='#8A7A80'; c.beginPath(); c.moveTo(10,40); c.lineTo(160,40); c.lineTo(130,70); c.lineTo(40,72); c.fill();
-      c.fillStyle='#6E9A58'; c.beginPath(); c.ellipse(85,38,78,10,0,0,7); c.fill(); c.fillStyle='#8DBA6A'; c.beginPath(); c.ellipse(80,34,62,6,0,0,7); c.fill();
-      c.fillStyle='#E8E2D6'; c.fillRect(70,8,22,26); c.fillRect(64,16,8,18); c.fillRect(92,14,7,20); c.fillStyle='#5684C6'; c.beginPath(); c.moveTo(68,8); c.lineTo(81,-6); c.lineTo(94,8); c.fill();
-      c.fillStyle='#FFE7A8'; c.fillRect(76,18,3,4); c.fillRect(83,18,3,4);
-      c.fillStyle='rgba(220,240,255,.75)'; c.fillRect(126,44,4,90); c.fillStyle='rgba(255,255,255,.5)'; c.beginPath(); c.ellipse(128,136,10,4,0,0,7); c.fill();
+  if(li===6){ // mesetas de roca con fincas: el diversificador tiene varias propiedades, todas bien plantadas en la tierra
+    out.isles=[0,1,2].map(v=>{ const cv2=document.createElement('canvas'); cv2.width=170; cv2.height=330; const c=cv2.getContext('2d');
+      const R=mulberry(41+v*7); c.fillStyle='#6A5A62'; c.beginPath(); c.moveTo(14,40); let xl=14; for(let y=40;y<=330;y+=18){ xl=Math.max(-6,xl-2-R()*4); c.lineTo(xl,y); } let xr=156; const pts=[]; for(let y=40;y<=330;y+=18){ xr=Math.min(176,xr+2+R()*4); pts.push([xr,y]); } c.lineTo(xr,330); pts.reverse().forEach(q=>c.lineTo(q[0],q[1])); c.closePath(); c.fill();
+      c.fillStyle='#8A7A80'; c.fillRect(14,40,142,26); c.strokeStyle='rgba(60,50,56,.5)'; c.lineWidth=1.2; for(let y=80;y<330;y+=26){ c.beginPath(); c.moveTo(0,y+R()*6); c.lineTo(170,y+R()*6); c.stroke(); }
+      c.fillStyle='rgba(255,240,220,.12)'; c.fillRect(120,40,40,290);
+      c.fillStyle='#6E9A58'; c.beginPath(); c.ellipse(85,40,76,9,0,0,7); c.fill(); c.fillStyle='#8DBA6A'; c.beginPath(); c.ellipse(80,36,60,6,0,0,7); c.fill();
+      if(v===1){ c.fillStyle='#3E6B3A'; for(let k=0;k<5;k++){ c.beginPath(); c.arc(40+k*20,30,7,0,7); c.fill(); } } // cafetal
+      c.fillStyle='#E8E2D6'; c.fillRect(70,10,22,26); c.fillRect(64,18,8,18); c.fillStyle=v===2?'#6B2A1A':'#A8452E'; c.beginPath(); c.moveTo(66,10); c.lineTo(81,-4); c.lineTo(96,10); c.fill();
+      c.fillStyle='#FFE7A8'; c.fillRect(76,20,3,4); c.fillRect(83,20,3,4); c.fillStyle='#B8862F'; c.fillRect(100,20,2,16); c.beginPath(); c.moveTo(102,20); c.lineTo(112,23); c.lineTo(102,26); c.fill();
       return cv2; }); }
   return out;
 }
@@ -2202,7 +2301,7 @@ function drawBg(th){
   BG.layers.forEach((Ly,i)=>{
     if(i===2){ BG.clouds.forEach((cl,k)=>{ const x=((k*430-S.cam*.07+S.t*.05)%(W+260)+W+260)%(W+260)-200, y=46+k*30+climb*.08; ctx.globalAlpha=th.deco==='niebla'?.5:S.li===0?.18:.8; ctx.drawImage(cl,x,y,cl.width*(.7+k*.12),cl.height*(.7+k*.12)); ctx.globalAlpha=1; }); }
     if(i===3&&BG.scen.city){ const off2=((S.cam*.24)%BGW+BGW)%BGW, dy2=climb*.12*.55-60; ctx.drawImage(BG.scen.city,-off2,dy2); if(BGW-off2<W) ctx.drawImage(BG.scen.city,BGW-off2,dy2); }
-    if(i===2&&BG.scen.isles){ BG.scen.isles.forEach((im,k)=>{ const x=((k*290+80-S.cam*.08)%(W+260)+W+260)%(W+260)-180, y=60+k*46+Math.sin(S.t*.01+k)*5+climb*.05; ctx.globalAlpha=.9-k*.12; ctx.drawImage(im,x,y,im.width*(.8-k*.15),im.height*(.8-k*.15)); ctx.globalAlpha=1; }); }
+    if(i===2&&BG.scen.isles){ BG.scen.isles.forEach((im,k)=>{ const x=((k*290+80-S.cam*.08)%(W+260)+W+260)%(W+260)-180, y=120+k*40+climb*.05; ctx.globalAlpha=.9-k*.12; ctx.drawImage(im,x,y,im.width*(.8-k*.15),im.height*(.8-k*.15)); ctx.globalAlpha=1; }); }
     const off=((S.cam*Ly.f)%BGW+BGW)%BGW, dy=climb*Ly.dy*0.55;
     ctx.drawImage(Ly.cv,-off,dy); if(BGW-off<W) ctx.drawImage(Ly.cv,BGW-off,dy);
   });
@@ -2364,7 +2463,7 @@ function drawTiles(th){
     ctx.fillStyle='#5E7A30'; ctx.fillRect(x+4,y+6,6,2); ctx.fillStyle='rgba(255,255,255,.4)'; ctx.fillRect(x+8,y+1.5,8,1.5);
     ctx.strokeStyle='rgba(220,240,255,.7)'; ctx.lineWidth=1; ctx.beginPath(); ctx.ellipse(x+15,st.y0+9,17+Math.sin(S.t*0.1)*2,3,0,0,7); ctx.stroke(); });
   L.mps.forEach(m=>{ const x=m.x-S.cam;
-    ctx.strokeStyle='rgba(230,215,180,.55)'; ctx.lineWidth=1; ctx.beginPath(); ctx.moveTo(x+8,m.y); ctx.lineTo(x+8,S.camY); ctx.moveTo(x+m.w-8,m.y); ctx.lineTo(x+m.w-8,S.camY); ctx.stroke();
+    for(const dx of [x+12,x+m.w-12]){ const dy=m.y-30+Math.sin(S.t*0.09+dx*0.1)*1.2; ctx.strokeStyle='rgba(40,36,32,.75)'; ctx.lineWidth=0.9; ctx.beginPath(); ctx.moveTo(dx-3,dy+5); ctx.lineTo(dx-6,m.y); ctx.moveTo(dx+3,dy+5); ctx.lineTo(dx+6,m.y); ctx.stroke(); drone(dx,dy,1); }
     ctx.fillStyle='rgba(0,0,0,.25)'; ctx.fillRect(x,m.y+m.h-2,m.w,3);
     ctx.fillStyle='#6B4A2B'; rr(x,m.y,m.w,m.h,3); ctx.fill(); ctx.fillStyle='#B98450'; ctx.fillRect(x+2,m.y+1,m.w-4,2);
     ctx.fillStyle='#4E341C'; for(let k=1;k<4;k++) ctx.fillRect(x+k*18,m.y+2,1,m.h-3); });
@@ -2391,6 +2490,7 @@ function drawProj(f){ const fx=f.x-S.cam; ctx.save(); ctx.translate(fx,f.y); ctx
   else if(f.icon==='tag'){ ctx.fillStyle='#F2B33D'; ctx.beginPath(); ctx.moveTo(-9,-5); ctx.lineTo(5,-5); ctx.lineTo(10,0); ctx.lineTo(5,5); ctx.lineTo(-9,5); ctx.fill(); ctx.fillStyle='#7A2A10'; ctx.font='800 4.4px sans-serif'; ctx.textAlign='center'; ctx.fillText('¡HOY!',-1,1.6); ctx.fillStyle='#fff'; ctx.beginPath(); ctx.arc(6,0,1.2,0,7); ctx.fill(); }
   else if(f.icon==='card'){ ctx.fillStyle='#D9B23A'; rr(-9,-6,18,12,2); ctx.fill(); ctx.fillStyle='#8A6A1A'; ctx.fillRect(-9,-3,18,2.4); ctx.fillStyle='#F4E3A0'; ctx.fillRect(-6,1,4,3); ctx.fillStyle='#5A3A00'; ctx.font='800 3.6px sans-serif'; ctx.textAlign='center'; ctx.fillText('30%',4,4); }
   else if(f.icon==='price'){ ctx.rotate(Math.sin(S.t*0.3)*0.25); ctx.fillStyle='#FBF7EC'; ctx.beginPath(); ctx.moveTo(-9,-5); ctx.lineTo(6,-5); ctx.lineTo(10,0); ctx.lineTo(6,5); ctx.lineTo(-9,5); ctx.closePath(); ctx.fill(); ctx.strokeStyle='#B8323C'; ctx.lineWidth=.8; ctx.stroke(); ctx.fillStyle='#B8323C'; ctx.beginPath(); ctx.arc(6.4,0,1,0,7); ctx.fill(); ctx.font='800 4.6px sans-serif'; ctx.textAlign='center'; ctx.fillText('$↑10%',-1.6,1.7); ctx.textAlign='left'; }
+  else if(f.icon==='mail'){ ctx.fillStyle='#F4ECD8'; rr(-9,-6,18,12,1.5); ctx.fill(); ctx.strokeStyle='#6B2A1A'; ctx.lineWidth=0.9; ctx.beginPath(); ctx.moveTo(-9,-6); ctx.lineTo(0,1); ctx.lineTo(9,-6); ctx.stroke(); ctx.strokeStyle='#C9D3DA'; ctx.lineWidth=1.2; ctx.beginPath(); ctx.moveTo(6,4); ctx.lineTo(6,10); ctx.arc(3.6,10,2.4,0,Math.PI); ctx.stroke(); ctx.fillStyle='#E04A4A'; ctx.beginPath(); ctx.arc(7,-6,3,0,7); ctx.fill(); ctx.fillStyle='#fff'; ctx.font='800 4px sans-serif'; ctx.textAlign='center'; ctx.fillText('!',7,-4.6); }
   else if(f.icon==='chip'){ ctx.fillStyle='#1F7A4A'; ctx.beginPath(); ctx.arc(0,0,7,0,7); ctx.fill(); ctx.strokeStyle='#fff'; ctx.setLineDash([2.2,2.2]); ctx.lineWidth=1.6; ctx.beginPath(); ctx.arc(0,0,5.6,0,7); ctx.stroke(); ctx.setLineDash([]); ctx.fillStyle='#fff'; ctx.beginPath(); ctx.arc(0,0,3,0,7); ctx.fill(); ctx.fillStyle='#1F7A4A'; ctx.font='800 3.6px sans-serif'; ctx.textAlign='center'; ctx.fillText('$',0,1.4); }
   else if(f.icon==='bag'){ ctx.fillStyle='#6B4A2B'; ctx.beginPath(); ctx.ellipse(0,2,8,7,0,0,7); ctx.fill(); ctx.fillStyle='#4A3018'; ctx.fillRect(-3,-7,6,4); ctx.fillStyle='#F2C85A'; ctx.font='800 7px sans-serif'; ctx.textAlign='center'; ctx.fillText('$',0,5); }
   ctx.textAlign='left'; ctx.restore(); }
@@ -2568,6 +2668,9 @@ function drawEnts(only){
       ctx.fillStyle='#fff'; ctx.font='800 9px Figtree, sans-serif'; ctx.textAlign='center'; ctx.fillText('EMPLEO',x+9,yy-6); ctx.textAlign='left'; }
     else if(e.t==='emb'){ piggy(x,y,e.used,e); }
     else if(e.t==='lote') drawLote(e,x,y);
+    else if(e.t==='colchon') drawColchon(e,x,y);
+    else if(e.t==='btc') drawBtc(x,y+Math.sin(S.t*0.07+e.ph)*2);
+    else if(e.t==='semilla') drawSemilla(x,y+Math.sin(S.t*0.07+e.ph)*2);
     else if(e.t==='bill'){ const fl=Math.sin(S.t*0.12+e.ph); ctx.save(); ctx.translate(x+11,y+6+Math.sin(S.t*0.07+e.ph)*2); ctx.rotate(fl*0.12); ctx.scale(1,0.8+0.2*Math.abs(fl));
       ctx.fillStyle='rgba(0,0,0,.2)'; ctx.fillRect(-10,-5,22,12); ctx.fillStyle=e.v===10?'#3E8F6A':'#5BAA5F'; ctx.fillRect(-11,-6,22,12); ctx.strokeStyle='#E9F7EC'; ctx.lineWidth=0.8; ctx.strokeRect(-9.5,-4.5,19,9);
       ctx.fillStyle='#E9F7EC'; ctx.beginPath(); ctx.arc(-4,0,3,0,7); ctx.fill(); ctx.fillStyle='#E9F7EC'; ctx.font='800 7px "IBM Plex Mono", monospace'; ctx.textAlign='center'; ctx.fillText('$'+e.v,4,2.5); ctx.textAlign='left'; ctx.restore(); }
@@ -2598,7 +2701,7 @@ function drawEnts(only){
   if(only) return;
   drawFees();
   S.rain.forEach(d=>drop(d.x+3-S.cam,d.y+5,.75,'#E5545E'));
-  S.rocks.forEach(k=>{ ctx.save(); ctx.translate(k.x+9-S.cam,k.y+8); ctx.rotate(k.rot); ctx.fillStyle='#6E655C'; ctx.beginPath(); ctx.moveTo(-9,2); ctx.lineTo(-5,-8); ctx.lineTo(6,-7); ctx.lineTo(9,3); ctx.lineTo(1,8); ctx.closePath(); ctx.fill(); ctx.fillStyle='#8E857A'; ctx.beginPath(); ctx.moveTo(-5,-8); ctx.lineTo(6,-7); ctx.lineTo(1,-1); ctx.fill(); ctx.restore(); });
+  S.rocks.forEach(k=>{ if(k.k==='teja'){ ctx.save(); ctx.translate(k.x+5-S.cam,k.y+3); ctx.rotate(k.rot); ctx.fillStyle='#A8452E'; ctx.beginPath(); ctx.moveTo(-6,2); ctx.quadraticCurveTo(0,-4,6,2); ctx.lineTo(4,3); ctx.quadraticCurveTo(0,-1.6,-4,3); ctx.fill(); ctx.restore(); return; } ctx.save(); ctx.translate(k.x+9-S.cam,k.y+8); ctx.rotate(k.rot); ctx.fillStyle='#6E655C'; ctx.beginPath(); ctx.moveTo(-9,2); ctx.lineTo(-5,-8); ctx.lineTo(6,-7); ctx.lineTo(9,3); ctx.lineTo(1,8); ctx.closePath(); ctx.fill(); ctx.fillStyle='#8E857A'; ctx.beginPath(); ctx.moveTo(-5,-8); ctx.lineTo(6,-7); ctx.lineTo(1,-1); ctx.fill(); ctx.restore(); });
   S.loose.forEach(d=>{ if(d.life>40||S.t%6<3) drop(d.x+6-S.cam,d.y+8,1,undefined,Math.abs(Math.cos(S.t*0.2+d.x))); });
 }
 
@@ -3080,7 +3183,7 @@ function draw(){
   gradeScene();
   // viñeta suave
   const VIG=[.62,.42,.3,.3,.38,.28,.22,.2][S.li]||.25; const vg=ctx.createRadialGradient(W/2,H*.55,H*(S.li===0?.3:.42),W/2,H/2,W*0.66); vg.addColorStop(0,'rgba(0,0,0,0)'); vg.addColorStop(1,'rgba(4,6,10,'+VIG+')'); ctx.fillStyle=vg; ctx.fillRect(0,0,W,H); drawGrain();
-  drawHud(); drawDisasterHud(); drawGuides(); syncTip();
+  drawEventFx(); drawHud(); drawDisasterHud(); drawGuides(); syncTip();
   if(S.coach>0&&S.mode==='play'){ const a=Math.min(1,S.coach/40); ctx.globalAlpha=a; const t1=isTouch()?'Usa los botones de abajo o toca donde quieres ir':'Flechas ← → para caminar · Espacio para saltar', t2=isTouch()?'Toca arriba del senderista para saltar':'También puedes hacer clic donde quieres ir (clic arriba de él = saltar)';
     ctx.font='800 13px Figtree, sans-serif'; const w1=Math.max(ctx.measureText(t1).width,ctx.measureText(t2).width)+28; ctx.fillStyle='rgba(10,20,26,.82)'; rr(W/2-w1/2,H/2-70,w1,48,12); ctx.fill(); ctx.strokeStyle='#F2B33D'; ctx.lineWidth=1.5; rr(W/2-w1/2,H/2-70,w1,48,12); ctx.stroke();
     ctx.textAlign='center'; ctx.fillStyle='#FFE18A'; ctx.fillText(t1,W/2,H/2-50); ctx.font='600 12px Figtree, sans-serif'; ctx.fillStyle='#EAF1F3'; ctx.fillText(t2,W/2,H/2-32); ctx.textAlign='left'; ctx.globalAlpha=1; }
@@ -3528,9 +3631,26 @@ function drawFinale(){
   if(t>470){ ctx.fillStyle=t%50<32?'#F4ECD8':'rgba(244,236,216,.55)'; ctx.font='700 9px Figtree, sans-serif'; ctx.textAlign='center'; ctx.fillText('Toca o pulsa una tecla para ver tu certificado',W/2,H-8); ctx.textAlign='left'; }
   if(t>1100) endingReport();
 }
+function certPattern(c){ // marca de agua tipo fondo de chat: lo que este jugador construyó (activos, pasivos, ahorro, patrimonio, inversiones)
+  const it=[]; const tn={fin:'cdt',inm:'casa',emp:'tienda'};
+  (eco.assets||[]).forEach(a=>it.push({ic:a.ic||tn[a.type]||'cdt',t:'ACTIVO · '+a.n}));
+  (eco.lujos||[]).forEach(l=>it.push({ic:l.ic||'carro',t:'PASIVO · '+l.n}));
+  it.push({g:'alc',t:'AHORRO '+eco.emb}); it.push({g:'pat',t:'PATRIMONIO '+patrimonio()}); it.push({g:'arb',t:'INVERTIDO '+(eco.stats.invested||0)});
+  if(eco.crypto&&(eco.crypto.v>0||eco.crypto.lost)) it.push({g:'btc',t:eco.crypto.lost?'₿ CLAVE PERDIDA':'₿ '+eco.crypto.v}); it.push({g:'mon',t:'RUTA A LA CIMA'});
+  const main=ctx; ctx=c; c.save(); c.beginPath(); c.rect(50,50,1100,750); c.clip(); c.translate(600,425); c.rotate(-0.32); let n=0;
+  for(let gy=-760;gy<760;gy+=118) for(let gx=-900;gx<900;gx+=150){ const q=it[(n++)%it.length], ox=((gy/118)%2?75:0); c.save(); c.translate(gx+ox,gy); c.globalAlpha=0.085;
+    if(q.ic){ icon(q.ic,0,0,2.4); }
+    else if(q.g==='alc'){ c.fillStyle='#4A8FD3'; c.beginPath(); c.ellipse(0,0,22,16,0,0,7); c.fill(); c.fillRect(18,-5,8,10); c.fillRect(-12,12,6,8); c.fillRect(6,12,6,8); c.fillStyle='#F4ECD8'; c.fillRect(-6,-14,14,3); }
+    else if(q.g==='pat'){ c.strokeStyle='#2F7A4A'; c.lineWidth=4; c.lineCap='round'; c.beginPath(); c.moveTo(-24,14); c.lineTo(-8,0); c.lineTo(2,8); c.lineTo(22,-14); c.stroke(); c.beginPath(); c.moveTo(12,-15); c.lineTo(23,-15); c.lineTo(23,-4); c.stroke(); }
+    else if(q.g==='arb'){ c.fillStyle='#6B4A2B'; c.fillRect(-2,-2,5,20); c.fillStyle='#2F7A4A'; c.beginPath(); c.arc(0,-10,14,0,7); c.arc(-11,-2,9,0,7); c.arc(11,-3,9,0,7); c.fill(); }
+    else if(q.g==='btc'){ c.fillStyle='#F7931A'; c.beginPath(); c.arc(0,0,18,0,7); c.fill(); c.fillStyle='#F4ECD8'; c.font='800 22px sans-serif'; c.textAlign='center'; c.fillText('₿',0,8); }
+    else if(q.g==='mon'){ drop(0,0,2.6); }
+    c.globalAlpha=0.11; c.fillStyle='#6B2A1A'; c.font='800 11px Figtree, sans-serif'; c.textAlign='center'; c.fillText(q.t.length>26?q.t.slice(0,25)+'…':q.t,0,40); c.restore(); }
+  c.restore(); ctx=main; c.textAlign='center'; }
 function certURL(){ // certificado imprimible: papel, lacre y oro, cordillera al pie
   const c0=document.createElement('canvas'); c0.width=1200; c0.height=850; const c=c0.getContext('2d');
   c.fillStyle='#F4ECD8'; c.fillRect(0,0,1200,850); const R=mulberry(5); for(let i=0;i<2600;i++){ c.fillStyle='rgba(120,90,50,'+(R()*0.05)+')'; c.fillRect(R()*1200,R()*850,1.5,1.5); }
+  certPattern(c);
   const pts=[finRidge(3,120,780,1200),finRidge(9,90,820,1200)]; c.save(); c.beginPath(); c.rect(50,50,1100,750); c.clip(); ['rgba(169,191,207,.55)','rgba(51,72,90,.35)'].forEach((col,i)=>{ c.fillStyle=col; c.beginPath(); c.moveTo(0,850); pts[i].forEach(p=>c.lineTo(p[0],p[1])); c.lineTo(1200,850); c.fill(); }); c.restore();
   c.strokeStyle='#6B2A1A'; c.lineWidth=6; c.strokeRect(34,34,1132,782); c.strokeStyle='#B8862F'; c.lineWidth=2; c.strokeRect(50,50,1100,750);
   c.textAlign='center'; c.fillStyle='#6B2A1A'; c.font='700 22px Figtree, sans-serif'; c.fillText('RUTA FINANCIERA · UN JUEGO DE RUTA A LA CIMA',600,128);
