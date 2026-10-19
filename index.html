@@ -4229,7 +4229,7 @@ function drawMap(){
     ctx.fillStyle=done||i===7?'#2A1A00':'#fff'; ctx.textAlign='center'; ctx.font='700 9px "IBM Plex Mono", monospace'; ctx.fillText(done?'✓':String(i+1+off),x,y+(i===7?2:0.5));
     ctx.globalAlpha=a; ctx.font='700 11px Figtree, system-ui, sans-serif';
     const left=x<320; let lx=left?x-14:x+14, ly=y-5, sy=y+7, sty=y+19; ctx.textAlign=left?'right':'left';
-    if(off){ if(i===7){ lx=x-16; ctx.textAlign='right'; } else if(i%2===0){ lx=x; ctx.textAlign='center'; ly=y-36; sy=y-25; sty=y+21; } else { lx=x; ctx.textAlign='center'; ly=y+24; sy=y+35; sty=y-14; } }
+    if(off){ if(i===7){ lx=x-16; ctx.textAlign='right'; } else if(i%2===0){ lx=x; ctx.textAlign='center'; ly=y-36; sy=y-25; sty=y+21; } else if(y+42>H){ lx=x; ctx.textAlign='center'; ly=y-60; sy=y-49; sty=y-14; } else { lx=x; ctx.textAlign='center'; ly=y+24; sy=y+35; sty=y-14; } }
     const label=LV[i+off].name, sub=off?fmtM(ALT2[i])+' m':LV[i].role;
     if(off){ ctx.font='700 11px Figtree, system-ui, sans-serif'; const bw=Math.max(ctx.measureText(label).width,40)+12, bx=ctx.textAlign==='center'?lx-bw/2:ctx.textAlign==='right'?lx-bw+6:lx-6; ctx.fillStyle='rgba(10,20,26,.55)'; rr(bx,ly-10,bw,25,6); ctx.fill(); }
     ctx.font='700 11px Figtree, system-ui, sans-serif'; ctx.fillStyle='rgba(0,0,0,.55)'; ctx.fillText(label,lx+1,ly+1); ctx.fillStyle=cur?'#FFE18A':'#FFFFFF'; ctx.fillText(label,lx,ly);
@@ -5849,11 +5849,11 @@ REQ.push(
  ()=>[flujo()>=reqN2(9), 'Tu flujo de caja es '+flujo()+' por quincena (meta: '+reqN2(9)+' o más).'],
  ()=>[(has('casco')||has('cuerda'))&&eco.emb>=reqN2(10), 'Seguro: '+((has('casco')||has('cuerda'))?'sí':'no')+' · alcancía '+eco.emb+' de '+reqN2(10)+'.'],
  ()=>[eco.emb>=reqN2(11), 'Reserva en la alcancía: '+eco.emb+' de '+reqN2(11)+'.'],
- ()=>[!!eco.renta13, eco.renta13?'Declaraste la renta en la oficina de impuestos.':'Aún no declaras la renta: busca la oficina de impuestos del salar.'],
+ ()=>[!!eco.renta13, eco.renta13?'Declaraste la renta en la oficina de impuestos.':'Aún no declaras la renta: busca la oficina de impuestos de las salinas.'],
  ()=>[tipos()>=3, 'Tipos de activo: '+tipos()+' de 3.'],
  ()=>[(eco.pension||0)+eco.assets.reduce((s,a)=>s+a.value,0)>=reqN2(14), 'Pensión '+(eco.pension||0)+' + inversiones '+eco.assets.reduce((s,a)=>s+a.value,0)+' = '+((eco.pension||0)+eco.assets.reduce((s,a)=>s+a.value,0))+' de '+reqN2(14)+'.'],
  ()=>[ingresoAct()>=costo()&&patrimonio()>=reqN2(15), 'Ingreso pasivo '+ingresoAct()+' de '+costo()+' · patrimonio '+patrimonio()+' de '+reqN2(15)+'.']);
-function reqText2(li){ return ['Llegar sin deudas','Flujo de caja de '+reqN2(9)+' o más por quincena','Tener un seguro (casco o cuerda) y '+reqN2(10)+' en la alcancía','Tener '+reqN2(11)+' o más en la alcancía','Declarar la renta en la oficina de impuestos del salar','Tener activos de 3 tipos distintos','Pensión más inversiones de '+reqN2(14)+' o más','Ingreso pasivo igual o mayor que tu costo de vida y patrimonio de '+reqN2(15)][li-8]; }
+var reqText2=function(li){ return ['Llegar sin deudas','Flujo de caja de '+reqN2(9)+' o más por quincena','Tener un seguro (casco o cuerda) y '+reqN2(10)+' en la alcancía','Tener '+reqN2(11)+' o más en la alcancía','Declarar la renta en la oficina de impuestos de las salinas','Tener activos de 3 tipos distintos','Pensión más inversiones de '+reqN2(14)+' o más','Ingreso pasivo igual o mayor que tu costo de vida y patrimonio de '+reqN2(15)][li-8]; }
 CURR.push(
  {ra:'Diseño un plan para salir de deudas (bola de nieve o avalancha) y evito tapar una deuda con otra.',comp:'Administrar',g:'Guía 3',ev:'Llegó sin deudas y sin caer en el gota a gota.',ok:()=>debtTot()===0&&!(S.ws.lost.gota>0)},
  {ra:'Calculo mi flujo de caja y elimino las fugas que lo vuelven negativo.',comp:'Administrar',g:'Guía 4',ev:'Su flujo de caja es positivo y no perdió plata en fugas.',ok:()=>flujo()>0&&!(S.ws.lost.fugas>0)},
@@ -6127,60 +6127,55 @@ const DECO2={
    ctx.beginPath(); ctx.moveTo(-14,0); ctx.lineTo(-10,-h*0.7); ctx.lineTo(-3,-h); ctx.lineTo(4,-h*0.8); ctx.lineTo(9,-h*0.9); ctx.lineTo(14,0); ctx.closePath(); ctx.fill();
    ctx.strokeStyle='rgba(255,255,255,.8)'; ctx.lineWidth=1; ctx.beginPath(); ctx.moveTo(-8,-h*0.6); ctx.lineTo(-2,-h*0.3); ctx.stroke(); ctx.strokeStyle='rgba(60,110,160,.35)'; ctx.beginPath(); ctx.moveTo(4,-h*0.7); ctx.lineTo(6,-h*0.2); ctx.stroke(); }};
 // ---------- mapa de La Expedición: un viaje por ocho escenarios distintos, del mar a los glaciares ----------
-const EXP_EDGE=[338,334,326,304,268,246,226,196,150]; // altura del suelo en el borde de cada escenario (sube hacia la derecha)
+const EXP_EDGE=[338,337,334,328,318,288,236,196,150]; // costa, salinas, desierto, río, bosque, páramo, nevado, cordillera: el suelo sube hacia la derecha
 const expGround=x=>{ const s=Math.max(0,Math.min(7.999,x/80)), i=Math.floor(s), f=s-i, a=EXP_EDGE[i], b=EXP_EDGE[i+1], u=f*f*(3-2*f); return a+(b-a)*u+Math.sin(x*0.09)*2; };
 const MAPN2=[0,1,2,3,4,5,6,7].map(i=>i===7?[606,62]:[40+i*80,Math.round(expGround(40+i*80))-6]);
 let MAPBG2=null;
-function buildMapBg2(){ const cv2=document.createElement('canvas'); cv2.width=W*2; cv2.height=H*2; const c=cv2.getContext('2d'); c.scale(2,2); const R=mulberry(2027);
-  // cielo de mediodía que se enfría hacia las cumbres
+function buildMapBg2(){ const cv2=document.createElement('canvas'); cv2.width=W*2; cv2.height=H*2; const c=cv2.getContext('2d'); c.scale(2,2); const R=mulberry(2027), gy=x=>expGround(x);
   let g=c.createLinearGradient(0,0,W,0); g.addColorStop(0,'#7EC2E8'); g.addColorStop(.5,'#5E9AD0'); g.addColorStop(1,'#2E5A9A'); c.fillStyle=g; c.fillRect(0,0,W,H);
   g=c.createLinearGradient(0,0,0,H); g.addColorStop(0,'rgba(10,20,50,.35)'); g.addColorStop(.6,'rgba(255,240,210,0)'); g.addColorStop(1,'rgba(255,220,170,.25)'); c.fillStyle=g; c.fillRect(0,0,W,H);
   const sg=c.createRadialGradient(150,60,4,150,60,70); sg.addColorStop(0,'rgba(255,250,220,.95)'); sg.addColorStop(.25,'rgba(255,240,190,.4)'); sg.addColorStop(1,'rgba(255,240,190,0)'); c.fillStyle=sg; c.fillRect(80,0,150,140);
-  for(let k=0;k<6;k++){ const cx=40+k*110+R()*30, cy=40+R()*50; c.fillStyle='rgba(255,255,255,.75)'; [[0,0,16],[14,-5,12],[-14,-3,11],[26,2,9]].forEach(([dx,dy,r])=>{ c.beginPath(); c.arc(cx+dx,cy+dy,r,0,7); c.fill(); }); c.fillStyle='rgba(180,190,210,.35)'; c.fillRect(cx-20,cy+6,50,4); }
-  // cordillera lejana detrás de la mitad alta del viaje
-  c.fillStyle='rgba(120,140,175,.55)'; c.beginPath(); c.moveTo(220,300); for(let x=220;x<=W;x+=4) c.lineTo(x,250-(x-220)*0.35+Math.abs(Math.sin(x*0.05))*22+Math.sin(x*0.13)*6); c.lineTo(W,300); c.closePath(); c.fill();
-  c.fillStyle='rgba(245,250,255,.7)'; for(let x=420;x<=W;x+=4){ const y=250-(x-220)*0.35+Math.abs(Math.sin(x*0.05))*22+Math.sin(x*0.13)*6; if(Math.abs(Math.sin(x*0.05))<0.25) c.fillRect(x,y,4,6); }
-  // fondos propios de algunos escenarios
-  c.fillStyle='#B8743E'; c.beginPath(); c.moveTo(250,300); c.lineTo(258,262); c.lineTo(296,260); c.lineTo(304,300); c.closePath(); c.fill(); c.fillStyle='#9A5A2E'; c.fillRect(258,262,38,4); // meseta del desierto
-  c.fillStyle='#8A8094'; c.beginPath(); c.moveTo(330,262); c.lineTo(366,206); c.lineTo(374,206); c.lineTo(412,262); c.closePath(); c.fill(); c.fillStyle='#F6F8FC'; c.beginPath(); c.moveTo(359,217); c.lineTo(366,206); c.lineTo(374,206); c.lineTo(381,217); c.closePath(); c.fill(); // volcán del salar
-  c.fillStyle='#9AA6B8'; c.beginPath(); c.moveTo(470,240); c.lineTo(520,104); c.lineTo(534,104); c.lineTo(586,236); c.closePath(); c.fill(); c.fillStyle='#F6FAFE'; c.beginPath(); c.moveTo(500,158); c.lineTo(520,104); c.lineTo(534,104); c.lineTo(556,160); c.lineTo(540,150); c.lineTo(528,162); c.lineTo(514,150); c.closePath(); c.fill(); // nevado
+  for(let k=0;k<6;k++){ const cx=40+k*110+R()*30, cy=40+R()*50; c.fillStyle='rgba(255,255,255,.75)'; [[0,0,16],[14,-5,12],[-14,-3,11],[26,2,9]].forEach(([dx,dy,r])=>{ c.beginPath(); c.arc(cx+dx,cy+dy,r,0,7); c.fill(); }); }
+  // la cordillera de los Andes al fondo, más alta hacia la derecha
+  c.fillStyle='rgba(120,140,175,.55)'; c.beginPath(); c.moveTo(250,320); for(let x=250;x<=W;x+=4) c.lineTo(x,300-(x-250)*0.45+Math.abs(Math.sin(x*0.05))*22+Math.sin(x*0.13)*6); c.lineTo(W,320); c.closePath(); c.fill();
+  // fondos de cada escenario
+  c.fillStyle='#B8743E'; c.beginPath(); c.moveTo(176,334); c.lineTo(182,304); c.lineTo(214,302); c.lineTo(222,334); c.closePath(); c.fill(); c.fillStyle='#9A5A2E'; c.fillRect(182,302,32,4); // meseta del desierto
+  c.fillStyle='#4E7A5A'; c.beginPath(); c.moveTo(240,330); c.quadraticCurveTo(270,290,300,312); c.quadraticCurveTo(320,300,330,326); c.closePath(); c.fill(); // lomas del valle
+  c.fillStyle='#9AA6B8'; c.beginPath(); c.moveTo(470,250); c.lineTo(520,104); c.lineTo(534,104); c.lineTo(586,246); c.closePath(); c.fill(); c.fillStyle='#F6FAFE'; c.beginPath(); c.moveTo(500,158); c.lineTo(520,104); c.lineTo(534,104); c.lineTo(556,160); c.lineTo(540,150); c.lineTo(528,162); c.lineTo(514,150); c.closePath(); c.fill(); // nevado
   c.fillStyle='#6E7A8E'; c.beginPath(); c.moveTo(540,210); for(const [x,y] of [[560,120],[574,140],[592,70],[606,52],[620,80],[632,60],[646,120],[660,210]]) c.lineTo(x,y); c.closePath(); c.fill();
-  c.fillStyle='#F2F8FF'; c.beginPath(); c.moveTo(592,70); c.lineTo(606,52); c.lineTo(620,80); c.lineTo(612,96); c.lineTo(600,88); c.closePath(); c.fill(); c.beginPath(); c.moveTo(626,70); c.lineTo(632,60); c.lineTo(640,84); c.closePath(); c.fill(); // cordillera con glaciares
-  // mar a la izquierda
-  g=c.createLinearGradient(0,300,0,H); g.addColorStop(0,'#4AA0C8'); g.addColorStop(1,'#1E6088'); c.fillStyle=g; c.fillRect(0,300,70,H-300);
-  c.strokeStyle='rgba(255,255,255,.5)'; c.lineWidth=.8; for(let y=306;y<H;y+=7){ c.beginPath(); for(let x=0;x<=70;x+=5) c.lineTo(x,y+Math.sin(x*.2+y)*1.2); c.stroke(); }
-  c.fillStyle='#F4ECD8'; c.beginPath(); c.moveTo(12,318); c.lineTo(17,304); c.lineTo(18,318); c.closePath(); c.fill(); c.fillStyle='#6A4A2A'; c.fillRect(9,318,12,2);
+  c.fillStyle='#F2F8FF'; c.beginPath(); c.moveTo(592,70); c.lineTo(606,52); c.lineTo(620,80); c.lineTo(612,96); c.lineTo(600,88); c.closePath(); c.fill(); c.beginPath(); c.moveTo(626,70); c.lineTo(632,60); c.lineTo(640,84); c.closePath(); c.fill();
+  // mar a la izquierda (costa y salinas)
+  g=c.createLinearGradient(0,318,0,H); g.addColorStop(0,'#4AA0C8'); g.addColorStop(1,'#1E6088'); c.fillStyle=g; c.fillRect(0,318,120,H-318);
+  c.strokeStyle='rgba(255,255,255,.5)'; c.lineWidth=.8; for(let y=322;y<H;y+=6){ c.beginPath(); for(let x=0;x<=120;x+=5) c.lineTo(x,y+Math.sin(x*.2+y)*1.2); c.stroke(); }
+  c.fillStyle='#F4ECD8'; c.beginPath(); c.moveTo(14,330); c.lineTo(19,316); c.lineTo(20,330); c.closePath(); c.fill(); c.fillStyle='#6A4A2A'; c.fillRect(11,330,12,2);
   // suelo de cada escenario
-  const COL=['#E6CE96','#5E9A5E','#2E6A3A','#D49A5E','#ECE8E0','#8A9460','#E8EEF6','#C6D2E2'], EARTH=['#B8945A','#5A6A3A','#3A4A2A','#A86A3A','#BDB6A8','#5A5A40','#9AA6B4','#7A8698'];
-  for(let i=0;i<8;i++){ const x0=i*80, x1=x0+80; c.fillStyle=EARTH[i]; c.beginPath(); c.moveTo(x0,H); for(let x=x0;x<=x1;x+=2) c.lineTo(x,expGround(x)); c.lineTo(x1,H); c.closePath(); c.fill();
-    c.fillStyle=COL[i]; c.beginPath(); for(let x=x0;x<=x1;x+=2) c.lineTo(x,expGround(x)-1); for(let x=x1;x>=x0;x-=2) c.lineTo(x,expGround(x)+7); c.closePath(); c.fill(); }
-  const gy=x=>expGround(x);
-  // 1 costa: palmeras
-  [[46,0],[62,1]].forEach(([x,k])=>{ const y=gy(x); c.strokeStyle='#6A4A2A'; c.lineWidth=1.8; c.beginPath(); c.moveTo(x,y); c.quadraticCurveTo(x+3,y-12,x+1,y-22); c.stroke(); c.fillStyle='#2E7A3A'; for(let j=0;j<6;j++){ c.save(); c.translate(x+1,y-22); c.rotate(-2.8+j*0.55); c.beginPath(); c.ellipse(6,0,7,1.8,0,0,7); c.fill(); c.restore(); } });
-  // 2 río: el río baja del bosque y llega al mar
-  c.strokeStyle='#3E8AC0'; c.lineWidth=4; c.lineCap='round'; c.beginPath(); c.moveTo(190,gy(190)+3); c.quadraticCurveTo(150,gy(150)+10,120,gy(120)+5); c.quadraticCurveTo(95,gy(95)+12,70,gy(70)+6); c.stroke(); c.strokeStyle='rgba(255,255,255,.45)'; c.lineWidth=1; c.stroke();
-  c.fillStyle='#8A5A34'; c.fillRect(113,gy(113)-1,16,2.4); for(let k=0;k<5;k++){ const x=88+k*14; c.fillStyle='#3E7A44'; c.beginPath(); c.arc(x,gy(x)-5,4,0,7); c.fill(); }
-  // 3 bosque
-  for(let k=0;k<22;k++){ const x=162+R()*76, y=gy(x), r=4+R()*4; c.fillStyle='#4A3322'; c.fillRect(x-.8,y-r,1.6,r); c.fillStyle=R()<.5?'#1E4A2A':'#2A6034'; c.beginPath(); c.arc(x,y-r-2,r,0,7); c.fill(); }
-  // 4 desierto: dunas y cactus
-  c.strokeStyle='rgba(140,90,40,.45)'; c.lineWidth=.8; for(let k=0;k<4;k++){ c.beginPath(); for(let x=242;x<=318;x+=3) c.lineTo(x,gy(x)+3+k*4+Math.sin(x*0.12+k)*1.5); c.stroke(); }
-  [[262,0],[286,1],[306,0]].forEach(([x])=>{ const y=gy(x); c.strokeStyle='#4E7A3A'; c.lineWidth=2.2; c.beginPath(); c.moveTo(x,y); c.lineTo(x,y-11); c.moveTo(x-3,y-4); c.lineTo(x-3,y-8); c.moveTo(x+3,y-5); c.lineTo(x+3,y-9); c.stroke(); });
-  // 5 salar: laguna rosada y flamencos
-  c.fillStyle='rgba(230,140,160,.85)'; c.beginPath(); c.ellipse(372,gy(372)+3,22,3.5,0,0,7); c.fill(); c.strokeStyle='rgba(160,150,140,.5)'; c.lineWidth=.5; for(let k=0;k<10;k++){ const x=325+R()*70, y=gy(x)+2+R()*5; c.beginPath(); c.moveTo(x,y); c.lineTo(x+4,y+1.5); c.lineTo(x+8,y); c.stroke(); }
-  [[362,0],[378,1]].forEach(([x])=>{ const y=gy(x); c.strokeStyle='#E07A8A'; c.lineWidth=.6; c.beginPath(); c.moveTo(x,y+2); c.lineTo(x,y-5); c.stroke(); c.fillStyle='#F29AAA'; c.beginPath(); c.ellipse(x+1,y-6,2.6,1.6,0,0,7); c.fill(); c.strokeStyle='#F29AAA'; c.lineWidth=.8; c.beginPath(); c.moveTo(x+3,y-6); c.quadraticCurveTo(x+5,y-10,x+4,y-12); c.stroke(); });
-  // 6 páramo: frailejones, laguna y niebla
+  const COL=['#E6CE96','#F2EEE6','#D49A5E','#5E9A5E','#2E6A3A','#8A9460','#E8EEF6','#C6D2E2'], EARTH=['#B8945A','#C9C0B0','#A86A3A','#5A6A3A','#3A4A2A','#5A5A40','#9AA6B4','#7A8698'];
+  for(let i=0;i<8;i++){ const x0=i*80, x1=x0+80; c.fillStyle=EARTH[i]; c.beginPath(); c.moveTo(x0,H); for(let x=x0;x<=x1;x+=2) c.lineTo(x,gy(x)); c.lineTo(x1,H); c.closePath(); c.fill();
+    c.fillStyle=COL[i]; c.beginPath(); for(let x=x0;x<=x1;x+=2) c.lineTo(x,gy(x)-1); for(let x=x1;x>=x0;x-=2) c.lineTo(x,gy(x)+7); c.closePath(); c.fill(); }
+  // costa: palmeras
+  [[48,0],[66,1]].forEach(([x])=>{ const y=gy(x); c.strokeStyle='#6A4A2A'; c.lineWidth=1.8; c.beginPath(); c.moveTo(x,y); c.quadraticCurveTo(x+3,y-12,x+1,y-22); c.stroke(); c.fillStyle='#2E7A3A'; for(let j=0;j<6;j++){ c.save(); c.translate(x+1,y-22); c.rotate(-2.8+j*0.55); c.beginPath(); c.ellipse(6,0,7,1.8,0,0,7); c.fill(); c.restore(); } });
+  // salinas: piscinas de sal rosadas y blancas, montículos de sal y flamencos
+  for(let k=0;k<4;k++){ const x=88+k*17, y=gy(x)+3; c.fillStyle=k%2?'rgba(240,160,180,.9)':'rgba(250,250,250,.95)'; c.fillRect(x,y,14,4); c.strokeStyle='rgba(140,120,110,.6)'; c.lineWidth=.5; c.strokeRect(x,y,14,4); }
+  [[100,0],[128,1],[146,0]].forEach(([x])=>{ const y=gy(x); c.fillStyle='#FFFFFF'; c.beginPath(); c.moveTo(x-6,y); c.lineTo(x,y-7); c.lineTo(x+6,y); c.closePath(); c.fill(); c.fillStyle='rgba(160,170,190,.5)'; c.beginPath(); c.moveTo(x,y-7); c.lineTo(x+6,y); c.lineTo(x+2,y); c.closePath(); c.fill(); });
+  [[114],[136]].forEach(([x])=>{ const y=gy(x)-2; c.strokeStyle='#E07A8A'; c.lineWidth=.6; c.beginPath(); c.moveTo(x,y+2); c.lineTo(x,y-5); c.stroke(); c.fillStyle='#F29AAA'; c.beginPath(); c.ellipse(x+1,y-6,2.6,1.6,0,0,7); c.fill(); c.strokeStyle='#F29AAA'; c.lineWidth=.8; c.beginPath(); c.moveTo(x+3,y-6); c.quadraticCurveTo(x+5,y-10,x+4,y-12); c.stroke(); });
+  // desierto: dunas y cactus
+  c.strokeStyle='rgba(140,90,40,.45)'; c.lineWidth=.8; for(let k=0;k<4;k++){ c.beginPath(); for(let x=162;x<=238;x+=3) c.lineTo(x,gy(x)+3+k*4+Math.sin(x*0.12+k)*1.5); c.stroke(); }
+  [[172],[196],[230]].forEach(([x])=>{ const y=gy(x); c.strokeStyle='#4E7A3A'; c.lineWidth=2.2; c.beginPath(); c.moveTo(x,y); c.lineTo(x,y-11); c.moveTo(x-3,y-4); c.lineTo(x-3,y-8); c.moveTo(x+3,y-5); c.lineTo(x+3,y-9); c.stroke(); });
+  // valle del río: el río baja del bosque, cruza el valle y llega al mar
+  c.strokeStyle='#3E8AC0'; c.lineWidth=4; c.lineCap='round'; c.beginPath(); c.moveTo(352,gy(352)+3); c.quadraticCurveTo(300,gy(300)+12,268,gy(268)+6); c.quadraticCurveTo(200,gy(200)+14,120,gy(120)+8); c.stroke(); c.strokeStyle='rgba(255,255,255,.45)'; c.lineWidth=1; c.stroke();
+  c.fillStyle='#8A5A34'; c.fillRect(272,gy(272)-1,16,2.4); for(let k=0;k<5;k++){ const x=246+k*16; c.fillStyle='#3E7A44'; c.beginPath(); c.arc(x,gy(x)-5,4,0,7); c.fill(); }
+  // bosque andino
+  for(let k=0;k<22;k++){ const x=322+R()*76, y=gy(x), r=4+R()*4; c.fillStyle='#4A3322'; c.fillRect(x-.8,y-r,1.6,r); c.fillStyle=R()<.5?'#1E4A2A':'#2A6034'; c.beginPath(); c.arc(x,y-r-2,r,0,7); c.fill(); }
+  // páramo: frailejones, laguna y niebla
   c.fillStyle='rgba(70,120,160,.8)'; c.beginPath(); c.ellipse(452,gy(452)+3,12,2.6,0,0,7); c.fill();
   for(let k=0;k<12;k++){ const x=404+R()*72, y=gy(x); c.fillStyle='#5A4A38'; c.fillRect(x-.7,y-6,1.4,6); c.fillStyle='#C9D4B4'; c.beginPath(); c.arc(x,y-7,2,0,7); c.fill(); if(k%3===0){ c.fillStyle='#F2C230'; c.beginPath(); c.arc(x,y-9.5,.9,0,7); c.fill(); } }
   c.fillStyle='rgba(255,255,255,.25)'; c.fillRect(400,gy(440)-20,80,6);
-  // 7 nevado y 8 cordillera: nieve en el suelo, rocas y grietas
+  // nevado y cordillera: rocas y grietas en el hielo
   for(let k=0;k<8;k++){ const x=486+R()*150, y=gy(x); c.fillStyle='#8A94A0'; c.beginPath(); c.moveTo(x-4,y+2); c.lineTo(x,y-3); c.lineTo(x+4,y+2); c.closePath(); c.fill(); }
   c.strokeStyle='rgba(90,140,200,.6)'; c.lineWidth=.8; for(let k=0;k<6;k++){ const x=596+R()*20, y=70+R()*18; c.beginPath(); c.moveTo(x,y); c.lineTo(x+3,y+5); c.stroke(); }
-  // separadores suaves entre escenarios y nombre del terreno
-  c.font='700 6.4px Figtree, sans-serif'; c.textAlign='center';
-  c.textAlign='left';
-  // luz del atardecer en las cumbres y oscurecimiento suave abajo
   g=c.createLinearGradient(0,H-40,0,H); g.addColorStop(0,'rgba(0,0,0,0)'); g.addColorStop(1,'rgba(10,15,20,.35)'); c.fillStyle=g; c.fillRect(0,H-40,W,40);
   MAPBG2=cv2; }
+
 
 
 // ---------- la playa: mar al fondo y palmeras con manglar ----------
@@ -6202,6 +6197,18 @@ function huellaHTML(){ const v=verde(), st=eco.stats||{}, k=v>=80?'v':v>=50?'a':
   return `<div class="sec"><h3>Tu huella ambiental</h3><div class="gig"><div class="gi"><div class="gt"><span style="display:inline-block;width:11px;height:11px;border-radius:50%;background:${SEMC[k]};margin-right:6px"></span>Huella verde</div><div class="gv" style="color:${SEMC[k]}">${v}/100</div><div class="gs">${msg}</div><div class="gsrc">Costo ambiental · externalidades</div></div>
    <div class="gi"><div class="gt">Lo que hiciste por la naturaleza</div><div class="gs">Zonas dañadas que atravesaste: <b>${st.danos||0}</b><br>Zonas que restauraste: <b>${st.restaura||0}</b><br>Atajos dañinos que tomaste: <b>${st.atajos||0}</b></div><div class="gsrc">Sembrar, limpiar, apagar y denunciar</div></div></div>
    <p class="muted" style="font-size:12.5px;margin:8px 0 0">Talar, contaminar o quemar parece barato hoy, pero sube el precio del agua, trae derrumbes y enfermedades, y lo pagamos todos. Por eso la huella verde suma o resta en tu diploma.</p></div>`; }
+// ---------- La Expedición en el orden real de altitud: costa, salinas, desierto, río, bosque, páramo, nevado, cordillera ----------
+(()=>{ const ORD=[0,4,3,1,2,5,6,7], INV=[]; ORD.forEach((o,n)=>INV[o]=n);
+  const perm=(arr,base)=>{ const sub=arr.slice(base,base+8); for(let n=0;n<8;n++) arr[base+n]=sub[ORD[n]]; };
+  [LV,LIGHT,PRIN,ETAPA,PAGES,PLAT_W,NPC_BY_WORLD,VEH_BY_WORLD,LANZA_W,JEFE_P.jefeGota,JEFE_P.jefeCredito,DESASTRES,ARENA_COL,ARENA_LEMA,REQ,CURR,RETOS].forEach(a=>perm(a,8));
+  [MT2,META2,DANO_K].forEach(a=>perm(a,0)); [JM,LOOK_J].forEach(a=>perm(a,7));
+  Q_GUIAS.forEach(q=>{ if(q[3]>=8) q[3]=8+INV[q[3]-8]; });
+  const rt=reqText2; window.reqText2=li=>rt(8+ORD[li-8]);
+  ALT2.splice(0,9,0,20,400,600,1800,3600,4800,5400,5775);
+  LV[9].name='Las Salinas'; LV[9].bioma='Salinas'; LV[9].lesson=LV[9].lesson.replace('En el <b>salar</b>','En las <b>salinas</b> de la costa').replace('del salar','de las salinas').replace('grietas de sal','grietas de sal y el sol');
+  LV[11].name='El Valle del Río'; LV[12].name='El Bosque Andino'; LV[12].bioma='Bosque andino';
+  [3,3,3,4,4,4,5,5].forEach((cst,n)=>LV[8+n].costo=cst);
+  const th=THEMES[LV[9].theme]; th.bgSnow=[0,0,0]; th.mar=1; th.sky=['#4A90D0','#F2E6C8']; })();
 ANCLA.add('dano'); ANCLA.add('impuestos');
 LV.slice(8).forEach(L=>{ const a=L.chunks.indexOf('page1'); L.chunks.splice(a+1,0,'dano'); const b=L.chunks.indexOf('page2'); L.chunks.splice(b,0,'dano'); });
 MEDALLAS.push({id:'verde',n:'Guardián de la montaña',d:'Restaura 5 zonas dañadas por tala, basura, quemas o contaminación',c:()=>(eco.stats.restaura||0)>=5},{id:'expe',n:'Gran Expedición',d:'Completa los 16 mundos y aprueba la Prueba del Gran Mentor',c:()=>!!eco.granMentor});
