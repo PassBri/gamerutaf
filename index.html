@@ -945,6 +945,7 @@ function indicadoresHTML(){ const G=guiaInd(), I=G.I, dot=k=>`<span style="displ
    <div class="gblk"><div class="gt">${dot(mm[2])}Meta de este mundo: ${esc(mm[0])}</div><div class="gs">${esc(mm[1])}</div><div class="gsrc">Guía 7 · indicadores de preparación para el ascenso (8.7)</div></div>
    <div class="gblk"><div class="gt">${dot(nAl===0?'v':nAl<=2?'a':'r')}Señales de alerta: ${nAl} de 5</div>${al.map(a=>`<div class="gs" style="color:${a[0]?'#FF9A8C':'var(--muted)'}">${a[0]?'⚠':'✓'} ${a[1]}</div>`).join('')}<div class="gsrc">Guía 6 · señales de alerta</div></div>
    ${G.cfi.length?`<div class="gblk"><div class="gt">Cash Flow Index: qué deuda pagar primero</div>${G.cfi.map((d,i)=>`<div class="gs">${i===0?'<b style="color:#FFD36B">1.º paga esta →</b> ':''}${esc(d.n)}: saldo ${d.saldo} ÷ cuota ${d.cuota} = <b>${d.i}</b></div>`).join('')}<div class="gs muted">El índice más bajo se paga primero: libera tu flujo de caja más rápido.</div><div class="gsrc">Guía 3 · Cash Flow Index</div></div>`:''}
+   ${(S.li>=8||verde()<100)?`<div class="gblk"><div class="gt">${dot(verde()>=80?'v':verde()>=50?'a':'r')}Huella ambiental: ${verde()}/100</div><div class="gs">Zonas dañadas atravesadas: ${(eco.stats.danos||0)} · restauradas: ${(eco.stats.restaura||0)} · atajos dañinos: ${(eco.stats.atajos||0)}. El daño ambiental encarece el agua, los alimentos y los servicios.</div><div class="gsrc">Costo ambiental · externalidades</div></div>`:''}
    <div class="gblk"><div class="gt">Otros números de la vida real</div>
    <div class="gs">Tasa de ahorro: <b>${I.tasa} %</b> (al menos 10 %, ideal 20 %) · Cuotas sobre ingresos: <b>${I.carga} %</b> (máximo 30 %) · Libertad financiera: tus activos pagan <b>${I.libertad} %</b> de tus gastos</div></div></div>`; }
 function nivelDiploma(){ const ts=(eco.stars||[]).reduce((a,b)=>a+(b||0),0), deuda=debtTot(), pat=patrimonio(), inv=(eco.stats&&eco.stats.invested)||0;
@@ -4227,11 +4228,13 @@ function drawMap(){
     else { ctx.beginPath(); ctx.arc(x,y,8,0,7); ctx.fill(); ctx.stroke(); }
     ctx.fillStyle=done||i===7?'#2A1A00':'#fff'; ctx.textAlign='center'; ctx.font='700 9px "IBM Plex Mono", monospace'; ctx.fillText(done?'✓':String(i+1+off),x,y+(i===7?2:0.5));
     ctx.globalAlpha=a; ctx.font='700 11px Figtree, system-ui, sans-serif';
-    const left=x<(off?300:320), lx=left?x-14:x+14; ctx.textAlign=left?'right':'left';
-    const label=LV[i+off].name, sub=off?LV[i+off].bioma+' · '+fmtM(ALT2[i])+' m':LV[i].role;
-    ctx.fillStyle='rgba(0,0,0,.55)'; ctx.fillText(label,lx+1,y-5+1); ctx.fillStyle=cur?'#FFE18A':'#FFFFFF'; ctx.fillText(label,lx,y-5);
-    ctx.font='600 9px Figtree, system-ui, sans-serif'; ctx.fillStyle='rgba(255,255,255,.75)'; ctx.fillText(sub,lx,y+7);
-    const st=eco&&eco.stars?eco.stars[i+off]:0; if(st){ ctx.fillStyle='#FFD36B'; ctx.font='700 10px Figtree, sans-serif'; ctx.fillText('★'.repeat(st)+'☆'.repeat(3-st),lx,y+19); }
+    const left=x<320; let lx=left?x-14:x+14, ly=y-5, sy=y+7, sty=y+19; ctx.textAlign=left?'right':'left';
+    if(off){ if(i===7){ lx=x-16; ctx.textAlign='right'; } else if(i%2===0){ lx=x; ctx.textAlign='center'; ly=y-36; sy=y-25; sty=y+21; } else { lx=x; ctx.textAlign='center'; ly=y+24; sy=y+35; sty=y-14; } }
+    const label=LV[i+off].name, sub=off?fmtM(ALT2[i])+' m':LV[i].role;
+    if(off){ ctx.font='700 11px Figtree, system-ui, sans-serif'; const bw=Math.max(ctx.measureText(label).width,40)+12, bx=ctx.textAlign==='center'?lx-bw/2:ctx.textAlign==='right'?lx-bw+6:lx-6; ctx.fillStyle='rgba(10,20,26,.55)'; rr(bx,ly-10,bw,25,6); ctx.fill(); }
+    ctx.font='700 11px Figtree, system-ui, sans-serif'; ctx.fillStyle='rgba(0,0,0,.55)'; ctx.fillText(label,lx+1,ly+1); ctx.fillStyle=cur?'#FFE18A':'#FFFFFF'; ctx.fillText(label,lx,ly);
+    ctx.font='600 9px Figtree, system-ui, sans-serif'; ctx.fillStyle='rgba(255,255,255,.8)'; ctx.fillText(sub,lx,sy);
+    const st=eco&&eco.stars?eco.stars[i+off]:0; if(st){ ctx.fillStyle='#FFD36B'; ctx.font='700 10px Figtree, sans-serif'; ctx.fillText('★'.repeat(st)+'☆'.repeat(3-st),lx,sty); }
     ctx.globalAlpha=1;
   });
   ctx.textAlign='left';
@@ -4952,9 +4955,9 @@ function certURL(){ // diploma: papel de seguridad, guilloche de oro, emblema, m
   const ND=nivelDiploma(); { c.font='800 15px Figtree, sans-serif'; const lt='DIPLOMA NIVEL '+ND.m.toUpperCase(), lw=c.measureText(lt).width+64; const gb=c.createLinearGradient(Wc/2-lw/2,0,Wc/2+lw/2,0); gb.addColorStop(0,ND.col); gb.addColorStop(0.5,'#FFF3D6'); gb.addColorStop(1,ND.col); c.fillStyle=gb; c.beginPath(); c.moveTo(Wc/2-lw/2-14,604); c.lineTo(Wc/2-lw/2,592); c.lineTo(Wc/2+lw/2,592); c.lineTo(Wc/2+lw/2+14,604); c.lineTo(Wc/2+lw/2,616); c.lineTo(Wc/2-lw/2,616); c.closePath(); c.fill(); c.strokeStyle='rgba(60,30,10,.45)'; c.lineWidth=1; c.stroke(); c.fillStyle='#3A2A20'; c.fillText(lt,Wc/2,609); }
   c.fillStyle=INK; c.font='500 21px Figtree, sans-serif'; c.fillText('por demostrar una',Wc/2,642);
   c.fillStyle=LAC; c.font='800 38px Figtree, sans-serif'; c.fillText(ND.t,Wc/2,684);
-  c.fillStyle=INK; c.font='500 19px Figtree, sans-serif'; c.fillText(ND.k==='oro'?'al conquistar las 8 estaciones de la montaña, del Valle a la Cordillera, hasta alcanzar la libertad financiera.':'al recorrer las 8 estaciones de la montaña. Siguiente paso: '+ND.tip+'.',Wc/2,716);
+  c.fillStyle=INK; c.font='500 19px Figtree, sans-serif'; c.fillText(S.li>=8?(ND.k==='oro'?'al recorrer los 16 mundos, de la costa a la Gran Cordillera, con libertad financiera y una huella verde de '+verde()+'.':'al recorrer los 16 mundos con una huella verde de '+verde()+'. Siguiente paso: '+ND.tip+'.'):(ND.k==='oro'?'al conquistar las 8 estaciones de la montaña, del Valle a la Cordillera, hasta alcanzar la libertad financiera.':'al recorrer las 8 estaciones de la montaña. Siguiente paso: '+ND.tip+'.'),Wc/2,716);
   // medallas de logros
-  const ts=eco.stars.reduce((a,b)=>a+(b||0),0), M=[[patrimonio(),'PATRIMONIO'],[ingresoAct(),'INGRESO DE ACTIVOS'],[activosN(),'ACTIVOS'],[eco.emb,'AHORRO'],[eco.stats.invested||0,'INVERTIDO'],[eco.score||650,'DATACRÉDITO'],[ts+'/24','ESTRELLAS']];
+  const nW=S.li>=8?16:8, ts=eco.stars.slice(0,nW).reduce((a,b)=>a+(b||0),0), M=[[patrimonio(),'PATRIMONIO'],[ingresoAct(),'INGRESO DE ACTIVOS'],[activosN(),'ACTIVOS'],[eco.emb,'AHORRO'],[eco.stats.invested||0,'INVERTIDO'],[eco.score||650,'DATACRÉDITO'],[verde(),'HUELLA VERDE'],[ts+'/'+nW*3,'ESTRELLAS']];
   const mw=150, mx0=Wc/2-(M.length-1)*mw/2;
   M.forEach(([v,l],i)=>{ const x=mx0+i*mw, y=790; c.fillStyle='rgba(255,252,244,.85)'; c.beginPath(); c.arc(x,y,44,0,7); c.fill(); c.strokeStyle=ORO; c.lineWidth=2.4; c.beginPath(); c.arc(x,y,44,0,7); c.stroke(); c.strokeStyle='rgba(107,42,26,.5)'; c.lineWidth=0.8; c.beginPath(); c.arc(x,y,38,0,7); c.stroke();
     c.fillStyle=LAC; c.font='700 '+(String(v).length>4?22:28)+'px "IBM Plex Mono", monospace'; c.fillText(String(v),x,y+9); c.fillStyle=INK; c.font='800 11px Figtree, sans-serif'; c.fillText(l,x,y+66); });
@@ -5004,8 +5007,9 @@ function endingReport(){ try{ medCheck(); }catch(e){}
       <div class="st"><b>${(eco.suenos||[]).length}</b><span>Sueños cumplidos sin deudas</span></div>
       <div class="st"><b>${(eco.lujos||[]).length}</b><span>Pasivos que conservas</span></div>
       <div class="st"><b>${Object.keys(eco.seen||{}).length}/${Object.keys(TIPS).length}</b><span>Conceptos descubiertos</span></div>
-      <div class="st"><b>${nLog()}/8</b><span>Resultados de aprendizaje logrados</span></div>
+      <div class="st"><b>${nLog()}/${fli===15?16:8}</b><span>Resultados de aprendizaje logrados</span></div>
     </div>
+    ${huellaHTML()}
     <div class="sec"><h3>Tus resultados de aprendizaje</h3>${CURR.map((c,i)=>`<div class="item"><span class="mk ${eco.logros[i]===2?'ok':'no'}" style="flex:0 0 auto">${eco.logros[i]===2?'✓':'…'}</span><span class="n"><b>Mundo ${i+1} · ${esc(c.comp)}</b> <span class="muted">${esc(c.g)}</span><br>${esc(c.ra)}</span></div>`).join('')}</div>
     ${eco.post!=null?`<div class="fb ok"><b>Lo que aprendiste:</b> ${eco.pre!=null?`prueba inicial ${eco.pre}/5 → prueba final ${eco.post}/5.`:`prueba final ${eco.post}/5.`}</div>`:`<p>¿Quieres medir cuánto aprendiste? Responde la prueba final (las mismas 5 preguntas del inicio).</p><button class="btn" type="button" id="bPost">Hacer la prueba final</button>`}
     <div class="sec"><h3>Resumen para el docente</h3><textarea id="rep" readonly style="width:100%;min-height:110px;background:var(--bg);color:var(--ink);border:1px solid var(--line);border-radius:10px;padding:10px;font:600 12px var(--f-num)">${esc(report)}</textarea>
@@ -6122,49 +6126,62 @@ const DECO2={
  glaciar:(d,warm)=>{ const h=20+(d.k%22); const g=ctx.createLinearGradient(-12,-h,12,0); g.addColorStop(0,'#E8F4FF'); g.addColorStop(1,'#8AB8DE'); ctx.fillStyle=g;
    ctx.beginPath(); ctx.moveTo(-14,0); ctx.lineTo(-10,-h*0.7); ctx.lineTo(-3,-h); ctx.lineTo(4,-h*0.8); ctx.lineTo(9,-h*0.9); ctx.lineTo(14,0); ctx.closePath(); ctx.fill();
    ctx.strokeStyle='rgba(255,255,255,.8)'; ctx.lineWidth=1; ctx.beginPath(); ctx.moveTo(-8,-h*0.6); ctx.lineTo(-2,-h*0.3); ctx.stroke(); ctx.strokeStyle='rgba(60,110,160,.35)'; ctx.beginPath(); ctx.moveTo(4,-h*0.7); ctx.lineTo(6,-h*0.2); ctx.stroke(); }};
-// ---------- mapa de La Expedición: la montaña por pisos de altura, del mar a los glaciares ----------
-const MAPN2=[[160,332],[430,292],[215,256],[440,218],[250,182],[410,142],[290,102],[330,52]];
-const PISOS=[ // [y superior del piso, nombre, altitud, color]
- [336,'Playa','0 m','#E6CE96'],[306,'Manglar','150 m','#3E6A44'],[272,'Río','420 m','#5E9A5E'],[236,'Bosque','1.150 m','#2E5E36'],
- [198,'Desierto','2.000 m','#C9915A'],[160,'Salar','3.650 m','#EDEAE2'],[118,'Páramo','3.900 m','#8A9460'],[80,'Nevado','4.400 m','#E4ECF4'],[0,'Cordillera','5.000 m','#F6FAFE']];
+// ---------- mapa de La Expedición: un viaje por ocho escenarios distintos, del mar a los glaciares ----------
+const EXP_EDGE=[338,334,326,304,268,246,226,196,150]; // altura del suelo en el borde de cada escenario (sube hacia la derecha)
+const expGround=x=>{ const s=Math.max(0,Math.min(7.999,x/80)), i=Math.floor(s), f=s-i, a=EXP_EDGE[i], b=EXP_EDGE[i+1], u=f*f*(3-2*f); return a+(b-a)*u+Math.sin(x*0.09)*2; };
+const MAPN2=[0,1,2,3,4,5,6,7].map(i=>i===7?[606,62]:[40+i*80,Math.round(expGround(40+i*80))-6]);
 let MAPBG2=null;
-function buildMapBg2(){ const cv2=document.createElement('canvas'); cv2.width=W*2; cv2.height=H*2; const c=cv2.getContext('2d'); c.scale(2,2);
-  const R=mulberry(777), n=(x,s)=>Math.sin(x*0.05+s)*5+Math.sin(x*0.13+s*2)*2.5;
-  // cielo y mar
-  let g=c.createLinearGradient(0,0,0,H); g.addColorStop(0,'#16284A'); g.addColorStop(.55,'#4A6E9A'); g.addColorStop(.8,'#E8B48A'); g.addColorStop(1,'#F6D2A0'); c.fillStyle=g; c.fillRect(0,0,W,H);
-  g=c.createLinearGradient(0,292,0,H); g.addColorStop(0,'#3E86B0'); g.addColorStop(1,'#1E5A80'); c.fillStyle=g; c.fillRect(0,292,W,H-292);
-  c.strokeStyle='rgba(255,255,255,.35)'; c.lineWidth=.8; for(let y=298;y<H;y+=7){ c.beginPath(); for(let x=0;x<=W;x+=6) c.lineTo(x,y+Math.sin(x*.08+y)*1.2); c.stroke(); }
-  // cordilleras lejanas
-  [[0.5,'#56708E',150],[0.7,'#46607E',190]].forEach(([a,col,b])=>{ c.fillStyle=col; c.globalAlpha=a; c.beginPath(); c.moveTo(0,300); for(let x=0;x<=W;x+=4) c.lineTo(x,b+n(x,b)*3+Math.abs(Math.sin(x*0.012+b))*40); c.lineTo(W,300); c.closePath(); c.fill(); c.globalAlpha=1; });
-  // silueta del macizo principal
-  const ridge=x=>Math.max(40,40+Math.abs(x-330)*1.03+n(x,1)*1.4+(Math.abs(x-330)>60?Math.sin(x*0.06)*6:0));
-  c.save(); c.beginPath(); c.moveTo(-10,H); for(let x=-10;x<=W+10;x+=2) c.lineTo(x,Math.min(H,ridge(x))); c.lineTo(W+10,H); c.closePath(); c.clip();
-  // pisos de altura
-  for(let i=PISOS.length-1;i>=0;i--){ const top=PISOS[i][0], bot=i===0?H:PISOS[i-1][0]; c.fillStyle=PISOS[i][3]; c.beginPath(); c.moveTo(0,bot+3); for(let x=0;x<=W;x+=4) c.lineTo(x,top+n(x,i*3)*0.8); c.lineTo(W,bot+3); c.closePath(); c.fill(); }
-  // detalles de cada piso
-  const dots=(y0,y1,k,fn)=>{ for(let i=0;i<k;i++){ const x=R()*W, y=y0+R()*(y1-y0); if(y>=ridge(x)+2) fn(x,y); } };
-  dots(306,336,70,(x,y)=>{ c.fillStyle=R()<.4?'rgba(60,110,140,.55)':'#2A5232'; c.beginPath(); c.ellipse(x,y,4,1.6,0,0,7); c.fill(); c.strokeStyle='#4A3A22'; c.lineWidth=.5; c.beginPath(); c.moveTo(x-2,y); c.lineTo(x-3,y+3); c.moveTo(x+2,y); c.lineTo(x+3,y+3); c.stroke(); });
-  c.strokeStyle='#3E8AC0'; c.lineWidth=3; c.beginPath(); for(let x=60;x<=600;x+=4){ const y=289+Math.sin(x*0.045)*9; x===60?c.moveTo(x,y):c.lineTo(x,y); } c.stroke(); c.strokeStyle='rgba(255,255,255,.4)'; c.lineWidth=.8; c.stroke();
-  dots(272,306,60,(x,y)=>{ c.fillStyle='#3E7A44'; c.beginPath(); c.arc(x,y,2.4,0,7); c.fill(); });
-  dots(236,272,240,(x,y)=>{ c.fillStyle=R()<.5?'#1E4A2A':'#2A6034'; c.beginPath(); c.arc(x,y,3+R()*1.6,0,7); c.fill(); });
-  c.strokeStyle='rgba(120,70,40,.45)'; c.lineWidth=.8; for(let y=203;y<236;y+=5){ c.beginPath(); for(let x=0;x<=W;x+=5) c.lineTo(x,y+Math.sin(x*.07+y)*1.5); c.stroke(); }
-  dots(200,234,40,(x,y)=>{ c.strokeStyle='#4E7A3A'; c.lineWidth=1.4; c.beginPath(); c.moveTo(x,y+3); c.lineTo(x,y-4); c.moveTo(x-2,y-1); c.lineTo(x-2,y-3); c.moveTo(x+2,y); c.lineTo(x+2,y-3); c.stroke(); });
-  c.fillStyle='rgba(230,140,160,.75)'; c.beginPath(); c.ellipse(300,184,34,6,0,0,7); c.fill(); c.strokeStyle='rgba(160,150,140,.5)'; c.lineWidth=.5; for(let i=0;i<40;i++){ const x=R()*W, y=162+R()*34; if(y>=ridge(x)+2){ c.beginPath(); c.moveTo(x,y); c.lineTo(x+5,y+2); c.lineTo(x+9,y); c.stroke(); } }
-  dots(178,192,8,(x,y)=>{ c.fillStyle='#F29AAA'; c.beginPath(); c.ellipse(x,y,1.6,1,0,0,7); c.fill(); });
-  dots(120,160,70,(x,y)=>{ c.fillStyle='#5A4A38'; c.fillRect(x-.6,y-3,1.2,3); c.fillStyle='#C9D4B4'; c.beginPath(); c.arc(x,y-3.4,1.6,0,7); c.fill(); if(R()<.3){ c.fillStyle='#F2C230'; c.beginPath(); c.arc(x,y-5.4,.8,0,7); c.fill(); } });
-  dots(82,118,30,(x,y)=>{ c.fillStyle='#8A94A0'; c.beginPath(); c.moveTo(x-5,y+2); c.lineTo(x,y-3); c.lineTo(x+5,y+2); c.closePath(); c.fill(); });
-  c.strokeStyle='rgba(90,140,200,.5)'; c.lineWidth=.8; for(let i=0;i<14;i++){ const x=290+R()*80, y=50+R()*28; if(y>=ridge(x)+3){ c.beginPath(); c.moveTo(x,y); c.lineTo(x+4,y+5); c.stroke(); } }
-  // luz desde la derecha: cara en sombra y borde iluminado
-  g=c.createLinearGradient(0,0,W,0); g.addColorStop(0,'rgba(10,20,40,.38)'); g.addColorStop(.5,'rgba(10,20,40,.08)'); g.addColorStop(.52,'rgba(255,230,190,.04)'); g.addColorStop(1,'rgba(255,220,170,.12)'); c.fillStyle=g; c.fillRect(0,0,W,H);
-  c.restore();
-  c.strokeStyle='rgba(255,240,215,.7)'; c.lineWidth=1.2; c.beginPath(); for(let x=330;x<=W;x+=2) c.lineTo(x,ridge(x)); c.stroke();
-  // playa al frente con palmeras
-  c.fillStyle='#E6CE96'; c.beginPath(); c.moveTo(0,H); for(let x=0;x<=W;x+=4) c.lineTo(x,348+Math.sin(x*.03)*3); c.lineTo(W,H); c.closePath(); c.fill(); c.strokeStyle='rgba(255,255,255,.75)'; c.lineWidth=1; c.beginPath(); for(let x=0;x<=W;x+=4) c.lineTo(x,347+Math.sin(x*.03)*3); c.stroke();
-  [[24,352],[52,350],[560,351],[586,353]].forEach(([x,y])=>{ c.strokeStyle='#6A4A2A'; c.lineWidth=1.6; c.beginPath(); c.moveTo(x,y); c.quadraticCurveTo(x+3,y-10,x+1,y-18); c.stroke(); c.fillStyle='#2E7A3A'; for(let k=0;k<5;k++){ c.save(); c.translate(x+1,y-18); c.rotate(-2.6+k*0.55); c.beginPath(); c.ellipse(5,0,6,1.6,0,0,7); c.fill(); c.restore(); } });
-  // regla de altitud
-  c.fillStyle='rgba(10,20,26,.55)'; c.fillRect(W-50,40,50,308); c.font='700 6.2px Figtree, sans-serif'; c.textAlign='left'; const RX=W-46;
-  PISOS.forEach(([y,nm,alt],i)=>{ const yy=i===PISOS.length-1?52:y+4; c.strokeStyle='rgba(255,255,255,.35)'; c.lineWidth=.6; c.beginPath(); c.moveTo(W-50,yy); c.lineTo(W-44,yy); c.stroke(); c.fillStyle='#FFE18A'; c.fillText(alt,RX+4,yy+2); c.fillStyle='rgba(255,255,255,.75)'; c.fillText(nm,RX+4,yy+9); });
+function buildMapBg2(){ const cv2=document.createElement('canvas'); cv2.width=W*2; cv2.height=H*2; const c=cv2.getContext('2d'); c.scale(2,2); const R=mulberry(2027);
+  // cielo de mediodía que se enfría hacia las cumbres
+  let g=c.createLinearGradient(0,0,W,0); g.addColorStop(0,'#7EC2E8'); g.addColorStop(.5,'#5E9AD0'); g.addColorStop(1,'#2E5A9A'); c.fillStyle=g; c.fillRect(0,0,W,H);
+  g=c.createLinearGradient(0,0,0,H); g.addColorStop(0,'rgba(10,20,50,.35)'); g.addColorStop(.6,'rgba(255,240,210,0)'); g.addColorStop(1,'rgba(255,220,170,.25)'); c.fillStyle=g; c.fillRect(0,0,W,H);
+  const sg=c.createRadialGradient(150,60,4,150,60,70); sg.addColorStop(0,'rgba(255,250,220,.95)'); sg.addColorStop(.25,'rgba(255,240,190,.4)'); sg.addColorStop(1,'rgba(255,240,190,0)'); c.fillStyle=sg; c.fillRect(80,0,150,140);
+  for(let k=0;k<6;k++){ const cx=40+k*110+R()*30, cy=40+R()*50; c.fillStyle='rgba(255,255,255,.75)'; [[0,0,16],[14,-5,12],[-14,-3,11],[26,2,9]].forEach(([dx,dy,r])=>{ c.beginPath(); c.arc(cx+dx,cy+dy,r,0,7); c.fill(); }); c.fillStyle='rgba(180,190,210,.35)'; c.fillRect(cx-20,cy+6,50,4); }
+  // cordillera lejana detrás de la mitad alta del viaje
+  c.fillStyle='rgba(120,140,175,.55)'; c.beginPath(); c.moveTo(220,300); for(let x=220;x<=W;x+=4) c.lineTo(x,250-(x-220)*0.35+Math.abs(Math.sin(x*0.05))*22+Math.sin(x*0.13)*6); c.lineTo(W,300); c.closePath(); c.fill();
+  c.fillStyle='rgba(245,250,255,.7)'; for(let x=420;x<=W;x+=4){ const y=250-(x-220)*0.35+Math.abs(Math.sin(x*0.05))*22+Math.sin(x*0.13)*6; if(Math.abs(Math.sin(x*0.05))<0.25) c.fillRect(x,y,4,6); }
+  // fondos propios de algunos escenarios
+  c.fillStyle='#B8743E'; c.beginPath(); c.moveTo(250,300); c.lineTo(258,262); c.lineTo(296,260); c.lineTo(304,300); c.closePath(); c.fill(); c.fillStyle='#9A5A2E'; c.fillRect(258,262,38,4); // meseta del desierto
+  c.fillStyle='#8A8094'; c.beginPath(); c.moveTo(330,262); c.lineTo(366,206); c.lineTo(374,206); c.lineTo(412,262); c.closePath(); c.fill(); c.fillStyle='#F6F8FC'; c.beginPath(); c.moveTo(359,217); c.lineTo(366,206); c.lineTo(374,206); c.lineTo(381,217); c.closePath(); c.fill(); // volcán del salar
+  c.fillStyle='#9AA6B8'; c.beginPath(); c.moveTo(470,240); c.lineTo(520,104); c.lineTo(534,104); c.lineTo(586,236); c.closePath(); c.fill(); c.fillStyle='#F6FAFE'; c.beginPath(); c.moveTo(500,158); c.lineTo(520,104); c.lineTo(534,104); c.lineTo(556,160); c.lineTo(540,150); c.lineTo(528,162); c.lineTo(514,150); c.closePath(); c.fill(); // nevado
+  c.fillStyle='#6E7A8E'; c.beginPath(); c.moveTo(540,210); for(const [x,y] of [[560,120],[574,140],[592,70],[606,52],[620,80],[632,60],[646,120],[660,210]]) c.lineTo(x,y); c.closePath(); c.fill();
+  c.fillStyle='#F2F8FF'; c.beginPath(); c.moveTo(592,70); c.lineTo(606,52); c.lineTo(620,80); c.lineTo(612,96); c.lineTo(600,88); c.closePath(); c.fill(); c.beginPath(); c.moveTo(626,70); c.lineTo(632,60); c.lineTo(640,84); c.closePath(); c.fill(); // cordillera con glaciares
+  // mar a la izquierda
+  g=c.createLinearGradient(0,300,0,H); g.addColorStop(0,'#4AA0C8'); g.addColorStop(1,'#1E6088'); c.fillStyle=g; c.fillRect(0,300,70,H-300);
+  c.strokeStyle='rgba(255,255,255,.5)'; c.lineWidth=.8; for(let y=306;y<H;y+=7){ c.beginPath(); for(let x=0;x<=70;x+=5) c.lineTo(x,y+Math.sin(x*.2+y)*1.2); c.stroke(); }
+  c.fillStyle='#F4ECD8'; c.beginPath(); c.moveTo(12,318); c.lineTo(17,304); c.lineTo(18,318); c.closePath(); c.fill(); c.fillStyle='#6A4A2A'; c.fillRect(9,318,12,2);
+  // suelo de cada escenario
+  const COL=['#E6CE96','#5E9A5E','#2E6A3A','#D49A5E','#ECE8E0','#8A9460','#E8EEF6','#C6D2E2'], EARTH=['#B8945A','#5A6A3A','#3A4A2A','#A86A3A','#BDB6A8','#5A5A40','#9AA6B4','#7A8698'];
+  for(let i=0;i<8;i++){ const x0=i*80, x1=x0+80; c.fillStyle=EARTH[i]; c.beginPath(); c.moveTo(x0,H); for(let x=x0;x<=x1;x+=2) c.lineTo(x,expGround(x)); c.lineTo(x1,H); c.closePath(); c.fill();
+    c.fillStyle=COL[i]; c.beginPath(); for(let x=x0;x<=x1;x+=2) c.lineTo(x,expGround(x)-1); for(let x=x1;x>=x0;x-=2) c.lineTo(x,expGround(x)+7); c.closePath(); c.fill(); }
+  const gy=x=>expGround(x);
+  // 1 costa: palmeras
+  [[46,0],[62,1]].forEach(([x,k])=>{ const y=gy(x); c.strokeStyle='#6A4A2A'; c.lineWidth=1.8; c.beginPath(); c.moveTo(x,y); c.quadraticCurveTo(x+3,y-12,x+1,y-22); c.stroke(); c.fillStyle='#2E7A3A'; for(let j=0;j<6;j++){ c.save(); c.translate(x+1,y-22); c.rotate(-2.8+j*0.55); c.beginPath(); c.ellipse(6,0,7,1.8,0,0,7); c.fill(); c.restore(); } });
+  // 2 río: el río baja del bosque y llega al mar
+  c.strokeStyle='#3E8AC0'; c.lineWidth=4; c.lineCap='round'; c.beginPath(); c.moveTo(190,gy(190)+3); c.quadraticCurveTo(150,gy(150)+10,120,gy(120)+5); c.quadraticCurveTo(95,gy(95)+12,70,gy(70)+6); c.stroke(); c.strokeStyle='rgba(255,255,255,.45)'; c.lineWidth=1; c.stroke();
+  c.fillStyle='#8A5A34'; c.fillRect(113,gy(113)-1,16,2.4); for(let k=0;k<5;k++){ const x=88+k*14; c.fillStyle='#3E7A44'; c.beginPath(); c.arc(x,gy(x)-5,4,0,7); c.fill(); }
+  // 3 bosque
+  for(let k=0;k<22;k++){ const x=162+R()*76, y=gy(x), r=4+R()*4; c.fillStyle='#4A3322'; c.fillRect(x-.8,y-r,1.6,r); c.fillStyle=R()<.5?'#1E4A2A':'#2A6034'; c.beginPath(); c.arc(x,y-r-2,r,0,7); c.fill(); }
+  // 4 desierto: dunas y cactus
+  c.strokeStyle='rgba(140,90,40,.45)'; c.lineWidth=.8; for(let k=0;k<4;k++){ c.beginPath(); for(let x=242;x<=318;x+=3) c.lineTo(x,gy(x)+3+k*4+Math.sin(x*0.12+k)*1.5); c.stroke(); }
+  [[262,0],[286,1],[306,0]].forEach(([x])=>{ const y=gy(x); c.strokeStyle='#4E7A3A'; c.lineWidth=2.2; c.beginPath(); c.moveTo(x,y); c.lineTo(x,y-11); c.moveTo(x-3,y-4); c.lineTo(x-3,y-8); c.moveTo(x+3,y-5); c.lineTo(x+3,y-9); c.stroke(); });
+  // 5 salar: laguna rosada y flamencos
+  c.fillStyle='rgba(230,140,160,.85)'; c.beginPath(); c.ellipse(372,gy(372)+3,22,3.5,0,0,7); c.fill(); c.strokeStyle='rgba(160,150,140,.5)'; c.lineWidth=.5; for(let k=0;k<10;k++){ const x=325+R()*70, y=gy(x)+2+R()*5; c.beginPath(); c.moveTo(x,y); c.lineTo(x+4,y+1.5); c.lineTo(x+8,y); c.stroke(); }
+  [[362,0],[378,1]].forEach(([x])=>{ const y=gy(x); c.strokeStyle='#E07A8A'; c.lineWidth=.6; c.beginPath(); c.moveTo(x,y+2); c.lineTo(x,y-5); c.stroke(); c.fillStyle='#F29AAA'; c.beginPath(); c.ellipse(x+1,y-6,2.6,1.6,0,0,7); c.fill(); c.strokeStyle='#F29AAA'; c.lineWidth=.8; c.beginPath(); c.moveTo(x+3,y-6); c.quadraticCurveTo(x+5,y-10,x+4,y-12); c.stroke(); });
+  // 6 páramo: frailejones, laguna y niebla
+  c.fillStyle='rgba(70,120,160,.8)'; c.beginPath(); c.ellipse(452,gy(452)+3,12,2.6,0,0,7); c.fill();
+  for(let k=0;k<12;k++){ const x=404+R()*72, y=gy(x); c.fillStyle='#5A4A38'; c.fillRect(x-.7,y-6,1.4,6); c.fillStyle='#C9D4B4'; c.beginPath(); c.arc(x,y-7,2,0,7); c.fill(); if(k%3===0){ c.fillStyle='#F2C230'; c.beginPath(); c.arc(x,y-9.5,.9,0,7); c.fill(); } }
+  c.fillStyle='rgba(255,255,255,.25)'; c.fillRect(400,gy(440)-20,80,6);
+  // 7 nevado y 8 cordillera: nieve en el suelo, rocas y grietas
+  for(let k=0;k<8;k++){ const x=486+R()*150, y=gy(x); c.fillStyle='#8A94A0'; c.beginPath(); c.moveTo(x-4,y+2); c.lineTo(x,y-3); c.lineTo(x+4,y+2); c.closePath(); c.fill(); }
+  c.strokeStyle='rgba(90,140,200,.6)'; c.lineWidth=.8; for(let k=0;k<6;k++){ const x=596+R()*20, y=70+R()*18; c.beginPath(); c.moveTo(x,y); c.lineTo(x+3,y+5); c.stroke(); }
+  // separadores suaves entre escenarios y nombre del terreno
+  c.font='700 6.4px Figtree, sans-serif'; c.textAlign='center';
+  c.textAlign='left';
+  // luz del atardecer en las cumbres y oscurecimiento suave abajo
+  g=c.createLinearGradient(0,H-40,0,H); g.addColorStop(0,'rgba(0,0,0,0)'); g.addColorStop(1,'rgba(10,15,20,.35)'); c.fillStyle=g; c.fillRect(0,H-40,W,40);
   MAPBG2=cv2; }
+
 
 // ---------- la playa: mar al fondo y palmeras con manglar ----------
 DECO2.palma=(d,warm)=>{ if(d.k%3===2){ // manglar: raíces zancudas sobre el agua
@@ -6180,6 +6197,11 @@ function drawSea(th,climb){ const y0=150+Math.min(70,climb*0.014)+(H-360)*0.42; 
   ctx.fillStyle='rgba(70,90,80,.6)'; ctx.beginPath(); const ix=((420-S.cam*0.02)%(W+200)+W+200)%(W+200)-100; ctx.ellipse(ix,y0,60,7,0,Math.PI,0); ctx.fill();
   for(let i=0;i<2;i++){ const bx=((i*330+S.t*0.2-S.cam*0.04)%(W+80)+W+80)%(W+80)-40; ctx.fillStyle='#F4ECD8'; ctx.beginPath(); ctx.moveTo(bx,y0+14+i*10); ctx.lineTo(bx+5,y0+2+i*10); ctx.lineTo(bx+6,y0+14+i*10); ctx.closePath(); ctx.fill(); ctx.fillStyle='#6A4A2A'; ctx.fillRect(bx-3,y0+14+i*10,12,2); } }
 
+TIPS.costoAmbiental={t:'Costo ambiental y huella verde',g:'Educación económica y ambiental',x:'Talar, contaminar, quemar o botar basura parece gratis o barato, pero alguien paga después: agua más cara, derrumbes, enfermedades y menos recursos. A eso se le llama costo ambiental o externalidad. Restaurar, consumir con responsabilidad y elegir negocios que cuidan la naturaleza también es inteligencia financiera.'};
+function huellaHTML(){ const v=verde(), st=eco.stats||{}, k=v>=80?'v':v>=50?'a':'r', msg=v>=80?'Cuidaste la naturaleza mientras construías tu patrimonio: eso también es inteligencia financiera.':v>=50?'Tu huella verde se puede mejorar: restaura las zonas dañadas y evita los atajos que dañan.':'Tu huella verde quedó en rojo: la plata fácil que daña la naturaleza termina costando a todos, también a ti.';
+  return `<div class="sec"><h3>Tu huella ambiental</h3><div class="gig"><div class="gi"><div class="gt"><span style="display:inline-block;width:11px;height:11px;border-radius:50%;background:${SEMC[k]};margin-right:6px"></span>Huella verde</div><div class="gv" style="color:${SEMC[k]}">${v}/100</div><div class="gs">${msg}</div><div class="gsrc">Costo ambiental · externalidades</div></div>
+   <div class="gi"><div class="gt">Lo que hiciste por la naturaleza</div><div class="gs">Zonas dañadas que atravesaste: <b>${st.danos||0}</b><br>Zonas que restauraste: <b>${st.restaura||0}</b><br>Atajos dañinos que tomaste: <b>${st.atajos||0}</b></div><div class="gsrc">Sembrar, limpiar, apagar y denunciar</div></div></div>
+   <p class="muted" style="font-size:12.5px;margin:8px 0 0">Talar, contaminar o quemar parece barato hoy, pero sube el precio del agua, trae derrumbes y enfermedades, y lo pagamos todos. Por eso la huella verde suma o resta en tu diploma.</p></div>`; }
 ANCLA.add('dano'); ANCLA.add('impuestos');
 LV.slice(8).forEach(L=>{ const a=L.chunks.indexOf('page1'); L.chunks.splice(a+1,0,'dano'); const b=L.chunks.indexOf('page2'); L.chunks.splice(b,0,'dano'); });
 MEDALLAS.push({id:'verde',n:'Guardián de la montaña',d:'Restaura 5 zonas dañadas por tala, basura, quemas o contaminación',c:()=>(eco.stats.restaura||0)>=5},{id:'expe',n:'Gran Expedición',d:'Completa los 16 mundos y aprueba la Prueba del Gran Mentor',c:()=>!!eco.granMentor});
