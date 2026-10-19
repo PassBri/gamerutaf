@@ -188,7 +188,7 @@ body.ovopen .touch,body.ovopen .fsbar,body.ovopen .rotfs{display:none!important}
 .rkbar{display:grid;grid-template-columns:2fr 1fr 1fr;gap:8px;margin-bottom:8px;align-items:end}.rkfl{display:flex;flex-direction:column;gap:3px;min-width:0}.rkfl span{font:700 11px var(--f-body);color:var(--muted)}.rkfl select,.rkfl input{width:100%;font:600 13px var(--f-body);background:var(--bg);color:var(--ink);border:1px solid var(--line);border-radius:9px;padding:7px 9px;min-height:38px;box-sizing:border-box}.rkck{grid-column:1/-1;display:flex;gap:6px;align-items:center;font:600 13px var(--f-body)}
 .rkinfo{display:flex;flex-wrap:wrap;justify-content:space-between;gap:6px;font-size:12.5px;color:var(--muted);margin:0 0 10px}.rkleg{white-space:nowrap}.rkleg i{margin-left:8px}
 @media (max-width:560px){.rkw{grid-template-columns:repeat(4,1fr)}.rkf{grid-template-columns:repeat(2,1fr)}.rkbar{grid-template-columns:1fr 1fr}.rkbar .rkfl:first-child{grid-column:1/-1}.rktime b{font-size:17px}}
-.rk6{grid-template-columns:repeat(6,1fr)}.rkprog{display:grid;grid-template-columns:repeat(8,1fr);gap:3px;margin-top:9px}.rkprog span{height:5px;border-radius:3px;background:var(--line)}.rkprog span.on{background:#F2B33D}.rkprog{grid-template-columns:repeat(16,1fr)!important}.rkprog span.r2{margin-left:4px}
+.rk6{grid-template-columns:repeat(6,1fr)}.rkprog{display:grid;grid-template-columns:repeat(8,1fr);gap:3px;margin-top:9px}.rkprog span{height:5px;border-radius:3px;background:var(--line)}.rkprog span.on{background:#F2B33D}.rkprog{grid-template-columns:repeat(16,1fr)}.rkprog span.r2{margin-left:4px}
 .rkd{margin-top:8px}.rkd summary{cursor:pointer;list-style:none;display:inline-flex;align-items:center;gap:6px;min-height:36px;padding:0 12px;border-radius:9px;border:1px solid var(--line);font:700 13px var(--f-body);color:var(--ink);background:var(--panel)}.rkd summary::-webkit-details-marker{display:none}.rkd summary::after{content:'▾';font-size:12px}.rkd[open] summary::after{content:'▴'}.rkd .rkdc,.rkd[open] .rkdo{display:none}.rkd[open] .rkdc{display:inline}.rkdl{font:700 11px var(--f-body);color:#C9A45A;margin:10px 0 0;letter-spacing:.03em;text-transform:uppercase}.rktools{display:flex;gap:8px;margin:0 0 10px}
 @media (max-width:560px){.rk6{grid-template-columns:repeat(3,1fr)}}
 .gig{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:8px}.gi,.gblk{background:var(--bg);border:1px solid var(--line);border-radius:12px;padding:10px 12px}.gblk{margin-top:8px}.gt{font:700 13.5px var(--f-body)}.gv{font:800 22px var(--f-num);margin:2px 0}.gs{font-size:12.5px;line-height:1.45;margin-top:3px}.gsrc{font:700 10.5px var(--f-body);color:#C9A45A;margin-top:5px;letter-spacing:.02em}
@@ -899,7 +899,7 @@ function nextQ(){
 }
 
 function newEco(name,color,o={}){ return {seed:(Math.random()*2e9)|0,ruta:o.ruta||'variada',grupo:o.grupo||'',colegio:o.colegio||'',grado:o.grado||'',pais:o.pais||'',ciudad:o.ciudad||'',name,color,skin:o.skin??1,head:o.head||'gorra',diff:o.diff||'sen',hand:0,emb:0,salario:0,assets:[],debts:[],fijos:[],gear:o.diff==='exp'?['brujula']:[],shield:false,
-  pages:Array(16).fill(0),stars:Array(16).fill(0),pre:null,post:null,lujos:[],suenos:[],diario:[],seen:{},
+  pages:Array(32).fill(0),stars:Array(32).fill(0),pre:null,post:null,lujos:[],suenos:[],diario:[],seen:{},
   stats:{deaths:0,drops:0,quizOk:0,quizN:0,frames:0,stomps:0,traps:0,saved:0,invested:0}}; }
 const renta=()=>eco.assets.reduce((s,a)=>s+a.renta,0);
 const negRen=()=>eco.negocio?eco.negocio.renta:0, ingresoAct=()=>renta()+negRen(), activosN=()=>eco.assets.length+(eco.negocio?1:0);
@@ -926,7 +926,7 @@ function metaMundo(li,G){ const I=G.I, M=[
   ['Ingresos pasivos del 50 % y diversificación','Ingresos pasivos: '+G.pasivo+' % · tipos de inversión: '+tipos()+' (meta: 50 % y varios tipos)',G.pasivo>=50&&tipos()>=2?'v':G.pasivo>=25?'a':'r'],
   ['Varias fuentes de ingreso','Tienes '+G.fuentes+' fuentes de ingreso (la guía propone llegar a 7)',G.fuentes>=5?'v':G.fuentes>=3?'a':'r'],
   ['Libertad financiera y legado','Tus activos pagan '+I.libertad+' % de tus gastos · deudas: '+G.deu,I.libertad>=100&&G.deu===0?'v':I.libertad>=50?'a':'r']];
-  if(li>=8){ const m=META2[li-8]; return [m[0],m[1](G),m[2](G)]; } return M[Math.max(0,Math.min(7,li))]; }
+  if(li>=8){ const m=li<16?META2[li-8]:LV[li].meta; return [m[0],m[1](G),m[2](G)]; } return M[Math.max(0,Math.min(7,li))]; }
 function indicadoresHTML(){ const G=guiaInd(), I=G.I, dot=k=>`<span style="display:inline-block;width:11px;height:11px;border-radius:50%;background:${SEMC[k]};margin-right:6px;vertical-align:-1px"></span>`;
   const sb=semBal(G.bal), si=semIE(G.ie), sp=G.pat>0?'v':G.pat===0?'a':'r', sf=I.fondo>=3?'v':I.fondo>=1?'a':'r';
   const card=(t,v,k,sub,src)=>`<div class="gi"><div class="gt">${dot(k)}${t}</div><div class="gv" style="color:${SEMC[k]}">${v}</div><div class="gs">${sub}</div><div class="gsrc">${src}</div></div>`;
@@ -963,7 +963,7 @@ const flujo=()=>eco.salario+ingresoAct()-costo()-cuotas()-primas()-fijos();
 const chained=()=>eco.debts.some(d=>d.kind==='gota');
 
 const reqN=li=>({1:Math.round(10*Dif().req),2:Math.round(15*Dif().req),6:Math.round(80*Dif().req),7:Math.max(1,Math.round(LV[7].costo*Dif().cost))})[li];
-function reqText(li){ if(li>=8) return reqText2(li); return ['Tener un empleo (salario)','Llegar al campamento con '+reqN(1)+' monedas o más en la mano','Tener '+reqN(2)+' monedas o más en la alcancía','Tener al menos 1 activo','Tener activos de 2 tipos distintos','Cero deudas','Patrimonio de '+reqN(6)+' o más','Ingreso pasivo igual o mayor que tu costo de vida ('+reqN(7)+')'][li]; }
+function reqText(li){ if(LV[li]&&LV[li].reqFn) return LV[li].reqFn(); if(li>=8) return reqText2(li); return ['Tener un empleo (salario)','Llegar al campamento con '+reqN(1)+' monedas o más en la mano','Tener '+reqN(2)+' monedas o más en la alcancía','Tener al menos 1 activo','Tener activos de 2 tipos distintos','Cero deudas','Patrimonio de '+reqN(6)+' o más','Ingreso pasivo igual o mayor que tu costo de vida ('+reqN(7)+')'][li]; }
 const REQ=[
  ()=>[eco.salario>=1, eco.salario>=1?'Tienes empleo: salario '+eco.salario+' por quincena.':'Aún no tienes empleo.'],
  ()=>[S.arrivalHand>=reqN(1), 'Llegaste con '+S.arrivalHand+' monedas en la mano.'],
@@ -1020,12 +1020,12 @@ function varyChunks(li){
 }
 // ---------- relieve variado: cada tramo se une con una ladera, terrazas, risco, loma, bajada o valle ----------
 // La pendiente media sube mundo a mundo (de unas 1,3 filas por tramo en El Valle a más de 4 en La Cordillera).
-const PENDIENTE=li=>1.9+0.45*(li%8)+(li>=8?0.7:0);
+const PENDIENTE=li=>1.9+0.45*(li%8)+[0,0.3,0.5,0.4][rutaDe(li)];
 function conHeights(d,R,li){ const H=[0]; const up=(n,step)=>{ let h=H[H.length-1]; while(n>0){ const s=Math.min(step,n); h+=s; n-=s; H.push(h); if(step>1) H.push(h); } };
   const flat=n=>{ for(let i=0;i<n;i++) H.push(H[H.length-1]); };
   if(d<0){ let h=0; flat(1); while(h>d){ h--; H.push(h); if(R()<0.4) H.push(h); } flat(1); return {H,k:'bajada'}; }
   if(d===0){ if(R()<0.45){ H.push(1,1,0); return {H,k:'loma'}; } flat(1+(R()<0.5?1:0)); return {H,k:'llano'}; }
-  const jumpy=0.15+0.08*li;
+  const jumpy=0.15+0.08*(li%8)+(li>=8?0.08:0);
   if(li>=2&&R()<0.14){ H.push(-1,-2,-2,-1); up(d+1,1); flat(1); return {H,k:'valle'}; }
   if(d>=3&&R()<jumpy){ flat(1); up(d,2); flat(1); return {H,k:'terrazas'}; }
   if(d>=4&&R()<0.5){ up(d-2,1); flat(2); up(2,2); flat(1); return {H,k:'risco'}; }
@@ -1037,7 +1037,7 @@ function terreno(li,seq){ const seedB=((eco&&eco.ruta!=='fija'&&eco.seed!=null)?
       if(FLAT.has(n)) d=r<0.5?0:1;
       else if(r<0.11) d=-(1+Math.floor(R()*(li>=4?3:2)));
       else if(r<0.2) d=0;
-      else d=Math.max(1,Math.min(maxD,Math.round(m+(R()-0.5)*1.6*m)));
+      else d=Math.max(1,Math.min(i<=3?2:maxD,Math.round(m+(R()-0.5)*1.6*m)));
       const C=conHeights(d,R,li), CR=conRows(C.H); parts.push({c:pad(CR.rows),off:off+CR.lo,con:C.k}); off+=C.H[C.H.length-1]; }
     parts.push({c:pad(CH[n]),off}); });
   const mn=Math.min(...parts.map(p=>p.off)); parts.forEach(p=>p.off-=mn); return parts; }
@@ -1074,9 +1074,9 @@ function buildLevel(li){
     if(ch==='4') ents.push({t:'trading',x:x-12,y:y+T-50,w:48,h:50,cd:0});
     if(ch==='7') ents.push({t:'jefeM',k:li<7?li:li-1,x:x-16,x0:x-16,y:y+T-92,w:56,h:92,st:'dormida',tt:0,dir:-1,hp:jmHP(li),hpMax:jmHP(li),flash:0,hitCd:0,cd:60});
     if(ch==='U') ents.push({t:'dian',x:x-30,y:y+T-58,w:84,h:58,used:false,cd:0});
-    if(ch==='8') ents.push({t:'dano',k:DANO_K[li-8]||'basura',x:x-2*T,y:y+T-60,w:26*T,h:60});
-    if(ch==='9') ents.push({t:'restaura',k:DANO_K[li-8]||'basura',x:x-4,y:y+T-44,w:32,h:44,used:false,cd:0});
-    if(ch==='0') ents.push({t:'atajo',k:DANO_K[li-8]||'basura',x:x-6,y:y+T-22,w:36,h:22,used:false,cd:0});
+    if(ch==='8') ents.push({t:'dano',k:DANO_K[li-8]||'escombros',x:x-2*T,y:y+T-60,w:26*T,h:60});
+    if(ch==='9') ents.push({t:'restaura',k:DANO_K[li-8]||'escombros',x:x-4,y:y+T-44,w:32,h:44,used:false,cd:0});
+    if(ch==='0') ents.push({t:'atajo',k:DANO_K[li-8]||'escombros',x:x-6,y:y+T-22,w:36,h:22,used:false,cd:0});
     if(ch==='5') ents.push({t:'parcaJefe',x:x,x0:x,y:y+T-88,w:44,h:78,st:'dormida',tt:0,ph:0,dir:-1,hp:jmHP(li),hpMax:jmHP(li),pf:[]});
     if(ch==='1') { const NT=NEG[Math.min(NEG.length-1,li)]; ents.push({t:'negocio',k:Math.min(NEG.length-1,li),x:x-8,y:y+T-NT.h,w:NT.w,h:NT.h,used:false,cd:0,hold:0}); }
     if(ch==='2') ents.push({t:'poder',k:'grande',x:x+2,y:y+T-48,w:20,h:48,ph:Math.random()*6});
@@ -1795,6 +1795,7 @@ function scoreAdd(n,why){ eco.score=Math.max(300,Math.min(900,(eco.score||650)+n
 function addDebt(name,saldo,cuota,kind){ try{ saludDebt(kind,name); }catch(e){} if(kind==='acuerdo') scoreAdd(-60,'reportado por no pagar'); else if(kind==='tarjeta') scoreAdd(-6); else if(kind==='credito') scoreAdd(-25,'crédito por encima de tu capacidad'); const d=eco.debts.find(x=>x.kind===kind); if(d) d.saldo+=saldo; else eco.debts.push({name,saldo,cuota,kind}); }
 
 function pulseExtras(p){
+  try{ inflPulse(); }catch(e){}
   eco.qDesLast=eco.qDes||0; eco.qDes=0; eco.deuQ=debtTot();
   saludPulse();
   negPulse(p);
@@ -2039,7 +2040,7 @@ const LANZA={
   hacker:{n:'EL HACKER',r:'robo cibernético',item:'mail',lab:'PHISHING',dmg:2,w:26,h:40,col:'#1E2A3A',say:['¡Ganaste un premio! Dame tu clave','Tu cuenta fue bloqueada: haz clic aquí','Soy del banco, dígame el código'],no:['¡No comparto mis claves!','¡Activo la doble verificación!']},
   tahur:{n:'EL TAHÚR',r:'apuestas y ludopatía',item:'chip',lab:'APUESTA',dmg:2,w:28,h:42,col:'#1F7A4A',say:['¡Apueste y duplique!','¡Esta vez sí gana!','¡Una ronda más!'],no:['¡No apuesto mi plata!','¡La casa siempre gana!']},
 };
-const PROJ_TXT={phone:'distraído en el celular',tag:'compra por impulso',card:'interés de la tarjeta',price:'subieron los precios',chip:'apuesta perdida',mail:'robo cibernético',decreto:'un decreto te subió los costos',bag:'estafa de Don Ruina',gota:'una fuga del flujo de caja',rayo:'un imprevisto sin seguro',multa:'multa por no pagar impuestos',antojo:'un antojo más',bolsa:'compra por impulso',cuota:'otra cuota más',huevo:'todo en una canasta',flyer:'promesa de pirámide'};
+const PROJ_TXT={phone:'distraído en el celular',tag:'compra por impulso',card:'interés de la tarjeta',price:'subieron los precios',chip:'apuesta perdida',mail:'robo cibernético',decreto:'un decreto te subió los costos',bag:'estafa de Don Ruina',lava:'roca ardiente',gota:'una fuga del flujo de caja',rayo:'un imprevisto sin seguro',multa:'multa por no pagar impuestos',antojo:'un antojo más',bolsa:'compra por impulso',cuota:'otra cuota más',huevo:'todo en una canasta',flyer:'promesa de pirámide'};
 function takeCoins(n){ let a=Math.min(n,eco.hand); eco.hand-=a; let r=n-a; const b=Math.min(r,eco.emb); eco.emb-=b; return a+b; }
 function inflaHit(f){ // la inflación no roba: hace que el dinero quieto compre menos. Lo que rinde (activos) la resiste
   const p=S.p, inv=(eco.assets||[]).length>0, ph=eco.hand>0?Math.max(1,Math.round(eco.hand*0.1)):0, pe=inv?0:Math.floor(eco.emb*0.1);
@@ -2199,7 +2200,7 @@ const JM=[
   no:['¡Verifico en la Superfinanciera!','¡Si es muy bueno, es falso!','¡No meto a mis amigos!','¡Pido el contrato!','¡Nadie paga 300 %!','¡Desconfío de lo fácil!','¡Pregunto antes de invertir!','¡Solo entidades vigiladas!','¡No firmo sin leer!','¡Denuncio la pirámide!'],
   intro:'Promete ganancias enormes con plata de los nuevos que entran: cuando dejan de entrar, todos pierden. Esquiva sus volantes.',
   fin:'Antes de invertir, verifica que la entidad esté vigilada por la Superintendencia Financiera. Si promete mucho y rápido, es estafa.'}];
-const jmHP=(li)=>(eco&&eco.diff==='exp'?6:eco&&eco.diff==='mon'?12:10)+(li>=8?2:0)+(li===15?4:0);
+const jmHP=(li)=>(eco&&eco.diff==='exp'?6:eco&&eco.diff==='mon'?12:10)+Math.min(4,rutaDe(li)*2)+(li>8&&li%8===7?4:0);
 function jmFire(e,p,f,dx){ const C=JM[e.k], sx=e.x+e.w/2+e.dir*20, sy=e.y+24, tt=40; S.fees.push(Object.assign({x:sx,y:sy,w:16,h:12,vx:(p.x+p.w/2+(dx||0)-sx)/tt,vy:((p.y+8)-sy)/tt-0.125*tt,fx:'jefe'+e.k,life:220},f||C.proj)); }
 // ---- combate estilo juego de pelea: barras de vida, tiempo, ¡PELEA! y ¡K.O.! ----
 function fightSay(t,sub,col){ const F=S.fight; if(!F) return; F.msg=t; F.sub=sub||''; F.msgT=0; F.msgCol=col||'#FFD36B'; }
@@ -2390,7 +2391,7 @@ function desUpdate(){
   S.cracks=(S.cracks||[]).filter(c=>++c.t<150); S.cracks.forEach(c=>{ const op=crackOpen(c); if(!c.hit&&op>0.5&&p.onGround&&Math.abs(p.x+p.w/2-c.x)<c.w*op/2-3){ c.hit=true; p.vy=-5; hurt(1,'la tierra se abrió','golpes'); } });
   S.bolts=(S.bolts||[]).filter(b=>++b.t<48); S.bolts.forEach(b=>{ if(b.t===34){ S.flashSky=8; snd('hit'); S.shake=reduced?0:4; if(Math.abs(p.x+p.w/2-b.x)<16&&p.inv<=0){ if(has('casco')){ addText(p.x-40,p.y-20,'El rayo cayó cerca: el seguro te cubrió','#C9CEFF'); } else hurt(2,'un rayo','golpes'); } } });
   if(S.sick>0) S.sick--; if(S.flashSky>0) S.flashSky--;
-  if(!D.cur){ if(--D.next<=0&&p.onGround&&!S.busy){ const k=DESASTRES[S.li][rnd(DESASTRES[S.li].length)]; D.cur={k,t:0,warn:110,dur:{servicios:140,alimentos:140,administracion:140,terremoto:300,inundacion:420,derrumbe:330,quiebra:110,tormenta:380,sequia:220,invierno:320,guerra:160,enfermedad:480,familiar:140,reforma:140}[k]}; snd('bad');
+  if(!D.cur){ if(--D.next<=0&&p.onGround&&!S.busy){ const k=DESASTRES[S.li][rnd(DESASTRES[S.li].length)]; D.cur={k,t:0,warn:110,dur:{erupcion:300,apagon:420,saqueo:110,servicios:140,alimentos:140,administracion:140,terremoto:300,inundacion:420,derrumbe:330,quiebra:110,tormenta:380,sequia:220,invierno:320,guerra:160,enfermedad:480,familiar:140,reforma:140}[k]}; snd('bad');
       if(k==='inundacion'){ const c=Math.floor((p.x+p.w/2)/T); D.cur.base=groundY(c); }
       learn(k); }
     return; }
@@ -2414,7 +2415,8 @@ function desUpdate(){
   else if(C.k==='inundacion'){ const rise=Math.min(1,tt/70), fall=Math.min(1,(C.dur-tt)/70); C.level=C.base+26-(40*Math.min(rise,fall)); if(p.y+p.h>C.level+4&&tt%45===0&&tt>40){ const l=takeCoins(1); if(S.ws) S.ws.lost.inundacion=(S.ws.lost.inundacion||0)+1; if(l){ addText(p.x-40,p.y-14,'−1 la inundación dañó tus cosas','#9FD3FF'); logD('Pérdida','Inundación',-1); } } if(tt%6===0) S.parts.push({x:S.cam+Math.random()*W,y:C.level,vx:0,vy:-0.3,life:20,col:'rgba(200,220,230,.6)'}); }
   else if(C.k==='derrumbe'){ S.boulders=S.boulders||[]; if(tt%75===5){ const bx=S.cam+W+30; const c=Math.min(S.L.w-1,Math.floor(bx/T)); S.boulders.push({x:bx,y:groundY(c)-18,r:9,vx:-2.6*Dif().enemy,rot:0}); } }
   else if(C.k==='quiebra'&&tt===1){ const pct=tipos()>=2?0.1:0.3, l=Math.ceil(eco.hand*pct); eco.hand-=l; if(S.ws) S.ws.lost.quiebra=(S.ws.lost.quiebra||0)+l; logD('Pérdida','Quiebra de una empresa'+(tipos()>=2?' (diversificado: perdiste poco)':''),-l); addText(p.x-60,p.y-30,'Quiebra: −'+l+(tipos()>=2?' · ¡diversificar te protegió!':' · con activos de 2 tipos perderías menos'),'#FFC7BF'); S.shake=reduced?0:5; }
-  if(tt>=C.dur){ D.cur=null; D.next=Math.round((1900+rnd(900))/Dif().enemy); }
+  desExtra(C,tt,p);
+  if(tt>=C.dur){ D.cur=null; D.next=Math.round((1900+rnd(900))/Dif().enemy/((LV[S.li]&&LV[S.li].desF)||1)); }
 }
 function bouldersUpdate(){ const p=S.p; if(!S.boulders) return; S.boulders.forEach(b=>{ b.x+=b.vx; b.rot+=b.vx/b.r; const c=Math.floor(b.x/T); if(c<0||c>=S.L.w||b.x<S.cam-60){ b.dead=true; return; } const gy=groundY(c)-b.r*2; b.y+=(gy-b.y)*0.5;
     if(overlap(p,{x:b.x-b.r+3,y:b.y+3,w:b.r*2-6,h:b.r*2-4})&&!b.hit){ b.hit=true; hurt(2,'derrumbe','golpes'); } }); S.boulders=S.boulders.filter(b=>!b.dead); }
@@ -2816,7 +2818,7 @@ function update(){
   L.mps.forEach(m=>{ const nx=m.x+m.dir*0.9; if(nx>m.x1||nx<m.x0) m.dir*=-1; m.dx=m.dir*0.9; m.x+=m.dx; });
   L.stones.forEach(st=>{ if(st.gone>0){ if(--st.gone===0){ st.y=st.y0; st.sink=0; st.t=0; } return; } if(st.t>0){ st.t++; if(st.t>38){ st.sink+=0.55; st.y=st.y0+st.sink; if(S.t%6===0) S.parts.push({x:st.x+Math.random()*st.w,y:st.y0+2,vx:0,vy:-0.5,life:18,col:'rgba(220,240,255,.8)'}); if(st.sink>18) st.gone=150; } } });
   // jugador
-  const ice=[7,14,15].includes(S.li) && !has('crampones') && p.onGround;
+  const ice=(S.li===7||!!THEMES[LV[S.li].theme].hielo) && !has('crampones') && p.onGround;
   const wt=peso(), wf=Math.max(0.72,1-0.035*wt);
   const inSwamp=tileAt(Math.floor((p.x+p.w/2)/T),Math.floor((p.y+p.h-4)/T))==='~';
   if(p.ride){ if(--p.ride.t<=0){ addText(p.x-30,p.y-20,p.ride.prest?'Devolviste la cicla: ¡gracias, Camila!':'Fin del paseo','#FFE18A'); p.ride=null; } }
@@ -3636,6 +3638,7 @@ function drawProj(f){ const fx=f.x-S.cam; ctx.save(); ctx.translate(fx,f.y); ctx
   else if(f.icon==='decreto'){ ctx.fillStyle='#F4ECD8'; ctx.fillRect(-7,-8,14,16); ctx.fillStyle='#E9DFC8'; ctx.beginPath(); ctx.ellipse(0,-8,7.4,1.8,0,0,7); ctx.ellipse(0,8,7.4,1.8,0,0,7); ctx.fill(); ctx.fillStyle='#24448E'; ctx.font='800 3.2px sans-serif'; ctx.textAlign='center'; ctx.fillText('DECRETO',0,-3.6); ctx.fillStyle='#C9283C'; ctx.font='800 4.4px sans-serif'; ctx.fillText('+$',0,2); ctx.fillStyle='#B8862F'; ctx.beginPath(); ctx.arc(3.6,5,1.8,0,7); ctx.fill(); }
   else if(f.icon==='mail'){ ctx.fillStyle='#F4ECD8'; rr(-9,-6,18,12,1.5); ctx.fill(); ctx.strokeStyle='#6B2A1A'; ctx.lineWidth=0.9; ctx.beginPath(); ctx.moveTo(-9,-6); ctx.lineTo(0,1); ctx.lineTo(9,-6); ctx.stroke(); ctx.strokeStyle='#C9D3DA'; ctx.lineWidth=1.2; ctx.beginPath(); ctx.moveTo(6,4); ctx.lineTo(6,10); ctx.arc(3.6,10,2.4,0,Math.PI); ctx.stroke(); ctx.fillStyle='#E04A4A'; ctx.beginPath(); ctx.arc(7,-6,3,0,7); ctx.fill(); ctx.fillStyle='#fff'; ctx.font='800 4px sans-serif'; ctx.textAlign='center'; ctx.fillText('!',7,-4.6); }
   else if(f.icon==='chip'){ ctx.fillStyle='#1F7A4A'; ctx.beginPath(); ctx.arc(0,0,7,0,7); ctx.fill(); ctx.strokeStyle='#fff'; ctx.setLineDash([2.2,2.2]); ctx.lineWidth=1.6; ctx.beginPath(); ctx.arc(0,0,5.6,0,7); ctx.stroke(); ctx.setLineDash([]); ctx.fillStyle='#fff'; ctx.beginPath(); ctx.arc(0,0,3,0,7); ctx.fill(); ctx.fillStyle='#1F7A4A'; ctx.font='800 3.6px sans-serif'; ctx.textAlign='center'; ctx.fillText('$',0,1.4); }
+  else if(f.icon==='lava'){ const g2=ctx.createRadialGradient(0,0,1,0,0,8); g2.addColorStop(0,'#FFE08A'); g2.addColorStop(.5,'#FF6A1A'); g2.addColorStop(1,'#5A1A0A'); ctx.fillStyle=g2; ctx.beginPath(); for(let i=0;i<7;i++){ const a=i/7*Math.PI*2, r=6+(i%2)*1.6; ctx.lineTo(Math.cos(a)*r,Math.sin(a)*r); } ctx.closePath(); ctx.fill(); }
   else if(f.icon==='gota'){ ctx.fillStyle='#5CB8E8'; ctx.beginPath(); ctx.moveTo(0,-8); ctx.quadraticCurveTo(-7,1,0,6); ctx.quadraticCurveTo(7,1,0,-8); ctx.fill(); ctx.fillStyle='#fff'; ctx.font='800 5px sans-serif'; ctx.textAlign='center'; ctx.fillText('$',0,3); }
   else if(f.icon==='rayo'){ ctx.fillStyle='#F2C230'; ctx.beginPath(); ctx.moveTo(1,-9); ctx.lineTo(-5,1); ctx.lineTo(0,1); ctx.lineTo(-2,9); ctx.lineTo(6,-2); ctx.lineTo(1,-2); ctx.closePath(); ctx.fill(); ctx.strokeStyle='#8A5A10'; ctx.lineWidth=.6; ctx.stroke(); }
   else if(f.icon==='multa'){ ctx.fillStyle='#FBF7EC'; ctx.fillRect(-8,-6,16,12); ctx.fillStyle='#C9283C'; ctx.fillRect(-8,-6,16,3.4); ctx.fillStyle='#fff'; ctx.font='800 3px sans-serif'; ctx.textAlign='center'; ctx.fillText('MULTA',0,-3.4); ctx.fillStyle='#24448E'; ctx.font='800 4.4px sans-serif'; ctx.fillText('$$',0,3); }
@@ -4204,14 +4207,14 @@ function buildMapBg(){
   MAPBG=cv2;
 }
 function drawMap(){
-  const m0=S.map; m0.t++; const off=m0.li>=8?8:0, MN=off?MAPN2:MAPN, m=Object.assign({},m0,{li:m0.li-off,from:Math.max(0,(m0.from!=null?m0.from:m0.li)-off)});
+  const m0=S.map; m0.t++; const ru=rutaDe(m0.li), off=ru*8, MN=[MAPN,MAPN2,typeof MAPN3!=='undefined'?MAPN3:MAPN2,typeof MAPN4!=='undefined'?MAPN4:MAPN2][ru], m=Object.assign({},m0,{li:m0.li-off,from:Math.max(0,(m0.from!=null?m0.from:m0.li)-off)});
   const g=ctx.createLinearGradient(0,0,0,H); g.addColorStop(0,'#0F1D33'); g.addColorStop(.42,'#34507C'); g.addColorStop(.72,'#B9849A'); g.addColorStop(1,'#F6B27A');
   ctx.fillStyle=g; ctx.fillRect(0,0,W,H);
   ctx.fillStyle='rgba(255,255,255,.85)'; for(let i=0;i<60;i++){ const tw=.4+.6*Math.abs(Math.sin(m.t*0.02+i)); ctx.globalAlpha=tw*.8; ctx.fillRect(hash(i)*W,hash(i+50)*150,1.4,1.4); } ctx.globalAlpha=1;
   ctx.save();
   let p=1;
   if(m.reveal && !reduced){ p=ease(m.t/190); const k=2.8-1.8*p, fx=320+(W/2-320)*p, fy=60+(H/2-60)*p; ctx.translate(W/2,H/2); ctx.scale(k,k); ctx.translate(-fx,-fy); }
-  if(off){ if(!MAPBG2) buildMapBg2(); ctx.drawImage(MAPBG2,0,0,W,H); } else { if(!MAPBG) buildMapBg(); ctx.drawImage(MAPBG,0,0,W,H); }
+  if(ru===2&&typeof buildMapBg3==='function'){ if(!MAPBG3) buildMapBg3(); ctx.drawImage(MAPBG3,0,0,W,H); } else if(ru===3&&typeof buildMapBg4==='function'){ if(!MAPBG4) buildMapBg4(); ctx.drawImage(MAPBG4,0,0,W,H); } else if(off){ if(!MAPBG2) buildMapBg2(); ctx.drawImage(MAPBG2,0,0,W,H); } else { if(!MAPBG) buildMapBg(); ctx.drawImage(MAPBG,0,0,W,H); }
   // ruta
   ctx.lineCap='round'; ctx.lineJoin='round';
   ctx.strokeStyle='rgba(0,0,0,.35)'; ctx.lineWidth=5; ctx.beginPath(); MN.forEach(([x,y],i)=>i?ctx.lineTo(x,y+1):ctx.moveTo(x,y+1)); ctx.stroke();
@@ -4229,8 +4232,9 @@ function drawMap(){
     ctx.fillStyle=done||i===7?'#2A1A00':'#fff'; ctx.textAlign='center'; ctx.font='700 9px "IBM Plex Mono", monospace'; ctx.fillText(done?'✓':String(i+1+off),x,y+(i===7?2:0.5));
     ctx.globalAlpha=a; ctx.font='700 11px Figtree, system-ui, sans-serif';
     const left=x<320; let lx=left?x-14:x+14, ly=y-5, sy=y+7, sty=y+19; ctx.textAlign=left?'right':'left';
-    if(off){ if(i===7){ lx=x-16; ctx.textAlign='right'; } else if(i%2===0){ lx=x; ctx.textAlign='center'; ly=y-36; sy=y-25; sty=y+21; } else if(y+42>H){ lx=x; ctx.textAlign='center'; ly=y-60; sy=y-49; sty=y-14; } else { lx=x; ctx.textAlign='center'; ly=y+24; sy=y+35; sty=y-14; } }
-    const label=LV[i+off].name, sub=off?fmtM(ALT2[i])+' m':LV[i].role;
+    if(off){ if(i===7&&ru<2){ lx=x-16; ctx.textAlign='right'; } else if(i%2===0){ lx=x; ctx.textAlign='center'; ly=y-36; sy=y-25; sty=y+21; } else if(y+42>H){ lx=x; ctx.textAlign='center'; ly=y-60; sy=y-49; sty=y-14; } else { lx=x; ctx.textAlign='center'; ly=y+24; sy=y+35; sty=y-14; } }
+    const label=LV[i+off].name, sub=ru>=2?(LV[i+off].tag||''):off?fmtM(ALTR(ru)[i])+' m':LV[i].role;
+    if(off&&ctx.textAlign==='center'){ ctx.font='700 11px Figtree, system-ui, sans-serif'; const hw=Math.max(ctx.measureText(label).width,40)/2+10; lx=Math.max(hw,Math.min(W-hw,lx)); }
     if(off){ ctx.font='700 11px Figtree, system-ui, sans-serif'; const bw=Math.max(ctx.measureText(label).width,40)+12, bx=ctx.textAlign==='center'?lx-bw/2:ctx.textAlign==='right'?lx-bw+6:lx-6; ctx.fillStyle='rgba(10,20,26,.55)'; rr(bx,ly-10,bw,25,6); ctx.fill(); }
     ctx.font='700 11px Figtree, system-ui, sans-serif'; ctx.fillStyle='rgba(0,0,0,.55)'; ctx.fillText(label,lx+1,ly+1); ctx.fillStyle=cur?'#FFE18A':'#FFFFFF'; ctx.fillText(label,lx,ly);
     ctx.font='600 9px Figtree, system-ui, sans-serif'; ctx.fillStyle='rgba(255,255,255,.8)'; ctx.fillText(sub,lx,sy);
@@ -4248,7 +4252,7 @@ function drawMap(){
   const ta=(m.reveal&&!reduced)?Math.min(1,m.t/60):1;
   ctx.globalAlpha=ta; ctx.textBaseline='alphabetic';
   ctx.fillStyle='rgba(10,20,26,.55)'; rr(12,12,236,58,10); ctx.fill();
-  ctx.fillStyle='#F2B33D'; ctx.font='800 9px Figtree, system-ui, sans-serif'; ctx.fillText(off?(m.reveal?'LA EXPEDICIÓN: 8 TERRENOS NUEVOS':'TU AVANCE EN LA EXPEDICIÓN'):(m.reveal?'ESTA ES LA MONTAÑA QUE VAS A SUBIR':'TU AVANCE EN LA MONTAÑA'),24,32);
+  ctx.fillStyle='#F2B33D'; ctx.font='800 9px Figtree, system-ui, sans-serif'; ctx.fillText(off?(m.reveal?RUTAS[ru].n.toUpperCase()+': 8 MUNDOS NUEVOS':'TU AVANCE · '+RUTAS[ru].n.toUpperCase()):(m.reveal?'ESTA ES LA MONTAÑA QUE VAS A SUBIR':'TU AVANCE EN LA MONTAÑA'),24,32);
   ctx.fillStyle='#fff'; ctx.font='400 22px "Young Serif", Georgia, serif'; ctx.fillText('Ruta Financiera',24,58);
   ctx.globalAlpha=1;
 }
@@ -4384,7 +4388,7 @@ function draw(){
     if(has('linterna')){ ctx.save(); ctx.globalCompositeOperation='lighter'; const lg=ctx.createRadialGradient(px+S.p.face*40,py-10,4,px+S.p.face*40,py-10,90); lg.addColorStop(0,'rgba(255,240,180,.18)'); lg.addColorStop(1,'rgba(255,240,180,0)'); ctx.fillStyle=lg; ctx.fillRect(0,0,W,H); ctx.restore(); }
   }
   if(S.li===4&&!inArena){ ctx.save(); ctx.translate(0,-Math.round(S.camY)); ctx.globalAlpha=0.9; drawEnts(['lender','card','bank','cobrador','puma','snake','npc','veh','cloud','lanza','slot','ruina','gotaJefe','creditoJefe','parca','parcaJefe','jefeM']); drawFees(); ctx.globalAlpha=1; ctx.restore(); }
-  gradeScene();
+  gradeScene(); drawApagon();
   // viñeta suave
   const VIG=[.62,.42,.3,.3,.38,.28,.22,.2][S.li]||.25; const vg=ctx.createRadialGradient(W/2,H*.55,H*(S.li===0?.3:.42),W/2,H/2,W*0.66); vg.addColorStop(0,'rgba(0,0,0,0)'); vg.addColorStop(1,'rgba(4,6,10,'+VIG+')'); ctx.fillStyle=vg; ctx.fillRect(0,0,W,H); drawGrain();
   { const hv=W<640, sv=[W,H]; if(hv){ ctx.save(); const sc=W/580; ctx.scale(sc,sc); H=Math.round(H/sc); W=580; }
@@ -4433,7 +4437,7 @@ function resize(){
   const st=document.getElementById('stage'), b=document.body; let cssW, cssH;
   const zv=zoomV(); b.classList.toggle('zoomv',zv); let nW=640, nH=360;
   if(zv){ const tb=document.querySelector('.touch'); const th=(tb&&tb.offsetHeight||64)+22; const vw=innerWidth, vh=Math.max(300,innerHeight-th); nW=270; nH=Math.max(300,Math.min(640,Math.round(nW*vh/vw))); }
-  if(nW!==W||nH!==H){ W=nW; H=nH; BG=null; MAPBG=null; MAPBG2=null; }
+  if(nW!==W||nH!==H){ W=nW; H=nH; BG=null; MAPBG=null; MAPBG2=null; if(typeof MAPBG3!=='undefined') MAPBG3=null; if(typeof MAPBG4!=='undefined') MAPBG4=null; }
   if(zv){ cssW=innerWidth; cssH=Math.round(cssW*H/W); st.style.width=cssW+'px'; }
   else if(b.classList.contains('fs')||b.classList.contains('tam-enfocado')){
     const touchH=b.classList.contains('has-touch')&&!b.classList.contains('fs')?90:0, vw=window.innerWidth, vh=window.innerHeight-(b.classList.contains('fs')?0:24)-touchH;
@@ -4816,8 +4820,8 @@ function askQuiz(mentor){
   const wi=(w!=null&&CURR[w])?w:S.li;
   const base={q,opts,exp,order:shuffle(idx),reveal:true,tags:['Mundo '+(wi+1),CURR[wi].comp,CURR[wi].g],hint:Dif().hint?'Pista: ya quitamos una respuesta incorrecta.':''};
   if(mentor){
-    quizCard(Object.assign(base,{eyebrow:'Prueba del Mentor',head:`<div class="eyebrow">${esc(LV[S.li].name)}</div><h2>${S.li===15?'Prueba del Gran Mentor':'Prueba del Mentor'}</h2><p class="muted">Tu ingreso pasivo ya cubre tu costo de vida. Un mentor enseña lo que sabe: responde bien para alcanzar la libertad financiera.</p>`,
-      onAnswer:ok=>{ eco.stats.quizN++; if(ok){ eco.stats.quizOk++; eco.mentorTest=true; if(S.li===15) eco.granMentor=true; } },
+    quizCard(Object.assign(base,{eyebrow:'Prueba del Mentor',head:`<div class="eyebrow">${esc(LV[S.li].name)}</div><h2>${S.li===15?'Prueba del Gran Mentor':S.li===23?'Prueba de la Resiliencia':S.li===31?'Prueba del Constructor':'Prueba del Mentor'}</h2><p class="muted">Tu ingreso pasivo ya cubre tu costo de vida. Un mentor enseña lo que sabe: responde bien para alcanzar la libertad financiera.</p>`,
+      onAnswer:ok=>{ eco.stats.quizN++; if(ok){ eco.stats.quizOk++; eco.mentorTest=true; if(S.li===15) eco.granMentor=true; if(S.li===23) eco.resiliente=true; if(S.li===31) eco.constructor=true; } },
       nextLabel:'Continuar',
       onNext:ok=>{ if(ok) return ending();
         openOv(`<div class="eyebrow">Prueba del Mentor</div><h2>Casi</h2><p>Un mentor también aprende de sus errores. Puedes intentar con otra carta o volver al campamento a repasar.</p><div class="foot"><button class="btn gold" type="button" id="bAgain">Otra carta</button><button class="btn alt" type="button" id="bBack">Volver al campamento</button></div>`);
@@ -4955,9 +4959,9 @@ function certURL(){ // diploma: papel de seguridad, guilloche de oro, emblema, m
   const ND=nivelDiploma(); { c.font='800 15px Figtree, sans-serif'; const lt='DIPLOMA NIVEL '+ND.m.toUpperCase(), lw=c.measureText(lt).width+64; const gb=c.createLinearGradient(Wc/2-lw/2,0,Wc/2+lw/2,0); gb.addColorStop(0,ND.col); gb.addColorStop(0.5,'#FFF3D6'); gb.addColorStop(1,ND.col); c.fillStyle=gb; c.beginPath(); c.moveTo(Wc/2-lw/2-14,604); c.lineTo(Wc/2-lw/2,592); c.lineTo(Wc/2+lw/2,592); c.lineTo(Wc/2+lw/2+14,604); c.lineTo(Wc/2+lw/2,616); c.lineTo(Wc/2-lw/2,616); c.closePath(); c.fill(); c.strokeStyle='rgba(60,30,10,.45)'; c.lineWidth=1; c.stroke(); c.fillStyle='#3A2A20'; c.fillText(lt,Wc/2,609); }
   c.fillStyle=INK; c.font='500 21px Figtree, sans-serif'; c.fillText('por demostrar una',Wc/2,642);
   c.fillStyle=LAC; c.font='800 38px Figtree, sans-serif'; c.fillText(ND.t,Wc/2,684);
-  c.fillStyle=INK; c.font='500 19px Figtree, sans-serif'; c.fillText(S.li>=8?(ND.k==='oro'?'al recorrer los 16 mundos, de la costa a la Gran Cordillera, con libertad financiera y una huella verde de '+verde()+'.':'al recorrer los 16 mundos con una huella verde de '+verde()+'. Siguiente paso: '+ND.tip+'.'):(ND.k==='oro'?'al conquistar las 8 estaciones de la montaña, del Valle a la Cordillera, hasta alcanzar la libertad financiera.':'al recorrer las 8 estaciones de la montaña. Siguiente paso: '+ND.tip+'.'),Wc/2,716);
+  c.fillStyle=INK; c.font='500 19px Figtree, sans-serif'; c.fillText(S.li>=8?(ND.k==='oro'?'al recorrer los '+((rutaDe(S.li)+1)*8)+' mundos de Ruta Financiera, con libertad financiera y una huella verde de '+verde()+'.':'al recorrer los '+((rutaDe(S.li)+1)*8)+' mundos con una huella verde de '+verde()+'. Siguiente paso: '+ND.tip+'.'):(ND.k==='oro'?'al conquistar las 8 estaciones de la montaña, del Valle a la Cordillera, hasta alcanzar la libertad financiera.':'al recorrer las 8 estaciones de la montaña. Siguiente paso: '+ND.tip+'.'),Wc/2,716);
   // medallas de logros
-  const nW=S.li>=8?16:8, ts=eco.stars.slice(0,nW).reduce((a,b)=>a+(b||0),0), M=[[patrimonio(),'PATRIMONIO'],[ingresoAct(),'INGRESO DE ACTIVOS'],[activosN(),'ACTIVOS'],[eco.emb,'AHORRO'],[eco.stats.invested||0,'INVERTIDO'],[eco.score||650,'DATACRÉDITO'],[verde(),'HUELLA VERDE'],[ts+'/'+nW*3,'ESTRELLAS']];
+  const nW=(rutaDe(S.li)+1)*8, ts=eco.stars.slice(0,nW).reduce((a,b)=>a+(b||0),0), M=[[patrimonio(),'PATRIMONIO'],[ingresoAct(),'INGRESO DE ACTIVOS'],[activosN(),'ACTIVOS'],[eco.emb,'AHORRO'],[eco.stats.invested||0,'INVERTIDO'],[eco.score||650,'DATACRÉDITO'],[verde(),'HUELLA VERDE'],[ts+'/'+nW*3,'ESTRELLAS']];
   const mw=150, mx0=Wc/2-(M.length-1)*mw/2;
   M.forEach(([v,l],i)=>{ const x=mx0+i*mw, y=790; c.fillStyle='rgba(255,252,244,.85)'; c.beginPath(); c.arc(x,y,44,0,7); c.fill(); c.strokeStyle=ORO; c.lineWidth=2.4; c.beginPath(); c.arc(x,y,44,0,7); c.stroke(); c.strokeStyle='rgba(107,42,26,.5)'; c.lineWidth=0.8; c.beginPath(); c.arc(x,y,38,0,7); c.stroke();
     c.fillStyle=LAC; c.font='700 '+(String(v).length>4?22:28)+'px "IBM Plex Mono", monospace'; c.fillText(String(v),x,y+9); c.fillStyle=INK; c.font='800 11px Figtree, sans-serif'; c.fillText(l,x,y+66); });
@@ -4988,8 +4992,8 @@ function endingReport(){ try{ medCheck(); }catch(e){}
   const show=()=>{
     const report=`Ruta Financiera · ${eco.name}${eco.grupo?' ('+eco.grupo+')':''} · ${Dif().n}${profLine()?'\n'+profLine():''}\nTiempo: ${mins}:${String(secs).padStart(2,'0')} · Estrellas: ${totalStars}/${eco.stars.length*3} · Páginas del Cuaderno: ${totalPages}/${eco.stars.length*3}\nPatrimonio final: ${patrimonio()} · Huella verde: ${verde()} · Índice de endeudamiento: ${(()=>{ const G=guiaInd(); return G.ie>=999?'alto':G.ie+' %'; })()} · Balance quincenal: ${guiaInd().bal} · Diploma: ${nivelDiploma().m} · Muertes financieras: ${st.muertes||0} · Salud financiera final: ${salud()} · Ingreso de activos y negocio: ${ingresoAct()} por quincena · Activos: ${activosN()}${eco.negocio?' (negocio: '+eco.negocio.n+' nivel '+eco.negocio.nivel+')':''}\nAhorrado: ${st.saved} · Invertido: ${st.invested} · Trampas: ${st.traps} · Quiebras y caídas: ${st.deaths}\nSueños cumplidos: ${(eco.suenos||[]).join(', ')||'ninguno'} · Pasivos: ${(eco.lujos||[]).map(l=>l.n).join(', ')||'ninguno'} · Conceptos: ${Object.keys(eco.seen||{}).length}/${Object.keys(TIPS).length}\nPreguntas acertadas en la ruta: ${st.quizOk}/${st.quizN}\nHábitos: DataCrédito ${eco.score||650} · esperó por más ${st.paciencia||0} vez(es) (eligió ya ${st.impaciente||0}) · cursos ${st.cursos||0} · comparó precios ${st.compara||0} · ayudó ${st.ayudas||0} · evitó el FOMO ${st.nofomo||0} · pensión ${eco.pension||0}`+(eco.pre!=null?`\nPrueba inicial: ${eco.pre}/5`:'')+(eco.post!=null?` · Prueba final: ${eco.post}/5`:'')+`\nAyudas recibidas: ${eco.stats.helps||0} · Peso que carga al final: ${peso()}\n\nResultados de aprendizaje (competencias de educación económica y financiera: decidir, administrar, planear, gestionar):\n`+CURR.map((c,i)=>`M${i+1} · ${c.comp} · ${c.g}: ${c.ra} → ${logro(i)}`).join('\n');
     const cert=certURL();
-    openOv(`<div class="eyebrow">${fli===15?"La Gran Expedición · 16 mundos":"Libertad financiera"}</div>
-    <h2>${esc(eco.name)}: ${fli===15?'completó La Gran Expedición':'excelente inteligencia financiera'}</h2>
+    openOv(`<div class="eyebrow">${fli===7?"Libertad financiera":RUTAS[rutaDe(fli)].n+" · "+(fli+1)+" mundos"}</div>
+    <h2>${esc(eco.name)}: ${fli===7?'excelente inteligencia financiera':fli===15?'completó La Gran Expedición':fli===23?'sobrevivió al Colapso':'reconstruyó el mundo'}</h2>
     <img src="${cert}" alt="Certificado de Inteligencia Financiera de ${esc(eco.name)}" style="width:100%;border-radius:10px;border:1px solid var(--line);margin:6px 0 4px">
     <div class="row" style="margin-bottom:8px"><button class="btn gold sm" type="button" id="bCert">Descargar certificado</button><span class="muted" id="certMsg" style="font-size:12px"></span></div>
     <h3 style="margin-top:6px">Mentor de la Cordillera</h3>
@@ -5007,22 +5011,22 @@ function endingReport(){ try{ medCheck(); }catch(e){}
       <div class="st"><b>${(eco.suenos||[]).length}</b><span>Sueños cumplidos sin deudas</span></div>
       <div class="st"><b>${(eco.lujos||[]).length}</b><span>Pasivos que conservas</span></div>
       <div class="st"><b>${Object.keys(eco.seen||{}).length}/${Object.keys(TIPS).length}</b><span>Conceptos descubiertos</span></div>
-      <div class="st"><b>${nLog()}/${fli===15?16:8}</b><span>Resultados de aprendizaje logrados</span></div>
+      <div class="st"><b>${nLog()}/${fli+1}</b><span>Resultados de aprendizaje logrados</span></div>
     </div>
     ${huellaHTML()}
     <div class="sec"><h3>Tus resultados de aprendizaje</h3>${CURR.map((c,i)=>`<div class="item"><span class="mk ${eco.logros[i]===2?'ok':'no'}" style="flex:0 0 auto">${eco.logros[i]===2?'✓':'…'}</span><span class="n"><b>Mundo ${i+1} · ${esc(c.comp)}</b> <span class="muted">${esc(c.g)}</span><br>${esc(c.ra)}</span></div>`).join('')}</div>
     ${eco.post!=null?`<div class="fb ok"><b>Lo que aprendiste:</b> ${eco.pre!=null?`prueba inicial ${eco.pre}/5 → prueba final ${eco.post}/5.`:`prueba final ${eco.post}/5.`}</div>`:`<p>¿Quieres medir cuánto aprendiste? Responde la prueba final (las mismas 5 preguntas del inicio).</p><button class="btn" type="button" id="bPost">Hacer la prueba final</button>`}
     <div class="sec"><h3>Resumen para el docente</h3><textarea id="rep" readonly style="width:100%;min-height:110px;background:var(--bg);color:var(--ink);border:1px solid var(--line);border-radius:10px;padding:10px;font:600 12px var(--f-num)">${esc(report)}</textarea>
-    <div class="row" style="margin-top:8px"><button class="btn sm" type="button" id="bCopy">Copiar resumen</button>${fli===7?'<button class="btn gold" type="button" id="bExpe">Seguir a La Expedición (mundos 9 a 16)</button>':''}<button class="btn ${fli===7?'alt':'gold'}" type="button" id="bAgain">Subir otra vez</button></div></div>`);
-    const bp=document.getElementById('bPost'); if(bp) bp.onclick=()=>runTest(sc=>{ eco.post=sc; if(fli===7) save(8); else clearSave(); show(); },'Prueba final');
+    <div class="row" style="margin-top:8px"><button class="btn sm" type="button" id="bCopy">Copiar resumen</button>${fli+1<LV.length?'<button class="btn gold" type="button" id="bExpe">Seguir a '+RUTAS[rutaDe(fli)+1].n+' (mundos '+(fli+2)+' a '+(fli+9)+')</button>':''}<button class="btn ${fli+1<LV.length?'alt':'gold'}" type="button" id="bAgain">Subir otra vez</button></div></div>`);
+    const bp=document.getElementById('bPost'); if(bp) bp.onclick=()=>runTest(sc=>{ eco.post=sc; if(fli+1<LV.length) save(fli+1); else clearSave(); show(); },'Prueba final');
     document.getElementById('bCopy').onclick=e=>{ const t=document.getElementById('rep'); try{ navigator.clipboard.writeText(t.value).then(()=>e.target.textContent='Copiado',()=>{t.select();}); }catch(_){ t.select(); } };
-    document.getElementById('bAgain').onclick=titleScreen; const bx=document.getElementById('bExpe'); if(bx) bx.onclick=()=>{ closeOv(); save(8); showMap(8,{reveal:true}); };
+    document.getElementById('bAgain').onclick=titleScreen; const bx=document.getElementById('bExpe'); if(bx) bx.onclick=()=>{ closeOv(); save(fli+1); showMap(fli+1,{reveal:true}); };
     document.getElementById('bCert').onclick=async()=>{ const msg=document.getElementById('certMsg'), name='certificado-ruta-financiera-'+String(eco.name||'senderista').toLowerCase().replace(/[^a-z0-9áéíóúñ]+/gi,'-')+'.png';
       const blob=await (await fetch(cert)).blob(); let dl=null; try{ dl=window.claude&&window.claude.use?await window.claude.use('downloads'):null; }catch(_){ dl=null; }
       if(dl){ try{ await dl.save({filename:name,data:blob}); msg.textContent=' Listo.'; }catch(err){ msg.textContent=err&&err.code==='declined'?'':' No se pudo descargar aquí.'; } return; }
       const a=document.createElement('a'); a.href=URL.createObjectURL(blob); a.download=name; document.body.appendChild(a); a.click(); setTimeout(()=>{ URL.revokeObjectURL(a.href); a.remove(); },500); };
   };
-  if(fli===7) save(8); else clearSave(); rkSubmit(fli===15?9:8,eco.stats.frames/60); show();
+  if(fli+1<LV.length) save(fli+1); else clearSave(); rkSubmit(RUTAS[rutaDe(fli)].code,eco.stats.frames/60); show();
 }
 
 
@@ -5221,7 +5225,7 @@ function rkLocal(){ try{ const a=JSON.parse(localStorage.getItem(RK_LOCAL)||'[]'
 function rkSaveLocal(a){ try{ localStorage.setItem(RK_LOCAL,JSON.stringify(a.slice(-200))); }catch(e){} }
 const rkKey=r=>[String(r.a).toLowerCase(),String(r.g||'').toLowerCase(),r.w,r.d].join('|');
 function rkMerge(list,run){ const i=list.findIndex(r=>rkKey(r)===rkKey(run)); if(i<0){ list.push(run); return true; } if(run.t<list[i].t){ list[i]=run; return true; } return false; }
-function rkValid(r){ return r&&typeof r.a==='string'&&r.a.length<=24&&typeof r.t==='number'&&isFinite(r.t)&&r.t>0&&Number.isInteger(r.w)&&r.w>=0&&r.w<=17&&['exp','sen','mon'].includes(r.d); }
+function rkValid(r){ return r&&typeof r.a==='string'&&r.a.length<=24&&typeof r.t==='number'&&isFinite(r.t)&&r.t>0&&Number.isInteger(r.w)&&r.w>=0&&r.w<=35&&['exp','sen','mon'].includes(r.d); }
 function fmtT(sec){ const m=Math.floor(sec/60), s2=(sec-m*60); return m+':'+(s2<10?'0':'')+s2.toFixed(1); }
 async function rkInit(){
   try{
@@ -5238,39 +5242,39 @@ async function rkInit(){
 }
 function rkRows(){ if(RK.shared&&RK.ready) return RK.rows; const me=eco?String(eco.name||'').toLowerCase()+'|'+String(eco.grupo||'').toLowerCase():null; return rkLocal().filter(rkValid).map(r=>Object.assign({},r,{own:me!==null&&(String(r.a).toLowerCase()+'|'+String(r.g||'').toLowerCase())===me})); }
 async function rkSubmit(w,secs){
-  const run={m:eco.ruta==='fija'?'f':'v',a:String(eco.name||'Senderista').slice(0,16),g:String(eco.grupo||'').slice(0,12),c:String(eco.colegio||'').slice(0,40),gr:String(eco.grado||'').slice(0,20),pa:String(eco.pais||'').slice(0,24),w,t:Math.round(secs*10)/10,d:eco.diff,p:patrimonio(),f:new Date().toISOString().slice(0,10),cl:String(eco.clase&&eco.clase.code||'').slice(0,12),ra:(eco.logros||[]).filter(x=>x===2).length,pr:eco.pre??null,po:eco.post??null,sf:salud(),mu:(eco.stats&&eco.stats.muertes)||0,dl:(w===8||w===9)?nivelDiploma().k.charAt(0):''}; try{ const I=indicadores(); Object.assign(run,{i:I.ing,gs:I.gas,ah:I.ahorro,iv:I.inv,ac:I.act,ps:I.pas,de:I.deu,ta:I.tasa}); const G=guiaInd(); run.ie=Math.min(999,G.ie); run.ba=G.bal; run.hv=verde(); }catch(e){}
+  const run={m:eco.ruta==='fija'?'f':'v',a:String(eco.name||'Senderista').slice(0,16),g:String(eco.grupo||'').slice(0,12),c:String(eco.colegio||'').slice(0,40),gr:String(eco.grado||'').slice(0,20),pa:String(eco.pais||'').slice(0,24),w,t:Math.round(secs*10)/10,d:eco.diff,p:patrimonio(),f:new Date().toISOString().slice(0,10),cl:String(eco.clase&&eco.clase.code||'').slice(0,12),ra:(eco.logros||[]).filter(x=>x===2).length,pr:eco.pre??null,po:eco.post??null,sf:salud(),mu:(eco.stats&&eco.stats.muertes)||0,dl:rkRutaFin(w)>=0?nivelDiploma().k.charAt(0):''}; try{ const I=indicadores(); Object.assign(run,{i:I.ing,gs:I.gas,ah:I.ahorro,iv:I.inv,ac:I.act,ps:I.pas,de:I.deu,ta:I.tasa}); const G=guiaInd(); run.ie=Math.min(999,G.ie); run.ba=G.bal; run.hv=verde(); }catch(e){}
   const loc=rkLocal(); const best=rkMerge(loc,run); rkSaveLocal(loc);
   if(RK.shared&&RK.db&&RK.uid&&RK.canWrite){ const mine=RK.mine.slice(); if(rkMerge(mine,run)){ try{ await RK.db.doc('ranking/'+RK.uid).set({runs:mine.slice(-80)}); RK.mine=mine; }catch(e){ if(e&&(e.code==='invalid_argument'||e.code==='not_granted')) RK.canWrite=false; } } }
   return {run,best};
 }
 function rkPlace(run){ const list=rkRows().filter(r=>r.w===run.w&&r.d===run.d).sort((a,b)=>a.t-b.t); const i=list.findIndex(r=>rkKey(r)===rkKey(run)&&r.t<=run.t+0.05); return {pos:i<0?null:i+1,of:list.length}; }
 const RK_UI={w:'g',d:'sen',g:''};
-function rkTimes(r){ const all=rkRows(), k=String(r.a).toLowerCase()+'|'+String(r.g||'').toLowerCase(), T=[]; for(let w=0;w<=17;w++){ const m=all.filter(x=>x.w===w&&x.d===r.d&&String(x.a).toLowerCase()+'|'+String(x.g||'').toLowerCase()===k).sort((a,b)=>a.t-b.t)[0]; T.push(m?m.t:null); } return T; }
+function rkTimes(r){ const all=rkRows(), k=String(r.a).toLowerCase()+'|'+String(r.g||'').toLowerCase(), T=[]; for(let w=0;w<=35;w++){ const m=all.filter(x=>x.w===w&&x.d===r.d&&String(x.a).toLowerCase()+'|'+String(x.g||'').toLowerCase()===k).sort((a,b)=>a.t-b.t)[0]; T.push(m?m.t:null); } return T; }
 function fmtTs(sec){ const m=Math.floor(sec/60), s2=Math.round(sec-m*60); return m+':'+(s2<10?'0':'')+s2; }
 const rkUK=r=>String(r.a).toLowerCase()+'|'+String(r.g||'').toLowerCase()+'|'+r.d;
 // resultado global: una fila por jugador con su avance, su tiempo total y sus finanzas más recientes
 function rkGlobal(rows){ const G={}; rows.forEach(r=>{ const k=rkUK(r); (G[k]=G[k]||[]).push(r); });
-  return Object.values(G).map(rs=>{ const T=[]; for(let w=0;w<=17;w++){ const m=rs.filter(x=>x.w===w).sort((a,b)=>a.t-b.t)[0]; T.push(m?m.t:null); }
-    const d1=T.slice(0,8).filter(x=>x!=null).length, d2=T.slice(10,18).filter(x=>x!=null).length, s1=T.slice(0,8).reduce((a,b)=>a+(b||0),0), s2=T.slice(10,18).reduce((a,b)=>a+(b||0),0), done=d1+d2, total=(T[8]!=null?T[8]:s1)+(T[9]!=null?T[9]:s2);
+  return Object.values(G).map(rs=>{ const T=[]; for(let w=0;w<=35;w++){ const m=rs.filter(x=>x.w===w).sort((a,b)=>a.t-b.t)[0]; T.push(m?m.t:null); }
+    let done=0,total=0,top=-1; RUTAS.forEach((R,ri)=>{ const ws=T.slice(R.w0,R.w0+8), d=ws.filter(x=>x!=null).length; done+=d; total+=T[R.code]!=null?T[R.code]:ws.reduce((a,b)=>a+(b||0),0); if(T[R.code]!=null) top=ri; });
     const last=rs.slice().sort((a,b)=>(rkProg(b.w)-rkProg(a.w))||String(b.f||'').localeCompare(String(a.f||'')))[0];
-    return Object.assign({},last,{own:rs.some(x=>x.own),glob:{T,done,total,full:T[8]!=null,full2:T[9]!=null}}); })
-   .sort((a,b)=>(b.glob.full2-a.glob.full2)||(b.glob.full-a.glob.full)||(b.glob.done-a.glob.done)||(a.glob.total-b.glob.total)); }
-function rkCard(r,i,d){ const DN={exp:'Explorador',sen:'Senderista',mon:'Montañista'}, gl=r.glob, T=gl?gl.T:rkTimes(r), sumW=T.slice(0,8).every(x=>x!=null)?T.slice(0,8).reduce((a,b)=>a+b,0):null, gen=(r.w===8||r.w===9)?r.t:(T[8]!=null?T[8]:sumW);
+    return Object.assign({},last,{own:rs.some(x=>x.own),glob:{T,done,total,top}}); })
+   .sort((a,b)=>(b.glob.top-a.glob.top)||(b.glob.done-a.glob.done)||(a.glob.total-b.glob.total)); }
+function rkCard(r,i,d){ const DN={exp:'Explorador',sen:'Senderista',mon:'Montañista'}, gl=r.glob, T=gl?gl.T:rkTimes(r), sumW=T.slice(0,8).every(x=>x!=null)?T.slice(0,8).reduce((a,b)=>a+b,0):null, gen=rkRutaFin(r.w)>=0?r.t:(T[8]!=null?T[8]:sumW);
   const has=r.i!=null, de=has?(r.de||0):null, ie=r.ie!=null?r.ie:(has&&r.p!=null?((r.p+de)>0?Math.round(de/(r.p+de)*100):(de>0?999:0)):null), ba=r.ba!=null?r.ba:(has?r.i-r.gs:null);
   const cell=(l,v,k)=>`<div class="rkf-c"><small>${l}</small><b${k?` style="color:${SEMC[k]}"`:''}>${k?`<i style="background:${SEMC[k]}"></i>`:''}${v}</b></div>`, n=x=>x==null?'—':x;
   const pill=(l,v,k)=>`<span class="rkp"${k?` style="color:${SEMC[k]}"`:''}>${k?`<i style="background:${SEMC[k]}"></i>`:''}${l} <b>${v}</b></span>`;
   const kp=r.p>0?'v':r.p===0?'a':'r', ki=ie==null?null:semIE(ie);
   const medal=`<span class="rkm${i<3?' p'+i:''}">${i+1}</span>`, sub=[r.c,[r.gr,r.g].filter(Boolean).join(' ')].filter(Boolean).join(' · ');
-  const big=gl?(gl.done?fmtT(gl.total):'—'):fmtT(r.t), lab=gl?(gl.full2?'Expedición completa':gl.full&&gl.done<=8?'Ruta 1 completa':gl.done+' de 16 mundos'):rkLabel(r.w);
+  const big=gl?(gl.done?fmtT(gl.total):'—'):fmtT(r.t), lab=gl?(gl.done+' de '+LV.length+' mundos'+(gl.top>=0?' · '+RUTAS[gl.top].fin:'')):rkLabel(r.w);
   return `<article class="rkcard${r.own?' own':''}">
    <div class="rkh">${medal}<div class="rkn"><b>${esc(r.a)}</b>${r.own?' <span class="tag" style="background:var(--gold)">tú</span>':''}<div class="rksub">${esc(sub||'Sin colegio')}${d==='all'?' · '+(DN[r.d]||''):''}</div></div>
-    <div class="rktime"><b>${big}</b><small>${lab}</small>${!gl&&r.w!==8&&r.w!==9?`<small>General ${gen!=null?fmtT(gen):'—'}</small>`:''}</div></div>
-   ${gl?`<div class="rkprog" title="${gl.done} de 16 mundos">${T.slice(0,8).concat(T.slice(10,18)).map((t,i)=>`<span class="${t!=null?'on':''}${i===8?' r2':''}"></span>`).join('')}</div>`:''}
+    <div class="rktime"><b>${big}</b><small>${lab}</small>${!gl&&rkRutaFin(r.w)<0?`<small>General ${gen!=null?fmtT(gen):'—'}</small>`:''}</div></div>
+   ${gl?`<div class="rkprog" style="grid-template-columns:repeat(${LV.length},1fr)" title="${gl.done} de ${LV.length} mundos">${RUTAS.slice(0,nRutas()).map((R,ri)=>T.slice(R.w0,R.w0+8).map((t,i)=>`<span class="${t!=null?'on':''}${ri&&i===0?' r2':''}"></span>`).join('')).join('')}</div>`:''}
    <div class="rkf rk6">${cell('Activos',r.p==null?'—':(r.p+(de||0)),null)}${cell('Pasivos',n(r.ps),r.ps?'a':null)}${cell('Patrimonio',n(r.p),r.p==null?null:kp)}${cell('Deudas',de==null?'—':de?'−'+de:'0',de==null?null:de?'r':'v')}${cell('Ahorros',n(r.ah))}${cell('Inversiones',n(r.iv))}</div>
    <details class="rkd"><summary><span class="rkdo">Ver detalles</span><span class="rkdc">Ocultar detalles</span></summary>
     <div class="rkdl">Tiempo por mundo</div>
     <div class="rkw" aria-label="Tiempo por mundo, ruta 1">${T.slice(0,8).map((t,w)=>`<span class="rkt${!gl&&w===r.w?' on':''}${t==null?' no':''}"><small>M${w+1}</small>${t==null?'—':fmtTs(t)}</span>`).join('')}</div>
-    ${T.slice(10,18).some(x=>x!=null)||r.w>=9?`<div class="rkdl">La Expedición</div><div class="rkw" aria-label="Tiempo por mundo, Expedición">${T.slice(10,18).map((t,w)=>`<span class="rkt${!gl&&w+10===r.w?' on':''}${t==null?' no':''}"><small>M${w+9}</small>${t==null?'—':fmtTs(t)}</span>`).join('')}</div>`:''}
+    ${RUTAS.slice(1,nRutas()).map((R,k)=>{ const ri=k+1; return T.slice(R.w0,R.w0+8).some(x=>x!=null)||rkProg(r.w)>=ri*8?`<div class="rkdl">${R.n}</div><div class="rkw" aria-label="Tiempo por mundo, ${R.n}">${T.slice(R.w0,R.w0+8).map((t,w)=>`<span class="rkt${!gl&&w+R.w0===r.w?' on':''}${t==null?' no':''}"><small>M${ri*8+w+1}</small>${t==null?'—':fmtTs(t)}</span>`).join('')}</div>`:''; }).join('')}
     ${gl?`<div class="rksub" style="margin-top:6px">Tiempo general: <b>${gl.done?fmtT(gl.total):'—'}</b>${gl.full?' (ruta completa)':' (suma de los mundos terminados)'} · último registro: ${esc(String(r.f||''))} en ${rkLabel(r.w).toLowerCase().replace('mundo','el Mundo')}</div>`:`<div class="rksub" style="margin-top:6px">Fecha: ${esc(String(r.f||''))}</div>`}
     <div class="rkdl">Indicadores de salud financiera</div>
     ${has||r.p!=null?`<div class="rkf">${cell('Balance / q',ba==null?'—':(ba>0?'+':'')+ba,ba==null?null:semBal(ba))}${cell('Endeudamiento',ie==null?'—':ie>=999?'alto':ie+' %',ki)}${cell('Tasa de ahorro',has&&r.ta!=null?r.ta+' %':'—',has&&r.ta!=null?(r.ta>=20?'v':r.ta>=10?'a':'r'):null)}${cell('Salud financiera',n(r.sf),r.sf==null?null:r.sf>=60?'v':r.sf>=35?'a':'r')}
@@ -5283,7 +5287,7 @@ function renderRanking(el){
   const base=rkRows().filter(r=>(!RK_UI.cl||!myCl||r.cl===myCl)&&(d==='all'||r.d===d)&&(!g||(String(r.g||'')+' '+String(r.c||'')+' '+String(r.gr||'')).toLowerCase().includes(g)));
   const glob=wv==='g', list=glob?rkGlobal(base).slice(0,30):base.filter(r=>r.w===+wv).sort((a,b)=>a.t-b.t).slice(0,15);
   el.innerHTML=`<div class="rkbar">
-     ${sel('w',[['g','Resultado global por jugador'],...LV.map((L,i)=>[rkW(i),'Mundo '+(i+1)+' · '+L.name]),[8,'Ruta 1 completa'],[9,'Expedición completa']],RK_UI.w,'Ver')}
+     ${sel('w',[['g','Resultado global por jugador'],...LV.map((L,i)=>[rkW(i),'Mundo '+(i+1)+' · '+L.name]),...RUTAS.slice(0,nRutas()).map(R=>[R.code,R.fin])],RK_UI.w,'Ver')}
      ${sel('d',[['sen','Senderista'],['exp','Explorador'],['mon','Montañista'],['all','Todas']],RK_UI.d,'Dificultad')}
      <label class="rkfl"><span>Curso o colegio</span><input type="text" data-rk="g" placeholder="Filtrar" value="${esc(RK_UI.g)}"></label>
      ${myCl?`<label class="rkck"><input type="checkbox" id="rkCl" ${RK_UI.cl?'checked':''}> Solo mi clase (${esc(myCl)})</label>`:''}
@@ -5361,7 +5365,7 @@ function showRanking(back){
 
 /* ================= GUARDADO ================= */
 function save(li){ try{ localStorage.setItem('rac-financiera-v2',JSON.stringify({li,eco})); }catch(e){} }
-function loadSave(){ try{ const s=JSON.parse(localStorage.getItem('rac-financiera-v2')||'null'); if(s&&s.eco){ ['pages','stars'].forEach(k=>{ s.eco[k]=s.eco[k]||[]; while(s.eco[k].length<16) s.eco[k].push(0); }); } return s&&s.eco?s:null; }catch(e){ return null; } }
+function loadSave(){ try{ const s=JSON.parse(localStorage.getItem('rac-financiera-v2')||'null'); if(s&&s.eco){ ['pages','stars'].forEach(k=>{ s.eco[k]=s.eco[k]||[]; while(s.eco[k].length<32) s.eco[k].push(0); }); } return s&&s.eco?s:null; }catch(e){ return null; } }
 function clearSave(){ try{ localStorage.removeItem('rac-financiera-v2'); }catch(e){} }
 
 /* ================= LEYENDA ================= */
@@ -5717,9 +5721,12 @@ addEventListener('keydown',e=>{ if(e.target&&(e.target.tagName==='INPUT'||e.targ
   if(e.key==='Escape'){ const p=document.getElementById('scrPanel'); if(p){ e.stopImmediatePropagation(); e.preventDefault(); p.remove(); document.getElementById('bScr').setAttribute('aria-expanded','false'); } } },true);
 /* ================= LA EXPEDICIÓN: mundos 9 a 16, cada uno en un terreno distinto ================= */
 const RUTA2=8; // índice del primer mundo de la Expedición
-const esR2=li=>li>=RUTA2, finalLi=li=>li===7||li===15, liR=li=>li%8;
+const esR2=li=>li>=RUTA2, finalLi=li=>li%8===7, liR=li=>li%8, rutaDe=li=>Math.floor(li/8);
+const RUTAS=[{n:'La Montaña',w0:0,code:8,fin:'Ruta 1 completa'},{n:'La Expedición',w0:10,code:9,fin:'Expedición completa'},{n:'El Colapso',w0:20,code:18,fin:'Colapso superado'},{n:'La Reconstrucción',w0:28,code:19,fin:'Reconstrucción completa'}];
+const nRutas=()=>Math.floor(LV.length/8);
 const ALT2=[0,420,1150,2000,3650,3900,4400,5000,5800];
-const altBase=li=>esR2(li)?ALT2[li-8]:ALT[li], altTop=li=>esR2(li)?ALT2[li-7]:ALT[li+1];
+const ALTR=r=>[ALT,ALT2,typeof ALT3!=='undefined'?ALT3:ALT2,typeof ALT4!=='undefined'?ALT4:ALT2][r];
+const altBase=li=>ALTR(rutaDe(li))[li%8], altTop=li=>ALTR(rutaDe(li))[li%8+1];
 LV.push(
  {name:'La Costa',bioma:'Playa y manglar',role:'Rescatista',step:'Salir de las deudas',theme:8,costo:3,
   lesson:'Empieza <b>La Expedición</b>: una segunda travesía desde el mar hasta los glaciares. En <b>la costa</b> hay playa y <b>manglar</b>, el pantano del mar: como una deuda en mora, te frena y te hunde. Aquí abundan el gota a gota, los créditos fáciles y las culebras. Usa la <b>bola de nieve</b> o la <b>avalancha</b> (Guía 3) y llega al campamento <b>sin deudas</b>.',
@@ -5907,8 +5914,11 @@ const RETOS2=[
   {l:'Prestarle plata a todo el que pida',fx:()=>{ eco.hand=Math.max(0,eco.hand-5); return 'Ayudar sin presupuesto te puede dejar sin nada (−5). Generosidad sí, pero planeada.'; }}]})];
 RETOS.push(...RETOS2);
 // ranking: códigos de mundo (0-7 ruta 1, 8 = ruta 1 completa, 9 = Expedición completa, 10-17 = mundos 9 a 16)
-const rkW=li=>li<8?li:li+2, rkLi=w=>w<8?w:w>=10?w-2:null, rkProg=w=>w<8?w:w===8?7.5:w===9?16:w-2;
-const rkLabel=w=>w===8?'Ruta 1 completa':w===9?'Expedición completa':'Mundo '+(rkLi(w)+1);
+const rkW=li=>RUTAS[rutaDe(li)].w0+li%8;
+const rkLi=w=>{ for(let r=0;r<RUTAS.length;r++){ const R=RUTAS[r]; if(w>=R.w0&&w<R.w0+8&&!(r===0&&w>=8)) return r*8+(w-R.w0); } return null; };
+const rkRutaFin=w=>RUTAS.findIndex(R=>R.code===w);
+const rkProg=w=>{ const f=rkRutaFin(w); if(f>=0) return f*8+7.5; const l=rkLi(w); return l==null?-1:l; };
+const rkLabel=w=>{ const f=rkRutaFin(w); return f>=0?RUTAS[f].fin:'Mundo '+(rkLi(w)+1); };
 // La Expedición: oficina de impuestos del salar
 function dianUpdate(e,p){ if(e.cd>0) e.cd--; e.near=Math.abs((p.x+p.w/2)-(e.x+e.w/2))<90;
   if(!e.used&&overlap(p,e)&&!e.cd){ e.used=true; const base=Math.max(2,Math.round(Math.max(0,patrimonio())*0.06)); learn('dian'); learn('impuestos');
@@ -5994,7 +6004,7 @@ function drawAtajo(e,x,y){ const D=DANO[e.k], fy=y+e.h, cx=x+e.w/2; if(e.used) r
   ctx.fillStyle='#6A4A2A'; rr(x+2,fy-14,e.w-4,14,2); ctx.fill(); ctx.strokeStyle='#3A2414'; ctx.lineWidth=1; ctx.strokeRect(x+2,fy-14,e.w-4,14);
   ctx.fillStyle='#F2C230'; ctx.font='900 10px Figtree, sans-serif'; ctx.textAlign='center'; ctx.fillText('$',cx,fy-4);
   ctx.font='800 6px Figtree, sans-serif'; const tw=ctx.measureText(D.mal[0]).width+10; ctx.fillStyle='rgba(60,10,10,.85)'; rr(cx-tw/2,fy-34,tw,12,3); ctx.fill(); ctx.fillStyle='#FFD08A'; ctx.fillText(D.mal[0],cx,fy-25.5); ctx.textAlign='left'; }
-function drawVerdeHud(){ if(!eco||!S.L||(S.li<8&&verde()>=100)) return; const v=verde(), x=W-118, y=130, w=90, col=v>=70?'#62C98A':v>=40?'#F2C230':'#EE5A4A';
+function drawVerdeHud(){ if(!eco||!S.L||(S.li<8&&verde()>=100)) return;  const v=verde(), x=W-118, y=130, w=90, col=v>=70?'#62C98A':v>=40?'#F2C230':'#EE5A4A';
   ctx.save(); ctx.fillStyle='rgba(10,20,26,.62)'; rr(x-8,y-2,118,22,8); ctx.fill(); if(S.verdeHit>0){ S.verdeHit--; ctx.strokeStyle=S.verdeD>0?'rgba(98,201,138,'+(S.verdeHit/24)+')':'rgba(238,120,74,'+(S.verdeHit/24)+')'; ctx.lineWidth=2; rr(x-8,y-2,118,22,8); ctx.stroke(); }
   ctx.fillStyle='#4E9A5A'; ctx.beginPath(); ctx.ellipse(x+2,y+9,4,6,0.6,0,7); ctx.fill(); ctx.strokeStyle='#BFF5CF'; ctx.lineWidth=.6; ctx.beginPath(); ctx.moveTo(x-1,y+13); ctx.lineTo(x+5,y+5); ctx.stroke();
   ctx.font='700 6.4px Figtree, sans-serif'; ctx.fillStyle='#fff'; ctx.fillText('HUELLA VERDE',x+10,y+6); ctx.textAlign='right'; ctx.fillText(String(v),x+w+16,y+6); ctx.textAlign='left';
@@ -6212,6 +6222,349 @@ function huellaHTML(){ const v=verde(), st=eco.stats||{}, k=v>=80?'v':v>=50?'a':
 ANCLA.add('dano'); ANCLA.add('impuestos');
 LV.slice(8).forEach(L=>{ const a=L.chunks.indexOf('page1'); L.chunks.splice(a+1,0,'dano'); const b=L.chunks.indexOf('page2'); L.chunks.splice(b,0,'dano'); });
 MEDALLAS.push({id:'verde',n:'Guardián de la montaña',d:'Restaura 5 zonas dañadas por tala, basura, quemas o contaminación',c:()=>(eco.stats.restaura||0)>=5},{id:'expe',n:'Gran Expedición',d:'Completa los 16 mundos y aprueba la Prueba del Gran Mentor',c:()=>!!eco.granMentor});
+/* ================= RUTA 3 · EL COLAPSO: guerra, ambiente destruido y desastres naturales (mundos 17 a 24) ================= */
+THEMES[14].hielo=1; THEMES[15].hielo=1;
+const ALT3=[1500,1500,4000,2600,200,800,300,2000,3000];
+const reqN3=li=>({16:Math.round(25*Dif().req),17:Math.round(20*Dif().req),21:Math.round(40*Dif().req),23:Math.round(250*Dif().req)})[li];
+const invV=()=>eco.assets.reduce((s,a)=>s+a.value,0);
+LV.push(
+ {name:'La Ciudad Sitiada',bioma:'Guerra',tag:'Guerra y saqueos',role:'Sobreviviente',step:'Plan financiero de emergencia',theme:16,costo:5,desF:1.7,
+  lesson:'Empieza <b>El Colapso</b>: el mundo que viene cuando nadie se preparó. En la <b>ciudad sitiada</b> hay saqueos y apagones: la plata en el bolsillo se pierde, la que está en la <b>alcancía</b> (el banco) queda a salvo. Ten un <b>plan de emergencia</b>: documentos, kit y dinero protegido.',
+  req:'Proteger tu dinero de los saqueos',reqFn:()=>'Tener '+reqN3(16)+' o más guardados en la alcancía',
+  meta:['Dinero protegido y documentos a salvo',G=>'Alcancía: '+eco.emb+' · en mano: '+eco.hand,G=>eco.emb>=reqN3(16)?'v':eco.emb>=10?'a':'r'],
+  chunks:['start','poder','calle','coins','ciudad','rocks','page1','dano','calle','lender','embalse','apuros','fugas','ayuda','calle','ciudad','negocio','dano','page2','embalse','rocks','vehiculo','colchon','racha','page3','trading','camp']},
+ {name:'El Volcán Despierto',bioma:'Volcán',tag:'Erupción',role:'Evacuado',step:'Evacuar con lo esencial',theme:17,costo:5,desF:1.6,
+  lesson:'El <b>volcán</b> despertó: llueve ceniza y bajan rocas ardientes. Quien tiene <b>seguro</b> y un <b>fondo de emergencia</b> evacúa y vuelve a empezar; quien no, lo pierde todo. Salta las rocas y no te detengas en la ceniza.',
+  req:'Seguro y fondo para evacuar',reqFn:()=>'Tener un seguro (casco o cuerda) y '+reqN3(17)+' en la alcancía',
+  meta:['Seguro y fondo de evacuación',G=>'Seguro: '+((has('casco')||has('cuerda'))?'sí':'no')+' · fondo: '+G.I.fondo+' meses',G=>(has('casco')||has('cuerda'))&&eco.emb>=reqN3(17)?'v':eco.emb>=8?'a':'r'],
+  chunks:['start','poder','rocks','steps','ciudad','tower','page1','dano','rocks','gap','embalse','muro','rocks','ayuda','calle','ciudad','negocio','dano','page2','embalse','tower','rocks','vehiculo','steps','racha','page3','trading','camp']},
+ {name:'La Ciudad del Terremoto',bioma:'Terremoto',tag:'Terremoto',role:'Reconstructor',step:'Reconstruir sin estafas',theme:18,costo:5,desF:1.8,
+  lesson:'Un <b>terremoto</b> partió la ciudad. Después de un desastre llegan los estafadores: “préstamos fáciles para reconstruir”, “subsidios” falsos. Pide ayuda en entidades oficiales, compara y <b>no te endeudes</b> por encima de tu capacidad.',
+  req:'Reconstruir sin deudas',reqFn:()=>'Llegar sin deudas',
+  meta:['Reconstruir sin deudas impagables',G=>'Deudas: '+G.deu+' · cuotas sobre ingresos: '+G.I.carga+' %',G=>G.deu===0?'v':G.I.carga<=30?'a':'r'],
+  chunks:['start','poder','gap','rocks','ciudad','credito','page1','dano','lender','hidden','embalse','gap','pyramid','ayuda','calle','ciudad','negocio','dano','page2','embalse','credito','rocks','vehiculo','gap','racha','page3','trading','camp']},
+ {name:'La Gran Inundación',bioma:'Inundación',tag:'Inundación',role:'Resiliente',step:'Diversificar para no perderlo todo',theme:19,costo:6,desF:1.6,
+  lesson:'El agua se llevó casas, cultivos y negocios. Quien tenía <b>todo en un solo lugar</b> lo perdió todo; quien tenía activos de varios tipos se sostuvo. Cruza ríos, puentes y techos, y llega con <b>activos de 2 tipos</b>.',
+  req:'Activos de 2 tipos distintos',reqFn:()=>'Tener activos de 2 tipos distintos',
+  meta:['Diversificar para resistir',G=>'Tipos de activo: '+tipos(),G=>tipos()>=2?'v':tipos()>=1?'a':'r'],
+  chunks:['start','poder','rio','bridge','ciudad','rio','page1','dano','moving','rio','embalse','bridge','invest','ayuda','calle','ciudad','negocio','dano','page2','embalse','rio','invest','vehiculo','moving','racha','page3','trading','camp']},
+ {name:'El Mercado Negro',bioma:'Hiperinflación',tag:'Hiperinflación',role:'Guardián del valor',step:'Proteger el valor del dinero',theme:20,costo:6,desF:1.4,infl:1,
+  lesson:'En el <b>mercado negro</b> hay <b>hiperinflación</b>: cada quincena los precios suben y el efectivo en tu mano se derrite. Lo que conserva valor son los <b>activos que producen</b>. Esquiva especuladores y llega con ingresos de activos que cubran tu costo de vida.',
+  req:'Activos que paguen tu costo de vida',reqFn:()=>'Ingreso de activos igual o mayor que tu costo de vida',
+  meta:['Ingresos que no se derriten',G=>'Ingreso de activos '+ingresoAct()+' de '+costo(),G=>ingresoAct()>=costo()?'v':ingresoAct()>0?'a':'r'],
+  chunks:['start','poder','mercado','tiendas','ciudad','vitrina','page1','dano','fomo','banco','embalse','mercado','invest','ayuda','calle','ciudad','negocio','dano','page2','embalse','tiendas','invest','vehiculo','fugas','racha','page3','trading','camp']},
+ {name:'El Desierto Tóxico',bioma:'Desierto tóxico',tag:'Sequía y veneno',role:'Previsor del agua',step:'Agua y salud primero',theme:21,costo:6,desF:1.6,
+  lesson:'Donde había ríos ahora hay <b>polvo y residuos tóxicos</b>. El agua limpia vale oro y enfermarse sale carísimo. La salud y el agua son lo primero del presupuesto. Llega con una <b>reserva grande</b> en la alcancía.',
+  req:'Reserva grande para la sequía',reqFn:()=>'Tener '+reqN3(21)+' o más en la alcancía',
+  meta:['Reserva de 6 meses',G=>'Tu alcancía cubre '+G.I.fondo+' meses',G=>G.I.fondo>=6?'v':G.I.fondo>=3?'a':'r'],
+  chunks:['start','poder','gap','rocks','ciudad','apuros','page1','dano','antgap','culebra','embalse','gap','fugas','ayuda','calle','ciudad','negocio','dano','page2','embalse','rocks','apuros','vehiculo','gap','racha','page3','trading','camp']},
+ {name:'El Bosque Calcinado',bioma:'Incendio',tag:'Incendio forestal',role:'Restaurador',step:'Restaurar también es invertir',theme:22,costo:6,desF:1.5,
+  lesson:'Un incendio arrasó el bosque. Sin árboles no hay agua, ni suelo, ni turismo, ni trabajo. <b>Restaurar</b> es una inversión: los negocios verdes y la reforestación generan ingresos. Restaura zonas y llega con una <b>huella verde</b> de 50 o más.',
+  req:'Huella verde de 50 o más',reqFn:()=>'Llegar con huella verde de 50 o más',
+  meta:['Huella verde en recuperación',G=>'Huella verde: '+verde()+' · zonas restauradas: '+(eco.stats.restaura||0),G=>verde()>=70?'v':verde()>=50?'a':'r'],
+  chunks:['start','poder','tower','puma','ciudad','steps','page1','dano','rocks','culebra','embalse','hidden','puma','ayuda','calle','ciudad','negocio','dano','page2','embalse','tower','steps','vehiculo','rocks','racha','page3','trading','camp']},
+ {name:'La Tierra de Nadie',bioma:'Tierra de nadie',tag:'Todas las crisis juntas',role:'Resiliente',step:'Resiliencia y comunidad',theme:23,costo:7,desF:2,
+  lesson:'La <b>Tierra de Nadie</b> junta todas las crisis: guerra, terremotos, erupciones y saqueos. Aquí se gana con lo aprendido: dinero protegido, seguros, activos diversificados, salud financiera y <b>comunidad</b>. Supera la <b>Prueba de la Resiliencia</b>.',
+  req:'Patrimonio alto y salud financiera',reqFn:()=>'Patrimonio de '+reqN3(23)+' o más y salud financiera de 50 o más',
+  meta:['Resiliencia financiera',G=>'Patrimonio '+G.pat+' · salud '+salud(),G=>G.pat>=reqN3(23)&&salud()>=50?'v':salud()>=50?'a':'r'],
+  chunks:['start','poder','muro','rocks','ciudad','gap','page1','dano','pyramid','puma','embalse','tower','gap','ayuda','calle','ciudad','negocio','dano','page2','embalse','muro','rocks','vehiculo','duo','racha','page3','trading','camp']});
+THEMES.push(
+ {sky:['#2A2228','#B8704A'],sun:'#F2A060',m:['#5A4A48','#46383A','#32282A'],grass:'#7A7068',earth:'#4A403C',edge:'#2E2624',deco:'ruinas',stone:'#8A8078',top:'sal'},
+ {sky:['#1E1414','#C9503A'],sun:'#FF8A4A',m:['#4A3A38','#3A2C2C','#2A2020'],grass:'#5A5450',earth:'#3A302C',edge:'#221A18',deco:'volcan',stone:'#6A605A',top:'sal'},
+ {sky:['#3A3A44','#C9A47A'],sun:'#F2D0A0',m:['#6A6470','#545060','#403C48'],grass:'#8A8478',earth:'#5A5048',edge:'#3A322C',deco:'grietas',stone:'#9A9088',top:'sal'},
+ {sky:['#2E3A4A','#9AAAB8'],sun:'#D8E0E8',m:['#5A6A74','#46565E','#34424A'],grass:'#5A7060',earth:'#4A4036',edge:'#2E2820',deco:'inundado',stone:'#7A8480',top:'barro',green:1},
+ {sky:['#1A1626','#6A4A6A'],sun:'#C9A0C0',m:['#3E3448','#30283A','#22202C'],grass:'#6A6070',earth:'#3A3440',edge:'#24202A',deco:'mercado',stone:'#7A7080',top:'sal'},
+ {sky:['#5A4A30','#D8C080'],sun:'#FFE8A0',m:['#8A7A4A','#6E603A','#54482C'],grass:'#B8A068',earth:'#7A6A44',edge:'#4E4228',deco:'toxico',stone:'#A89A70',top:'arena'},
+ {sky:['#2A1A14','#B85A30'],sun:'#FF9A50',m:['#4A3A30','#3A2C24','#2A201A'],grass:'#3A3430',earth:'#2E2622',edge:'#1A1412',deco:'calcinado',stone:'#5A504A',top:'sal'},
+ {sky:['#14141C','#7A3A30'],sun:'#E0603A',m:['#3A3438','#2C2830','#201E24'],grass:'#5A5450',earth:'#34302E',edge:'#1E1C1C',deco:'alambre',stone:'#6A6260',top:'sal'});
+LIGHT.push(
+ {hora:'humo sobre la ciudad',sun:[.75,70],warm:'#F2B080',grade:'#7A5A4A',ga:.16,ray:.03},
+ {hora:'cielo de ceniza y fuego',sun:[.8,60],warm:'#FF9A60',grade:'#8A3A2A',ga:.18,ray:.04},
+ {hora:'polvo después del sismo',sun:[.72,70],warm:'#F2D6B0',grade:'#8A7A6A',ga:.14,ray:.03},
+ {hora:'lluvia sin fin',sun:[.7,60],warm:'#DDE4EA',grade:'#4A5A6A',ga:.16,ray:0},
+ {hora:'toque de queda',sun:[.82,50],warm:'#D8B0D0',grade:'#3A2A4A',ga:.2,ray:0},
+ {hora:'sol abrasador y polvo',sun:[.86,40],warm:'#FFE6A0',grade:'#B8904A',ga:.14,ray:.06},
+ {hora:'humo del incendio',sun:[.78,70],warm:'#FF9A60',grade:'#6A2A1A',ga:.18,ray:.05},
+ {hora:'tormenta sobre la tierra de nadie',sun:[.74,60],warm:'#E07A5A',grade:'#2A1A1E',ga:.2,ray:.02});
+MT2.push(
+ {rock:'#5A504C',veg:'#6A6048',forest:'#4A4438',paramo:'#6A6050',vegA:.3,parA:.6,rockA:.8,snowA:9},
+ {rock:'#3A3030',veg:'#4A3E36',forest:'#3A3028',paramo:'#4E4238',vegA:-1,parA:.1,rockA:.2,snowA:9},
+ {rock:'#6A6268',veg:'#7A7460',forest:'#5E5A4E',paramo:'#7A7462',vegA:.3,parA:.6,rockA:.8,snowA:9},
+ {rock:'#4E5A60',veg:'#4E6A58',forest:'#3A5446',paramo:'#5E6A58',vegA:.6,parA:.85,rockA:1,snowA:9},
+ {rock:'#3E3644',veg:'#4A4250',forest:'#3A3440',paramo:'#4E4652',vegA:.3,parA:.6,rockA:.8,snowA:9},
+ {rock:'#8A7A50',veg:'#9A8A5A',forest:'#7A6C48',paramo:'#A0906A',vegA:-.2,parA:.1,rockA:.25,snowA:9},
+ {rock:'#3A302A',veg:'#3E342C',forest:'#2E2620',paramo:'#4A3E34',vegA:.5,parA:.8,rockA:1,snowA:9},
+ {rock:'#34302E',veg:'#3E3834',forest:'#2E2A28',paramo:'#46403C',vegA:.2,parA:.5,rockA:.7,snowA:9});
+PRIN.push('En la crisis, la plata protegida es la que sobrevive.','El que evacúa con lo esencial vuelve a empezar.','Después del desastre llegan los estafadores: desconfía de lo fácil.','No pongas todo en el mismo lugar: el agua no avisa.','Cuando todo sube, guarda valor en lo que produce.','El agua y la salud van primero en el presupuesto.','Restaurar también es invertir.','La resiliencia se construye antes de la tormenta.');
+ETAPA.push(
+ {fase:'Fase de emergencia',obj:'Proteger el dinero, los documentos y la familia.',riesgo:'Tener todo el dinero en efectivo y en un solo lugar.',hab:['Kit de emergencia con documentos','Dinero guardado en entidad vigilada','Plan familiar de encuentro'],guia:'Guía 5 · Supervivencia financiera'},
+ {fase:'Fase de evacuación',obj:'Salir con lo esencial y poder volver a empezar.',riesgo:'No tener seguro ni fondo de emergencia.',hab:['Seguro de vivienda y vida','Fondo de emergencia','Copia digital de documentos'],guia:'Guía 5 · Supervivencia financiera'},
+ {fase:'Fase de reconstrucción',obj:'Reconstruir sin caer en estafas ni deudas impagables.',riesgo:'Créditos “fáciles” y falsos subsidios después del desastre.',hab:['Verificar ayudas en entidades oficiales','Comparar créditos','Reconstruir por etapas'],guia:'Guía 3 · Cargas financieras'},
+ {fase:'Fase de diversificación',obj:'Que una sola pérdida no te deje sin nada.',riesgo:'Tener todos los bienes en el mismo lugar o negocio.',hab:['Activos de varios tipos','Seguros paramétricos o agrícolas','Ahorro fuera de casa'],guia:'Guía 7 · Ascenso financiero'},
+ {fase:'Fase de protección del valor',obj:'Conservar el valor del dinero cuando todo sube.',riesgo:'Guardar todo en efectivo durante la inflación.',hab:['Activos que producen','Comprar lo necesario a tiempo','No especular con la desgracia'],guia:'Guía 6 · Cima financiera'},
+ {fase:'Fase de supervivencia',obj:'Cuidar el agua, la salud y lo esencial.',riesgo:'Gastar la reserva en lo que no es necesario.',hab:['Presupuesto de crisis','Reserva de 6 meses','Salud preventiva'],guia:'Guía 5 · Supervivencia financiera'},
+ {fase:'Fase de restauración',obj:'Convertir la restauración en ingreso y futuro.',riesgo:'Quemar o talar para ganar rápido.',hab:['Negocios verdes','Pagos por servicios ambientales','Cuidar el agua'],guia:'Educación económica y ambiental'},
+ {fase:'Fase de resiliencia',obj:'Resistir cualquier crisis con lo aprendido y en comunidad.',riesgo:'Enfrentar la crisis solo y sin plan.',hab:['Red de apoyo','Patrimonio diversificado','Salud financiera alta'],guia:'Guía 7 · Ascenso financiero'});
+PAGES.push(
+ ['Kit de emergencia: documentos, copias digitales, medicinas, agua y un poco de efectivo.','La plata en una entidad vigilada no se la llevan los saqueadores.','Define con tu familia dónde encontrarse si se cortan las comunicaciones.'],
+ ['Un seguro de vivienda te permite volver a empezar después de un desastre.','Evacuar a tiempo vale más que cualquier cosa que dejes atrás.','Guarda copias de tus documentos en la nube o con alguien de confianza.'],
+ ['Después de un desastre aparecen préstamos “fáciles” y subsidios falsos: verifica siempre.','Reconstruye por etapas, con lo que puedas pagar.','Las ayudas oficiales no cobran por inscribirte.'],
+ ['Diversificar es no tener todo en el mismo lugar ni en el mismo negocio.','Los seguros agrícolas protegen las cosechas de inundaciones y sequías.','Un ahorro fuera de casa no se lo lleva el agua.'],
+ ['Hiperinflación: los precios suben tan rápido que el efectivo pierde valor cada día.','Los activos que producen (negocios, rentas) conservan mejor su valor.','Especular con la desgracia de otros también es una forma de saqueo.'],
+ ['En la escasez, el agua y la salud van primero en el presupuesto.','Prevenir una enfermedad cuesta menos que curarla.','La reserva es para lo esencial, no para seguir gastando igual.'],
+ ['Los negocios verdes también dan trabajo e ingresos.','Reforestar protege el agua de la que dependen las ciudades.','Un incendio por descuido puede costar más que toda una vida de ahorro.'],
+ ['Resiliencia: la capacidad de caer y volver a levantarse.','La comunidad organizada resiste mejor que cada uno solo.','Con salud financiera, ninguna crisis te deja en cero.']);
+PLAT_W.push([2,1,3,3],[2,1,3,3],[3,1,2,3],[2,1,3,4],[2,1,2,5],[2,1,3,4],[2,1,3,4],[2,1,2,5]);
+NPC_BY_WORLD.push('abuela','guia','asesor','profe','asesor','guia','profe','mentor');
+VEH_BY_WORLD.push('cicla','moto','moto','carro','carro','moto','carro','avion');
+LANZA_W.push(['tahur','hacker','politico'],['inflacion','tarjeta','scroll'],['politico','tarjeta','hacker'],['inflacion','vitrina','tahur'],['inflacion','tahur','hacker','politico'],['inflacion','scroll','tarjeta'],['politico','vitrina','hacker'],['tarjeta','hacker','politico','inflacion','tahur']);
+JEFE_P.jefeGota.push(.9,.6,.85,.6,.8,.6,.5,.7); JEFE_P.jefeCredito.push(.6,.6,.9,.6,.7,.6,.5,.7);
+DESASTRES.push(['saqueo','apagon','guerra','alimentos'],['erupcion','terremoto','tormenta','erupcion'],['terremoto','derrumbe','saqueo','terremoto'],['inundacion','inundacion','enfermedad','tormenta'],['alimentos','servicios','saqueo','apagon'],['sequia','enfermedad','alimentos','sequia'],['tormenta','sequia','derrumbe','familiar'],['guerra','terremoto','erupcion','saqueo','apagon']);
+ARENA_COL.push('#8A5A3A','#C9503A','#8A7A6A','#3E6A8A','#6A4A8A','#B8A040','#C96A2A','#8A2A2A');
+ARENA_LEMA.push('PLAN DE EMERGENCIA','EVACÚA A TIEMPO','VERIFICA LAS AYUDAS','DIVERSIFICA','ACTIVOS QUE PRODUCEN','AGUA Y SALUD','RESTAURA','RESILIENCIA');
+DANO_K.push('escombros','ceniza','escombros','contaminado','basura','toxico','quemado','escombros');
+Object.assign(DANO,{
+ escombros:{n:'Escombros de la guerra',pierde:7,shock:['Reconstrucción y servicios más caros',1,3],x:'La guerra destruye casas, vías y empleos: reconstruir cuesta años y mucho dinero de todos. La paz también es una decisión económica.',
+   bien:['Retirar escombros con la comunidad',8],mal:['Vender lo ajeno de las ruinas: +4 ya',4,18]},
+ ceniza:{n:'Cultivos bajo la ceniza',pierde:6,shock:['Alimentos más caros (cosechas perdidas)',1,3],x:'La ceniza tapa cultivos y techos: los alimentos suben para todos. Limpiar a tiempo salva la siguiente cosecha.',
+   bien:['Limpiar techos y cultivos',7],mal:['Revender comida a precio de crisis: +4 ya',4,16]},
+ toxico:{n:'Derrame tóxico',pierde:8,shock:['Agua potable y salud más caras',1,3],x:'Un derrame envenena el agua y la tierra por décadas. Los costos de salud y de limpieza los pagamos todos.',
+   bien:['Contener el derrame y avisar',8],mal:['Botar más residuos: te ahorras 3',3,18]}});
+REQ.push(
+ ()=>[eco.emb>=reqN3(16),'Alcancía: '+eco.emb+' de '+reqN3(16)+'.'],
+ ()=>[(has('casco')||has('cuerda'))&&eco.emb>=reqN3(17),'Seguro: '+((has('casco')||has('cuerda'))?'sí':'no')+' · alcancía '+eco.emb+' de '+reqN3(17)+'.'],
+ ()=>[eco.debts.length===0,eco.debts.length?'Debes '+debtTot()+'.':'Sin deudas.'],
+ ()=>[tipos()>=2,'Tipos de activo: '+tipos()+' de 2.'],
+ ()=>[ingresoAct()>=costo(),'Ingreso de activos '+ingresoAct()+' de '+costo()+'.'],
+ ()=>[eco.emb>=reqN3(21),'Alcancía: '+eco.emb+' de '+reqN3(21)+'.'],
+ ()=>[verde()>=50,'Huella verde: '+verde()+' de 50.'],
+ ()=>[patrimonio()>=reqN3(23)&&salud()>=50,'Patrimonio '+patrimonio()+' de '+reqN3(23)+' · salud '+salud()+' de 50.']);
+CURR.push(
+ {ra:'Preparo un plan financiero de emergencia y protejo mi dinero en entidades vigiladas.',comp:'Planear',g:'Guía 5',ev:'Llegó con el dinero protegido en la alcancía.',ok:()=>eco.emb>=reqN3(16)},
+ {ra:'Uso seguros y fondo de emergencia para recuperarme de un desastre natural.',comp:'Gestionar',g:'Guía 5',ev:'Tiene seguro y fondo de evacuación.',ok:()=>REQ[17]()[0]},
+ {ra:'Reconozco estafas después de un desastre y reconstruyo sin deudas impagables.',comp:'Decidir',g:'Guía 3',ev:'Llegó sin deudas y sin caer en el gota a gota.',ok:()=>debtTot()===0&&!(S.ws.lost.gota>0)},
+ {ra:'Diversifico mis activos para que una sola pérdida no me deje sin nada.',comp:'Gestionar',g:'Guía 7',ev:'Tiene activos de 2 tipos o más.',ok:()=>tipos()>=2},
+ {ra:'Protejo el valor de mi dinero en una época de inflación con activos que producen.',comp:'Decidir',g:'Guía 6',ev:'Su ingreso de activos cubre su costo de vida.',ok:()=>ingresoAct()>=costo()},
+ {ra:'Priorizo el agua, la salud y lo esencial en un presupuesto de crisis.',comp:'Administrar',g:'Guía 5',ev:'Llegó con la reserva de la meta.',ok:()=>eco.emb>=reqN3(21)},
+ {ra:'Entiendo que restaurar la naturaleza también es invertir en el futuro.',comp:'Decidir',g:'Educación ambiental',ev:'Llegó con huella verde de 50 o más.',ok:()=>verde()>=50},
+ {ra:'Soy resiliente: con salud financiera, seguros, activos y comunidad resisto cualquier crisis.',comp:'Gestionar',g:'Guía 7',ev:'Patrimonio alto, salud financiera de 50 o más y Prueba de la Resiliencia aprobada.',ok:()=>REQ[23]()[0]&&!!eco.resiliente});
+RETOS.push(
+ ()=>({t:'La noche del saqueo',x:'Hay rumores de saqueos. Tienes 12 monedas en el bolsillo.',opts:[
+  {l:'Dejarlas en el bolsillo',fx:()=>{ const l=Math.ceil(eco.hand*0.5); eco.hand-=l; return 'Esa noche saquearon la calle: perdiste '+l+'. El efectivo es lo primero que se pierde.'; }},
+  {l:'Guardar la mayor parte en la alcancía (entidad vigilada)',fx:()=>{ const m=Math.floor(eco.hand*0.7); eco.hand-=m; eco.emb+=m; return 'Guardaste '+m+' donde no se lo llevan. Ese es el primer paso de un plan de emergencia.'; }},
+  {l:'Enterrarlas en el patio',fx:()=>'Puede funcionar… hasta que te toque evacuar o llueva. El dinero escondido en casa se pierde, se daña o se olvida.'}]}),
+ ()=>({t:'Alerta naranja del volcán',x:'Las autoridades piden evacuar. ¿Qué llevas?',opts:[
+  {l:'El televisor y la nevera',fx:()=>'No caben en el carro de evacuación y te retrasan. Lo esencial cabe en una mochila.'},
+  {l:'Documentos, medicinas, la póliza del seguro y el kit',fx:()=>{ eco.hand=Math.min(cap(),eco.hand+3); return 'Con documentos y póliza puedes reclamar el seguro y pedir ayudas. Volver a empezar es posible (+3).'; }},
+  {l:'Quedarme para cuidar la casa',fx:()=>{ saludAdd(-10,'no evacuar'); return 'Ningún bien vale tu vida. Evacuar a tiempo es la decisión correcta (−10 de salud financiera).'; }}]}),
+ ()=>({t:'El préstamo para reconstruir',x:'Un señor ofrece “préstamo sin papeles para reconstruir tu casa, pague mañana”.',opts:[
+  {l:'Aceptarlo ya',fx:()=>{ addDebt('Gota a gota de reconstrucción',16,3,'gota'); return 'Era un gota a gota: ahora debes 16 con cobros diarios.'; }},
+  {l:'Ir a la alcaldía y a la cooperativa a comparar',fx:()=>{ eco.emb+=3; return 'La alcaldía tenía subsidio y la cooperativa una tasa justa: +3 que no perdiste.'; }},
+  {l:'Pedir a la familia sin acordar cómo pagar',fx:()=>'Prestar entre familia sin acuerdos claros suele terminar en peleas. Si lo haces, pongan monto y plazo por escrito.'}]}),
+ ()=>({t:'Después de la inundación',x:'El agua se llevó tu cultivo. ¿Qué hubiera ayudado?',opts:[
+  {l:'Tener todo en el cultivo: era lo que mejor pagaba',fx:()=>'Todo en una sola canasta: una inundación y quedas en cero.'},
+  {l:'Un seguro agrícola y otro activo en otro lugar',fx:()=>{ eco.hand=Math.min(cap(),eco.hand+4); return 'Con el seguro y el otro activo te sostuviste mientras volvías a sembrar (+4).'; }},
+  {l:'Rezar para que no llueva',fx:()=>'La esperanza ayuda, pero un plan protege.'}]}),
+ ()=>({t:'Hiperinflación',x:'Los precios subieron 50 % este mes. Tienes 10 monedas.',opts:[
+  {l:'Guardarlas en efectivo debajo del colchón',fx:()=>{ eco.hand=Math.max(0,eco.hand-4); return 'El mes siguiente esas 10 monedas compraban como 6: el efectivo se derrite (−4).'; }},
+  {l:'Comprar lo necesario ya e invertir el resto en un activo que produce',fx:()=>{ eco.emb+=2; return 'Lo que produce mantiene su valor mejor que el efectivo (+2).'; }},
+  {l:'Revender comida al triple a los vecinos',fx:()=>{ eco.hand=Math.min(cap(),eco.hand+3); saludAdd(-8,'especular con la desgracia'); return 'Ganaste 3, pero especular con la necesidad de otros rompe la comunidad que te va a ayudar mañana (−8 de salud financiera).'; }}]}),
+ ()=>({t:'El agua escasea',x:'Venden agua al doble. Tu presupuesto no alcanza para todo.',opts:[
+  {l:'Recortar gustos y priorizar agua y salud',fx:()=>{ eco.emb+=2; return 'Lo esencial primero: pasaste la escasez sin enfermarte (+2 en la reserva).'; }},
+  {l:'Seguir igual y pagar con tarjeta',fx:()=>{ addDebt('Tarjeta en la sequía',8,2,'tarjeta'); return 'Seguir igual en la crisis lleva a la deuda: debes 8.'; }},
+  {l:'Tomar agua de cualquier lado para ahorrar',fx:()=>{ payEvent(4,'Enfermedad por agua contaminada','salud'); return 'El agua contaminada te enfermó: la cita y los remedios costaron más que el agua limpia.'; }}]}),
+ ()=>({t:'Después del incendio',x:'Te ofrecen dos trabajos: quemar más monte para potreros, o un proyecto de reforestación.',opts:[
+  {l:'Quemar monte: pagan más rápido',fx:()=>{ eco.hand=Math.min(cap(),eco.hand+4); verdeAdd(-15,'quemar el monte'); return 'Plata rápida hoy y menos agua, suelo y trabajo mañana (−15 huella verde).'; }},
+  {l:'Reforestación con pagos por servicios ambientales',fx:()=>{ eco.salario=(eco.salario||0)+1; verdeAdd(8,'reforestar'); return 'Un trabajo estable que cuida el agua: +1 de salario y +8 de huella verde.'; }},
+  {l:'Nada, esperar a que otro lo arregle',fx:()=>'Mientras nadie restaura, el daño crece y nos cuesta a todos.'}]}),
+ ()=>({t:'La comunidad',x:'Los vecinos proponen una olla comunitaria y un fondo de ayuda mutua.',opts:[
+  {l:'No participo, cada quien con lo suyo',fx:()=>'Solo se resiste peor. La comunidad organizada es un activo.'},
+  {l:'Aporto con presupuesto y ayudo a organizar',fx:()=>{ eco.hand=Math.max(0,eco.hand-2); saludAdd(10,'comunidad'); return 'Aportaste 2 y la red de apoyo te sostuvo en la siguiente crisis (+10 de salud financiera).'; }},
+  {l:'Me quedo con la plata del fondo',fx:()=>{ eco.hand=Math.min(cap(),eco.hand+5); saludAdd(-15,'traicionar a la comunidad'); return 'Te quedaste con 5… y con nadie que te ayude después (−15 de salud financiera).'; }}]}));
+Q_GUIAS.push(
+ ['¿Qué va en un kit de emergencia financiera?',['Documentos, copias digitales, medicinas y algo de efectivo','Todo tu dinero en efectivo','Las facturas viejas','Solo el celular'],'Con documentos y copias puedes reclamar seguros, ayudas y abrir cuentas de nuevo.',16],
+ ['En una crisis con saqueos, ¿dónde está más seguro tu dinero?',['En una entidad financiera vigilada','En el bolsillo','Debajo del colchón','Enterrado en el patio'],'El efectivo es lo primero que se pierde o se roba.',16],
+ ['¿Qué es un plan de emergencia familiar?',['Acuerdos sobre qué hacer, dónde encontrarse y con qué recursos','Un préstamo preaprobado','Una póliza de carro','Un viaje de vacaciones'],'Saber qué hacer antes de la crisis evita decisiones caras en el pánico.',16],
+ ['Ante una alerta de evacuación por volcán, ¿qué es lo primero?',['Salir a tiempo con documentos, medicinas y lo esencial','Cuidar la casa','Cargar los electrodomésticos','Esperar a ver qué pasa'],'Ningún bien vale más que tu vida; con documentos puedes reclamar seguros.',17],
+ ['¿Para qué sirve un seguro de vivienda?',['Para reconstruir o reponer tu casa después de un desastre','Para pagar la cuota de la tarjeta','Para no pagar impuestos','Para ganar intereses'],'Un pago pequeño y fijo te permite volver a empezar.',17],
+ ['¿Por qué guardar copias digitales de tus documentos?',['Porque el papel se puede perder en un desastre','Porque es obligatorio','Para venderlas','No sirven'],'Sin documentos es difícil pedir ayudas o reclamar seguros.',17],
+ ['Después de un terremoto te ofrecen un préstamo sin papeles para reconstruir. ¿Qué haces?',['Desconfío y comparo con entidades oficiales y cooperativas','Lo acepto ya','Firmo sin leer','Pido dos'],'Después de los desastres abundan los gota a gota y los fraudes.',18],
+ ['¿Cobran las ayudas oficiales por inscribirte?',['No: si te cobran por inscribirte, es estafa','Sí, siempre','Solo los lunes','Depende del vendedor'],'Las ayudas públicas no se venden.',18],
+ ['¿Cómo conviene reconstruir sin endeudarse de más?',['Por etapas, con lo que puedes pagar','Todo de una con varios créditos','Con la tarjeta de crédito','No reconstruir nunca'],'Reconstruir por etapas evita cuotas impagables.',18],
+ ['¿Por qué diversificar te protege de una inundación?',['Porque si un activo se pierde, los otros te sostienen','Porque el agua no moja los activos','Porque es más divertido','No protege'],'Tener todo en un mismo lugar o negocio es arriesgarlo todo.',19],
+ ['¿Qué protege un seguro agrícola?',['Las cosechas ante sequías, plagas o inundaciones','El carro','La tarjeta de crédito','Las vacaciones'],'El agro depende del clima: el seguro reduce el golpe.',19],
+ ['¿Dónde conviene tener parte del ahorro en zonas de inundación?',['Fuera de casa, en una entidad vigilada','Debajo de la cama','En el sótano','En el techo'],'El agua no se lleva lo que está protegido fuera de casa.',19],
+ ['¿Qué es la hiperinflación?',['Una subida de precios tan rápida que el dinero pierde valor cada día','Un descuento masivo','Un impuesto nuevo','Un tipo de crédito'],'En hiperinflación, el efectivo guardado se “derrite”.',20],
+ ['En hiperinflación, ¿qué conserva mejor el valor?',['Los activos que producen ingresos','El efectivo debajo del colchón','Las deudas','Los gustos'],'Un negocio o una renta se ajustan; el billete guardado no.',20],
+ ['¿Por qué especular con la necesidad de otros es mala idea?',['Porque rompe la confianza y la comunidad que te ayudará después','Porque es aburrido','Porque da poca plata','No es mala idea'],'En la crisis, la comunidad es un activo.',20],
+ ['En una crisis de agua, ¿qué va primero en el presupuesto?',['El agua y la salud','Los gustos','El celular nuevo','Las salidas'],'Lo esencial primero; los gustos esperan.',21],
+ ['¿Por qué la prevención en salud es inteligencia financiera?',['Porque prevenir cuesta menos que curar','Porque es obligatorio','Porque da intereses','No lo es'],'Una enfermedad puede consumir toda la reserva.',21],
+ ['¿Cuánto debería durar una reserva para la escasez?',['Idealmente 6 meses de gastos','Un día','Una semana','No hace falta reserva'],'Una crisis larga necesita una reserva grande.',21],
+ ['¿Qué son los pagos por servicios ambientales?',['Pagos a quien cuida bosques y agua que benefician a otros','Una multa','Un crédito','Un impuesto a los árboles'],'Cuidar la naturaleza también puede ser un ingreso.',22],
+ ['¿Por qué un incendio forestal afecta tu bolsillo?',['Porque se pierde agua, suelo, turismo y trabajo','No lo afecta','Porque baja el precio de todo','Porque sube el DataCrédito'],'Lo que se quema hoy lo pagamos todos mañana.',22],
+ ['¿Qué es un negocio verde?',['Uno que gana dinero cuidando o restaurando la naturaleza','Uno pintado de verde','Uno que vende plantas de plástico','Uno ilegal'],'Ecoturismo, viveros y reciclaje son ejemplos.',22],
+ ['¿Qué es la resiliencia financiera?',['La capacidad de resistir una crisis y recuperarse','No tener nunca problemas','Tener mucho efectivo','Pedir prestado rápido'],'Se construye antes de la crisis: ahorro, seguros, activos y comunidad.',23],
+ ['¿Qué protege mejor ante muchas crisis juntas?',['Ahorro, seguros, activos diversificados y una red de apoyo','Un solo negocio muy grande','Un préstamo grande','La suerte'],'Cada protección cubre un riesgo distinto.',23],
+ ['¿Por qué la paz también es una decisión económica?',['Porque la guerra destruye empleos, vías y patrimonio por años','Porque la guerra da trabajo','No tiene relación','Porque sube los salarios'],'Reconstruir después de la guerra cuesta mucho más que prevenirla.',23]);
+Object.assign(TIPS,{
+ erupcion:{t:'Erupción volcánica',g:'Guía 5',x:'Ceniza, rocas y evacuación: quien tiene seguro y fondo de emergencia puede volver a empezar.'},
+ apagon:{t:'Apagón',g:'Guía 5',x:'Sin luz se daña la comida y se para el trabajo. Una reserva y un plan reducen el golpe.'},
+ saqueo:{t:'Saqueo',g:'Guía 5',x:'En una crisis, el efectivo en el bolsillo es lo primero que se pierde. La plata guardada en una entidad vigilada queda a salvo.'},
+ hiperinflacion:{t:'Hiperinflación',g:'Guía 6',x:'Cuando los precios suben muy rápido, el efectivo pierde valor cada quincena. Los activos que producen conservan mejor el valor.'},
+ resiliencia:{t:'Resiliencia financiera',g:'Guía 7',x:'Capacidad de resistir una crisis y recuperarse: ahorro, seguros, activos diversificados, salud financiera y comunidad.'}});
+Object.assign(DES_TXT,{erupcion:['¡ERUPCIÓN!','Llueve ceniza y bajan rocas: salta y evacúa'],apagon:['¡APAGÓN!','Sin luz: la comida se daña y todo se oscurece'],saqueo:['¡SAQUEO!','Se llevan el efectivo del bolsillo: la alcancía está a salvo']});
+
+// ---------- jefes de El Colapso ----------
+LOOK_J.push(
+ {top:'#3A3A3A',topD:'#222222',pants:'#2A2E34',shoes:'#141414',skin:'#B08A6A',armW:4.6,legW:5,legScale:1.05,
+  head:b=>{ ctx.fillStyle='#14161C'; ctx.beginPath(); ctx.arc(0,-1,7,Math.PI*0.95,Math.PI*2.05); ctx.fill(); ctx.fillRect(-7,-1,14,4); ctx.fillStyle='#F2EBDD'; ctx.fillRect(1,-1.4,2.4,1.2); ctx.fillRect(4.6,-1.4,2.2,1.2); ctx.fillStyle='#14161C'; ctx.fillRect(1.6,-1.2,1,.8); ctx.fillRect(5.2,-1.2,1,.8); },
+  torso:(sh,hp)=>{ ctx.fillStyle='#222'; rr(-9,sh-3,18,hp-sh+6,4); ctx.fill(); ctx.fillStyle='#3A3A3A'; rr(-8,sh-3,16,hp-sh+5,4); ctx.fill(); ctx.fillStyle='#6A5A3A'; ctx.fillRect(-8,sh+8,16,2); },
+  hand:()=>{ ctx.fillStyle='#6B4A2B'; ctx.beginPath(); ctx.ellipse(2,2,5,5,0,0,7); ctx.fill(); ctx.fillStyle='#F2C85A'; ctx.font='800 5px sans-serif'; mtext('$',2,4); },
+  handB:()=>{ ctx.fillStyle='#8A8F98'; ctx.fillRect(-1,-1,10,2); }},
+ {top:'#8A2A1A',topD:'#4A1408',pants:'#2A1A14',shoes:'#140A08',skin:'#5A3A2A',armW:5,legW:5.6,headR:7,
+  head:b=>{ ctx.fillStyle='#FF8A3A'; ctx.beginPath(); ctx.arc(2.6,-1,1.2,0,7); ctx.arc(5.2,-1,1.1,0,7); ctx.fill(); ctx.fillStyle='#FF5A1A'; for(let i=0;i<5;i++){ const t=S.t*0.2+i; ctx.beginPath(); ctx.moveTo(-6+i*3,-5); ctx.lineTo(-5+i*3,-11-Math.sin(t)*2); ctx.lineTo(-3.6+i*3,-5); ctx.fill(); } mouth('grin'); },
+  torso:(sh,hp)=>{ ctx.fillStyle='#4A1408'; rr(-10,sh-3,20,hp-sh+7,5); ctx.fill(); ctx.fillStyle='#8A2A1A'; rr(-9,sh-3,18,hp-sh+6,5); ctx.fill(); ctx.strokeStyle='#FF8A3A'; ctx.lineWidth=1.2; ctx.beginPath(); ctx.moveTo(-5,sh); ctx.lineTo(-1,sh+6); ctx.lineTo(-4,sh+11); ctx.moveTo(4,sh+2); ctx.lineTo(1,sh+8); ctx.stroke(); },
+  hand:()=>{ ctx.fillStyle='#3A2A24'; ctx.beginPath(); ctx.arc(2,0,4,0,7); ctx.fill(); ctx.fillStyle='#FF8A3A'; ctx.beginPath(); ctx.arc(3,-1,1.6,0,7); ctx.fill(); },
+  handB:()=>{ ctx.fillStyle='#3A2A24'; ctx.beginPath(); ctx.arc(0,0,3,0,7); ctx.fill(); }},
+ {top:'#8A7A6A',topD:'#5A4E44',pants:'#3A3430',shoes:'#1E1A18',skin:'#D6A07A',armW:3.8,legW:4.4,legScale:1.15,
+  head:b=>{ eyes(b); mouth('grin'); ctx.fillStyle='#F2C230'; ctx.beginPath(); ctx.arc(0,-3,7,Math.PI,0); ctx.fill(); ctx.fillRect(-8,-3.6,16,1.6); },
+  torso:(sh,hp)=>{ ctx.fillStyle='#5A4E44'; rr(-8,sh-3,16,hp-sh+5,4); ctx.fill(); ctx.fillStyle='#8A7A6A'; rr(-7,sh-3,14,hp-sh+4,4); ctx.fill(); ctx.strokeStyle='#2A2420'; ctx.lineWidth=.8; ctx.beginPath(); ctx.moveTo(-6,sh+2); ctx.lineTo(-1,sh+6); ctx.lineTo(-4,sh+10); ctx.lineTo(2,sh+14); ctx.stroke(); },
+  hand:()=>{ ctx.rotate(-0.3); ctx.fillStyle='#FFE18A'; ctx.fillRect(-1,-5,8,10); ctx.fillStyle='#C9283C'; ctx.font='800 2.4px sans-serif'; mtext('PRÉSTAMO',3,0); },
+  handB:()=>{ ctx.fillStyle='#8A8F98'; ctx.fillRect(-1,-1,9,2.4); }},
+ {top:'#2E5A7A',topD:'#1E3A50',pants:'#1E3A50',shoes:'#0E1A24',skin:'#7AA8C8',armW:4.6,legW:5.2,headR:6.6,
+  head:b=>{ eyes(b,{angry:true}); mouth('sly'); ctx.fillStyle='#4A8AB8'; ctx.beginPath(); ctx.moveTo(-7,-3); ctx.quadraticCurveTo(-4,-12,0,-6); ctx.quadraticCurveTo(4,-13,7,-3); ctx.fill(); },
+  torso:(sh,hp)=>{ ctx.fillStyle='#1E3A50'; rr(-10,sh-3,20,hp-sh+6,6); ctx.fill(); ctx.fillStyle='#2E5A7A'; rr(-9,sh-3,18,hp-sh+5,6); ctx.fill(); ctx.strokeStyle='rgba(200,230,255,.6)'; ctx.lineWidth=1; for(let i=0;i<3;i++){ ctx.beginPath(); for(let x=-8;x<=8;x+=2) ctx.lineTo(x,sh+3+i*5+Math.sin(x*0.8+S.t*0.1)*1); ctx.stroke(); } },
+  hand:()=>{ ctx.fillStyle='#5CB8E8'; ctx.beginPath(); ctx.moveTo(0,-6); ctx.quadraticCurveTo(-5,1,0,5); ctx.quadraticCurveTo(5,1,0,-6); ctx.fill(); },
+  handB:()=>{ ctx.fillStyle='#5CB8E8'; ctx.beginPath(); ctx.arc(0,0,3,0,7); ctx.fill(); }},
+ {top:'#2A2238',topD:'#16121E',pants:'#16121E',shoes:'#0A080E',skin:'#C9A07A',armW:3.8,legW:4.4,legScale:1.2,
+  head:b=>{ ctx.fillStyle='#0E0E10'; rr(-1,-2.8,10,3,1.4); ctx.fill(); mouth('grin'); ctx.fillStyle='#16121E'; ctx.fillRect(-8,-6.6,17,2); ctx.fillRect(-5,-12,11,6); ctx.fillStyle='#9A4ABA'; ctx.fillRect(-5,-7.6,11,1.4); },
+  torso:(sh,hp)=>{ ctx.fillStyle='#16121E'; ctx.beginPath(); ctx.moveTo(-9,sh-2); ctx.lineTo(9,sh-2); ctx.lineTo(11,hp+8); ctx.lineTo(-11,hp+8); ctx.closePath(); ctx.fill(); ctx.fillStyle='#2A2238'; ctx.beginPath(); ctx.moveTo(-8,sh-2); ctx.lineTo(8,sh-2); ctx.lineTo(10,hp+7); ctx.lineTo(-10,hp+7); ctx.closePath(); ctx.fill(); ctx.fillStyle='#E04A4A'; ctx.font='900 6px sans-serif'; mtext('+%',0,sh+8); },
+  hand:()=>{ ctx.fillStyle='#FBF7EC'; ctx.beginPath(); ctx.moveTo(-1,-3); ctx.lineTo(7,-3); ctx.lineTo(10,0); ctx.lineTo(7,3); ctx.lineTo(-1,3); ctx.fill(); ctx.fillStyle='#E04A4A'; ctx.font='800 3px sans-serif'; mtext('×3',4,1); },
+  handB:()=>{ ctx.fillStyle='#62C98A'; for(let i=0;i<3;i++){ ctx.save(); ctx.rotate(-0.8+i*0.3); ctx.fillRect(0,-1.8,9,4.4); ctx.restore(); } }},
+ {top:'#B8A068',topD:'#7A6A44',pants:'#5A4A30',shoes:'#3A2E1E',skin:'#9A6A4A',armW:3.6,legW:4.2,headR:6,
+  head:b=>{ eyes(b,{angry:true}); mouth('flat'); ctx.fillStyle='#D8C890'; ctx.beginPath(); ctx.arc(0,-2,7,Math.PI*0.9,Math.PI*2.1); ctx.fill(); ctx.fillRect(-7,-2,3,9); },
+  torso:(sh,hp)=>{ ctx.fillStyle='#7A6A44'; ctx.beginPath(); ctx.moveTo(-6,sh-2); ctx.lineTo(6,sh-2); ctx.lineTo(10,hp+6); ctx.lineTo(-10,hp+6); ctx.closePath(); ctx.fill(); ctx.fillStyle='#B8A068'; ctx.beginPath(); ctx.moveTo(-5,sh-2); ctx.lineTo(6,sh-2); ctx.lineTo(9,hp+5); ctx.lineTo(-9,hp+5); ctx.closePath(); ctx.fill(); },
+  hand:()=>{ ctx.fillStyle='#9FD3FF'; rr(-1,-6,6,10,1.5); ctx.fill(); ctx.fillStyle='#2E86A8'; ctx.fillRect(-1,-2,6,6); },
+  handB:()=>{ ctx.fillStyle='#5A5A62'; ctx.beginPath(); ctx.ellipse(3,0,4,3,0,0,Math.PI); ctx.fill(); }},
+ {top:'#3A2A22',topD:'#1E1410',pants:'#2A1E18',shoes:'#140C08',skin:'#8A5A3A',armW:4.2,legW:4.8,
+  head:b=>{ eyes(b,{angry:true}); mouth('grin'); ctx.fillStyle='#FF6A1A'; for(let i=0;i<4;i++){ const t=S.t*0.25+i; ctx.beginPath(); ctx.moveTo(-5+i*3,-4); ctx.lineTo(-4+i*3,-10-Math.sin(t)*2); ctx.lineTo(-2.6+i*3,-4); ctx.fill(); } },
+  torso:(sh,hp)=>{ ctx.fillStyle='#1E1410'; rr(-9,sh-3,18,hp-sh+6,4); ctx.fill(); ctx.fillStyle='#3A2A22'; rr(-8,sh-3,16,hp-sh+5,4); ctx.fill(); ctx.fillStyle='#FF8A3A'; ctx.beginPath(); ctx.moveTo(0,sh+12); ctx.quadraticCurveTo(-4,sh+6,0,sh+1); ctx.quadraticCurveTo(4,sh+6,0,sh+12); ctx.fill(); },
+  hand:()=>{ ctx.fillStyle='#8A8F98'; rr(-1,-4,5,8,1); ctx.fill(); ctx.fillStyle='#FF6A1A'; ctx.beginPath(); ctx.moveTo(1.5,-4); ctx.quadraticCurveTo(-1,-8,1.5,-11); ctx.quadraticCurveTo(4,-8,1.5,-4); ctx.fill(); },
+  handB:()=>{ ctx.fillStyle='#5A3A22'; ctx.fillRect(-1,-1,10,2.4); }},
+ {top:'#2A1418',topD:'#140A0C',pants:'#140A0C',shoes:'#0A0506',skin:'#5A4A50',armW:5.2,legW:5.6,legScale:1.15,headR:7,
+  head:b=>{ ctx.fillStyle='#FF3A2A'; ctx.beginPath(); ctx.arc(2.6,-1,1.3,0,7); ctx.arc(5.4,-1,1.2,0,7); ctx.fill(); ctx.strokeStyle='#8A2A2A'; ctx.lineWidth=.8; ctx.beginPath(); ctx.moveTo(1,3); ctx.lineTo(7,3.6); ctx.stroke();
+    ctx.fillStyle='#2A1418'; ctx.beginPath(); ctx.moveTo(-7,-4); ctx.lineTo(-9,-14); ctx.lineTo(-3,-7); ctx.lineTo(0,-16); ctx.lineTo(3,-7); ctx.lineTo(9,-14); ctx.lineTo(7,-4); ctx.closePath(); ctx.fill(); },
+  back:(sh,hp)=>{ ctx.fillStyle='rgba(40,10,14,.85)'; ctx.beginPath(); ctx.moveTo(-8,sh-2); ctx.lineTo(8,sh-2); ctx.lineTo(18,hp+18); ctx.lineTo(-18,hp+18); ctx.closePath(); ctx.fill(); },
+  torso:(sh,hp)=>{ ctx.fillStyle='#140A0C'; rr(-10,sh-3,20,hp-sh+7,5); ctx.fill(); ctx.fillStyle='#2A1418'; rr(-9,sh-3,18,hp-sh+6,5); ctx.fill(); ctx.strokeStyle='#FF5A3A'; ctx.lineWidth=1; ctx.beginPath(); ctx.arc(0,sh+6,4,0,7); ctx.stroke(); ctx.beginPath(); ctx.moveTo(0,sh+2); ctx.lineTo(0,sh+10); ctx.moveTo(-4,sh+6); ctx.lineTo(4,sh+6); ctx.stroke(); },
+  hand:()=>{ ctx.fillStyle='#FF5A3A'; ctx.beginPath(); ctx.arc(2,0,3.4,0,7); ctx.fill(); },
+  handB:()=>{ ctx.fillStyle='#8A8F98'; ctx.fillRect(-1,-1,11,2.4); }});
+JM.push(
+ {n:'EL SAQUEADOR',r:'el que roba en el caos',proj:{icon:'bag',n:'SAQUEO',dmg:2},esp:['carga','lluvia'],tip:'saqueo',slam:'¡TODO ES MÍO!',rain:{icon:'bag',n:'SAQUEO',dmg:1},
+  say:['¡En el caos todo se vale!','¡Lo que tenga en el bolsillo es mío!','¡Nadie va a venir a ayudar!','¡Aproveche, que no hay ley!'],
+  no:['¡Mi plata está protegida!','¡Tengo plan de emergencia!','¡Documentos a salvo!','¡La alcancía no se la llevas!','¡Comunidad unida!','¡Denuncio!','¡Kit listo!','¡Nada en el bolsillo!','¡Calma y plan!','¡No me rindo!'],
+  intro:'El Saqueador se lleva el efectivo que encuentra. Esquiva sus embestidas y su lluvia de bolsas.',fin:'En una crisis, el dinero protegido en una entidad vigilada y un plan de emergencia valen más que cualquier cosa.'},
+ {n:'LA FURIA DEL VOLCÁN',r:'la que sorprende sin plan de evacuación',proj:{icon:'lava',n:'ROCA ARDIENTE',dmg:2},esp:['salto','lluvia'],tip:'erupcion',slam:'¡ERUPCIÓN!',rain:{icon:'lava',n:'CENIZA',dmg:1},
+  say:['¡Nadie evacúa a tiempo!','¡Todo lo que no aseguraste es mío!','¡La ceniza lo tapa todo!','¡Ni un plan, ni un seguro!'],
+  no:['¡Evacúo a tiempo!','¡Tengo seguro!','¡Fondo de emergencia!','¡Documentos conmigo!','¡Kit listo!','¡Ruta de evacuación!','¡Copia en la nube!','¡Me cuido!','¡Vuelvo a empezar!','¡Plan familiar!'],
+  intro:'La Furia del Volcán lanza rocas ardientes y lluvia de ceniza. Salta sus ondas y no te quedes quieto.',fin:'Con seguro, fondo de emergencia y documentos a salvo, un desastre natural no te deja en cero.'},
+ {n:'DON GRIETA',r:'el estafador de la reconstrucción',proj:{icon:'flyer',n:'PRÉSTAMO FÁCIL',dmg:2},esp:['salto','carga'],tip:'pyr',slam:'¡FIRME YA!',
+  say:['¡Préstamo sin papeles para su casa!','¡Subsidio garantizado, solo pague la inscripción!','¡Reconstruya hoy, pague toda la vida!','¡Yo le consigo la ayuda!'],
+  no:['¡Verifico con la alcaldía!','¡Las ayudas no se cobran!','¡Comparo créditos!','¡No firmo sin leer!','¡Reconstruyo por etapas!','¡Cooperativa!','¡Nada de gota a gota!','¡Denuncio la estafa!','¡Cero deudas impagables!','¡Me asesoro!'],
+  intro:'Después de un terremoto aparecen estafadores. Don Grieta abre el suelo con sus golpes: salta y no firmes nada.',fin:'Después de un desastre, verifica las ayudas en entidades oficiales y reconstruye sin deudas que no puedas pagar.'},
+ {n:'LA CRECIENTE',r:'la que se lleva lo que no está diversificado',proj:{icon:'gota',n:'CRECIENTE',dmg:2},esp:['carga','lluvia'],tip:'canasta',slam:'¡SE LO LLEVO TODO!',rain:{icon:'gota',n:'AGUACERO',dmg:1},
+  say:['¡Todo en un solo lugar, qué fácil!','¡Me llevo su cosecha y su casa!','¡Para qué seguros!','¡El agua no avisa!'],
+  no:['¡Diversifico!','¡Seguro agrícola!','¡Ahorro fuera de casa!','¡Varios activos!','¡No todo en un lugar!','¡Plan de evacuación!','¡Me sostengo!','¡Vuelvo a sembrar!','¡Resisto!','¡Canastas repartidas!'],
+  intro:'La Creciente embiste como una avalancha de agua. Salta cuando se lance y esquiva el aguacero.',fin:'Diversificar en distintos activos y lugares hace que una sola pérdida no te deje sin nada.'},
+ {n:'EL ESPECULADOR',r:'el que sube los precios en la crisis',proj:{icon:'price',n:'PRECIOS ×3',dmg:1},esp:['tiro3','lluvia'],tip:'hiperinflacion',slam:'¡TODO AL TRIPLE!',rain:{icon:'price',n:'PRECIOS ×3',dmg:1},
+  say:['¡El arroz hoy vale el triple!','¡Guarde efectivo, que mañana vale menos!','¡La necesidad es mi negocio!','¡Compre ya o nunca!'],
+  no:['¡Activos que producen!','¡Compro lo necesario!','¡No especulo!','¡Comunidad!','¡Nada de pánico!','¡Comparo precios!','¡Mi valor está a salvo!','¡Presupuesto de crisis!','¡Ahorro que rinde!','¡Le gano a la inflación!'],
+  intro:'El Especulador lanza precios de tres en tres y una lluvia de alzas. Su golpe encoge tu efectivo.',fin:'Cuando todo sube, los activos que producen conservan el valor; especular con la necesidad ajena rompe la comunidad.'},
+ {n:'DOÑA SED',r:'la escasez de agua',proj:{icon:'gota',n:'SED',dmg:2},esp:['salto','lluvia'],tip:'escasez',slam:'¡SE ACABÓ EL AGUA!',rain:{icon:'price',n:'AGUA MÁS CARA',dmg:1},
+  say:['¡El agua vale oro!','¡Gaste la reserva en lo que quiera!','¡Tome de cualquier charco!','¡La salud puede esperar!'],
+  no:['¡Agua y salud primero!','¡Reserva de 6 meses!','¡Presupuesto de crisis!','¡Prevengo!','¡Cuido el agua!','¡Recorto gustos!','¡Agua limpia!','¡Nada de deudas!','¡Lo esencial primero!','¡Resisto la sed!'],
+  intro:'Doña Sed seca todo a su paso. Salta sus ondas y esquiva la lluvia de precios.',fin:'En la escasez, el agua y la salud van primero. Una reserva grande es tu agua en el desierto.'},
+ {n:'EL PIRÓMANO',r:'el que quema para ganar',proj:{icon:'lava',n:'FUEGO',dmg:2},esp:['lluvia','carga'],tip:'costoAmbiental',slam:'¡QUE ARDA!',rain:{icon:'lava',n:'BRASAS',dmg:1},
+  say:['¡Quemar es más barato que limpiar!','¡Un potrero vale más que un bosque!','¡Plata rápida, humo para todos!','¡El agua ya volverá!'],
+  no:['¡Restauro!','¡Negocio verde!','¡Cuido el agua!','¡Reforesto!','¡Denuncio la quema!','¡Pago por servicios ambientales!','¡Huella verde!','¡Nada de quemas!','¡Bosque vivo!','¡Futuro verde!'],
+  intro:'El Pirómano quema para ganar rápido. Esquiva sus brasas y sus embestidas.',fin:'Lo que se quema hoy lo pagamos todos mañana; restaurar y los negocios verdes también son inteligencia financiera.'},
+ {n:'EL CAOS',r:'la suma de todas las crisis',proj:{icon:'bag',n:'CRISIS',dmg:3},esp:['salto','lluvia','carga','tiro3','invoca'],tip:'resiliencia',slam:'¡TODO SE DERRUMBA!',rain:{icon:'lava',n:'CRISIS',dmg:2},
+  say:['¡Guerra, sismos y hambre a la vez!','¡Nadie está preparado para mí!','¡Solos no van a resistir!','¡Todo lo que construyeron se cae!'],
+  no:['¡Plan de emergencia!','¡Seguros!','¡Activos diversificados!','¡Reserva!','¡Salud financiera!','¡Comunidad!','¡Sin deudas!','¡Huella verde!','¡Resiliencia!','¡Volvemos a construir!'],
+  intro:'El Caos junta todas las crisis. Usa todo lo que sabes: agáchate, salta, cúbrete y golpea.',fin:'La resiliencia se construye antes de la crisis: ahorro, seguros, activos, salud financiera y comunidad.'});
+// ---------- decoración de los escenarios del colapso ----------
+Object.assign(DECO2,{
+ ruinas:(d)=>{ const h=30+(d.k%26); ctx.fillStyle='#6A625A'; ctx.beginPath(); ctx.moveTo(-14,0); ctx.lineTo(-14,-h); ctx.lineTo(-8,-h+6); ctx.lineTo(-2,-h-4); ctx.lineTo(4,-h+8); ctx.lineTo(10,-h*0.6); ctx.lineTo(14,0); ctx.closePath(); ctx.fill();
+   ctx.fillStyle='#2A2622'; ctx.fillRect(-9,-h*0.7,5,6); ctx.fillRect(2,-h*0.5,5,6); ctx.strokeStyle='#8A4A2A'; ctx.lineWidth=.8; ctx.beginPath(); ctx.moveTo(-2,-h-4); ctx.lineTo(-1,-h-12); ctx.moveTo(4,-h+8); ctx.lineTo(7,-h); ctx.stroke();
+   for(let i=0;i<3;i++){ const t=((S.t*0.3+i*30+d.k)%90)/90; ctx.fillStyle='rgba(60,56,52,'+(0.35*(1-t))+')'; ctx.beginPath(); ctx.arc(-4+i*4,-h-6-t*40,4+t*8,0,7); ctx.fill(); }
+   ctx.fillStyle='#7A7068'; for(let i=0;i<4;i++){ ctx.beginPath(); ctx.ellipse(-16+i*10,-1,4,2.4,i,0,7); ctx.fill(); } },
+ volcan:(d)=>{ ctx.fillStyle='#2A2422'; ctx.beginPath(); ctx.moveTo(-12,0); ctx.lineTo(-6,-10-(d.k%8)); ctx.lineTo(4,-8); ctx.lineTo(12,0); ctx.closePath(); ctx.fill();
+   ctx.strokeStyle='#FF6A1A'; ctx.lineWidth=1; ctx.beginPath(); ctx.moveTo(-4,-6); ctx.lineTo(-1,-2); ctx.lineTo(2,-5); ctx.stroke();
+   for(let i=0;i<2;i++){ const t=((S.t*0.5+i*40+d.k)%80)/80; ctx.fillStyle='rgba(220,220,220,'+(0.4*(1-t))+')'; ctx.beginPath(); ctx.arc(-2+i*4,-12-t*30,3+t*6,0,7); ctx.fill(); } },
+ grietas:(d)=>{ ctx.save(); ctx.rotate(((d.k%5)-2)*0.08); ctx.fillStyle='#5A5048'; ctx.fillRect(-1.5,-40,3,40); ctx.fillStyle='#3A3430'; ctx.fillRect(-9,-38,18,2); ctx.strokeStyle='#2A2A2A'; ctx.lineWidth=.6; ctx.beginPath(); ctx.moveTo(-9,-37); ctx.quadraticCurveTo(-30,-30,-50,-34); ctx.stroke(); ctx.restore();
+   ctx.strokeStyle='#1E1A18'; ctx.lineWidth=1.4; ctx.beginPath(); ctx.moveTo(-10,0); ctx.lineTo(-4,-2); ctx.lineTo(0,1); ctx.lineTo(6,-1); ctx.lineTo(12,1); ctx.stroke(); },
+ inundado:(d)=>{ ctx.fillStyle='rgba(90,120,130,.55)'; ctx.fillRect(-22,-6,44,7); ctx.fillStyle='#7A5A3A'; ctx.fillRect(-10,-26,20,20); ctx.fillStyle='#8A3A2A'; ctx.beginPath(); ctx.moveTo(-13,-26); ctx.lineTo(0,-36); ctx.lineTo(13,-26); ctx.closePath(); ctx.fill();
+   ctx.fillStyle='rgba(90,120,130,.75)'; ctx.fillRect(-22,-14,44,8); ctx.strokeStyle='rgba(255,255,255,.5)'; ctx.lineWidth=.6; ctx.beginPath(); for(let x=-22;x<=22;x+=3) ctx.lineTo(x,-14+Math.sin(x*0.5+S.t*0.08)); ctx.stroke(); },
+ mercado:(d)=>{ ctx.fillStyle='#2A2230'; ctx.fillRect(-14,-24,28,24); ctx.fillStyle=d.k%2?'#6A2A4A':'#3A4A6A'; ctx.beginPath(); ctx.moveTo(-16,-24); ctx.lineTo(16,-24); ctx.lineTo(13,-30); ctx.lineTo(-13,-30); ctx.closePath(); ctx.fill();
+   ctx.fillStyle='rgba(255,200,120,'+(0.4+0.2*Math.sin(S.t*0.1+d.k))+')'; ctx.fillRect(-10,-20,20,8); ctx.fillStyle='#E04A4A'; ctx.font='800 5px sans-serif'; ctx.textAlign='center'; ctx.fillText('×3',0,-14); ctx.textAlign='left'; },
+ toxico:(d)=>{ ctx.strokeStyle='#4A3A2A'; ctx.lineWidth=2; ctx.beginPath(); ctx.moveTo(0,0); ctx.lineTo(0,-30); ctx.moveTo(0,-20); ctx.lineTo(-8,-28); ctx.moveTo(0,-24); ctx.lineTo(7,-32); ctx.stroke();
+   ctx.fillStyle='rgba(140,190,60,.7)'; ctx.beginPath(); ctx.ellipse(10,0,9,2.4,0,0,7); ctx.fill(); ctx.fillStyle='#C9A23A'; rr(-16,-11,8,11,1.5); ctx.fill(); ctx.fillStyle='#2A2A2A'; ctx.font='800 5px sans-serif'; ctx.fillText('☠',-15,-3); },
+ calcinado:(d)=>{ const h=40+(d.k%28); ctx.fillStyle='#1A1410'; ctx.fillRect(-2.5,-h,5,h); for(let j=0;j<4;j++){ ctx.save(); ctx.translate(0,-h+8+j*8); ctx.rotate((j%2?1:-1)*(0.7+j*0.1)); ctx.fillRect(0,-1,12-j*2,2); ctx.restore(); }
+   if((S.t+d.k*7)%50<25){ ctx.fillStyle='#FF8A3A'; ctx.beginPath(); ctx.arc(0,-((S.t+d.k)%30),1.2,0,7); ctx.fill(); }
+   for(let i=0;i<2;i++){ const t=((S.t*0.4+i*45+d.k)%90)/90; ctx.fillStyle='rgba(70,64,60,'+(0.35*(1-t))+')'; ctx.beginPath(); ctx.arc(0,-h-t*40,4+t*9,0,7); ctx.fill(); } },
+ alambre:(d)=>{ ctx.strokeStyle='#5A5450'; ctx.lineWidth=1.4; for(const px of [-14,14]){ ctx.beginPath(); ctx.moveTo(px,0); ctx.lineTo(px,-16); ctx.stroke(); }
+   ctx.strokeStyle='#8A8480'; ctx.lineWidth=.6; for(let r=0;r<2;r++){ ctx.beginPath(); for(let x=-14;x<=14;x+=2) ctx.lineTo(x,-8-r*6+Math.sin(x)*1.2); ctx.stroke(); }
+   ctx.fillStyle='rgba(30,26,24,.6)'; ctx.beginPath(); ctx.ellipse(24,1,10,3,0,0,7); ctx.fill(); }});
+// ---------- desastres nuevos: erupción, apagón y saqueo; hiperinflación en el mercado negro ----------
+function desExtra(C,tt,p){
+  if(C.k==='erupcion'){ S.shake=Math.max(S.shake,reduced?0:1.6); if(tt%10===0) for(let i=0;i<3;i++) S.parts.push({x:S.cam+Math.random()*W,y:S.camY-10,vx:-.3,vy:1+Math.random(),life:120,col:'rgba(120,115,110,.7)'});
+    S.boulders=S.boulders||[]; if(tt%70===5){ const bx=S.cam+W+30, c=Math.min(S.L.w-1,Math.floor(bx/T)); S.boulders.push({x:bx,y:groundY(c)-18,r:9,vx:-2.8*Dif().enemy,rot:0}); }
+    if(tt===1){ addShock('Evacuación y limpieza de la ceniza',1,2); learn('erupcion'); } }
+  else if(C.k==='apagon'){ S.apagon=C.dur-tt; if(tt===1){ addShock('Comida dañada por el apagón',1,1); addText(p.x-70,p.y-30,'Apagón: se dañó la comida (+1 por 1 quincena)','#FFC7BF'); learn('apagon'); } }
+  else if(C.k==='saqueo'&&tt===1){ const l=Math.ceil(eco.hand*0.4); eco.hand-=l; if(S.ws) S.ws.lost.saqueo=(S.ws.lost.saqueo||0)+l; logD('Pérdida','Saqueo: se llevaron el efectivo del bolsillo',-l); addText(p.x-80,p.y-36,'Saqueo: −'+l+' del bolsillo. Tu alcancía ('+eco.emb+') quedó a salvo','#FF9A8C'); snd('bad'); learn('saqueo'); } }
+function inflPulse(){ if(!(LV[S.li]&&LV[S.li].infl)) return; const l=eco.hand>0?Math.max(1,Math.round(eco.hand*0.12)):0; eco.hand-=l; addShock('Hiperinflación: todo sube',1,1); learn('hiperinflacion');
+  if(S.p) addText(S.p.x-80,S.p.y-60,'Hiperinflación: tu efectivo perdió '+l+' de valor y los precios subieron','#FFB08A'); logD('Pérdida','Hiperinflación: el efectivo se derrite',-l); }
+function drawApagon(){ if(!(S.apagon>0)||!S.p) return; S.apagon--; const px=S.p.x+S.p.w/2-S.cam, py=S.p.y+S.p.h/2-S.camY, g=ctx.createRadialGradient(px,py,40,px,py,190); g.addColorStop(0,'rgba(5,6,12,0)'); g.addColorStop(1,'rgba(5,6,12,.86)'); ctx.fillStyle=g; ctx.fillRect(0,0,W,H); }
+// ---------- mapa de El Colapso: una tierra devastada, escenario por escenario ----------
+const EXP_EDGE3=[300,300,250,286,322,300,310,296,270];
+const colGround=x=>{ const s=Math.max(0,Math.min(7.999,x/80)), i=Math.floor(s), f=s-i, a=EXP_EDGE3[i], b=EXP_EDGE3[i+1], u=f*f*(3-2*f); return a+(b-a)*u+Math.sin(x*0.11)*2.5; };
+const MAPN3=[0,1,2,3,4,5,6,7].map(i=>[40+i*80,Math.round(colGround(40+i*80))-6]);
+let MAPBG3=null;
+function buildMapBg3(){ const cv2=document.createElement('canvas'); cv2.width=W*2; cv2.height=H*2; const c=cv2.getContext('2d'); c.scale(2,2); const R=mulberry(666), gy=x=>colGround(x);
+  let g=c.createLinearGradient(0,0,0,H); g.addColorStop(0,'#1A1216'); g.addColorStop(.55,'#5A2A22'); g.addColorStop(1,'#C9603A'); c.fillStyle=g; c.fillRect(0,0,W,H);
+  for(let k=0;k<9;k++){ const cx=R()*W, cy=40+R()*120, r=40+R()*50; const cg=c.createRadialGradient(cx,cy,4,cx,cy,r); cg.addColorStop(0,'rgba(40,30,30,.55)'); cg.addColorStop(1,'rgba(40,30,30,0)'); c.fillStyle=cg; c.fillRect(cx-r,cy-r,r*2,r*2); }
+  // horizonte de ciudades y montañas oscuras
+  c.fillStyle='rgba(30,22,24,.8)'; c.beginPath(); c.moveTo(0,300); for(let x=0;x<=W;x+=4) c.lineTo(x,226+Math.abs(Math.sin(x*0.02))*30+Math.sin(x*0.09)*6); c.lineTo(W,300); c.closePath(); c.fill();
+  // 1 ciudad sitiada: edificios rotos con humo
+  for(let k=0;k<5;k++){ const x=6+k*14, h=30+R()*40, y=gy(x+5); c.fillStyle='#3A3236'; c.beginPath(); c.moveTo(x,y); c.lineTo(x,y-h); c.lineTo(x+5,y-h+8); c.lineTo(x+12,y-h-4); c.lineTo(x+12,y); c.closePath(); c.fill(); c.fillStyle='rgba(255,170,90,.6)'; c.fillRect(x+3,y-h*0.5,2,2); }
+  // 2 volcán en erupción con lava y ceniza
+  c.fillStyle='#2A1E1C'; c.beginPath(); c.moveTo(84,gy(84)); c.lineTo(116,150); c.lineTo(128,150); c.lineTo(160,gy(160)); c.closePath(); c.fill();
+  c.strokeStyle='#FF6A1A'; c.lineWidth=2.4; c.beginPath(); c.moveTo(122,152); c.quadraticCurveTo(112,200,100,gy(100)-2); c.stroke(); c.beginPath(); c.moveTo(124,152); c.quadraticCurveTo(140,210,150,gy(150)-2); c.stroke();
+  for(let k=0;k<6;k++){ c.fillStyle='rgba(90,84,80,'+(0.55-k*0.07)+')'; c.beginPath(); c.arc(122+k*6,140-k*16,10+k*6,0,7); c.fill(); }
+  // 3 ciudad del terremoto: edificios inclinados y grietas
+  for(let k=0;k<4;k++){ const x=170+k*17, y=gy(x); c.save(); c.translate(x,y); c.rotate((k%2?1:-1)*0.15); c.fillStyle='#5A5458'; c.fillRect(-5,-34-k*4,11,34+k*4); c.fillStyle='rgba(255,220,160,.4)'; c.fillRect(-3,-26,2,2); c.restore(); }
+  // 4 gran inundación: agua y techos
+  c.fillStyle='rgba(70,100,120,.85)'; c.beginPath(); c.moveTo(240,gy(240)-10); for(let x=240;x<=320;x+=4) c.lineTo(x,gy(x)-10+Math.sin(x*0.3)*1.2); c.lineTo(320,H); c.lineTo(240,H); c.closePath(); c.fill();
+  [[256],[284],[306]].forEach(([x])=>{ const y=gy(x)-12; c.fillStyle='#8A3A2A'; c.beginPath(); c.moveTo(x-8,y); c.lineTo(x,y-8); c.lineTo(x+8,y); c.closePath(); c.fill(); });
+  // 5 mercado negro: calle de toque de queda con puestos
+  for(let k=0;k<4;k++){ const x=328+k*18, y=gy(x); c.fillStyle='#2A2230'; c.fillRect(x-6,y-14,12,14); c.fillStyle=k%2?'#6A2A4A':'#3A4A6A'; c.fillRect(x-8,y-17,16,3); c.fillStyle='rgba(255,200,120,.6)'; c.fillRect(x-4,y-11,8,3); }
+  // 6 desierto tóxico: barriles y árboles muertos
+  for(let k=0;k<5;k++){ const x=408+k*15, y=gy(x); if(k%2){ c.fillStyle='#C9A23A'; c.fillRect(x-3,y-7,6,7); } else { c.strokeStyle='#4A3A2A'; c.lineWidth=1.4; c.beginPath(); c.moveTo(x,y); c.lineTo(x,y-14); c.lineTo(x-4,y-19); c.moveTo(x,y-9); c.lineTo(x+5,y-14); c.stroke(); } }
+  c.fillStyle='rgba(140,190,60,.7)'; c.beginPath(); c.ellipse(440,gy(440)+2,12,2.4,0,0,7); c.fill();
+  // 7 bosque calcinado: troncos negros y brasas
+  for(let k=0;k<7;k++){ const x=488+k*11, y=gy(x); c.fillStyle='#14100E'; c.fillRect(x-1.2,y-22,2.4,22); c.fillRect(x-5,y-16,5,1.4); if(k%2){ c.fillStyle='#FF6A1A'; c.beginPath(); c.arc(x+1,y-3,1.2,0,7); c.fill(); } }
+  for(let k=0;k<5;k++){ c.fillStyle='rgba(60,56,52,'+(0.4-k*0.06)+')'; c.beginPath(); c.arc(520+k*4,gy(520)-30-k*14,8+k*5,0,7); c.fill(); }
+  // 8 tierra de nadie: alambre de púas, cráteres y tormenta
+  c.strokeStyle='#8A8480'; c.lineWidth=.6; for(let r=0;r<2;r++){ c.beginPath(); for(let x=566;x<=640;x+=2) c.lineTo(x,gy(x)-6-r*5+Math.sin(x)*1); c.stroke(); }
+  c.fillStyle='rgba(20,16,16,.7)'; [[580],[612]].forEach(([x])=>{ c.beginPath(); c.ellipse(x,gy(x)+2,9,2.6,0,0,7); c.fill(); });
+  c.strokeStyle='rgba(255,240,200,.8)'; c.lineWidth=1.2; c.beginPath(); c.moveTo(600,40); c.lineTo(592,70); c.lineTo(602,72); c.lineTo(590,104); c.stroke();
+  // suelo devastado
+  const COL=['#5A5450','#3A302C','#6A6058','#4E6A60','#3E3644','#A89A70','#2E2622','#3A3434'], EARTH=['#3A3430','#221A18','#4A423C','#3A4A42','#28222E','#7A6A44','#1E1814','#26221E'];
+  for(let i=0;i<8;i++){ const x0=i*80, x1=x0+80; c.fillStyle=EARTH[i]; c.beginPath(); c.moveTo(x0,H); for(let x=x0;x<=x1;x+=2) c.lineTo(x,gy(x)); c.lineTo(x1,H); c.closePath(); c.fill();
+    c.fillStyle=COL[i]; c.beginPath(); for(let x=x0;x<=x1;x+=2) c.lineTo(x,gy(x)-1); for(let x=x1;x>=x0;x-=2) c.lineTo(x,gy(x)+6); c.closePath(); c.fill(); }
+  for(let k=0;k<50;k++){ c.fillStyle='rgba(200,190,180,.35)'; c.fillRect(R()*W,R()*H*0.8,1,1.6); }
+  MAPBG3=cv2; }
+
+MEDALLAS.push({id:'colapso',n:'Sobreviviente',d:'Supera El Colapso y aprueba la Prueba de la Resiliencia',c:()=>!!eco.resiliente});
 scrApply();
 resize();
 legend();
