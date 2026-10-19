@@ -1543,6 +1543,7 @@ function defendBox(p){ const r=p.big?40:32; return {x:p.face>0?p.x+p.w-4:p.x-r+4
 function defendHit(p){ const hb=defendBox(p), sw=p.swing; let hit=0;
   for(const e of S.L.ents){ if(e.dead||e.swHit===sw||!overlap(hb,e)) continue;
     if(e.t==='ant'){ e.swHit=sw; e.dead=true; eco.hand=Math.min(cap(),eco.hand+1); eco.stats.stomps=(eco.stats.stomps||0)+1; stampAt(e.x+9,e.y-6,'¡NO!','gasto hormiga evitado'); burst(e.x+9,e.y+6,'#C08A55',8); logD('Ahorro','Dijiste NO a un gasto hormiga',1); hit++; }
+    else if(e.t==='nido'){ e.swHit=sw; nidoHit(e); hit++; }
     else if(e.t==='puma'||e.t==='snake'){ e.swHit=sw; e.dead=true; tiedPoof(e); stampAt(e.x+e.w/2,e.y-6,'¡NO!','peligro evitado'); hit++; }
     else if(e.t==='lanza'&&!e.tied){ e.swHit=sw; e.hp=(e.hp||1)-1; e.flash=12; hit++; if(e.hp<=0){ e.tied=1; e.pw=1; e.flash=0; eco.hand=Math.min(cap(),eco.hand+1); eco.stats.lanzadores=(eco.stats.lanzadores||0)+1; logD('Ahorro','Dijiste NO: amarraste un gasto',1); confetti(e.x+e.w/2,e.y,12); } else addText(e.x-20,e.y-12,'¡NO!','#FFE18A'); }
     else if(e.t==='ladron'&&e.st!=='preso'){ e.swHit=sw; e.st='preso'; e.pt=0; eco.stats.ladrones=(eco.stats.ladrones||0)+1; eco.hand=Math.min(cap(),eco.hand+2); stampAt(e.x+10,e.y-12,'ROBO EVITADO','te defendiste'); logD('Ahorro','Evitaste un robo',2); hit++; }
@@ -2907,7 +2908,7 @@ function update(){
     if(e.t==='parca'){ parcaUpdate(e,p,prevBottom); continue; }
     if(e.t==='parcaJefe'){ parcaJefeUpdate(e,p,prevBottom); continue; }
     if(e.t==='jefeM'){ jefeMUpdate(e,p,prevBottom); continue; }
-    if(e.t==='dian'){ dianUpdate(e,p); continue; } if(e.t==='dano'){ danoUpdate(e,p); continue; } if(e.t==='restaura'){ restauraUpdate(e,p); continue; } if(e.t==='atajo'){ atajoUpdate(e,p); continue; }
+    if(e.t==='nido'){ nidoUpdate(e,p,prevBottom); continue; } if(e.t==='dian'){ dianUpdate(e,p); continue; } if(e.t==='dano'){ danoUpdate(e,p); continue; } if(e.t==='restaura'){ restauraUpdate(e,p); continue; } if(e.t==='atajo'){ atajoUpdate(e,p); continue; }
     if(e.t==='trading'){ tradingUpdate(e,p); continue; }
     if(e.t==='lugar'){ lugarUpdate(e,p); continue; }
     if(e.t==='camp'&&S.li===7&&parcaCampGate(e,p)) continue;
@@ -2921,6 +2922,7 @@ function update(){
     }
     else if(e.t==='ant'){
       e.vy=Math.min(e.vy+0.5,8); const ovx=e.vx; if(moveX(e)) e.vx=-ovx; moveY(e);
+      if(e.chase&&e.onGround){ const ddx=(p.x+p.w/2)-(e.x+9); if(S.t%24===0&&Math.abs(ddx)>14) e.vx=Math.sign(ddx)*Math.abs(e.vx); if(Math.abs(ddx)<70&&Math.abs(ddx)>10&&S.t%55===(e.x|0)%55) e.vy=-5.5; if(Math.abs(ddx)>700) e.dead=true; }
       if(e.onGround){ const ahead=e.vx>0?Math.floor((e.x+e.w+1)/T):Math.floor((e.x-1)/T); const below=Math.floor((e.y+e.h+2)/T); if(!solid(ahead,below)&&!oneway(ahead,below)) e.vx=-e.vx; }
       if(e.y>L.rows*T+40) e.dead=true;
       if(overlap(p,e)){
@@ -3832,7 +3834,7 @@ function drawEnts(only){
     else if(e.t==='negocio') drawNegocio(e,x,y);
     else if(e.t==='parca'||e.t==='parcaJefe') drawParca(e,x,y);
     else if(e.t==='jefeM') drawJefeM(e,x,y);
-    else if(e.t==='dian') drawDian(e,x,y); else if(e.t==='dano') drawDano(e,x,y); else if(e.t==='restaura') drawRestaura(e,x,y); else if(e.t==='atajo') drawAtajo(e,x,y);
+    else if(e.t==='nido') drawNido(e,x,y); else if(e.t==='dian') drawDian(e,x,y); else if(e.t==='dano') drawDano(e,x,y); else if(e.t==='restaura') drawRestaura(e,x,y); else if(e.t==='atajo') drawAtajo(e,x,y);
     else if(e.t==='trading') drawTrading(e,x,y);
     else if(e.t==='lugar') drawLugar(e,x,y);
     else if(e.t==='poder') drawPoder(e,x,y);
@@ -6955,6 +6957,56 @@ function buildMapBg4(){ const cv2=document.createElement('canvas'); cv2.width=W*
   c.save(); c.globalCompositeOperation='saturation'; const sat=c.createLinearGradient(0,0,W,0); sat.addColorStop(0,'rgba(128,128,128,.85)'); sat.addColorStop(.45,'rgba(128,128,128,.35)'); sat.addColorStop(.8,'rgba(128,128,128,0)'); c.fillStyle=sat; c.fillRect(0,0,W,H); c.restore();
   MAPBG4=cv2; }
 MEDALLAS.push({id:'reconstruccion',n:'Constructor de paz',d:'Termina La Reconstrucción y aprueba la Prueba del Constructor',c:()=>!!eco.constructor});
+/* ================= NIDOS DE GASTOS HORMIGA: la fuente de las hormigas ================= */
+const NIDO_K=[
+ {n:'Nido del tinto diario',s:'TINTO',x:'Un tinto y una empanada de 4.000 pesos al día son más de 100.000 pesos al mes.'},
+ {n:'Nido de la gaseosa',s:'GASEOSA',x:'Una gaseosa diaria de 3.000 pesos son 90.000 al mes y más de un millón al año.'},
+ {n:'Nido de las empanadas',s:'EMPANADAS',x:'Comprar el almuerzo en la calle todos los días cuesta el doble que llevarlo de la casa.'},
+ {n:'Nido del paquete de la tienda',s:'PAQUETES',x:'Papas y dulces de 2.500 pesos al día son 75.000 al mes que se van sin darte cuenta.'},
+ {n:'Nido de los antojos',s:'ANTOJOS',x:'Antojos de 1.000 pesos varias veces al día suman sin que lo notes: anótalos una semana y verás.'},
+ {n:'Nido de los domicilios',s:'DOMICILIOS',x:'Un domicilio de 8.000 pesos cinco veces por semana son unos 160.000 pesos al mes.'}];
+function addNests(L,li){ if(!L||li===0) return; const n=li===1?1:2, fr=n===1?[0.4]:[0.3,0.58], J=L.ents.find(e=>e.t==='jefeM'), xmax=J?J.x-22*T:L.w*T*0.8;
+  fr.forEach((f,i)=>{ for(let c=Math.floor(L.w*f);c<Math.floor(L.w*f)+60&&c<L.w-4;c++){ const s=L.surf[c]; if(s==null||s<0) continue; let flat=true; for(let d=-1;d<=2;d++) if(L.surf[c+d]!==s) flat=false; if(!flat||c*T>xmax) continue;
+      if(L.ents.some(e=>e.t!=='drop'&&e.t!=='coin'&&Math.abs(e.x-c*T)<4*T&&Math.abs(e.y-s*T)<5*T)) continue;
+      L.ents.push({t:'nido',x:c*T-6,y:s*T-28,w:44,h:28,hp:3,hpMax:3,cd:60,k:(li*3+i)%NIDO_K.length,flash:0,spawn:0}); break; } }); }
+{ const _bl=buildLevel; buildLevel=function(li){ const L=_bl(li); try{ addNests(L,li); }catch(e){} return L; }; }
+function nidoAnts(e){ return S.L.ents.filter(q=>q.t==='ant'&&!q.dead&&q.src===e).length; }
+function nidoUpdate(e,p,prevBottom){ if(e.flash>0) e.flash--; if(e.spawn>0) e.spawn--; if(e.inv>0) e.inv--;
+  const dx=(p.x+p.w/2)-(e.x+e.w/2), near=Math.abs(dx)<430&&Math.abs((p.y+p.h)-(e.y+e.h))<220;
+  if(near&&!e.seen){ e.seen=1; if(!eco.seen||!eco.seen.nido){ toast('¡Un nido de gastos hormiga!',NIDO_K[e.k].n+': de aquí salen hormigas que te atacan y se llevan tus monedas. Salta encima 3 veces o usa el bastón (decir NO) para destruirlo: cortar la fuente ahorra más que esquivar cada gasto.'); } learn('nido'); }
+  if(near&&--e.cd<=0){ const sp=(eco?Dif().enemy:1), mx=Math.min(4,2+Math.floor(S.li/8)); e.cd=Math.round((150+rnd(60))/Math.max(.6,sp));
+    if(nidoAnts(e)<mx){ const dir=Math.sign(dx)||-1; S.L.ents.push({t:'ant',x:e.x+e.w/2-9+dir*12,y:e.y+e.h-14,w:18,h:12,vx:dir*0.95*sp,vy:-4,k:e.k,src:e,chase:1}); e.spawn=24; burst(e.x+e.w/2,e.y+8,'#8A6A4A',6); } }
+  if(overlap(p,e)&&p.vy>0&&prevBottom<=e.y+12&&!e.inv){ p.vy=-8.5; nidoHit(e); } }
+function nidoHit(e){ if(e.inv>0) return; e.inv=14; e.hp--; e.flash=14; snd('stomp'); burst(e.x+e.w/2,e.y+10,'#8A6A4A',12); S.shake=Math.max(S.shake||0,reduced?0:2);
+  if(e.hp>0){ addText(e.x-10,e.y-14,'¡Nido herido! '+e.hp+' más','#FFE18A'); return; }
+  e.dead=true; const K=NIDO_K[e.k]; eco.hand=Math.min(cap(),eco.hand+2); eco.stats.nidos=(eco.stats.nidos||0)+1;
+  S.L.ents.forEach(q=>{ if(q.t==='ant'&&q.src===e&&!q.dead){ q.dead=true; burst(q.x+9,q.y+6,'#C08A55',6); } });
+  stampAt(e.x+e.w/2,e.y-6,'NIDO DESTRUIDO','cortaste la fuente del gasto'); confetti(e.x+e.w/2,e.y,18); logD('Ahorro','Cortaste un gasto hormiga recurrente: '+K.s.toLowerCase(),2);
+  try{ saludAdd(3,'cortar un gasto hormiga'); }catch(er){} toast(K.n+' destruido (+2)',K.x+' Cortar el hábito ahorra más que esquivar cada gasto.'); learn('nido'); }
+function drawNido(e,x,y){ const fy=y+e.h, cx=x+e.w/2, Th=THEMES[LV[S.li].theme]||{}, dirt=Th.earth||'#6A4A2A', dk=Th.edge||'#3A2A18';
+  ctx.save(); if(e.flash>0&&e.flash%4<2) ctx.globalAlpha=.55;
+  const sq=e.spawn>0?1+Math.sin(e.spawn*0.6)*0.06:1; ctx.translate(cx,fy); ctx.scale(1/sq,sq); ctx.translate(-cx,-fy);
+  ctx.fillStyle='rgba(0,0,0,.25)'; ctx.beginPath(); ctx.ellipse(cx,fy,e.w*0.62,4,0,0,7); ctx.fill();
+  // montículo de tierra con relieve
+  const g=ctx.createLinearGradient(x,y,x+e.w,fy); g.addColorStop(0,'#B08A5A'); g.addColorStop(.5,dirt); g.addColorStop(1,dk); ctx.fillStyle=g;
+  ctx.beginPath(); ctx.moveTo(x-6,fy); ctx.quadraticCurveTo(x+4,y+6,cx-4,y+2); ctx.quadraticCurveTo(cx+2,y-2,cx+8,y+3); ctx.quadraticCurveTo(x+e.w+2,y+8,x+e.w+6,fy); ctx.closePath(); ctx.fill();
+  ctx.fillStyle='rgba(255,230,190,.18)'; ctx.beginPath(); ctx.ellipse(cx-8,y+8,9,4,-0.4,0,7); ctx.fill();
+  for(let i=0;i<12;i++){ const a=hash(i*3.7+e.x*0.01), b=hash(i*1.9+e.x*0.02); ctx.fillStyle=i%2?'rgba(40,24,12,.35)':'rgba(220,190,150,.3)'; ctx.beginPath(); ctx.arc(x+4+a*(e.w-8),y+10+b*(e.h-12),1.1,0,7); ctx.fill(); }
+  // grietas según el daño
+  ctx.strokeStyle='rgba(30,18,10,.7)'; ctx.lineWidth=1.2; if(e.hp<3){ ctx.beginPath(); ctx.moveTo(cx-12,y+10); ctx.lineTo(cx-6,y+16); ctx.lineTo(cx-10,fy-3); ctx.stroke(); } if(e.hp<2){ ctx.beginPath(); ctx.moveTo(cx+12,y+9); ctx.lineTo(cx+7,y+15); ctx.lineTo(cx+13,fy-4); ctx.stroke(); }
+  // boca del nido
+  ctx.fillStyle='#1A100A'; ctx.beginPath(); ctx.ellipse(cx+1,y+5,5.4,2.6,0,0,7); ctx.fill();
+  ctx.restore();
+  // hormiguitas que entran y salen
+  for(let i=0;i<4;i++){ const t=((S.t*0.6+i*37+e.x)%120)/120, side=i%2?1:-1, ax=cx+side*(4+t*26), ay=y+5+t*(e.h-6)+Math.sin(t*20)*1; ctx.fillStyle='#2A1A10'; ctx.beginPath(); ctx.ellipse(ax,ay,1.8,1.1,0,0,7); ctx.ellipse(ax+side*2,ay,1.2,1,0,0,7); ctx.fill(); }
+  // letrero del gasto
+  ctx.fillStyle='#6E4A2A'; ctx.fillRect(x+e.w+2,fy-24,2,24); const K=NIDO_K[e.k]; ctx.font='800 7px Figtree, sans-serif'; const tw=ctx.measureText(K.s).width+8;
+  ctx.fillStyle='#F4ECD8'; rr(x+e.w-tw/2+3,fy-34,tw,11,2); ctx.fill(); ctx.strokeStyle='#C0392B'; ctx.lineWidth=1; ctx.stroke(); ctx.fillStyle='#8A1F12'; ctx.textAlign='center'; ctx.fillText(K.s,x+e.w+3,fy-26); ctx.textAlign='left';
+  // vida del nido
+  for(let i=0;i<e.hpMax;i++){ ctx.fillStyle=i<e.hp?'#E04A3A':'rgba(255,255,255,.25)'; ctx.beginPath(); ctx.arc(cx-8+i*8,y-8,2.6,0,7); ctx.fill(); }
+  if(e.spawn>0){ ctx.strokeStyle='rgba(255,120,90,'+(e.spawn/24)+')'; ctx.lineWidth=2; ctx.beginPath(); ctx.arc(cx,y+5,8+(24-e.spawn),Math.PI,0); ctx.stroke(); } }
+Object.assign(TIPS,{nido:{t:'Nido de gastos hormiga',g:'Guía 1 y 3',x:'Los gastos hormiga nacen de un hábito que se repite (el tinto, la gaseosa, el domicilio). Esquivar cada uno ayuda, pero lo que más ahorra es cortar la fuente: cambiar el hábito o cancelar la suscripción.'}});
+MEDALLAS.push({id:'nidos',n:'Cazador de hormigueros',d:'Destruye 5 nidos de gastos hormiga',c:()=>(eco.stats.nidos||0)>=5});
 scrApply();
 resize();
 legend();
