@@ -1237,7 +1237,7 @@ function muertePanel(){ const C=S.muerte.causas, li=C.map(c=>`<li><b>${esc(c.k.c
   <h3>Consecuencias en el juego</h3><p>Vuelves al inicio de este mundo, pierdes lo que tenías en mano, tus deudas se juntan en un solo acuerdo de pago y tu DataCrédito baja 100 puntos. Tu diploma también lo tendrá en cuenta.</p>
   <div class="row" style="margin-top:12px"><button class="btn gold" type="button" id="bRevive">Negociar mis deudas y volver a empezar</button></div>`);
   const b=document.getElementById('bRevive'); if(b) b.onclick=muerteRevivir; }
-function drawSaludHud(){ if(!eco||!S.L) return; const s=salud(), x=W-118, y=96, w=90, col=s>=60?'#62C98A':s>=35?'#F2C230':'#EE5A4A';
+function drawSaludHud(){ if(!eco||!S.L) return; const s=salud(), x=W-118, y=104, w=90, col=s>=60?'#62C98A':s>=35?'#F2C230':'#EE5A4A';
   ctx.save(); ctx.fillStyle='rgba(10,20,26,.62)'; rr(x-8,y-2,118,22,8); ctx.fill(); if(S.saludHit>0){ S.saludHit--; ctx.strokeStyle='rgba(238,90,74,'+(S.saludHit/24)+')'; ctx.lineWidth=2; rr(x-8,y-2,118,22,8); ctx.stroke(); }
   const beat=s<35?1+Math.max(0,Math.sin(S.t*0.25))*0.25:1; ctx.save(); ctx.translate(x+2,y+9); ctx.scale(beat,beat); ctx.fillStyle=col; ctx.beginPath(); ctx.moveTo(0,4); ctx.bezierCurveTo(-7,-1,-4,-7,0,-3); ctx.bezierCurveTo(4,-7,7,-1,0,4); ctx.fill(); ctx.restore();
   ctx.font='700 6.4px Figtree, sans-serif'; ctx.fillStyle='#E9EEF2'; ctx.fillText('SALUD FINANCIERA',x+10,y+6); ctx.fillStyle='#fff'; ctx.font='800 7px "IBM Plex Mono", monospace'; ctx.textAlign='right'; ctx.fillText(String(s),x+w+16,y+6.2); ctx.textAlign='left';
@@ -1644,7 +1644,7 @@ function doPulse(){ S.collect=[]; const s0=salud(); try{ doPulse0(); } finally {
 function drawQCard(){ const Q=S.qcard; if(!Q||S.mode!=='play'&&S.mode!=='pause') return; const life=Math.max(240,120+Q.lines.length*45); Q.t++; if(Q.t>life){ S.qcard=null; return; }
   const a=Math.min(1,Q.t/10,(life-Q.t)/30), w=214, x=W-w-8, lines=[]; ctx.save(); ctx.font='700 6.6px Figtree, sans-serif';
   Q.lines.forEach(l=>{ const words=l.txt.split(' '); let cur=''; const out=[]; words.forEach(wd=>{ const t2=cur?cur+' '+wd:wd; if(ctx.measureText(t2).width>w-22&&cur){ out.push(cur); cur=wd; } else cur=t2; }); if(cur) out.push(cur); out.slice(0,2).forEach((o,i)=>lines.push({t:o,col:l.col,first:i===0})); });
-  const show=lines.slice(0,9), h=18+show.length*9, y=124; ctx.globalAlpha=a; ctx.fillStyle='rgba(10,20,26,.78)'; rr(x,y,w,h,7); ctx.fill(); ctx.strokeStyle='rgba(232,182,74,.55)'; ctx.lineWidth=1; rr(x,y,w,h,7); ctx.stroke();
+  const show=lines.slice(0,9), h=18+show.length*9, y=132; ctx.globalAlpha=a; ctx.fillStyle='rgba(10,20,26,.78)'; rr(x,y,w,h,7); ctx.fill(); ctx.strokeStyle='rgba(232,182,74,.55)'; ctx.lineWidth=1; rr(x,y,w,h,7); ctx.stroke();
   ctx.fillStyle='#E8B64A'; ctx.font='800 6.6px Figtree, sans-serif'; ctx.fillText('QUINCENA '+Q.n,x+9,y+11); ctx.fillStyle='rgba(255,255,255,.18)'; ctx.fillRect(x+9,y+14,w-18,0.8);
   ctx.font='700 6.4px Figtree, sans-serif'; show.forEach((l,i)=>{ ctx.fillStyle=l.col; if(l.first){ ctx.beginPath(); ctx.arc(x+11,y+21+i*9,1.4,0,7); ctx.fill(); } ctx.fillText(l.t,x+16,y+23.4+i*9); });
   if(lines.length>show.length){ ctx.fillStyle='rgba(255,255,255,.6)'; ctx.fillText('… y '+(lines.length-show.length)+' más en el Diario',x+16,y+h-2); }
@@ -1661,17 +1661,17 @@ function doPulse0(){
   if(eco.debts.some(d=>d.kind==='gota') && S.L && !S.L.ents.some(e=>e.t==='cobrador'&&!e.dead)){ S.L.ents.push({t:'cobrador',x:p.x-W*0.55,y:p.y-70,w:22,h:30,life:560}); addText(p.x-40,p.y-40,'¡Llegó el cobrador del gota a gota!','#FF9A8C'); }
   if(ws){ ws.cost+=cost; ws.cuotas+=cu; ws.primas+=pr; ws.fijos+=fj; }
   const total=cost+cu+pr+fj;
-  const parts=[]; if(inc) parts.push('+'+inc);
-  if(total){ parts.push('−'+total);
+  const parts=[]; if(inc) parts.push('ingresos +'+inc+(sal&&ren?' (sueldo '+sal+', activos '+ren+')':''));
+  if(total){ parts.push('gastos −'+total+' (vida '+cost+(cu?', cuotas '+cu:'')+(pr?', seguros '+pr:'')+(fj?', fijos '+fj:'')+')');
     const fromH=Math.min(total,eco.hand); eco.hand-=fromH; let rest=total-fromH;
     if(rest>0){ const fe=Math.min(rest,eco.emb); eco.emb-=fe; rest-=fe; }
     if(rest>0){ const sc=eco.score||650, extra=sc<550?2:sc>=750?0:1; addDebt('Acuerdo de pago',rest+extra,1,'acuerdo'); parts.push('deuda +'+(rest+extra)); }
   }
-  if(eco.hand>cap()){ const over=eco.hand-cap(); eco.hand=cap(); if(ws) ws.lost.desborde=(ws.lost.desborde||0)+over; addText(p.x-10,p.y-30,'Mochila llena: se perdieron '+over,'#FFC7BF'); }
-  (eco.lujos||[]).forEach(l=>{ if(l.value>0) l.value-=1; });
+  if(eco.hand>cap()){ const over=eco.hand-cap(); eco.hand=cap(); eco.emb+=over; addText(p.x-10,p.y-30,'Mochila llena: '+over+' fueron a tu alcancía','#9FD3FF'); }
+  { const dep=(eco.lujos||[]).filter(l=>l.value>0); dep.forEach(l=>{ l.value-=1; }); if(dep.length){ addText(p.x-10,p.y-44,'Tus pasivos perdieron valor: −'+dep.length+' ('+dep.map(l=>l.n.toLowerCase()).slice(0,3).join(', ')+')','#FFC7BF'); logD('Gasto','Depreciación de pasivos: '+dep.map(l=>l.n).join(', '),-dep.length); } }
   logD(inc>=total?'Ingreso':'Gasto','Quincena: +'+inc+' de ingresos, −'+total+' de gastos',inc-total);
   if(ws) ws.hist.push(patrimonio());
-  if(parts.length){ addText(p.x-6,p.y-16,'Quincena '+parts.join(' '),inc>=total?'#BFF5CF':'#FFC7BF'); snd('pulse'); }
+  if(parts.length){ addText(p.x-6,p.y-16,'Quincena: '+parts.join(' · '),inc>=total?'#BFF5CF':'#FFC7BF'); snd('pulse'); }
 }
 
 function takeOffer(e){
@@ -2453,7 +2453,7 @@ function update(){
     if(e.t==='trading'){ tradingUpdate(e,p); continue; }
     if(e.t==='camp'&&S.li===7&&parcaCampGate(e,p)) continue;
     if(e.t==='poder'){ if(overlap(p,e)) poderTake(e,p); continue; }
-    if(e.t==='drop'){ if(overlap(p,e)){ if(eco.hand>=cap()){ if(!S.fullMsg||S.t-S.fullMsg>120){ S.fullMsg=S.t; addText(p.x-30,p.y-20,'Mochila llena: ahorra en la alcancía o invierte','#FFE18A'); } } else { e.dead=true; eco.hand++; eco.stats.drops++; if(S.ws) S.ws.coins++; snd('drop'); burst(e.x+6,e.y+8,VALOR_C[e.k]||'#FFD36B',5); if(e.k&&e.k!=='moneda'&&(!S.valTxt||S.t-S.valTxt>40)){ S.valTxt=S.t; addText(e.x-8,e.y-8,'+1 '+VALOR_N[e.k],VALOR_C[e.k]); } S.pops.push({x:e.x+6,y:e.y+8,life:14}); S.hudPop=10; } } }
+    if(e.t==='drop'){ if(overlap(p,e)){ const v=VALOR_V[e.k]||1; e.dead=true; ganar(v); eco.stats.drops+=v; if(S.ws) S.ws.coins+=v; snd('drop'); burst(e.x+6,e.y+8,VALOR_C[e.k]||'#FFD36B',4+v*2); if(e.k&&e.k!=='moneda'){ addText(e.x-10,e.y-8,'+'+v+' '+VALOR_N[e.k],VALOR_C[e.k]); } S.pops.push({x:e.x+6,y:e.y+8,life:14}); S.hudPop=10; } }
     else if(e.t==='page'){ if(overlap(p,e)){ e.dead=true; eco.pages[S.li]|=(1<<e.idx); snd('gate'); burst(e.x+9,e.y+10,'#B9A8FF',16); toast('Cuaderno de Ruta · página '+(e.idx+1)+' de 3',PAGES[S.li][e.idx]); } }
     else if(e.t==='rockgen'){
       if(e.warn>0){ e.warn--; if(S.t%4===0) S.parts.push({x:e.x+4+Math.random()*16,y:S.camY-4,vx:0,vy:1.5,life:40,col:'rgba(120,110,100,.8)'}); if(e.warn===0) S.rocks.push({x:e.x+3,y:S.camY-30,w:18,h:16,vy:1,rot:0}); }
@@ -2546,7 +2546,7 @@ function update(){
   S.rocks=S.rocks.filter(k=>!k.dead);
   if(S.toast&&S.toast.life>0) S.toast.life--;
   // monedas sueltas
-  S.loose.forEach(d=>{ d.vy=Math.min(d.vy+0.4,8); d.vx*=0.98; const ovx=d.vx; if(moveX(d)) d.vx=-ovx*0.5; if(moveY(d)===null && d.onGround) d.vx*=0.8; d.life--; if(d.wait>0) d.wait--; else if(overlap(p,d)&&eco.hand<cap()){ d.dead=true; eco.hand++; snd('drop'); if(S.ws&&S.ws.lost.golpes) S.ws.lost.golpes--; } if(d.life<=0||d.y>L.rows*T) d.dead=true; });
+  S.loose.forEach(d=>{ d.vy=Math.min(d.vy+0.4,8); d.vx*=0.98; const ovx=d.vx; if(moveX(d)) d.vx=-ovx*0.5; if(moveY(d)===null && d.onGround) d.vx*=0.8; d.life--; if(d.wait>0) d.wait--; else if(overlap(p,d)){ d.dead=true; ganar(1); snd('drop'); if(S.ws&&S.ws.lost.golpes) S.ws.lost.golpes--; } if(d.life<=0||d.y>L.rows*T) d.dead=true; });
   S.loose=S.loose.filter(d=>!d.dead);
   // partículas
   if(S.L&&S.L.plats) for(const q of S.L.plats) if(q.broken&&--q.brokenT<=0){ q.broken=false; q.hits=0; q.paid=true; q.rebuilt=40; for(let c=q.c0;c<=q.c1;c++) S.L.g[q.r][c]='='; const ii=S.L.plats.indexOf(q); for(let c=q.c0;c<=q.c1;c++) S.L.pmap[q.r*S.L.w+c]=ii; if(q.c0*T>S.cam-20&&q.c0*T<S.cam+W) addText(q.c0*T-20,q.r*T-24,'Frasco nuevo: vuelve a ahorrar','#9FD3FF'); }
@@ -3197,6 +3197,8 @@ function drop(x,y,s=1,col,sx=1){
   ctx.restore();
 }
 const VALOR=['moneda','moneda','billete','moneda','diamante','bono','moneda','lingote','billete','joya','moneda','moneda'];
+const VALOR_V={moneda:1,billete:2,bono:2,joya:2,lingote:3,diamante:4};
+function ganar(v,why){ const toH=Math.max(0,Math.min(v,cap()-eco.hand)); eco.hand+=toH; const over=v-toH; if(over>0){ eco.emb+=over; if(!S.fullMsg||S.t-S.fullMsg>90){ S.fullMsg=S.t; if(S.p) addText(S.p.x-60,S.p.y-34,'Mochila llena: +'+over+' fue a tu alcancía','#9FD3FF'); } } return over; }
 const VALOR_N={moneda:'moneda',billete:'billete',bono:'bono',diamante:'diamante',lingote:'lingote de oro',joya:'joya'};
 const VALOR_C={moneda:'#E2B85A',billete:'#EDE2C6',bono:'#F4E3A0',diamante:'#9FE8FF',lingote:'#FFD36B',joya:'#FF8FA8'};
 function valuable(k,x,y,s=1,t=0){ // objetos de valor que se recogen (todos valen 1)
@@ -3844,7 +3846,8 @@ function drawHud(){
   ctx.fillStyle='rgba(10,20,26,.62)'; rr(W-aw-28,38,aw+20,22,8); ctx.fill(); ctx.fillStyle='#FFE18A'; ctx.fillText(al,W-aw-18,49);
   // patrimonio: el puntaje de la ruta
   { const pt=patrimonio(), lab='Patrimonio '+pt; ctx.font='700 12px Figtree, sans-serif'; const pw=ctx.measureText(lab).width;
-    ctx.fillStyle='rgba(10,20,26,.62)'; rr(W-pw-28,70,pw+20,22,8); ctx.fill(); ctx.fillStyle=pt>=0?'#FFFFFF':'#FF9A8C'; ctx.fillText(lab,W-pw-18,81);
+    const dbt=debtTot(), tiene=pt+dbt, sub2='tienes '+tiene+' · debes '+dbt; ctx.font='700 7px Figtree, sans-serif'; const sw2=ctx.measureText(sub2).width; ctx.font='700 12px Figtree, sans-serif'; const bw=Math.max(pw,sw2)+20;
+    ctx.fillStyle='rgba(10,20,26,.62)'; rr(W-bw-8,70,bw,30,8); ctx.fill(); ctx.fillStyle=pt>=0?'#FFFFFF':'#FF9A8C'; ctx.fillText(lab,W-pw-18,81); ctx.font='700 7px Figtree, sans-serif'; ctx.fillStyle='#BFF5CF'; ctx.fillText('tienes '+tiene,W-sw2-18,93); ctx.fillStyle=dbt?'#FF9A8C':'#9DB0B8'; ctx.fillText(' · debes '+dbt,W-sw2-18+ctx.measureText('tienes '+tiene).width,93); ctx.font='700 12px Figtree, sans-serif';
     if(S.patDeltaLife>0&&S.patDelta){ ctx.globalAlpha=Math.min(1,S.patDeltaLife/25); ctx.fillStyle=S.patDelta>0?'#8BF0AE':'#FF9A8C'; ctx.font='800 12px "IBM Plex Mono", monospace'; const dt=(S.patDelta>0?'+':'')+S.patDelta; ctx.fillText(dt,W-pw-34-ctx.measureText(dt).width,81+(S.patDeltaLife-80)/8); ctx.globalAlpha=1; } }
   // barra de progreso del ascenso
   const pr=Math.max(0,Math.min(1,S.p.x/(S.L.w*T))); ctx.fillStyle='rgba(255,255,255,.18)'; rr(W-aw-28,63,aw+20,3,1.5); ctx.fill(); ctx.fillStyle='#F2B33D'; rr(W-aw-28,63,(aw+20)*pr,3,1.5); ctx.fill();
@@ -4183,6 +4186,17 @@ function enterCamp(){
 }
 const LOSS_N={hormigas:'Gastos hormiga',inflacion:'Inflación',golpes:'Golpes y rocas',ocultos:'Costos ocultos',piramide:'Pirámides',gota:'Intereses del gota a gota',caidas:'Caídas al río',desborde:'Mochila llena (dinero sin destino)',pasivos:'Pasivos disfrazados',impulso:'Compras por impulso',credito:'Crédito fácil'};
 const LOSS_TIP={hormigas:'Salta sobre las hormigas: cada gasto pequeño que evitas suma.',inflacion:'La inflación se come el dinero quieto: ahórralo en la alcancía o inviértelo.',golpes:'Una alcancía llena y un casco convierten los golpes en simples sustos.',ocultos:'La linterna revela los costos ocultos: infórmate antes de decidir.',piramide:'Ninguna inversión seria duplica tu plata rápido: desconfía.',gota:'El gota a gota es la deuda más cara: evítalo siempre.',caidas:'La cuerda y arnés es un seguro barato contra las caídas.',desborde:'Cuando la mochila se llena, ahorra o invierte: el dinero sin destino se pierde.',pasivos:'Antes de comprar algo que brilla, haz la prueba del activo real: ¿me genera ingresos?',impulso:'Regla de las 72 horas: si después de tres días aún lo quieres, revisa tu presupuesto.',credito:'Un cupo pre-aprobado no es plata tuya: regla del 30% y pago total.'};
+function balanceHTML(){ const N=eco.negocio, crip=eco.crypto&&!eco.crypto.lost?eco.crypto.v:0, inv=eco.assets.reduce((s,a)=>s+a.value,0), luj=(eco.lujos||[]).reduce((s,a)=>s+a.value,0);
+  const A=[['Monedas en mano',eco.hand],['Alcancía (ahorro)',eco.emb],['Debajo del colchón',eco.colchon||0],['Inversiones ('+eco.assets.length+')',inv],['Tu negocio'+(N?' · '+N.n:''),N?N.val+(N.caja||0):0],['Pensión y cesantías',(eco.pension||0)+(eco.cesantias||0)],['Bitcoin',crip]].filter(r=>r[1]);
+  const Lj=(eco.lujos||[]).map(l=>[l.n+' (pierde 1 por quincena)',l.value]).filter(r=>r[1]>0), D=eco.debts.map(d=>[d.name,d.saldo]);
+  const tA=A.reduce((s,r)=>s+r[1],0)+luj, tD=D.reduce((s,r)=>s+r[1],0), row=(n,v,c)=>`<div class="item"><span class="n">${esc(n)}</span><span class="m" style="color:${c}">${v}</span></div>`;
+  return `<div class="sec"><h3>Tu balance: lo que tienes menos lo que debes</h3>
+   <p class="muted">Cada moneda, billete (2), bono (2), joya (2), lingote (3) y diamante (4) suma a lo que tienes. Las deudas restan. Los pasivos disfrazados (carro, celular de lujo…) cuentan por lo que valen hoy, pero pierden 1 cada quincena y algunos cobran un gasto fijo.</p>
+   ${A.map(r=>row(r[0],'+'+r[1],'#BFF5CF')).join('')}${Lj.length?'<p class="muted" style="margin:8px 0 2px">Pasivos disfrazados (se desvalorizan)</p>'+Lj.map(r=>row(r[0],'+'+r[1],'#FFD9A0')).join(''):''}
+   <div class="item" style="border-top:1px solid var(--line)"><span class="n"><b>Total que tienes</b></span><span class="m"><b>${tA}</b></span></div>
+   ${D.length?D.map(r=>row(r[0],'−'+r[1],'#FF9A8C')).join(''):'<p class="muted">No debes nada.</p>'}
+   <div class="item" style="border-top:1px solid var(--line)"><span class="n"><b>Total que debes</b></span><span class="m" style="color:#FF9A8C"><b>−${tD}</b></span></div>
+   <div class="item" style="border-top:2px solid var(--gold,#E8B64A)"><span class="n"><b>Patrimonio = ${tA} − ${tD}</b></span><span class="m"><b>${tA-tD}</b></span></div></div>`; }
 function summaryHTML(){
   const w=S.ws; if(!w) return '';
   const lostTot=Object.values(w.lost).reduce((a,b)=>a+b,0);
@@ -4252,7 +4266,7 @@ function renderCamp(msg){ try{ medCheck(); }catch(e){}
     </div>${S.cesMsg?`<div class="fb ok">Te consignaron <b>${S.cesMsg}</b> de cesantías: ya están en tu alcancía.</div>`:''}
     <p class="muted">${final?'':'En el siguiente mundo el costo de vida será '+nextCosto+' por quincena. '}Cuotas: ${cuotas()} · seguros: ${primas()} · gastos fijos: ${fijos()} por quincena.</p>
     <div class="sec"><h3>Sueños cumplidos</h3><div class="row" style="gap:6px">${suenos}</div></div>`,
-   balance:`${summaryHTML()}
+   balance:`${balanceHTML()}${summaryHTML()}
     <div class="sec"><h3>Diario del viajero (Guía 6)</h3>${diario}</div>
     <div class="sec"><h3>Alcancía</h3><div class="row">
       <button class="btn sm" type="button" data-s="1" ${eco.hand>=1?'':'disabled'}>Guardar 1</button>
