@@ -4926,9 +4926,46 @@ function certPattern(c,x0,y0,w,h,al){ // marca de agua orgánica, como el fondo 
     if(i%17===5&&labels.length){ c.save(); c.translate(q.x+q.r*0.4,q.y+q.r*0.9); c.rotate((R()-.5)*0.6); c.globalAlpha=al*1.15; c.font='italic 600 15px "Young Serif", Georgia, serif'; c.textAlign='center'; c.fillText(labels[li++%labels.length],0,0); c.restore(); }
   });
   c.restore(); c.globalAlpha=1; c.textAlign='center'; }
-function certURL(){ // diploma: papel de seguridad, guilloche de oro, emblema, medallas de logros, firmas y código de verificación
+/* ================= DIPLOMAS: uno por ruta, cada uno con su diseño y lo que aprendió ================= */
+const DIPLOMAS=[
+ {t:'Diploma de Inteligencia Financiera',sub:'RUTA 1 · LA MONTAÑA · DEL VALLE A LA CORDILLERA',pal:['#6B2A1A','#B8862F','#D9B26A','#3A2A20','#F6EFDF'],ridge:['rgba(169,191,207,.32)','rgba(51,72,90,.18)'],
+  msg:'Aprendió a ganar, gastar con control, ahorrar, invertir en activos y salir de deudas hasta la libertad financiera.',
+  cierre:'Mentor de la Cordillera',txt:'Tu dinero ahora trabaja por ti: el ingreso pasivo cubre el costo de vida. Llegaste a la fase de impacto y legado: el mentor transforma su éxito personal en impacto colectivo. La vida es una serie de montañas; desde aquí te toca enseñarle el camino a otros.'},
+ {t:'Diploma de Explorador Financiero',sub:'RUTA 2 · LA EXPEDICIÓN · DE LA COSTA A LA GRAN CORDILLERA',pal:['#1E5A6A','#C9963A','#E8C77A','#1E2E2E','#EFF4EC'],ridge:['rgba(90,170,200,.30)','rgba(30,90,106,.20)'],
+  msg:'Aprendió a salir de deudas, pagar impuestos, manejar su flujo de caja, protegerse con seguros y planear su vejez.',
+  cierre:'Gran Mentor de la Expedición',txt:'Atravesaste ocho terrenos de Colombia, del mar a los glaciares, y en cada uno aprendiste a cuidar tu dinero y tu entorno. Saliste de deudas, cumpliste con los impuestos, dominaste tu flujo de caja y planeaste tu vejez. Tu huella verde muestra cómo cuidaste la naturaleza que te sostiene.'},
+ {t:'Diploma de Resiliencia Financiera',sub:'RUTA 3 · EL COLAPSO · GUERRA, DESASTRES Y CRISIS',pal:['#3A2A2E','#C9602A','#F0A060','#2A2024','#F3ECE4'],ridge:['rgba(140,110,100,.28)','rgba(58,42,46,.22)'],
+  msg:'Aprendió a proteger su dinero en la crisis: plan de emergencia, seguros, cero deudas impagables, diversificar y comunidad.',
+  cierre:'Sobreviviente del Colapso',txt:'Resististe guerra, erupciones, terremotos, inundaciones e hiperinflación. La resiliencia no se improvisa: se construye antes de la tormenta, con ahorro protegido, seguros, activos diversificados, salud financiera y una comunidad unida.'},
+ {t:'Diploma de Constructor de Futuro',sub:'RUTA 4 · LA RECONSTRUCCIÓN · DEL GRIS AL COLOR',pal:['#2E6A3E','#C9A23A','#EED27A','#1E2E22','#F3F6E8'],ridge:['rgba(110,190,120,.30)','rgba(46,106,62,.20)'],
+  msg:'Aprendió a reconstruir por etapas, emprender con cuentas claras, cuidar el agua, reciclar, cooperar y dejar un legado.',
+  cierre:'Constructor de paz',txt:'Le devolviste el color al mundo. Reconstruiste con presupuesto, creaste negocios verdes, cuidaste el agua, reciclaste y organizaste a la comunidad. Ahora tu tarea es enseñar lo que aprendiste para que el colapso no se repita.'}];
+function dipEmblem(c,r,ex,ey,G){ const CR='#F4ECD8';
+  if(r===1){ // rosa de los vientos sobre las olas
+    c.save(); c.translate(ex,ey-4); for(let k=0;k<8;k++){ const L=k%2?20:34; c.rotate(Math.PI/4); c.fillStyle=k%2?G:CR; c.beginPath(); c.moveTo(0,-L); c.lineTo(6,0); c.lineTo(0,4); c.lineTo(-6,0); c.closePath(); c.fill(); } c.restore();
+    c.fillStyle=G; c.beginPath(); c.arc(ex,ey-4,5,0,7); c.fill(); c.font='800 12px Figtree, sans-serif'; c.textAlign='center'; c.fillStyle=G; c.fillText('N',ex,ey-42+6);
+    c.strokeStyle=CR; c.lineWidth=2; for(let j=0;j<2;j++){ c.beginPath(); for(let x=-30;x<=30;x+=2) c.lineTo(ex+x,ey+30+j*7+Math.sin(x*0.3)*2); c.stroke(); } }
+  else if(r===2){ // escudo con una llama que renace entre las grietas
+    c.fillStyle=CR; c.beginPath(); c.moveTo(ex-30,ey-32); c.lineTo(ex+30,ey-32); c.lineTo(ex+30,ey+2); c.quadraticCurveTo(ex+28,ey+28,ex,ey+40); c.quadraticCurveTo(ex-28,ey+28,ex-30,ey+2); c.closePath(); c.fill();
+    c.strokeStyle='#3A2A2E'; c.lineWidth=1.6; c.beginPath(); c.moveTo(ex-30,ey-10); c.lineTo(ex-16,ey-4); c.lineTo(ex-20,ey+8); c.moveTo(ex+30,ey-14); c.lineTo(ex+18,ey-6); c.lineTo(ex+22,ey+6); c.stroke();
+    const fg=c.createLinearGradient(0,ey+30,0,ey-26); fg.addColorStop(0,'#C9602A'); fg.addColorStop(1,'#F2C860'); c.fillStyle=fg; c.beginPath(); c.moveTo(ex,ey+30); c.quadraticCurveTo(ex-20,ey+16,ex-8,ey-6); c.quadraticCurveTo(ex-6,ey+6,ex-2,ey+4); c.quadraticCurveTo(ex-4,ey-14,ex+4,ey-26); c.quadraticCurveTo(ex+6,ey-6,ex+12,ey-4); c.quadraticCurveTo(ex+20,ey+16,ex,ey+30); c.fill();
+    c.strokeStyle='#2E6A3E'; c.lineWidth=2; c.beginPath(); c.moveTo(ex,ey+30); c.lineTo(ex,ey+14); c.stroke(); c.fillStyle='#4EA84E'; c.beginPath(); c.ellipse(ex-5,ey+16,5,2.4,-0.5,0,7); c.ellipse(ex+5,ey+14,5,2.4,0.5,0,7); c.fill(); }
+  else if(r===3){ // arcoíris sobre una casa nueva y un brote
+    ['#E04A4A','#F29A3A','#F2D84A','#5AC060','#4A8AE0'].forEach((col,i)=>{ c.strokeStyle=col; c.lineWidth=3; c.beginPath(); c.arc(ex,ey+14,36-i*3.4,Math.PI*1.08,Math.PI*1.92); c.stroke(); });
+    c.fillStyle=CR; c.fillRect(ex-16,ey+2,24,22); c.fillStyle=G; c.beginPath(); c.moveTo(ex-20,ey+3); c.lineTo(ex-4,ey-12); c.lineTo(ex+12,ey+3); c.closePath(); c.fill(); c.fillStyle='#2E6A3E'; c.fillRect(ex-8,ey+12,7,12);
+    c.strokeStyle='#8ADA7A'; c.lineWidth=2.4; c.beginPath(); c.moveTo(ex+22,ey+24); c.lineTo(ex+22,ey+6); c.stroke(); c.fillStyle='#8ADA7A'; c.beginPath(); c.ellipse(ex+16,ey+8,6,3,-0.5,0,7); c.ellipse(ex+28,ey+4,6,3,0.5,0,7); c.fill(); }
+  else { // la cordillera y la bandera (ruta 1)
+    c.fillStyle=CR; c.beginPath(); c.moveTo(ex-36,ey+22); c.lineTo(ex-14,ey-6); c.lineTo(ex-4,ey+6); c.lineTo(ex+12,ey-22); c.lineTo(ex+36,ey+22); c.closePath(); c.fill(); c.fillStyle='#6B2A1A'; c.beginPath(); c.moveTo(ex-24,ey+22); c.lineTo(ex-14,ey+8); c.lineTo(ex-4,ey+22); c.fill();
+    c.strokeStyle=G; c.lineWidth=2; c.beginPath(); c.moveTo(ex+12,ey-22); c.lineTo(ex+12,ey-42); c.stroke(); c.fillStyle=G; c.beginPath(); c.moveTo(ex+12,ey-42); c.lineTo(ex+30,ey-36); c.lineTo(ex+12,ey-30); c.fill(); }
+  c.textAlign='left'; }
+function dipLearn(c,r,Wc,y0,pal){ const [LAC,ORO,,INK]=pal; c.textAlign='center'; c.font='800 13px Figtree, sans-serif'; c.fillStyle=ORO; c.fillText('LO QUE APRENDIÓ EN '+RUTAS[r].n.toUpperCase(),Wc/2,y0);
+  const cw=330, gap=12, x0=Wc/2-(4*cw+3*gap)/2;
+  for(let i=0;i<8;i++){ const li=r*8+i, ok=(eco.logros||[])[li]===2, x=x0+(i%4)*(cw+gap), y=y0+12+Math.floor(i/4)*34; c.fillStyle=ok?'rgba(255,250,236,.92)':'rgba(255,255,255,.5)'; c.beginPath(); c.moveTo(x+14,y); c.lineTo(x+cw-14,y); c.arc(x+cw-14,y+14,14,-Math.PI/2,Math.PI/2); c.lineTo(x+14,y+28); c.arc(x+14,y+14,14,Math.PI/2,Math.PI*1.5); c.fill();
+    c.strokeStyle=ok?ORO:'rgba(60,40,30,.25)'; c.lineWidth=1.4; c.stroke(); c.fillStyle=ok?LAC:'rgba(60,40,30,.45)'; c.beginPath(); c.arc(x+16,y+14,9,0,7); c.fill(); c.fillStyle='#fff'; c.font='800 11px Figtree, sans-serif'; c.fillText(ok?'✓':String(li+1),x+16,y+18);
+    c.textAlign='left'; c.fillStyle=ok?INK:'rgba(60,40,30,.6)'; c.font='700 14px Figtree, sans-serif'; let t=LV[li].step; while(c.measureText(t).width>cw-44&&t.length>4) t=t.slice(0,-2); if(t!==LV[li].step) t=t.trim()+'…'; c.fillText(t,x+32,y+19); c.textAlign='center'; } }
+function certURL(r){ if(r==null) r=Math.max(0,rutaDe(S.li)); const D=DIPLOMAS[r]||DIPLOMAS[0]; // diploma: papel de seguridad, guilloche de oro, emblema, medallas de logros, firmas y código de verificación
   const Wc=1600, Hc=1131, c0=document.createElement('canvas'); c0.width=Wc; c0.height=Hc; const c=c0.getContext('2d'); const R=mulberry(5);
-  const LAC='#6B2A1A', ORO='#B8862F', ORO2='#D9B26A', INK='#3A2A20', PAP='#F6EFDF';
+  const [LAC,ORO,ORO2,INK,PAP]=D.pal;
   c.fillStyle=PAP; c.fillRect(0,0,Wc,Hc);
   for(let i=0;i<5200;i++){ c.fillStyle='rgba(120,90,50,'+(R()*0.045)+')'; c.fillRect(R()*Wc,R()*Hc,1+R()*1.5,1); }
   const vg=c.createRadialGradient(Wc/2,Hc/2,300,Wc/2,Hc/2,1000); vg.addColorStop(0,'rgba(255,255,255,0)'); vg.addColorStop(1,'rgba(150,110,60,.16)'); c.fillStyle=vg; c.fillRect(0,0,Wc,Hc);
@@ -4945,16 +4982,15 @@ function certURL(){ // diploma: papel de seguridad, guilloche de oro, emblema, m
   certPattern(c,px0,py0,pw,ph,0.09);
   { const fade=c.createRadialGradient(Wc/2,520,120,Wc/2,520,560); fade.addColorStop(0,'rgba(246,239,223,.82)'); fade.addColorStop(1,'rgba(246,239,223,0)'); c.fillStyle=fade; c.fillRect(px0,py0,pw,ph); }
   rosette(Wc/2,500,250,.10,18);
-  const pts=[finRidge(3,110,Hc-90,Wc),finRidge(9,80,Hc-62,Wc)]; c.save(); c.beginPath(); c.rect(px0,py0,pw,ph); c.clip(); ['rgba(169,191,207,.32)','rgba(51,72,90,.18)'].forEach((col,i)=>{ c.fillStyle=col; c.beginPath(); c.moveTo(0,Hc); pts[i].forEach(p=>c.lineTo(p[0],p[1])); c.lineTo(Wc,Hc); c.fill(); }); c.restore();
+  const pts=[finRidge(3,110,Hc-90,Wc),finRidge(9,80,Hc-62,Wc)]; c.save(); c.beginPath(); c.rect(px0,py0,pw,ph); c.clip(); D.ridge.forEach((col,i)=>{ c.fillStyle=col; c.beginPath(); c.moveTo(0,Hc); pts[i].forEach(p=>c.lineTo(p[0],p[1])); c.lineTo(Wc,Hc); c.fill(); }); c.restore();
   // emblema: medalla de oro con la cordillera y la bandera
   const ex=Wc/2, ey=168; c.fillStyle='rgba(0,0,0,.18)'; c.beginPath(); c.arc(ex+3,ey+4,62,0,7); c.fill();
   const mg=c.createRadialGradient(ex-20,ey-20,10,ex,ey,64); mg.addColorStop(0,'#F2D58A'); mg.addColorStop(1,'#A8761A'); c.fillStyle=mg; c.beginPath(); c.arc(ex,ey,62,0,7); c.fill();
   c.strokeStyle='#8A5A10'; c.lineWidth=1; for(let i=0;i<72;i++){ const a=i/72*Math.PI*2; c.beginPath(); c.moveTo(ex+Math.cos(a)*55,ey+Math.sin(a)*55); c.lineTo(ex+Math.cos(a)*61,ey+Math.sin(a)*61); c.stroke(); }
-  c.fillStyle=LAC; c.beginPath(); c.arc(ex,ey,48,0,7); c.fill(); c.fillStyle='#F4ECD8'; c.beginPath(); c.moveTo(ex-36,ey+22); c.lineTo(ex-14,ey-6); c.lineTo(ex-4,ey+6); c.lineTo(ex+12,ey-22); c.lineTo(ex+36,ey+22); c.closePath(); c.fill(); c.fillStyle=LAC; c.beginPath(); c.moveTo(ex-24,ey+22); c.lineTo(ex-14,ey+8); c.lineTo(ex-4,ey+22); c.fill();
-  c.strokeStyle=ORO2; c.lineWidth=2; c.beginPath(); c.moveTo(ex+12,ey-22); c.lineTo(ex+12,ey-42); c.stroke(); c.fillStyle=ORO2; c.beginPath(); c.moveTo(ex+12,ey-42); c.lineTo(ex+30,ey-36); c.lineTo(ex+12,ey-30); c.fill();
+  c.fillStyle=LAC; c.beginPath(); c.arc(ex,ey,48,0,7); c.fill(); dipEmblem(c,r,ex,ey,ORO2);
   const sp=(t,x,y,f,col,ls)=>{ c.font=f; c.fillStyle=col; const chars=[...t]; const w=chars.reduce((a,ch)=>a+c.measureText(ch).width+ls,-ls); let xx=x-w/2; chars.forEach(ch=>{ c.fillText(ch,xx,y); xx+=c.measureText(ch).width+ls; }); };
-  c.textAlign='left'; sp('RUTA A LA CIMA',Wc/2,266,'800 20px Figtree, sans-serif',LAC,6); sp('RUTA FINANCIERA · EDUCACIÓN FINANCIERA QUE SE JUEGA',Wc/2,292,'600 13px Figtree, sans-serif',INK,3);
-  c.textAlign='center'; c.fillStyle=LAC; c.font='66px "Young Serif", Georgia, serif'; c.fillText('Certificado de Inteligencia Financiera',Wc/2,372);
+  c.textAlign='left'; sp('RUTA A LA CIMA',Wc/2,266,'800 20px Figtree, sans-serif',LAC,6); sp(D.sub,Wc/2,292,'600 13px Figtree, sans-serif',INK,3);
+  c.textAlign='center'; c.fillStyle=LAC; c.font='66px "Young Serif", Georgia, serif'; c.fillText(D.t,Wc/2,372);
   sp('SE OTORGA A',Wc/2,428,'700 16px Figtree, sans-serif',INK,5);
   c.textAlign='center'; c.fillStyle=LAC; c.font='88px "Young Serif", Georgia, serif'; const nm=eco.name||'Senderista'; c.fillText(nm,Wc/2,520);
   const nw=Math.max(420,c.measureText(nm).width+120); c.strokeStyle=ORO; c.lineWidth=1.6; c.beginPath(); c.moveTo(Wc/2-nw/2,546); c.lineTo(Wc/2-12,546); c.moveTo(Wc/2+12,546); c.lineTo(Wc/2+nw/2,546); c.stroke(); c.fillStyle=ORO; c.beginPath(); c.moveTo(Wc/2,539); c.lineTo(Wc/2+7,546); c.lineTo(Wc/2,553); c.lineTo(Wc/2-7,546); c.fill();
@@ -4962,23 +4998,24 @@ function certURL(){ // diploma: papel de seguridad, guilloche de oro, emblema, m
   const ND=nivelDiploma(); { c.font='800 15px Figtree, sans-serif'; const lt='DIPLOMA NIVEL '+ND.m.toUpperCase(), lw=c.measureText(lt).width+64; const gb=c.createLinearGradient(Wc/2-lw/2,0,Wc/2+lw/2,0); gb.addColorStop(0,ND.col); gb.addColorStop(0.5,'#FFF3D6'); gb.addColorStop(1,ND.col); c.fillStyle=gb; c.beginPath(); c.moveTo(Wc/2-lw/2-14,604); c.lineTo(Wc/2-lw/2,592); c.lineTo(Wc/2+lw/2,592); c.lineTo(Wc/2+lw/2+14,604); c.lineTo(Wc/2+lw/2,616); c.lineTo(Wc/2-lw/2,616); c.closePath(); c.fill(); c.strokeStyle='rgba(60,30,10,.45)'; c.lineWidth=1; c.stroke(); c.fillStyle='#3A2A20'; c.fillText(lt,Wc/2,609); }
   c.fillStyle=INK; c.font='500 21px Figtree, sans-serif'; c.fillText('por demostrar una',Wc/2,642);
   c.fillStyle=LAC; c.font='800 38px Figtree, sans-serif'; c.fillText(ND.t,Wc/2,684);
-  c.fillStyle=INK; c.font='500 19px Figtree, sans-serif'; c.fillText(S.li>=8?(ND.k==='oro'?'al recorrer los '+((rutaDe(S.li)+1)*8)+' mundos de Ruta Financiera, con libertad financiera y una huella verde de '+verde()+'.':'al recorrer los '+((rutaDe(S.li)+1)*8)+' mundos con una huella verde de '+verde()+'. Siguiente paso: '+ND.tip+'.'):(ND.k==='oro'?'al conquistar las 8 estaciones de la montaña, del Valle a la Cordillera, hasta alcanzar la libertad financiera.':'al recorrer las 8 estaciones de la montaña. Siguiente paso: '+ND.tip+'.'),Wc/2,716);
+  c.fillStyle=INK; c.font='500 19px Figtree, sans-serif'; c.fillText(D.msg,Wc/2,712);
+  dipLearn(c,r,Wc,744,D.pal);
   // medallas de logros
-  const nW=(rutaDe(S.li)+1)*8, ts=eco.stars.slice(0,nW).reduce((a,b)=>a+(b||0),0), M=[[patrimonio(),'PATRIMONIO'],[ingresoAct(),'INGRESO DE ACTIVOS'],[activosN(),'ACTIVOS'],[eco.emb,'AHORRO'],[eco.stats.invested||0,'INVERTIDO'],[eco.score||650,'DATACRÉDITO'],[verde(),'HUELLA VERDE'],[ts+'/'+nW*3,'ESTRELLAS']];
+  const nW=(r+1)*8, ts=eco.stars.slice(0,nW).reduce((a,b)=>a+(b||0),0), M=[[patrimonio(),'PATRIMONIO'],[ingresoAct(),'INGRESO DE ACTIVOS'],[activosN(),'ACTIVOS'],[eco.emb,'AHORRO'],[eco.stats.invested||0,'INVERTIDO'],[eco.score||650,'DATACRÉDITO'],[verde(),'HUELLA VERDE'],[ts+'/'+nW*3,'ESTRELLAS']];
   const mw=150, mx0=Wc/2-(M.length-1)*mw/2;
-  M.forEach(([v,l],i)=>{ const x=mx0+i*mw, y=790; c.fillStyle='rgba(255,252,244,.85)'; c.beginPath(); c.arc(x,y,44,0,7); c.fill(); c.strokeStyle=ORO; c.lineWidth=2.4; c.beginPath(); c.arc(x,y,44,0,7); c.stroke(); c.strokeStyle='rgba(107,42,26,.5)'; c.lineWidth=0.8; c.beginPath(); c.arc(x,y,38,0,7); c.stroke();
-    c.fillStyle=LAC; c.font='700 '+(String(v).length>4?22:28)+'px "IBM Plex Mono", monospace'; c.fillText(String(v),x,y+9); c.fillStyle=INK; c.font='800 11px Figtree, sans-serif'; c.fillText(l,x,y+66); });
+  M.forEach(([v,l],i)=>{ const x=mx0+i*mw, y=860; c.fillStyle='rgba(255,252,244,.85)'; c.beginPath(); c.arc(x,y,34,0,7); c.fill(); c.strokeStyle=ORO; c.lineWidth=2.4; c.beginPath(); c.arc(x,y,34,0,7); c.stroke(); c.strokeStyle='rgba(107,42,26,.5)'; c.lineWidth=0.8; c.beginPath(); c.arc(x,y,29,0,7); c.stroke();
+    c.fillStyle=LAC; c.font='700 '+(String(v).length>4?17:22)+'px "IBM Plex Mono", monospace'; c.fillText(String(v),x,y+7); c.fillStyle=INK; c.font='800 11px Figtree, sans-serif'; c.fillText(l,x,y+50); });
   // firmas
   const CL=eco.clase, fimg=claseImg(CL), sigY=975; [[360,'Brian Suárez','Fundador · Ruta a la Cima',null],[Wc-360,CL?(fimg&&fimg.complete&&fimg.naturalWidth?'':CL.doc||''):'',CL?[CL.doc,CL.cargo].filter(Boolean).join(' · ')+(CL.col?' · '+CL.col:''):(eco.colegio?'Docente · '+eco.colegio:'Docente acompañante'),CL&&fimg&&fimg.complete&&fimg.naturalWidth?fimg:null]].forEach(([x,n,r,img],i)=>{ c.strokeStyle=INK; c.lineWidth=1; c.beginPath(); c.moveTo(x-150,sigY); c.lineTo(x+150,sigY); c.stroke();
     if(img){ c.drawImage(img,x-120,sigY-78,240,80); }
     if(n){ c.save(); c.translate(x,sigY-10); c.transform(1,0,-0.25,1,0,0); c.fillStyle='#24324A'; c.font='40px "Young Serif", Georgia, serif'; c.fillText(n,0,0); c.restore(); }
     c.fillStyle=INK; c.font='700 '+(r.length>48?13:15)+'px Figtree, sans-serif'; c.fillText(r.length>70?r.slice(0,69)+'…':r,x,sigY+24); });
   // sello de lacre con cintas
-  const sx=Wc/2, sy=960; c.fillStyle='#4A1A0E'; c.beginPath(); c.moveTo(sx-26,sy+20); c.lineTo(sx-44,sy+98); c.lineTo(sx-28,sy+86); c.lineTo(sx-16,sy+102); c.lineTo(sx-4,sy+24); c.fill(); c.beginPath(); c.moveTo(sx+26,sy+20); c.lineTo(sx+44,sy+98); c.lineTo(sx+28,sy+86); c.lineTo(sx+16,sy+102); c.lineTo(sx+4,sy+24); c.fill();
+  const sx=Wc/2, sy=990; c.fillStyle='#4A1A0E'; c.beginPath(); c.moveTo(sx-26,sy+20); c.lineTo(sx-44,sy+98); c.lineTo(sx-28,sy+86); c.lineTo(sx-16,sy+102); c.lineTo(sx-4,sy+24); c.fill(); c.beginPath(); c.moveTo(sx+26,sy+20); c.lineTo(sx+44,sy+98); c.lineTo(sx+28,sy+86); c.lineTo(sx+16,sy+102); c.lineTo(sx+4,sy+24); c.fill();
   c.fillStyle=LAC; c.beginPath(); c.moveTo(sx-22,sy+20); c.lineTo(sx-38,sy+92); c.lineTo(sx-26,sy+82); c.lineTo(sx-16,sy+96); c.lineTo(sx-6,sy+24); c.fill(); c.beginPath(); c.moveTo(sx+22,sy+20); c.lineTo(sx+38,sy+92); c.lineTo(sx+26,sy+82); c.lineTo(sx+16,sy+96); c.lineTo(sx+6,sy+24); c.fill();
   waxSeal(c,sx,sy,62,-0.12);
   // pie: fecha, dificultad y código de verificación
-  let h=2166136261; for(const ch of nm+patrimonio()+(eco.seed||0)+ts) { h^=ch.charCodeAt(0); h=Math.imul(h,16777619)>>>0; } const code='RF-'+h.toString(36).toUpperCase().padStart(7,'0').slice(0,4)+'-'+(h>>>7).toString(36).toUpperCase().slice(0,4);
+  let h=2166136261; for(const ch of nm+patrimonio()+(eco.seed||0)+ts+'r'+r) { h^=ch.charCodeAt(0); h=Math.imul(h,16777619)>>>0; } const code='RF'+(r+1)+'-'+h.toString(36).toUpperCase().padStart(7,'0').slice(0,4)+'-'+(h>>>7).toString(36).toUpperCase().slice(0,4);
   const d=new Date(); c.fillStyle=INK; c.font='600 14px Figtree, sans-serif'; const fyy=Hc-gy-band-22; c.textAlign='left'; c.fillText(d.toLocaleDateString('es-CO',{day:'numeric',month:'long',year:'numeric'})+'  ·  Dificultad '+Dif().n,px0+30,fyy); c.textAlign='right'; c.fillText('Código de verificación '+code,px0+pw-30,fyy);
   c.textAlign='left';
   return c0.toDataURL('image/png'); }
@@ -4994,13 +5031,22 @@ function endingReport(){ try{ medCheck(); }catch(e){}
   const nLog=()=>(eco.logros||[]).filter(v=>v===2).length;
   const show=()=>{
     const report=`Ruta Financiera · ${eco.name}${eco.grupo?' ('+eco.grupo+')':''} · ${Dif().n}${profLine()?'\n'+profLine():''}\nTiempo: ${mins}:${String(secs).padStart(2,'0')} · Estrellas: ${totalStars}/${eco.stars.length*3} · Páginas del Cuaderno: ${totalPages}/${eco.stars.length*3}\nPatrimonio final: ${patrimonio()} · Huella verde: ${verde()} · Índice de endeudamiento: ${(()=>{ const G=guiaInd(); return G.ie>=999?'alto':G.ie+' %'; })()} · Balance quincenal: ${guiaInd().bal} · Diploma: ${nivelDiploma().m} · Muertes financieras: ${st.muertes||0} · Salud financiera final: ${salud()} · Ingreso de activos y negocio: ${ingresoAct()} por quincena · Activos: ${activosN()}${eco.negocio?' (negocio: '+eco.negocio.n+' nivel '+eco.negocio.nivel+')':''}\nAhorrado: ${st.saved} · Invertido: ${st.invested} · Trampas: ${st.traps} · Quiebras y caídas: ${st.deaths}\nSueños cumplidos: ${(eco.suenos||[]).join(', ')||'ninguno'} · Pasivos: ${(eco.lujos||[]).map(l=>l.n).join(', ')||'ninguno'} · Conceptos: ${Object.keys(eco.seen||{}).length}/${Object.keys(TIPS).length}\nPreguntas acertadas en la ruta: ${st.quizOk}/${st.quizN}\nHábitos: DataCrédito ${eco.score||650} · esperó por más ${st.paciencia||0} vez(es) (eligió ya ${st.impaciente||0}) · cursos ${st.cursos||0} · comparó precios ${st.compara||0} · ayudó ${st.ayudas||0} · evitó el FOMO ${st.nofomo||0} · pensión ${eco.pension||0}`+(eco.pre!=null?`\nPrueba inicial: ${eco.pre}/5`:'')+(eco.post!=null?` · Prueba final: ${eco.post}/5`:'')+`\nAyudas recibidas: ${eco.stats.helps||0} · Peso que carga al final: ${peso()}\n\nResultados de aprendizaje (competencias de educación económica y financiera: decidir, administrar, planear, gestionar):\n`+CURR.map((c,i)=>`M${i+1} · ${c.comp} · ${c.g}: ${c.ra} → ${logro(i)}`).join('\n');
-    const cert=certURL();
+    const rr0=Math.max(0,rutaDe(fli)), D=DIPLOMAS[rr0]; eco.diplomas=eco.diplomas||[]; eco.diplomas[rr0]=1; const cert=certURL(rr0);
+    const chips=LV.slice(rr0*8,rr0*8+8).map((l,i)=>{ const ok=(eco.logros||[])[rr0*8+i]===2; return `<span style="display:inline-flex;align-items:center;gap:6px;margin:3px;padding:5px 10px;border-radius:999px;font-size:12.5px;font-weight:700;border:1px solid ${ok?D.pal[1]:'var(--line)'};background:${ok?'rgba(242,179,61,.12)':'transparent'};opacity:${ok?1:.65}"><b style="color:${ok?'#62C98A':'var(--muted)'}">${ok?'✓':'○'}</b>${esc(l.step)}</span>`; }).join('');
+    const otros=(eco.diplomas||[]).map((v,k)=>v&&k!==rr0?`<button class="btn sm alt" type="button" data-dip="${k}">${esc(DIPLOMAS[k].t.replace('Diploma de ',''))} · Ruta ${k+1}</button>`:'').join('');
     openOv(`<div class="eyebrow">${fli===7?"Libertad financiera":RUTAS[rutaDe(fli)].n+" · "+(fli+1)+" mundos"}</div>
     <h2>${esc(eco.name)}: ${fli===7?'excelente inteligencia financiera':fli===15?'completó La Gran Expedición':fli===23?'sobrevivió al Colapso':'reconstruyó el mundo'}</h2>
-    <img src="${cert}" alt="Certificado de Inteligencia Financiera de ${esc(eco.name)}" style="width:100%;border-radius:10px;border:1px solid var(--line);margin:6px 0 4px">
-    <div class="row" style="margin-bottom:8px"><button class="btn gold sm" type="button" id="bCert">Descargar certificado</button><span class="muted" id="certMsg" style="font-size:12px"></span></div>
-    <h3 style="margin-top:6px">Mentor de la Cordillera</h3>
-    <p>Tu dinero ahora trabaja por ti: el ingreso pasivo cubre el costo de vida. Llegaste a la fase de impacto y legado: el mentor transforma su éxito personal en impacto colectivo. La vida es una serie de montañas; desde aquí te toca enseñarle el camino a otros. ${eco.mentorOk?'Y ya empezaste: tu consejo ayudó a otra persona a subir.':''}</p>
+    <div style="border:1px solid ${D.pal[1]};border-radius:14px;padding:12px 14px;margin:8px 0 10px;background:linear-gradient(135deg,rgba(242,179,61,.10),rgba(98,201,138,.06))">
+      <div class="eyebrow" style="color:${D.pal[2]}">🎓 Diploma ganado · Ruta ${rr0+1} de ${nRutas()}</div>
+      <h3 style="margin:4px 0 6px">${esc(D.t)}</h3>
+      <p style="margin:0 0 6px"><b>Lo que aprendiste en ${esc(RUTAS[rr0].n)}:</b> ${esc(D.msg.replace(/^Aprendió a /,'aprendiste a '))}</p>
+      <div>${chips}</div>
+      ${rr0===nRutas()-1?'<p style="margin:8px 0 0"><b>¡Completaste las '+nRutas()+' rutas de Ruta Financiera!</b> Ya tienes los '+nRutas()+' diplomas.</p>':''}
+    </div>
+    <img src="${cert}" alt="${esc(D.t)} de ${esc(eco.name)}" style="width:100%;border-radius:10px;border:1px solid var(--line);margin:6px 0 4px">
+    <div class="row" style="margin-bottom:8px;flex-wrap:wrap"><button class="btn gold sm" type="button" id="bCert">Descargar diploma</button>${otros?'<span class="muted" style="font-size:12px">Tus otros diplomas:</span>'+otros:''}<span class="muted" id="certMsg" style="font-size:12px"></span></div>
+    <h3 style="margin-top:6px">${esc(D.cierre)}</h3>
+    <p>${esc(D.txt)} ${eco.mentorOk?'Y ya empezaste: tu consejo ayudó a otra persona a subir.':''}</p>
     <div class="stats">
       <div class="st"><b>${patrimonio()}</b><span>Patrimonio final</span></div>
       <div class="st"><b>${ingresoAct()}</b><span>Ingreso de activos y negocio por quincena</span></div>
@@ -5017,17 +5063,19 @@ function endingReport(){ try{ medCheck(); }catch(e){}
       <div class="st"><b>${nLog()}/${fli+1}</b><span>Resultados de aprendizaje logrados</span></div>
     </div>
     ${huellaHTML()}
-    <div class="sec"><h3>Tus resultados de aprendizaje</h3>${CURR.map((c,i)=>`<div class="item"><span class="mk ${eco.logros[i]===2?'ok':'no'}" style="flex:0 0 auto">${eco.logros[i]===2?'✓':'…'}</span><span class="n"><b>Mundo ${i+1} · ${esc(c.comp)}</b> <span class="muted">${esc(c.g)}</span><br>${esc(c.ra)}</span></div>`).join('')}</div>
+    <div class="sec"><h3>Tus resultados de aprendizaje en ${esc(RUTAS[rr0].n)}</h3>${CURR.map((c,i)=>i<rr0*8||i>=rr0*8+8?'':`<div class="item"><span class="mk ${eco.logros[i]===2?'ok':'no'}" style="flex:0 0 auto">${eco.logros[i]===2?'✓':'…'}</span><span class="n"><b>Mundo ${i+1} · ${esc(c.comp)}</b> <span class="muted">${esc(c.g)}</span><br>${esc(c.ra)}</span></div>`).join('')}</div>
     ${eco.post!=null?`<div class="fb ok"><b>Lo que aprendiste:</b> ${eco.pre!=null?`prueba inicial ${eco.pre}/5 → prueba final ${eco.post}/5.`:`prueba final ${eco.post}/5.`}</div>`:`<p>¿Quieres medir cuánto aprendiste? Responde la prueba final (las mismas 5 preguntas del inicio).</p><button class="btn" type="button" id="bPost">Hacer la prueba final</button>`}
     <div class="sec"><h3>Resumen para el docente</h3><textarea id="rep" readonly style="width:100%;min-height:110px;background:var(--bg);color:var(--ink);border:1px solid var(--line);border-radius:10px;padding:10px;font:600 12px var(--f-num)">${esc(report)}</textarea>
     <div class="row" style="margin-top:8px"><button class="btn sm" type="button" id="bCopy">Copiar resumen</button>${fli+1<LV.length?'<button class="btn gold" type="button" id="bExpe">Seguir a '+RUTAS[rutaDe(fli)+1].n+' (mundos '+(fli+2)+' a '+(fli+9)+')</button>':''}<button class="btn ${fli+1<LV.length?'alt':'gold'}" type="button" id="bAgain">Subir otra vez</button></div></div>`);
     const bp=document.getElementById('bPost'); if(bp) bp.onclick=()=>runTest(sc=>{ eco.post=sc; if(fli+1<LV.length) save(fli+1); else clearSave(); show(); },'Prueba final');
     document.getElementById('bCopy').onclick=e=>{ const t=document.getElementById('rep'); try{ navigator.clipboard.writeText(t.value).then(()=>e.target.textContent='Copiado',()=>{t.select();}); }catch(_){ t.select(); } };
     document.getElementById('bAgain').onclick=titleScreen; const bx=document.getElementById('bExpe'); if(bx) bx.onclick=()=>{ closeOv(); save(fli+1); showMap(fli+1,{reveal:true}); };
-    document.getElementById('bCert').onclick=async()=>{ const msg=document.getElementById('certMsg'), name='certificado-ruta-financiera-'+String(eco.name||'senderista').toLowerCase().replace(/[^a-z0-9áéíóúñ]+/gi,'-')+'.png';
-      const blob=await (await fetch(cert)).blob(); let dl=null; try{ dl=window.claude&&window.claude.use?await window.claude.use('downloads'):null; }catch(_){ dl=null; }
+    const dipDl=async(k,url)=>{ const msg=document.getElementById('certMsg'), name='diploma-ruta-'+(k+1)+'-'+String(eco.name||'senderista').toLowerCase().replace(/[^a-z0-9áéíóúñ]+/gi,'-')+'.png';
+      const blob=await (await fetch(url)).blob(); let dl=null; try{ dl=window.claude&&window.claude.use?await window.claude.use('downloads'):null; }catch(_){ dl=null; }
       if(dl){ try{ await dl.save({filename:name,data:blob}); msg.textContent=' Listo.'; }catch(err){ msg.textContent=err&&err.code==='declined'?'':' No se pudo descargar aquí.'; } return; }
       const a=document.createElement('a'); a.href=URL.createObjectURL(blob); a.download=name; document.body.appendChild(a); a.click(); setTimeout(()=>{ URL.revokeObjectURL(a.href); a.remove(); },500); };
+    document.getElementById('bCert').onclick=()=>dipDl(rr0,cert);
+    document.querySelectorAll('[data-dip]').forEach(b=>b.onclick=()=>{ const k=+b.dataset.dip; dipDl(k,certURL(k)); });
   };
   if(fli+1<LV.length) save(fli+1); else clearSave(); rkSubmit(RUTAS[rutaDe(fli)].code,eco.stats.frames/60); show();
 }
