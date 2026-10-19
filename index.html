@@ -2040,7 +2040,7 @@ const LANZA={
   hacker:{n:'EL HACKER',r:'robo cibernético',item:'mail',lab:'PHISHING',dmg:2,w:26,h:40,col:'#1E2A3A',say:['¡Ganaste un premio! Dame tu clave','Tu cuenta fue bloqueada: haz clic aquí','Soy del banco, dígame el código'],no:['¡No comparto mis claves!','¡Activo la doble verificación!']},
   tahur:{n:'EL TAHÚR',r:'apuestas y ludopatía',item:'chip',lab:'APUESTA',dmg:2,w:28,h:42,col:'#1F7A4A',say:['¡Apueste y duplique!','¡Esta vez sí gana!','¡Una ronda más!'],no:['¡No apuesto mi plata!','¡La casa siempre gana!']},
 };
-const PROJ_TXT={phone:'distraído en el celular',tag:'compra por impulso',card:'interés de la tarjeta',price:'subieron los precios',chip:'apuesta perdida',mail:'robo cibernético',decreto:'un decreto te subió los costos',bag:'estafa de Don Ruina',lava:'roca ardiente',gota:'una fuga del flujo de caja',rayo:'un imprevisto sin seguro',multa:'multa por no pagar impuestos',antojo:'un antojo más',bolsa:'compra por impulso',cuota:'otra cuota más',huevo:'todo en una canasta',flyer:'promesa de pirámide'};
+const PROJ_TXT={phone:'distraído en el celular',tag:'compra por impulso',card:'interés de la tarjeta',price:'subieron los precios',chip:'apuesta perdida',mail:'robo cibernético',decreto:'un decreto te subió los costos',bag:'estafa de Don Ruina',lava:'roca ardiente',ladrillo:'escombro del desánimo',tronco:'madera ilegal',lata:'usar y botar',gota:'una fuga del flujo de caja',rayo:'un imprevisto sin seguro',multa:'multa por no pagar impuestos',antojo:'un antojo más',bolsa:'compra por impulso',cuota:'otra cuota más',huevo:'todo en una canasta',flyer:'promesa de pirámide'};
 function takeCoins(n){ let a=Math.min(n,eco.hand); eco.hand-=a; let r=n-a; const b=Math.min(r,eco.emb); eco.emb-=b; return a+b; }
 function inflaHit(f){ // la inflación no roba: hace que el dinero quieto compre menos. Lo que rinde (activos) la resiste
   const p=S.p, inv=(eco.assets||[]).length>0, ph=eco.hand>0?Math.max(1,Math.round(eco.hand*0.1)):0, pe=inv?0:Math.floor(eco.emb*0.1);
@@ -3639,6 +3639,9 @@ function drawProj(f){ const fx=f.x-S.cam; ctx.save(); ctx.translate(fx,f.y); ctx
   else if(f.icon==='mail'){ ctx.fillStyle='#F4ECD8'; rr(-9,-6,18,12,1.5); ctx.fill(); ctx.strokeStyle='#6B2A1A'; ctx.lineWidth=0.9; ctx.beginPath(); ctx.moveTo(-9,-6); ctx.lineTo(0,1); ctx.lineTo(9,-6); ctx.stroke(); ctx.strokeStyle='#C9D3DA'; ctx.lineWidth=1.2; ctx.beginPath(); ctx.moveTo(6,4); ctx.lineTo(6,10); ctx.arc(3.6,10,2.4,0,Math.PI); ctx.stroke(); ctx.fillStyle='#E04A4A'; ctx.beginPath(); ctx.arc(7,-6,3,0,7); ctx.fill(); ctx.fillStyle='#fff'; ctx.font='800 4px sans-serif'; ctx.textAlign='center'; ctx.fillText('!',7,-4.6); }
   else if(f.icon==='chip'){ ctx.fillStyle='#1F7A4A'; ctx.beginPath(); ctx.arc(0,0,7,0,7); ctx.fill(); ctx.strokeStyle='#fff'; ctx.setLineDash([2.2,2.2]); ctx.lineWidth=1.6; ctx.beginPath(); ctx.arc(0,0,5.6,0,7); ctx.stroke(); ctx.setLineDash([]); ctx.fillStyle='#fff'; ctx.beginPath(); ctx.arc(0,0,3,0,7); ctx.fill(); ctx.fillStyle='#1F7A4A'; ctx.font='800 3.6px sans-serif'; ctx.textAlign='center'; ctx.fillText('$',0,1.4); }
   else if(f.icon==='lava'){ const g2=ctx.createRadialGradient(0,0,1,0,0,8); g2.addColorStop(0,'#FFE08A'); g2.addColorStop(.5,'#FF6A1A'); g2.addColorStop(1,'#5A1A0A'); ctx.fillStyle=g2; ctx.beginPath(); for(let i=0;i<7;i++){ const a=i/7*Math.PI*2, r=6+(i%2)*1.6; ctx.lineTo(Math.cos(a)*r,Math.sin(a)*r); } ctx.closePath(); ctx.fill(); }
+  else if(f.icon==='ladrillo'){ ctx.rotate(S.t*0.15); ctx.fillStyle='#B0503A'; rr(-8,-4,16,8,1); ctx.fill(); ctx.strokeStyle='#E0D6CC'; ctx.lineWidth=.7; ctx.beginPath(); ctx.moveTo(-8,0); ctx.lineTo(8,0); ctx.moveTo(-2,-4); ctx.lineTo(-2,0); ctx.moveTo(3,0); ctx.lineTo(3,4); ctx.stroke(); }
+  else if(f.icon==='tronco'){ ctx.rotate(S.t*0.12); ctx.fillStyle='#6E4A2A'; rr(-10,-4,20,8,3); ctx.fill(); ctx.fillStyle='#D8B47A'; ctx.beginPath(); ctx.ellipse(10,0,2.4,4,0,0,7); ctx.fill(); ctx.strokeStyle='#A07A4A'; ctx.lineWidth=.5; ctx.beginPath(); ctx.arc(10,0,1.4,0,7); ctx.stroke(); }
+  else if(f.icon==='lata'){ ctx.rotate(S.t*0.2); ctx.fillStyle='#B8BCC4'; rr(-4,-7,8,14,1.6); ctx.fill(); ctx.fillStyle='#C9283C'; ctx.fillRect(-4,-3,8,5); ctx.fillStyle='#8A8F98'; ctx.fillRect(-4,-7,8,1.2); }
   else if(f.icon==='gota'){ ctx.fillStyle='#5CB8E8'; ctx.beginPath(); ctx.moveTo(0,-8); ctx.quadraticCurveTo(-7,1,0,6); ctx.quadraticCurveTo(7,1,0,-8); ctx.fill(); ctx.fillStyle='#fff'; ctx.font='800 5px sans-serif'; ctx.textAlign='center'; ctx.fillText('$',0,3); }
   else if(f.icon==='rayo'){ ctx.fillStyle='#F2C230'; ctx.beginPath(); ctx.moveTo(1,-9); ctx.lineTo(-5,1); ctx.lineTo(0,1); ctx.lineTo(-2,9); ctx.lineTo(6,-2); ctx.lineTo(1,-2); ctx.closePath(); ctx.fill(); ctx.strokeStyle='#8A5A10'; ctx.lineWidth=.6; ctx.stroke(); }
   else if(f.icon==='multa'){ ctx.fillStyle='#FBF7EC'; ctx.fillRect(-8,-6,16,12); ctx.fillStyle='#C9283C'; ctx.fillRect(-8,-6,16,3.4); ctx.fillStyle='#fff'; ctx.font='800 3px sans-serif'; ctx.textAlign='center'; ctx.fillText('MULTA',0,-3.4); ctx.fillStyle='#24448E'; ctx.font='800 4.4px sans-serif'; ctx.fillText('$$',0,3); }
@@ -4388,7 +4391,7 @@ function draw(){
     if(has('linterna')){ ctx.save(); ctx.globalCompositeOperation='lighter'; const lg=ctx.createRadialGradient(px+S.p.face*40,py-10,4,px+S.p.face*40,py-10,90); lg.addColorStop(0,'rgba(255,240,180,.18)'); lg.addColorStop(1,'rgba(255,240,180,0)'); ctx.fillStyle=lg; ctx.fillRect(0,0,W,H); ctx.restore(); }
   }
   if(S.li===4&&!inArena){ ctx.save(); ctx.translate(0,-Math.round(S.camY)); ctx.globalAlpha=0.9; drawEnts(['lender','card','bank','cobrador','puma','snake','npc','veh','cloud','lanza','slot','ruina','gotaJefe','creditoJefe','parca','parcaJefe','jefeM']); drawFees(); ctx.globalAlpha=1; ctx.restore(); }
-  gradeScene(); drawApagon();
+  gradeScene(); drawApagon(); try{ drawRecolor(); }catch(e){}
   // viñeta suave
   const VIG=[.62,.42,.3,.3,.38,.28,.22,.2][S.li]||.25; const vg=ctx.createRadialGradient(W/2,H*.55,H*(S.li===0?.3:.42),W/2,H/2,W*0.66); vg.addColorStop(0,'rgba(0,0,0,0)'); vg.addColorStop(1,'rgba(4,6,10,'+VIG+')'); ctx.fillStyle=vg; ctx.fillRect(0,0,W,H); drawGrain();
   { const hv=W<640, sv=[W,H]; if(hv){ ctx.save(); const sc=W/580; ctx.scale(sc,sc); H=Math.round(H/sc); W=580; }
@@ -6565,6 +6568,345 @@ function buildMapBg3(){ const cv2=document.createElement('canvas'); cv2.width=W*
   MAPBG3=cv2; }
 
 MEDALLAS.push({id:'colapso',n:'Sobreviviente',d:'Supera El Colapso y aprueba la Prueba de la Resiliencia',c:()=>!!eco.resiliente});
+/* ================= RUTA 4 · LA RECONSTRUCCIÓN: del gris al color (mundos 25 a 32) ================= */
+const ALT4=[300,300,1200,900,1800,500,1500,20,2600];
+const reqN4=li=>({24:Math.round(30*Dif().req),25:Math.round(15*Dif().req),28:Math.round(150*Dif().req),31:Math.round(300*Dif().req)})[li];
+LV.push(
+ {name:'Las Ruinas de la Ciudad',bioma:'Ciudad en ruinas',tag:'Plan de reconstrucción',role:'Reconstructor',step:'Presupuesto para reconstruir',theme:24,costo:5,desF:1.1,
+  lesson:'Empieza <b>La Reconstrucción</b>. Después del colapso todo quedó <b>gris</b>. Reconstruir empieza con un <b>presupuesto</b> y un plan <b>por etapas</b>: primero lo esencial, después lo demás. Cada zona que restauras le devuelve el <b>color</b> al mundo.',
+  req:'Fondo para reconstruir',reqFn:()=>'Tener '+reqN4(24)+' o más guardados en la alcancía',
+  meta:['Fondo de reconstrucción',G=>'Alcancía: '+eco.emb+' de '+reqN4(24),G=>eco.emb>=reqN4(24)?'v':eco.emb>=12?'a':'r'],
+  chunks:['start','poder','calle','coins','ciudad','rocks','page1','dano','calle','embalse','steps','ayuda','calle','ciudad','negocio','dano','page2','embalse','rocks','vehiculo','colchon','racha','page3','trading','camp']},
+ {name:'El Campamento de Familias',bioma:'Campamento',tag:'Volver a empezar',role:'Acogido',step:'Documentos y cuenta propia',theme:25,costo:5,desF:1.1,
+  lesson:'Muchas familias llegaron sin nada al <b>campamento</b>. Para volver a empezar: <b>recuperar los documentos</b>, abrir una <b>cuenta</b> en una entidad vigilada y pedir ayudas solo en entidades oficiales. El <b>trueque</b> y el trabajo en comunidad ayudan mientras tanto. Nada de préstamos sin papeles.',
+  req:'Empezar sin deudas y con ahorro',reqFn:()=>'Llegar sin deudas y con '+reqN4(25)+' o más en la alcancía',
+  meta:['Empezar limpio',G=>'Deudas: '+G.deu+' · alcancía: '+eco.emb,G=>G.deu===0&&eco.emb>=reqN4(25)?'v':G.deu===0?'a':'r'],
+  chunks:['start','poder','calle','gap','ciudad','lender','page1','dano','hidden','embalse','calle','ayuda','fugas','ciudad','negocio','dano','page2','embalse','gap','vehiculo','calle','racha','page3','trading','camp']},
+ {name:'El Río que Revive',bioma:'Río en recuperación',tag:'Agua limpia',role:'Guardián del río',step:'El agua limpia también es riqueza',theme:26,costo:5,desF:1.1,
+  lesson:'El <b>río</b> estaba envenenado. Limpiarlo es una <b>inversión</b>: el agua limpia baja los gastos de salud y trae pesca, cultivos y turismo. Restaura las orillas y llega con una <b>huella verde</b> de 60 o más.',
+  req:'Huella verde de 60 o más',reqFn:()=>'Llegar con huella verde de 60 o más',
+  meta:['Río limpio',G=>'Huella verde: '+verde()+' · zonas restauradas: '+(eco.stats.restaura||0),G=>verde()>=75?'v':verde()>=60?'a':'r'],
+  chunks:['start','poder','rio','bridge','ciudad','rio','page1','dano','moving','rio','embalse','bridge','ayuda','calle','ciudad','negocio','dano','page2','embalse','rio','vehiculo','moving','racha','page3','trading','camp']},
+ {name:'El Vivero del Bosque',bioma:'Bosque en recuperación',tag:'Reforestación',role:'Sembrador',step:'Negocios verdes',theme:27,costo:6,desF:1.1,
+  lesson:'Donde hubo incendio ahora hay un <b>vivero</b>. Sembrar árboles nativos da trabajo y un <b>negocio verde</b>: vender plántulas, ecoturismo y <b>pagos por servicios ambientales</b>. Llega con activos que paguen al menos la <b>mitad</b> de tu costo de vida.',
+  req:'Ingresos de activos: la mitad del costo de vida',reqFn:()=>'Ingreso de activos de '+Math.ceil(costo()/2)+' o más',
+  meta:['Un negocio verde que produce',G=>'Ingreso de activos '+ingresoAct()+' de '+Math.ceil(costo()/2),G=>ingresoAct()>=Math.ceil(costo()/2)?'v':ingresoAct()>0?'a':'r'],
+  chunks:['start','poder','tower','steps','ciudad','invest','page1','dano','rocks','hidden','embalse','steps','invest','ayuda','calle','ciudad','negocio','dano','page2','embalse','tower','vehiculo','steps','racha','page3','trading','camp']},
+ {name:'La Fábrica Circular',bioma:'Fábrica de reciclaje',tag:'Economía circular',role:'Reciclador',step:'Lo que era basura es materia prima',theme:28,costo:6,desF:1.2,
+  lesson:'La vieja fábrica ahora <b>recicla</b>. En la <b>economía circular</b> lo que era basura se vuelve materia prima: se gasta menos, se contamina menos y se crean empleos. Reparar y reutilizar antes que comprar nuevo. Llega con un <b>patrimonio</b> que crece.',
+  req:'Patrimonio en crecimiento',reqFn:()=>'Patrimonio de '+reqN4(28)+' o más',
+  meta:['Patrimonio que crece',G=>'Patrimonio: '+G.pat+' de '+reqN4(28),G=>G.pat>=reqN4(28)?'v':G.pat>=reqN4(28)/2?'a':'r'],
+  chunks:['start','poder','muro','rocks','ciudad','tower','page1','dano','pyramid','gap','embalse','muro','invest','ayuda','calle','ciudad','negocio','dano','page2','embalse','rocks','vehiculo','gap','racha','page3','trading','camp']},
+ {name:'El Pueblo Cooperativo',bioma:'Pueblo en cooperativa',tag:'Ahorro colectivo',role:'Cooperativista',step:'Juntos llegamos más lejos',theme:29,costo:6,desF:1.1,
+  lesson:'En el pueblo se organizaron en <b>cooperativa</b>: un <b>fondo de ahorro colectivo</b>, <b>microcréditos</b> con tasas justas y compras al por mayor. La confianza y las cuentas claras son el capital de una comunidad. Llega con <b>salud financiera</b> de 60 o más.',
+  req:'Salud financiera de 60 o más',reqFn:()=>'Llegar con salud financiera de 60 o más',
+  meta:['Cuentas claras en comunidad',G=>'Salud financiera: '+salud(),G=>salud()>=70?'v':salud()>=60?'a':'r'],
+  chunks:['start','poder','calle','coins','ciudad','credito','page1','dano','banco','embalse','calle','ayuda','fugas','ciudad','negocio','dano','page2','embalse','credito','vehiculo','calle','racha','page3','trading','camp']},
+ {name:'El Puerto del Comercio Justo',bioma:'Puerto',tag:'Emprender y comerciar',role:'Emprendedor',step:'Emprender con flujo de caja',theme:30,costo:7,desF:1.2,
+  lesson:'El <b>puerto</b> volvió a abrir. Es hora de <b>emprender</b>: vender lo que produce la región con <b>comercio justo</b>, llevar cuentas, cuidar el <b>flujo de caja</b> y ser formal. No acapares ni especules. Llega con activos que paguen <b>todo</b> tu costo de vida.',
+  req:'Activos que paguen tu costo de vida',reqFn:()=>'Ingreso de activos igual o mayor que tu costo de vida',
+  meta:['Negocio que sostiene la casa',G=>'Ingreso de activos '+ingresoAct()+' de '+costo(),G=>ingresoAct()>=costo()?'v':ingresoAct()>0?'a':'r'],
+  chunks:['start','poder','mercado','tiendas','ciudad','vitrina','page1','dano','fomo','banco','embalse','mercado','invest','ayuda','calle','ciudad','negocio','dano','page2','embalse','tiendas','invest','vehiculo','fugas','racha','page3','trading','camp']},
+ {name:'La Ciudad Renacida',bioma:'Ciudad renacida',tag:'Paz y legado',role:'Constructor',step:'Paz, legado y futuro',theme:31,costo:7,desF:1.2,
+  lesson:'La <b>Ciudad Renacida</b> tiene color otra vez: escuelas, huertas, paneles solares y parques. La <b>paz</b> también es una decisión económica, y el <b>legado</b> es enseñar lo que aprendiste. Supera la <b>Prueba del Constructor</b> y termina toda la Ruta Financiera.',
+  req:'Patrimonio, salud y huella verde',reqFn:()=>'Patrimonio de '+reqN4(31)+' o más, salud financiera de 60 y huella verde de 70',
+  meta:['Legado que dura',G=>'Patrimonio '+G.pat+' · salud '+salud()+' · verde '+verde(),G=>G.pat>=reqN4(31)&&salud()>=60&&verde()>=70?'v':salud()>=60?'a':'r'],
+  chunks:['start','poder','muro','steps','ciudad','gap','page1','dano','pyramid','tower','embalse','steps','gap','ayuda','calle','ciudad','negocio','dano','page2','embalse','muro','vehiculo','duo','racha','page3','trading','camp']});
+THEMES.push(
+ {sky:['#4A6A8A','#F2C89A'],sun:'#FFE0A0',m:['#7A8494','#5E6A7A','#46505E'],grass:'#7AA05A',earth:'#6A5444',edge:'#3E3028',deco:'andamios',stone:'#A09A90'},
+ {sky:['#5A7AA0','#F6D8A8'],sun:'#FFE8B0',m:['#7A8A70','#5E6E58','#465440'],grass:'#86AA5A',earth:'#6E5638',edge:'#423222',deco:'carpas',stone:'#A89C84'},
+ {sky:['#3E7AB0','#BEE0F0'],sun:'#FFF2C0',m:['#5A8A7A','#467060','#34584A'],grass:'#5EA860',earth:'#5A4A36',edge:'#362A1E',deco:'riolimpio',stone:'#8A9488',green:1},
+ {sky:['#4A8AB8','#DDF0E0'],sun:'#FFF4C8',m:['#4E7A50','#3A6240','#2A4A30'],grass:'#4E9A4A',earth:'#5A4430',edge:'#34261A',deco:'vivero',stone:'#7A8A6A',green:1},
+ {sky:['#5A8AB0','#F0E0C0'],sun:'#FFE8A8',m:['#6A7A88','#525E6C','#3E4854'],grass:'#7AA858',earth:'#6A5A48',edge:'#40362A',deco:'reciclaje',stone:'#9AA0A0'},
+ {sky:['#4A86C0','#F6E4B0'],sun:'#FFE6A0',m:['#6A9A60','#548048','#3E6436'],grass:'#7AB850',earth:'#7A5A3A',edge:'#4A3420',deco:'cooperativa',stone:'#A8986E'},
+ {sky:['#2E86C8','#BFE8F2'],sun:'#FFF0B0',m:['#5A8AA0','#467488','#345A6E'],grass:'#86B858',earth:'#8A7050',edge:'#54402A',deco:'puerto',stone:'#B0A890',top:'arena'},
+ {sky:['#3A7ACC','#FFD8A8'],sun:'#FFE9A0',m:['#6A8AB0','#54729A','#3E5A80'],grass:'#6CC060',earth:'#6A5040',edge:'#3E2E22',deco:'renacida',stone:'#B8B0A0',green:1});
+LIGHT.push(
+ {hora:'amanecer entre ruinas',sun:[.2,70],warm:'#FFD8A8',grade:'#8A7A6A',ga:.1,ray:.05},
+ {hora:'mañana en el campamento',sun:[.28,60],warm:'#FFE2B0',grade:'#8A7A5A',ga:.08,ray:.05},
+ {hora:'sol sobre el agua limpia',sun:[.4,50],warm:'#FFF2C8',grade:'#4A7A8A',ga:.06,ray:.07},
+ {hora:'luz entre árboles jóvenes',sun:[.5,45],warm:'#F6F2C0',grade:'#3E6A3E',ga:.06,ray:.08},
+ {hora:'mediodía de trabajo',sun:[.55,40],warm:'#FFEEC0',grade:'#6A7A7A',ga:.06,ray:.05},
+ {hora:'tarde de cosecha',sun:[.65,50],warm:'#FFD890',grade:'#8A7040',ga:.08,ray:.07},
+ {hora:'brisa del puerto',sun:[.72,55],warm:'#FFE6B0',grade:'#3E6A8A',ga:.06,ray:.06},
+ {hora:'atardecer de fiesta',sun:[.8,60],warm:'#FFC890',grade:'#8A5A6A',ga:.08,ray:.08});
+MT2.push(
+ {rock:'#6A6A70',veg:'#6A8A58',forest:'#4E6A44',paramo:'#7A8A60',vegA:.4,parA:.7,rockA:.9,snowA:9},
+ {rock:'#7A7468',veg:'#74945A',forest:'#557A44',paramo:'#869460',vegA:.4,parA:.7,rockA:.9,snowA:9},
+ {rock:'#5E6E6A',veg:'#5E9A62',forest:'#3E7A4A',paramo:'#6E9A66',vegA:.6,parA:.85,rockA:1,snowA:9},
+ {rock:'#5A6A58',veg:'#4E9A4E',forest:'#2E6E3A',paramo:'#6A9A5A',vegA:.6,parA:.85,rockA:1,snowA:9},
+ {rock:'#6E747A',veg:'#6E9A58',forest:'#4A7444',paramo:'#7A9460',vegA:.4,parA:.7,rockA:.9,snowA:9},
+ {rock:'#7A7A60',veg:'#78A850',forest:'#4E8040',paramo:'#8AA060',vegA:.5,parA:.8,rockA:1,snowA:9},
+ {rock:'#7A7468',veg:'#7AA858',forest:'#4E7E44',paramo:'#8A9A60',vegA:.3,parA:.6,rockA:.8,snowA:9},
+ {rock:'#6E7280',veg:'#62B05A',forest:'#3E8446',paramo:'#7AAA66',vegA:.5,parA:.8,rockA:1,snowA:9});
+PRIN.push('Reconstruir empieza con un presupuesto por etapas.','Con documentos y cuenta propia se vuelve a empezar.','El agua limpia también es riqueza.','Sembrar hoy es el ingreso de mañana.','Lo que era basura puede ser materia prima.','Juntos llegamos más lejos: cuentas claras, confianza alta.','Emprende con cuentas claras y comercio justo.','El mejor legado es enseñar lo que aprendiste.');
+ETAPA.push(
+ {fase:'Fase de reconstrucción',obj:'Volver a levantar la casa con un plan por etapas.',riesgo:'Querer reconstruir todo de una con deudas.',hab:['Presupuesto de reconstrucción','Lo esencial primero','Fondo para imprevistos'],guia:'Guía 3 · Cargas financieras'},
+ {fase:'Fase de nuevo comienzo',obj:'Recuperar documentos, abrir cuenta y empezar a ahorrar.',riesgo:'Préstamos sin papeles y ayudas falsas.',hab:['Documentos al día','Cuenta en entidad vigilada','Ayudas solo oficiales'],guia:'Guía 1 · Primeros pasos'},
+ {fase:'Fase de recuperación del agua',obj:'Entender que cuidar el agua ahorra dinero a todos.',riesgo:'Volver a contaminar para ahorrar unos pesos.',hab:['Tratar residuos','Sembrar en las orillas','Consumo responsable de agua'],guia:'Educación económica y ambiental'},
+ {fase:'Fase de negocio verde',obj:'Convertir la restauración en un ingreso estable.',riesgo:'Talar o quemar para ganar rápido.',hab:['Vivero y plántulas','Ecoturismo','Pagos por servicios ambientales'],guia:'Guía 6 · Cima financiera'},
+ {fase:'Fase de economía circular',obj:'Reducir gastos reutilizando y reciclando.',riesgo:'Comprar y botar sin pensar.',hab:['Reparar antes que comprar','Separar y vender reciclaje','Materia prima reutilizada'],guia:'Guía 4 · Hábitos'},
+ {fase:'Fase de comunidad',obj:'Ahorrar y prestar en comunidad con cuentas claras.',riesgo:'Fondos sin reglas ni registros.',hab:['Cooperativa o fondo de ahorro','Microcrédito justo','Actas y cuentas claras'],guia:'Guía 5 · Supervivencia financiera'},
+ {fase:'Fase de emprendimiento',obj:'Emprender con flujo de caja, formalidad y comercio justo.',riesgo:'Acaparar, especular o mezclar la plata del negocio y la casa.',hab:['Flujo de caja','Cuentas separadas','Precio justo'],guia:'Guía 6 · Cima financiera'},
+ {fase:'Fase de legado',obj:'Mantener la paz, cuidar lo construido y enseñar.',riesgo:'Olvidar lo aprendido y repetir los errores.',hab:['Enseñar finanzas','Patrimonio diversificado','Huella verde alta'],guia:'Guía 7 · Ascenso financiero'});
+PAGES.push(
+ ['Reconstruye por etapas: primero techo, agua y comida; después lo demás.','Haz un presupuesto de reconstrucción antes de pedir cualquier crédito.','Guarda una parte para imprevistos: las obras siempre cuestan más.'],
+ ['Recuperar documentos es gratis o casi gratis en las entidades oficiales.','Una cuenta propia en entidad vigilada protege lo que vuelves a ganar.','El trueque y el trabajo en comunidad ayudan mientras llega el primer ingreso.'],
+ ['Cada peso invertido en agua limpia ahorra en salud, alimentos y servicios.','Un río limpio vuelve a dar pesca, riego y turismo.','Tratar los residuos es más barato que limpiar un río envenenado.'],
+ ['Un vivero de árboles nativos es un negocio verde.','Los pagos por servicios ambientales premian a quien cuida bosques y agua.','Sembrar hoy es el ingreso (y el agua) de mañana.'],
+ ['Economía circular: reducir, reutilizar, reparar y reciclar.','Reparar antes que comprar nuevo también es ahorrar.','El reciclaje separado se vende mejor y crea empleos.'],
+ ['En una cooperativa los socios ahorran juntos y se prestan a tasas justas.','Las cuentas claras (actas y registros) cuidan la confianza.','Comprar al por mayor en comunidad baja los precios para todos.'],
+ ['Flujo de caja: anota lo que entra y lo que sale de tu negocio cada semana.','Separa la plata del negocio de la plata de la casa.','Comercio justo: precio justo para quien produce y para quien compra.'],
+ ['La paz también es una decisión económica: con paz hay empleo e inversión.','El legado es enseñar lo que aprendiste a tu familia y tu comunidad.','Cuidar lo construido cuesta menos que volver a empezar.']);
+PLAT_W.push([2,1,3,3],[2,1,3,3],[2,1,3,4],[2,1,3,4],[2,1,2,4],[2,1,3,4],[2,1,2,5],[2,1,2,5]);
+NPC_BY_WORLD.push('guia','abuela','profe','guia','asesor','abuela','asesor','mentor');
+VEH_BY_WORLD.push('cicla','cicla','moto','moto','carro','moto','carro','avion');
+LANZA_W.push(['politico','tahur','tarjeta'],['hacker','tahur','scroll'],['vitrina','tarjeta','scroll'],['tahur','hacker','vitrina'],['vitrina','tarjeta','inflacion'],['tahur','politico','hacker'],['inflacion','vitrina','tarjeta','tahur'],['tarjeta','hacker','politico','inflacion','vitrina']);
+JEFE_P.jefeGota.push(.7,.9,.6,.6,.6,.8,.6,.7); JEFE_P.jefeCredito.push(.7,.8,.6,.6,.6,.8,.7,.7);
+DESASTRES.push(['servicios','alimentos','familiar'],['enfermedad','alimentos','familiar'],['tormenta','inundacion','servicios'],['sequia','tormenta','derrumbe'],['servicios','reforma','alimentos'],['tormenta','familiar','enfermedad'],['alimentos','reforma','servicios','tormenta'],['terremoto','tormenta','familiar','servicios']);
+ARENA_COL.push('#C9A24A','#D8884A','#3EA0C0','#4EA84E','#7AA8A0','#E0B04A','#3E8AD0','#E07A9A');
+ARENA_LEMA.push('PRESUPUESTO POR ETAPAS','DOCUMENTOS Y CUENTA','AGUA LIMPIA','NEGOCIO VERDE','ECONOMÍA CIRCULAR','CUENTAS CLARAS','COMERCIO JUSTO','PAZ Y LEGADO');
+DANO_K.push('escombros','basura','contaminado','talado','residuos','mineria','contaminado','escombros');
+REQ.push(
+ ()=>[eco.emb>=reqN4(24),'Alcancía: '+eco.emb+' de '+reqN4(24)+'.'],
+ ()=>[eco.debts.length===0&&eco.emb>=reqN4(25),(eco.debts.length?'Debes '+debtTot()+'.':'Sin deudas.')+' Alcancía '+eco.emb+' de '+reqN4(25)+'.'],
+ ()=>[verde()>=60,'Huella verde: '+verde()+' de 60.'],
+ ()=>[ingresoAct()>=Math.ceil(costo()/2),'Ingreso de activos '+ingresoAct()+' de '+Math.ceil(costo()/2)+'.'],
+ ()=>[patrimonio()>=reqN4(28),'Patrimonio '+patrimonio()+' de '+reqN4(28)+'.'],
+ ()=>[salud()>=60,'Salud financiera: '+salud()+' de 60.'],
+ ()=>[ingresoAct()>=costo(),'Ingreso de activos '+ingresoAct()+' de '+costo()+'.'],
+ ()=>[patrimonio()>=reqN4(31)&&salud()>=60&&verde()>=70,'Patrimonio '+patrimonio()+' de '+reqN4(31)+' · salud '+salud()+' de 60 · verde '+verde()+' de 70.']);
+CURR.push(
+ {ra:'Planeo una reconstrucción por etapas con presupuesto y fondo para imprevistos.',comp:'Planear',g:'Guía 3',ev:'Llegó con el fondo de reconstrucción.',ok:()=>REQ[24]()[0]},
+ {ra:'Vuelvo a empezar con documentos, cuenta propia y sin deudas informales.',comp:'Decidir',g:'Guía 1',ev:'Llegó sin deudas y con ahorro.',ok:()=>REQ[25]()[0]},
+ {ra:'Entiendo que el agua limpia ahorra dinero a toda la comunidad.',comp:'Decidir',g:'Educación ambiental',ev:'Llegó con huella verde de 60 o más.',ok:()=>verde()>=60},
+ {ra:'Convierto la restauración ambiental en un negocio verde que produce.',comp:'Gestionar',g:'Guía 6',ev:'Sus activos pagan la mitad de su costo de vida.',ok:()=>REQ[27]()[0]},
+ {ra:'Aplico la economía circular para gastar menos y hacer crecer mi patrimonio.',comp:'Administrar',g:'Guía 4',ev:'Llegó con el patrimonio de la meta.',ok:()=>REQ[28]()[0]},
+ {ra:'Ahorro y presto en comunidad con reglas y cuentas claras.',comp:'Gestionar',g:'Guía 5',ev:'Llegó con salud financiera de 60 o más.',ok:()=>salud()>=60},
+ {ra:'Emprendo con flujo de caja, formalidad y comercio justo.',comp:'Gestionar',g:'Guía 6',ev:'Su ingreso de activos cubre su costo de vida.',ok:()=>ingresoAct()>=costo()},
+ {ra:'Construyo un legado: cuido la paz, el ambiente y enseño lo que aprendí.',comp:'Gestionar',g:'Guía 7',ev:'Patrimonio, salud y huella verde altos y Prueba del Constructor aprobada.',ok:()=>REQ[31]()[0]&&!!eco.constructor});
+RETOS.push(
+ ()=>({t:'¿Por dónde empezar?',x:'Tienes 20 monedas para reconstruir tu casa.',opts:[
+  {l:'Todo en una cocina nueva y bonita',fx:()=>'Quedó linda la cocina… pero sin techo llueve adentro. Lo esencial primero.'},
+  {l:'Techo y agua primero, y guardar 4 para imprevistos',fx:()=>{ eco.emb+=4; return 'Reconstruiste por etapas y tenías con qué pagar el imprevisto de la obra (+4 en la alcancía).'; }},
+  {l:'Pedir un crédito grande y hacerlo todo ya',fx:()=>{ addDebt('Crédito de reconstrucción',14,2,'credito'); return 'Lo hiciste todo… y ahora debes 14 con cuotas que pesan cada quincena.'; }}]}),
+ ()=>({t:'Llegaste sin documentos',x:'Un señor ofrece cédula y papeles “rápidos” por 8 monedas.',opts:[
+  {l:'Pagarle, es más rápido',fx:()=>{ eco.hand=Math.max(0,eco.hand-8); return 'Eran papeles falsos: perdiste 8 y tuviste que hacer el trámite oficial igual.'; }},
+  {l:'Ir a la entidad oficial y abrir una cuenta',fx:()=>{ eco.emb+=2; return 'El trámite oficial era casi gratis, y con la cuenta empezaste a ahorrar (+2).'; }},
+  {l:'Seguir sin documentos',fx:()=>'Sin documentos no hay cuenta, ni empleo formal, ni ayudas. Es el primer paso para volver a empezar.'}]}),
+ ()=>({t:'La planta del río',x:'La comunidad propone una pequeña planta para tratar las aguas antes de que lleguen al río. Cada familia aporta 3.',opts:[
+  {l:'No aporto: que lo pague otro',fx:()=>'El río sigue sucio y el agua potable cuesta más para todos, también para ti.'},
+  {l:'Aporto 3',fx:()=>{ eco.hand=Math.max(0,eco.hand-3); verdeAdd(10,'agua limpia'); saludAdd(5,'menos gastos de salud'); return 'El río revivió: menos enfermedades y volvió la pesca (+10 huella verde, +5 salud financiera).'; }},
+  {l:'Seguir botando al río, es gratis',fx:()=>{ verdeAdd(-12,'contaminar el río'); return 'Gratis para ti hoy, caro para todos mañana (−12 huella verde).'; }}]}),
+ ()=>({t:'El vivero',x:'Puedes montar un vivero de árboles nativos con 6 monedas.',opts:[
+  {l:'Montarlo y vender plántulas',fx:()=>{ eco.hand=Math.max(0,eco.hand-6); eco.salario=(eco.salario||0)+1; verdeAdd(8,'vivero'); return 'Ahora vendes plántulas a la reforestación: +1 de ingreso cada quincena y +8 de huella verde.'; }},
+  {l:'Mejor vender la madera que quedó',fx:()=>{ eco.hand=Math.min(cap(),eco.hand+4); verdeAdd(-10,'vender madera'); return 'Ganaste 4 una sola vez… y el bosque tardará más en volver (−10 huella verde).'; }},
+  {l:'Esperar a tener más plata',fx:()=>'A veces esperar es prudente, pero un negocio pequeño y bien pensado puede empezar ya.'}]}),
+ ()=>({t:'Se dañó la licuadora',x:'¿Qué haces?',opts:[
+  {l:'Comprar una nueva a crédito',fx:()=>{ addDebt('Licuadora a cuotas',6,2,'tarjeta'); return 'Nueva, sí, pero ahora debes 6 por algo que se arreglaba barato.'; }},
+  {l:'Llevarla a reparar',fx:()=>{ eco.hand=Math.max(0,eco.hand-1); eco.emb+=2; return 'La reparación costó 1 y te ahorraste lo de una nueva (+2 en la alcancía). Economía circular.'; }},
+  {l:'Botarla en la calle',fx:()=>{ verdeAdd(-6,'basura en la calle'); return 'Los aparatos botados contaminan. Si ya no sirve, llévala a un punto de reciclaje (−6 huella verde).'; }}]}),
+ ()=>({t:'El fondo de la cooperativa',x:'La cooperativa pide elegir cómo manejar el fondo de ahorro.',opts:[
+  {l:'Que lo guarde el presidente sin anotar nada',fx:()=>{ saludAdd(-6,'cuentas sin registro'); return 'Sin registros, al primer problema nadie confía en nadie (−6 salud financiera).'; }},
+  {l:'Cuenta en entidad vigilada, actas y rendición de cuentas',fx:()=>{ saludAdd(10,'cuentas claras'); eco.emb+=2; return 'Con cuentas claras el fondo creció y te dio un microcrédito justo (+10 salud financiera, +2).'; }},
+  {l:'Prestar todo al que ofrezca más interés',fx:()=>'El que promete más interés suele ser el más riesgoso. Un fondo comunitario cuida primero el capital.'}]}),
+ ()=>({t:'Tu primer negocio en el puerto',x:'Te va bien vendiendo café de la región.',opts:[
+  {l:'Mezclar la plata del negocio con la de la casa',fx:()=>'Al mes no sabías si ganabas o perdías. Separa siempre las cuentas.'},
+  {l:'Llevar flujo de caja, formalizarte y pagar precio justo al caficultor',fx:()=>{ eco.salario=(eco.salario||0)+1; return 'Con cuentas claras y proveedores contentos, el negocio crece: +1 de ingreso cada quincena.'; }},
+  {l:'Acaparar el café para subir el precio',fx:()=>{ eco.hand=Math.min(cap(),eco.hand+3); saludAdd(-10,'acaparar'); return 'Ganaste 3, pero perdiste la confianza del pueblo (−10 salud financiera).'; }}]}),
+ ()=>({t:'Tu legado',x:'Te piden enseñar en la escuela lo que aprendiste en la Ruta Financiera.',opts:[
+  {l:'No tengo tiempo',fx:()=>'Lo que no se enseña, se olvida… y los errores se repiten.'},
+  {l:'Enseñar presupuesto, ahorro y cuidado del ambiente',fx:()=>{ saludAdd(10,'legado'); verdeAdd(5,'educación ambiental'); return 'Tus alumnos ya ahorran y cuidan el agua: ese es tu legado (+10 salud financiera, +5 huella verde).'; }},
+  {l:'Cobrar un curso de “hágase rico rápido”',fx:()=>{ eco.hand=Math.min(cap(),eco.hand+3); saludAdd(-12,'vender humo'); return 'Ganaste 3 vendiendo humo. Eso no es un legado (−12 salud financiera).'; }}]}));
+Q_GUIAS.push(
+ ['¿Cuál es la mejor forma de reconstruir una casa?',['Por etapas: primero lo esencial y con presupuesto','Todo de una con varios créditos','Empezar por lo más bonito','Sin presupuesto'],'Por etapas evitas deudas que no puedes pagar.',24],
+ ['¿Por qué dejar un fondo para imprevistos en una obra?',['Porque las obras casi siempre cuestan más de lo planeado','Porque es obligatorio','Para pagar la fiesta','No hace falta'],'El imprevisto llega: mejor tenerlo previsto.',24],
+ ['¿Qué va primero al reconstruir?',['Techo, agua y lo esencial','La decoración','El televisor','La fachada'],'Lo esencial protege a la familia; lo demás puede esperar.',24],
+ ['¿Dónde se recuperan los documentos de identidad?',['En las entidades oficiales, casi gratis','Con un tramitador en la calle','En cualquier papelería','No se pueden recuperar'],'Los papeles “rápidos” de la calle suelen ser falsos.',25],
+ ['¿Por qué abrir una cuenta en una entidad vigilada al volver a empezar?',['Protege lo que ganas y te permite ahorrar y recibir pagos','Para endeudarte rápido','Porque cobran menos impuestos','No sirve'],'Es la base para ahorrar y acceder a servicios formales.',25],
+ ['¿Qué es el trueque?',['Intercambiar bienes o trabajo sin usar dinero','Un tipo de crédito','Un impuesto','Una estafa'],'Ayuda mientras llega el primer ingreso.',25],
+ ['¿Por qué el agua limpia ahorra dinero?',['Baja los gastos de salud, potabilización y alimentos','No ahorra nada','Porque el agua es gratis','Porque sube los precios'],'Contaminar sale caro para todos.',26],
+ ['¿Qué beneficios trae un río recuperado?',['Pesca, riego, turismo y salud','Solo paisaje','Ninguno','Más impuestos'],'El río sano es un activo de la comunidad.',26],
+ ['¿Qué es más barato?',['Tratar los residuos antes de botarlos','Limpiar después un río envenenado','Igual de caro','No tratar nada'],'Prevenir el daño cuesta menos que repararlo.',26],
+ ['¿Qué es un negocio verde?',['Uno que gana dinero cuidando o restaurando la naturaleza','Uno pintado de verde','Uno que tala','Uno ilegal'],'Viveros, ecoturismo y reciclaje son ejemplos.',27],
+ ['¿Qué son los pagos por servicios ambientales?',['Pagos a quien cuida bosques y agua que benefician a otros','Una multa','Un crédito','Un impuesto a los árboles'],'Cuidar la naturaleza también puede ser un ingreso.',27],
+ ['¿Por qué un vivero puede ser un activo?',['Porque genera ingresos al vender plántulas','Porque los árboles no valen','Porque no da trabajo','No es un activo'],'Un activo pone dinero en tu bolsillo.',27],
+ ['¿Qué es la economía circular?',['Reducir, reutilizar, reparar y reciclar para no desperdiciar','Comprar y botar','Un tipo de banco','Un impuesto'],'Lo que era basura vuelve a ser materia prima.',28],
+ ['Se dañó un aparato. ¿Qué es más inteligente primero?',['Ver si se puede reparar','Comprar uno nuevo a crédito','Botarlo en la calle','Comprar dos'],'Reparar ahorra dinero y recursos.',28],
+ ['¿Por qué separar el reciclaje?',['Se vende mejor y contamina menos','Es más feo','No sirve','Para pagar más'],'El reciclaje limpio tiene mejor precio.',28],
+ ['¿Qué es una cooperativa?',['Una organización de socios que ahorran, compran o producen juntos','Un banco extranjero','Una tienda de lujo','Un gota a gota'],'Los socios son dueños y comparten los beneficios.',29],
+ ['¿Qué cuida la confianza en un fondo comunitario?',['Cuentas claras, actas y rendición de cuentas','Que nadie pregunte','Guardar la plata en una caja','Prestar sin anotar'],'Sin registros, la confianza se rompe.',29],
+ ['¿Qué es un microcrédito justo?',['Un préstamo pequeño con tasa legal y cuotas que puedes pagar','Un gota a gota','Un préstamo sin contrato','Un regalo'],'Compara siempre la tasa y la cuota.',29],
+ ['¿Qué es el flujo de caja de un negocio?',['El registro de lo que entra y sale de dinero','El precio del producto','La deuda del negocio','El nombre del negocio'],'Sin flujo de caja no sabes si ganas o pierdes.',30],
+ ['¿Por qué separar la plata del negocio y la de la casa?',['Para saber si el negocio realmente gana','Para pagar menos impuestos','No hace falta','Para gastar más'],'Mezclarlas esconde las pérdidas.',30],
+ ['¿Qué es el comercio justo?',['Pagar y cobrar precios justos que respetan a quien produce','Vender siempre lo más caro','Acaparar productos','Comprar sin factura'],'Un negocio que respeta a todos dura más.',30],
+ ['¿Por qué la paz es también una decisión económica?',['Con paz hay empleo, inversión y comercio','La guerra da más empleo','No tiene relación','Porque sube los impuestos'],'Reconstruir después del conflicto cuesta mucho más que cuidar la paz.',31],
+ ['¿Qué es un legado financiero?',['Lo que dejas a otros: conocimiento, hábitos y patrimonio bien cuidado','Una deuda heredada','Un préstamo','Un gasto'],'Enseñar es la mejor herencia.',31],
+ ['¿Qué evita repetir un colapso?',['No olvidar lo aprendido: ahorro, seguros, activos, comunidad y ambiente','Confiar en la suerte','Gastar todo','Endeudarse más'],'La resiliencia se mantiene con hábitos.',31]);
+Object.assign(TIPS,{
+ reconstruccion:{t:'Reconstruir por etapas',g:'Guía 3',x:'Primero lo esencial (techo, agua, comida), con presupuesto y un fondo para imprevistos. Nada de créditos por encima de tu capacidad.'},
+ documentos:{t:'Documentos y cuenta propia',g:'Guía 1',x:'Recuperar tus documentos en entidades oficiales y abrir una cuenta vigilada es el primer paso para volver a empezar.'},
+ aguaLimpia:{t:'El agua limpia es riqueza',g:'Educación ambiental',x:'El agua limpia baja gastos de salud, alimentos y servicios, y trae pesca y turismo.'},
+ negocioVerde:{t:'Negocio verde',g:'Guía 6',x:'Ganar dinero cuidando o restaurando la naturaleza: viveros, ecoturismo, reciclaje y pagos por servicios ambientales.'},
+ economiaCircular:{t:'Economía circular',g:'Guía 4',x:'Reducir, reutilizar, reparar y reciclar: se gasta menos, se contamina menos y se crean empleos.'},
+ cooperativa:{t:'Cooperativa',g:'Guía 5',x:'Socios que ahorran, compran o producen juntos, con reglas y cuentas claras. Prestan a tasas justas.'},
+ comercioJusto:{t:'Comercio justo y flujo de caja',g:'Guía 6',x:'Anota lo que entra y sale, separa la plata del negocio y la de la casa y paga precios justos.'},
+ pazLegado:{t:'Paz y legado',g:'Guía 7',x:'La paz trae empleo e inversión. El legado es enseñar lo aprendido para no repetir el colapso.'}});
+// ---------- jefes de La Reconstrucción ----------
+LOOK_J.push(
+ {top:'#7A7470',topD:'#4E4A46',pants:'#5A5450',shoes:'#2A2624',skin:'#9A8A7A',armW:5.4,legW:5.8,legScale:1.05,headR:7,
+  head:b=>{ eyes(b,{angry:true}); mouth('flat'); ctx.fillStyle='#E0A030'; ctx.beginPath(); ctx.arc(0,-3,7.4,Math.PI,0); ctx.fill(); ctx.fillRect(-9,-3.6,18,1.8); ctx.strokeStyle='#5A4A3A'; ctx.lineWidth=.8; ctx.beginPath(); ctx.moveTo(-2,-10); ctx.lineTo(0,-6); ctx.lineTo(-1,-4); ctx.stroke(); },
+  torso:(sh,hp)=>{ ctx.fillStyle='#4E4A46'; rr(-11,sh-3,22,hp-sh+7,5); ctx.fill(); ctx.fillStyle='#7A7470'; rr(-10,sh-3,20,hp-sh+6,5); ctx.fill(); ctx.fillStyle='#5A5450'; for(let i=0;i<4;i++){ ctx.beginPath(); ctx.arc(-6+i*4,sh+4+(i%2)*6,1.6,0,7); ctx.fill(); } },
+  hand:()=>{ ctx.fillStyle='#B0503A'; rr(-1,-4,10,7,1); ctx.fill(); ctx.strokeStyle='#E0D6CC'; ctx.lineWidth=.5; ctx.beginPath(); ctx.moveTo(-1,-.5); ctx.lineTo(9,-.5); ctx.moveTo(4,-4); ctx.lineTo(4,-.5); ctx.stroke(); },
+  handB:()=>{ ctx.fillStyle='#8A8480'; ctx.beginPath(); ctx.arc(0,0,3.4,0,7); ctx.fill(); }},
+ {top:'#4A3A2A',topD:'#2A2018',pants:'#2E2620',shoes:'#140E0A',skin:'#C49070',armW:3.8,legW:4.4,legScale:1.15,
+  head:b=>{ eyes(b); mouth('sly'); ctx.fillStyle='#2A2018'; ctx.fillRect(-9,-5,19,2); ctx.beginPath(); ctx.moveTo(-5,-5); ctx.lineTo(-4,-12); ctx.lineTo(6,-12); ctx.lineTo(7,-5); ctx.closePath(); ctx.fill(); ctx.fillStyle='#8A6A3A'; ctx.fillRect(-4,-7,11,1.4); },
+  torso:(sh,hp)=>{ ctx.fillStyle='#2A2018'; ctx.beginPath(); ctx.moveTo(-9,sh-2); ctx.lineTo(9,sh-2); ctx.lineTo(11,hp+9); ctx.lineTo(-11,hp+9); ctx.closePath(); ctx.fill(); ctx.fillStyle='#4A3A2A'; ctx.beginPath(); ctx.moveTo(-8,sh-2); ctx.lineTo(8,sh-2); ctx.lineTo(10,hp+8); ctx.lineTo(-10,hp+8); ctx.closePath(); ctx.fill(); ctx.fillStyle='#F4ECD8'; ctx.save(); ctx.rotate(-.2); ctx.fillRect(2,sh+2,6,8); ctx.restore(); },
+  hand:()=>{ ctx.rotate(-0.2); ctx.fillStyle='#F4ECD8'; ctx.fillRect(-1,-5,9,10); ctx.fillStyle='#C9283C'; ctx.font='800 2.4px sans-serif'; mtext('CÉDULA',3.5,-1); ctx.fillStyle='#3A3A3A'; ctx.fillRect(0,1,7,.8); ctx.fillRect(0,3,5,.8); },
+  handB:()=>{ ctx.fillStyle='#6B4A2B'; rr(-2,-3,9,7,1); ctx.fill(); }},
+ {top:'#1A1A20',topD:'#0A0A0E',pants:'#14141A',shoes:'#060608',skin:'#2A2A34',armW:5,legW:5.4,headR:7,
+  head:b=>{ ctx.fillStyle='#9AE05A'; ctx.beginPath(); ctx.arc(2.6,-1,1.3,0,7); ctx.arc(5.4,-1,1.2,0,7); ctx.fill(); ctx.fillStyle='#1A1A20'; for(let i=0;i<4;i++){ ctx.beginPath(); ctx.arc(-5+i*3.4,-6-Math.abs(Math.sin(S.t*0.08+i))*3,2.6,0,7); ctx.fill(); } ctx.strokeStyle='#5A5A6A'; ctx.lineWidth=.6; ctx.beginPath(); ctx.arc(-2,-3,2,0,4); ctx.stroke(); },
+  torso:(sh,hp)=>{ ctx.fillStyle='#0A0A0E'; ctx.beginPath(); ctx.ellipse(0,(sh+hp)/2+2,11,(hp-sh)/2+6,0,0,7); ctx.fill(); ctx.fillStyle='#1A1A20'; ctx.beginPath(); ctx.ellipse(0,(sh+hp)/2+2,10,(hp-sh)/2+5,0,0,7); ctx.fill(); ctx.fillStyle='rgba(120,90,200,.35)'; ctx.beginPath(); ctx.ellipse(-3,sh+4,4,1.6,-.3,0,7); ctx.fill(); ctx.fillStyle='rgba(90,200,160,.3)'; ctx.beginPath(); ctx.ellipse(3,sh+9,3.4,1.4,.3,0,7); ctx.fill(); },
+  hand:()=>{ ctx.fillStyle='#1A1A20'; ctx.beginPath(); ctx.moveTo(0,-6); ctx.quadraticCurveTo(-5,1,0,5); ctx.quadraticCurveTo(5,1,0,-6); ctx.fill(); ctx.fillStyle='rgba(120,90,200,.5)'; ctx.beginPath(); ctx.arc(-1,0,1.2,0,7); ctx.fill(); },
+  handB:()=>{ ctx.fillStyle='#1A1A20'; ctx.beginPath(); ctx.arc(0,0,3,0,7); ctx.fill(); }},
+ {top:'#B83A2A',topD:'#7A2418',pants:'#3A4A5A',shoes:'#2A1E14',skin:'#C49070',armW:5,legW:5.4,legScale:1.05,
+  head:b=>{ eyes(b,{angry:true}); mouth('grin'); ctx.fillStyle='#3A2A1A'; ctx.beginPath(); ctx.ellipse(1,4,6,3,0,0,Math.PI); ctx.fill(); ctx.fillStyle='#F2C230'; ctx.beginPath(); ctx.arc(0,-3,7,Math.PI,0); ctx.fill(); ctx.fillRect(-8,-3.6,16,1.6); },
+  torso:(sh,hp)=>{ ctx.fillStyle='#7A2418'; rr(-10,sh-3,20,hp-sh+6,4); ctx.fill(); ctx.fillStyle='#B83A2A'; rr(-9,sh-3,18,hp-sh+5,4); ctx.fill(); ctx.strokeStyle='#5A1A10'; ctx.lineWidth=.8; for(let i=-6;i<=6;i+=4){ ctx.beginPath(); ctx.moveTo(i,sh-2); ctx.lineTo(i,hp+2); ctx.stroke(); } for(let j=sh+2;j<hp;j+=4){ ctx.beginPath(); ctx.moveTo(-9,j); ctx.lineTo(9,j); ctx.stroke(); } },
+  hand:()=>{ ctx.fillStyle='#E0B030'; rr(-1,-3,7,6,1); ctx.fill(); ctx.fillStyle='#8A8F98'; ctx.fillRect(5,-1.6,9,3.2); ctx.fillStyle='#3A3A3A'; for(let i=0;i<4;i++) ctx.fillRect(6+i*2,(S.t>>1)%2?-2.4:1.6,1,.8); },
+  handB:()=>{ ctx.fillStyle='#6E4A2A'; ctx.fillRect(-1,-1.4,9,2.8); }},
+ {top:'#3A3A3A',topD:'#1E1E1E',pants:'#2A2A2A',shoes:'#141414',skin:'#B08A6A',armW:4.8,legW:5.2,headR:6.6,
+  head:b=>{ eyes(b); mouth('grin'); ctx.fillStyle='#2A2A2A'; ctx.beginPath(); ctx.moveTo(-7,-3); ctx.quadraticCurveTo(0,-14,7,-3); ctx.fill(); ctx.fillStyle='#C9A23A'; ctx.beginPath(); ctx.ellipse(-4,-9,2.4,1.4,.4,0,7); ctx.fill(); },
+  torso:(sh,hp)=>{ ctx.fillStyle='#1E1E1E'; ctx.beginPath(); ctx.ellipse(0,(sh+hp)/2+2,11,(hp-sh)/2+5,0,0,7); ctx.fill(); ctx.fillStyle='#3A3A3A'; ctx.beginPath(); ctx.ellipse(0,(sh+hp)/2+2,10,(hp-sh)/2+4,0,0,7); ctx.fill();
+    ctx.fillStyle='#C9283C'; rr(-7,sh+2,4,5,1); ctx.fill(); ctx.fillStyle='#5CB8E8'; rr(2,sh+6,4,6,1); ctx.fill(); ctx.fillStyle='#E8E0D0'; rr(-3,sh+10,5,3,1); ctx.fill(); },
+  hand:()=>{ ctx.fillStyle='#B8BCC4'; rr(-1,-5,6,10,1.6); ctx.fill(); ctx.fillStyle='#C9283C'; ctx.fillRect(-1,-2,6,3); },
+  handB:()=>{ ctx.fillStyle='#2A2A2A'; ctx.beginPath(); ctx.ellipse(3,0,4,3,0,0,7); ctx.fill(); }},
+ {top:'#5A4A6A',topD:'#3A2E46',pants:'#2E2638',shoes:'#16121C',skin:'#C9A07A',armW:3.8,legW:4.4,legScale:1.1,
+  head:b=>{ ctx.fillStyle='#F4ECD8'; ctx.beginPath(); ctx.arc(1,-1,6.6,-Math.PI/2,Math.PI/2); ctx.fill(); ctx.fillStyle='#2A2238'; ctx.beginPath(); ctx.arc(1,-1,6.6,Math.PI/2,Math.PI*1.5); ctx.fill(); ctx.fillStyle='#1E1A18'; ctx.beginPath(); ctx.ellipse(4,-1.6,1.2,1.6,0,0,7); ctx.fill(); ctx.fillStyle='#F4ECD8'; ctx.beginPath(); ctx.ellipse(-2,-1.6,1.2,1.6,0,0,7); ctx.fill();
+    ctx.strokeStyle='#7A3A2A'; ctx.lineWidth=.8; ctx.beginPath(); ctx.arc(4,3.6,1.6,1.1*Math.PI,1.9*Math.PI); ctx.stroke(); },
+  torso:(sh,hp)=>{ ctx.fillStyle='#3A2E46'; ctx.beginPath(); ctx.moveTo(-9,sh-2); ctx.lineTo(9,sh-2); ctx.lineTo(11,hp+8); ctx.lineTo(-11,hp+8); ctx.closePath(); ctx.fill(); ctx.fillStyle='#5A4A6A'; ctx.beginPath(); ctx.moveTo(-8,sh-2); ctx.lineTo(8,sh-2); ctx.lineTo(10,hp+7); ctx.lineTo(-10,hp+7); ctx.closePath(); ctx.fill(); ctx.fillStyle='#F2C230'; ctx.font='900 7px sans-serif'; mtext('?',0,sh+9); },
+  hand:()=>{ ctx.fillStyle='#FFE18A'; ctx.fillRect(-1,-5,9,8); ctx.fillStyle='#3A2E46'; ctx.font='800 2.6px sans-serif'; mtext('DICEN…',3.5,0); },
+  handB:()=>{ ctx.fillStyle='#C9A07A'; ctx.beginPath(); ctx.arc(0,0,2.6,0,7); ctx.fill(); }},
+ {top:'#6A5A2A',topD:'#3E3418',pants:'#3A3020',shoes:'#1E180E',skin:'#D6A07A',armW:5,legW:5.4,legScale:1.05,headR:6.8,
+  head:b=>{ eyes(b); mouth('sly'); ctx.fillStyle='#E8D49A'; ctx.beginPath(); ctx.ellipse(0,-5,11,2.2,0,0,7); ctx.fill(); ctx.beginPath(); ctx.arc(0,-6,5.4,Math.PI,0); ctx.fill(); ctx.fillStyle='#8A3A2A'; ctx.fillRect(-5.4,-7,10.8,1.4); },
+  back:(sh,hp)=>{ ctx.fillStyle='#B89A5A'; for(let i=0;i<3;i++){ rr(-16+i*3,sh-6+i*7,12,9,3); ctx.fill(); } ctx.fillStyle='#5A4A2A'; ctx.font='800 4px sans-serif'; mtext('CAFÉ',-10,sh+1); },
+  torso:(sh,hp)=>{ ctx.fillStyle='#3E3418'; rr(-10,sh-3,20,hp-sh+7,5); ctx.fill(); ctx.fillStyle='#6A5A2A'; rr(-9,sh-3,18,hp-sh+6,5); ctx.fill(); ctx.fillStyle='#F2C230'; ctx.beginPath(); ctx.arc(0,sh+7,3,0,7); ctx.fill(); ctx.fillStyle='#6A5A2A'; ctx.font='800 4px sans-serif'; mtext('$',0,sh+8.4); },
+  hand:()=>{ ctx.fillStyle='#B89A5A'; rr(-2,-5,9,10,3); ctx.fill(); ctx.fillStyle='#5A4A2A'; ctx.fillRect(1,-5,3,2); },
+  handB:()=>{ ctx.fillStyle='#D6A07A'; ctx.beginPath(); ctx.arc(0,0,2.8,0,7); ctx.fill(); }},
+ {top:'#6A6A74',topD:'#44444C',pants:'#3A3A42',shoes:'#22222A',skin:'#A0A0AA',armW:5,legW:5.4,legScale:1.15,headR:7,
+  head:b=>{ ctx.fillStyle='rgba(230,230,240,.9)'; ctx.beginPath(); ctx.arc(2.6,-1,1.3,0,7); ctx.arc(5.4,-1,1.2,0,7); ctx.fill(); ctx.strokeStyle='#5A5A64'; ctx.lineWidth=.8; ctx.beginPath(); ctx.moveTo(1,3.4); ctx.lineTo(7,3.4); ctx.stroke();
+    ctx.fillStyle='#6A6A74'; ctx.beginPath(); ctx.moveTo(-8,-2); ctx.quadraticCurveTo(-6,-15,2,-13); ctx.quadraticCurveTo(9,-12,8,-2); ctx.quadraticCurveTo(3,-8,-8,-2); ctx.fill(); },
+  back:(sh,hp)=>{ const a=.5+.2*Math.sin(S.t*0.06); ctx.fillStyle='rgba(90,90,104,'+a+')'; ctx.beginPath(); ctx.moveTo(-8,sh-2); ctx.lineTo(8,sh-2); ctx.lineTo(16,hp+18); ctx.lineTo(8,hp+12); ctx.lineTo(0,hp+20); ctx.lineTo(-8,hp+12); ctx.lineTo(-16,hp+18); ctx.closePath(); ctx.fill(); },
+  torso:(sh,hp)=>{ ctx.fillStyle='#44444C'; rr(-10,sh-3,20,hp-sh+7,5); ctx.fill(); ctx.fillStyle='#6A6A74'; rr(-9,sh-3,18,hp-sh+6,5); ctx.fill(); ctx.strokeStyle='rgba(230,230,240,.6)'; ctx.lineWidth=1; ctx.beginPath(); ctx.arc(0,sh+7,4,0.4,Math.PI*1.7); ctx.stroke(); ctx.beginPath(); ctx.moveTo(3.4,sh+3.6); ctx.lineTo(5,sh+5.6); ctx.lineTo(2.4,sh+5.6); ctx.stroke(); },
+  hand:()=>{ ctx.fillStyle='#E8E4F0'; rr(-1,-4,10,8,1.4); ctx.fill(); ctx.fillStyle='#C9C4D0'; ctx.fillRect(4,-4,1,8); ctx.fillStyle='rgba(60,60,70,.4)'; ctx.fillRect(0,-2,3,.6); ctx.fillRect(6,-2,2.4,.6); },
+  handB:()=>{ ctx.fillStyle='#A0A0AA'; ctx.beginPath(); ctx.arc(0,0,3,0,7); ctx.fill(); }});
+JM.push(
+ {n:'DON ESCOMBRO',r:'el desánimo que dice que nada se puede',proj:{icon:'ladrillo',n:'ESCOMBRO',dmg:2},esp:['salto','carga'],tip:'reconstruccion',slam:'¡NO HAY NADA QUE HACER!',
+  say:['¡Esto no se levanta nunca!','¡Pida un crédito grande y hágalo todo ya!','¡Para qué presupuesto!','¡Mejor quédese en las ruinas!'],
+  no:['¡Por etapas!','¡Presupuesto!','¡Lo esencial primero!','¡Fondo para imprevistos!','¡Sí se puede!','¡Techo y agua!','¡Sin deudas impagables!','¡Paso a paso!','¡Con la comunidad!','¡Reconstruimos!'],
+  intro:'Don Escombro te tira ladrillos y te quiere convencer de que nada se puede. Salta sus derrumbes y esquiva sus embestidas.',fin:'Reconstruir es posible: presupuesto, plan por etapas y un fondo para imprevistos.'},
+ {n:'EL CONTRABANDISTA',r:'el que vende papeles falsos',proj:{icon:'flyer',n:'PAPELES FALSOS',dmg:2},esp:['tiro3','carga'],tip:'documentos',slam:'¡CÉDULA EXPRÉS!',
+  say:['¡Le consigo la cédula hoy mismo!','¡Para qué banco, guárdela conmigo!','¡Préstamo sin papeles!','¡La ayuda oficial es lenta, yo se la vendo!'],
+  no:['¡Trámite oficial!','¡Cuenta vigilada!','¡No compro papeles!','¡Ayudas sin intermediarios!','¡Denuncio!','¡Documentos en regla!','¡Nada de gota a gota!','¡Pregunto primero!','¡Empiezo limpio!','¡Ahorro formal!'],
+  intro:'El Contrabandista lanza papeles falsos de tres en tres. Esquívalos y no le compres nada.',fin:'Los documentos se recuperan en entidades oficiales, y una cuenta vigilada protege lo que vuelves a ganar.'},
+ {n:'LA MANCHA NEGRA',r:'la contaminación que no se va sola',proj:{icon:'gota',n:'AGUA SUCIA',dmg:2},esp:['lluvia','salto'],tip:'aguaLimpia',slam:'¡TODO AL RÍO!',rain:{icon:'gota',n:'AGUA SUCIA',dmg:1},
+  say:['¡Botar al río es gratis!','¡El agua se limpia sola!','¡Que lo pague otro!','¡Una mancha más no se nota!'],
+  no:['¡Agua limpia!','¡Trato los residuos!','¡Siembro en la orilla!','¡Planta de tratamiento!','¡El río es de todos!','¡Menos gastos de salud!','¡Vuelve la pesca!','¡Huella verde!','¡Prevenir es más barato!','¡El río revive!'],
+  intro:'La Mancha Negra salta y riega agua sucia. Esquiva el aguacero y golpéala cuando aterrice.',fin:'Limpiar el río es una inversión: el agua limpia ahorra salud, alimentos y servicios para todos.'},
+ {n:'EL TALADOR',r:'el que corta lo que estás sembrando',proj:{icon:'tronco',n:'MADERA ILEGAL',dmg:2},esp:['carga','lluvia'],tip:'negocioVerde',slam:'¡A TUMBAR!',rain:{icon:'tronco',n:'TRONCOS',dmg:1},
+  say:['¡Un árbol vale más tumbado!','¡Plata rápida con la madera!','¡Para qué vivero!','¡El bosque crece solo!'],
+  no:['¡Siembro nativos!','¡Vivero!','¡Negocio verde!','¡Ecoturismo!','¡Pago por servicios ambientales!','¡Bosque vivo!','¡Agua para mañana!','¡Denuncio la tala!','¡Ingreso que dura!','¡Futuro verde!'],
+  intro:'El Talador embiste con su motosierra y hace llover troncos. Cúbrete y contraataca.',fin:'Un bosque en pie y un vivero dan ingresos que duran; la madera ilegal se vende una sola vez.'},
+ {n:'DON DESPERDICIO',r:'el de usar y botar',proj:{icon:'lata',n:'USAR Y BOTAR',dmg:1},esp:['tiro3','lluvia'],tip:'economiaCircular',slam:'¡BÓTELO Y COMPRE OTRO!',rain:{icon:'lata',n:'BASURA',dmg:1},
+  say:['¡Si se daña, compre otro!','¡Reciclar es perder el tiempo!','¡Todo a la misma bolsa!','¡A crédito y a la basura!'],
+  no:['¡Reparo!','¡Reutilizo!','¡Separo!','¡Reciclo!','¡Economía circular!','¡Gasto menos!','¡Materia prima!','¡Cero desperdicio!','¡Ahorro!','¡Lo arreglo yo!'],
+  intro:'Don Desperdicio lanza latas y basura sin parar. Esquiva y aprovecha cuando recarga.',fin:'Reducir, reutilizar, reparar y reciclar: gastas menos, contaminas menos y creas empleo.'},
+ {n:'LA DESCONFIANZA',r:'la que divide a la comunidad',proj:{icon:'flyer',n:'RUMOR',dmg:1},esp:['tiro3','invoca'],tip:'cooperativa',slam:'¡CADA QUIEN POR SU LADO!',
+  say:['¡No confíe en nadie!','¡Seguro el tesorero se la roba!','¡Cuentas claras? ¡Para qué!','¡Solo se llega más rápido!'],
+  no:['¡Cuentas claras!','¡Actas y registros!','¡Cooperativa!','¡Fondo de ahorro!','¡Microcrédito justo!','¡Rendición de cuentas!','¡Juntos llegamos lejos!','¡Confianza!','¡Compras al por mayor!','¡Comunidad!'],
+  intro:'La Desconfianza riega rumores y llama a sus cómplices. Derrótalos y no te dejes dividir.',fin:'Con reglas, registros y rendición de cuentas, la comunidad ahorra y presta mejor que cada uno solo.'},
+ {n:'EL ACAPARADOR',r:'el que esconde para subir precios',proj:{icon:'price',n:'PRECIO INFLADO',dmg:1},esp:['carga','tiro3','lluvia'],tip:'comercioJusto',slam:'¡TODO ES MÍO!',rain:{icon:'price',n:'PRECIO INFLADO',dmg:1},
+  say:['¡Guardo el café hasta que suba!','¡El caficultor que se aguante!','¡Sin factura sale más barato!','¡Negocio y casa en el mismo bolsillo!'],
+  no:['¡Comercio justo!','¡Flujo de caja!','¡Cuentas separadas!','¡Precio justo!','¡Formalidad!','¡Proveedores contentos!','¡Cliente fiel!','¡Sin acaparar!','¡Negocio que dura!','¡Emprendo bien!'],
+  intro:'El Acaparador lanza precios inflados y embiste con sus bultos. Agáchate, salta y golpea.',fin:'Un negocio con flujo de caja, formalidad y precios justos crece y hace crecer a la región.'},
+ {n:'EL OLVIDO',r:'el que quiere que repitas el colapso',proj:{icon:'ladrillo',n:'VIEJOS HÁBITOS',dmg:3},esp:['salto','lluvia','carga','tiro3','invoca'],tip:'pazLegado',slam:'¡OLVIDA TODO!',rain:{icon:'lata',n:'VIEJOS HÁBITOS',dmg:2},
+  say:['¡Olvida lo que aprendiste!','¡Vuelve a gastar como antes!','¡Ya pasó la crisis, para qué ahorrar!','¡No enseñes nada a nadie!'],
+  no:['¡Presupuesto!','¡Ahorro!','¡Seguros!','¡Activos!','¡Cuentas claras!','¡Agua limpia!','¡Comunidad!','¡Paz!','¡Enseño lo aprendido!','¡Legado!'],
+  intro:'El Olvido usa todos los trucos de los jefes anteriores. Usa todo lo que aprendiste en la Ruta Financiera.',fin:'El legado es no olvidar: enseñar, cuidar la paz y el ambiente, y mantener los buenos hábitos.'});
+// ---------- decoración de los escenarios de la reconstrucción ----------
+Object.assign(DECO2,{
+ andamios:(d)=>{ const h=34+(d.k%22); ctx.fillStyle='#B8A890'; ctx.fillRect(-12,-h,24,h); ctx.fillStyle='#8A7A66'; for(let y=-h+6;y<-4;y+=10){ ctx.fillRect(-9,y,6,6); ctx.fillRect(3,y,6,6); }
+   ctx.strokeStyle='#C9A23A'; ctx.lineWidth=1; for(const x of [-15,15]){ ctx.beginPath(); ctx.moveTo(x,0); ctx.lineTo(x,-h-6); ctx.stroke(); } for(let y=-8;y>-h-6;y-=10){ ctx.beginPath(); ctx.moveTo(-15,y); ctx.lineTo(15,y); ctx.stroke(); }
+   ctx.strokeStyle='#E0B030'; ctx.lineWidth=1.4; ctx.beginPath(); ctx.moveTo(22,0); ctx.lineTo(22,-h-20); ctx.lineTo(-4,-h-20); ctx.stroke(); ctx.lineWidth=.6; ctx.beginPath(); ctx.moveTo(2,-h-20); ctx.lineTo(2,-h-10+Math.sin(S.t*0.05+d.k)*2); ctx.stroke(); },
+ carpas:(d)=>{ const c=['#E07A4A','#4A8AC0','#E0B04A','#6AAA5A'][d.k%4]; ctx.fillStyle=c; ctx.beginPath(); ctx.moveTo(-16,0); ctx.lineTo(0,-20); ctx.lineTo(16,0); ctx.closePath(); ctx.fill(); ctx.fillStyle='rgba(0,0,0,.25)'; ctx.beginPath(); ctx.moveTo(0,-20); ctx.lineTo(16,0); ctx.lineTo(4,0); ctx.closePath(); ctx.fill();
+   ctx.fillStyle='#3A2A1A'; ctx.beginPath(); ctx.moveTo(-3,0); ctx.lineTo(0,-8); ctx.lineTo(3,0); ctx.closePath(); ctx.fill(); ctx.strokeStyle='#8A7A66'; ctx.lineWidth=.6; ctx.beginPath(); ctx.moveTo(20,0); ctx.lineTo(20,-14); ctx.lineTo(34,-14); ctx.lineTo(34,0); ctx.stroke(); ctx.fillStyle='#F4ECD8'; ctx.fillRect(22,-13,4,5); ctx.fillStyle='#C9475B'; ctx.fillRect(28,-13,4,6); },
+ riolimpio:(d)=>{ ctx.fillStyle='rgba(80,170,220,.6)'; ctx.fillRect(-24,-4,48,5); ctx.strokeStyle='rgba(255,255,255,.7)'; ctx.lineWidth=.6; ctx.beginPath(); for(let x=-24;x<=24;x+=3) ctx.lineTo(x,-4+Math.sin(x*0.5+S.t*0.08)); ctx.stroke();
+   ctx.strokeStyle='#4A8A3A'; ctx.lineWidth=1.2; for(let i=0;i<5;i++){ ctx.beginPath(); ctx.moveTo(-20+i*10,-4); ctx.lineTo(-21+i*10,-14-(i%2)*4); ctx.stroke(); }
+   if(d.k%3===0){ const t=(S.t*0.04+d.k)%6.28; ctx.fillStyle='#E0A050'; ctx.save(); ctx.translate(Math.cos(t)*14,-6-Math.abs(Math.sin(t*2))*8); ctx.beginPath(); ctx.ellipse(0,0,3.4,1.4,0,0,7); ctx.fill(); ctx.restore(); } },
+ vivero:(d)=>{ ctx.fillStyle='#6E4A2A'; ctx.fillRect(-20,-3,40,3); for(let i=0;i<5;i++){ const x=-16+i*8, h=6+((d.k+i)%4)*3; ctx.fillStyle='#3A2A1A'; ctx.fillRect(x-2.4,-7,4.8,4); ctx.strokeStyle='#5A3A20'; ctx.lineWidth=.8; ctx.beginPath(); ctx.moveTo(x,-7); ctx.lineTo(x,-7-h); ctx.stroke();
+   ctx.fillStyle=i%2?'#4EA84E':'#6CC060'; ctx.beginPath(); ctx.ellipse(x,-7-h,3.4,2.4,0,0,7); ctx.fill(); }
+   if(d.k%2===0){ ctx.fillStyle='#F4ECD8'; ctx.fillRect(18,-16,14,8); ctx.fillStyle='#2E6E3A'; ctx.font='800 3.4px sans-serif'; ctx.fillText('VIVERO',19,-10.6); ctx.fillStyle='#6E4A2A'; ctx.fillRect(24,-8,1.4,8); } },
+ reciclaje:(d)=>{ const cs=['#3E8AD0','#E0B030','#4EA84E','#8A8F98']; for(let i=0;i<3;i++){ const c=cs[(d.k+i)%4]; ctx.fillStyle=c; rr(-18+i*12,-12,10,12,1.5); ctx.fill(); ctx.fillStyle='rgba(0,0,0,.25)'; ctx.fillRect(-18+i*12,-12,10,2); ctx.fillStyle='#fff'; ctx.font='800 5px sans-serif'; ctx.fillText('♻',-16+i*12,-3); }
+   if(d.k%3===0){ ctx.fillStyle='#2A3A5A'; ctx.save(); ctx.translate(22,-20); ctx.rotate(-0.35); ctx.fillRect(0,0,22,10); ctx.strokeStyle='#8AB0E0'; ctx.lineWidth=.5; for(let x=0;x<=22;x+=5.5){ ctx.beginPath(); ctx.moveTo(x,0); ctx.lineTo(x,10); ctx.stroke(); } ctx.restore(); ctx.fillStyle='#6A6A70'; ctx.fillRect(28,-14,1.6,14); } },
+ cooperativa:(d)=>{ ctx.fillStyle='#F2E6C8'; ctx.fillRect(-14,-20,28,20); ctx.fillStyle='#B0503A'; ctx.beginPath(); ctx.moveTo(-17,-20); ctx.lineTo(0,-30); ctx.lineTo(17,-20); ctx.closePath(); ctx.fill(); ctx.fillStyle='#5A3A20'; ctx.fillRect(-4,-12,8,12); ctx.fillStyle='#4A8AC0'; ctx.fillRect(-12,-16,6,5); ctx.fillRect(6,-16,6,5);
+   ctx.fillStyle='#2E6E3A'; ctx.font='800 3.4px sans-serif'; ctx.textAlign='center'; if(d.k%2===0) ctx.fillText('COOPERATIVA',0,-22); ctx.textAlign='left';
+   for(let i=0;i<4;i++){ ctx.fillStyle='#4E9A3A'; ctx.beginPath(); ctx.arc(20+i*5,-3,2.6,0,7); ctx.fill(); ctx.fillStyle='#E04A3A'; ctx.beginPath(); ctx.arc(20+i*5,-4,.9,0,7); ctx.fill(); } },
+ puerto:(d)=>{ const cs=['#C9475B','#3E8AD0','#E0B030','#4EA84E']; for(let i=0;i<2;i++) for(let j=0;j<2-i;j++){ ctx.fillStyle=cs[(d.k+i*2+j)%4]; ctx.fillRect(-18+j*16+i*8,-9-i*9,15,9); ctx.strokeStyle='rgba(0,0,0,.25)'; ctx.lineWidth=.5; for(let x=2;x<15;x+=3){ ctx.beginPath(); ctx.moveTo(-18+j*16+i*8+x,-9-i*9); ctx.lineTo(-18+j*16+i*8+x,-i*9); ctx.stroke(); } }
+   if(d.k%2===0){ ctx.strokeStyle='#E0B030'; ctx.lineWidth=1.4; ctx.beginPath(); ctx.moveTo(24,0); ctx.lineTo(24,-38); ctx.lineTo(-6,-38); ctx.moveTo(24,-30); ctx.lineTo(10,-38); ctx.stroke(); } },
+ renacida:(d)=>{ if(d.k%3===0){ ctx.fillStyle='#E8E4E0'; ctx.fillRect(-1,-46,2,46); ctx.save(); ctx.translate(0,-46); ctx.rotate(S.t*0.03+d.k); ctx.fillStyle='#F6F2EC'; for(let i=0;i<3;i++){ ctx.rotate(2.094); ctx.beginPath(); ctx.ellipse(0,-8,1.6,8,0,0,7); ctx.fill(); } ctx.restore(); return; }
+   const h=26+(d.k%18), c=['#F2C860','#7AC0E0','#E08AA0','#9ADA7A'][d.k%4]; ctx.fillStyle=c; ctx.fillRect(-11,-h,22,h); ctx.fillStyle='rgba(255,255,255,.75)'; for(let y=-h+5;y<-6;y+=8){ ctx.fillRect(-8,y,5,4); ctx.fillRect(3,y,5,4); }
+   ctx.fillStyle='#2A3A5A'; ctx.fillRect(-11,-h-2,22,2); ctx.fillStyle='#4EA84E'; ctx.beginPath(); ctx.arc(-14,-6,5,0,7); ctx.arc(15,-5,4,0,7); ctx.fill(); }});
+// ---------- el mundo recupera el color a medida que lo restauras ----------
+function recolorP(){ const L=S.L; if(!L||rutaDe(S.li)!==3) return 1; if(S.r4li!==S.li){ S.r4li=S.li; S.r4base=eco.stats.restaura||0; S.r4show=0; }
+  const rest=Math.max(0,(eco.stats.restaura||0)-S.r4base), prog=S.p?Math.max(0,Math.min(1,S.p.x/(L.w*T))):0, jefe=L.ents.some(q=>q.t==='jefeM')&&!L.ents.some(q=>q.t==='jefeM'&&!q.dead&&q.st!=='derrota');
+  return Math.min(1,0.08+prog*0.42+rest*0.18+(jefe?0.4:0)); }
+function drawRecolor(){ if(rutaDe(S.li)!==3||!S.L) return; const tgt=recolorP(); S.r4show=(S.r4show||0)+(tgt-(S.r4show||0))*0.03; const a=Math.max(0,0.82*(1-S.r4show)); if(a<0.02) return;
+  ctx.save(); ctx.globalCompositeOperation='saturation'; ctx.fillStyle='rgba(128,128,128,'+a.toFixed(3)+')'; ctx.fillRect(0,0,W,H); ctx.restore(); }
+// ---------- mapa de La Reconstrucción: del gris al color ----------
+const EXP_EDGE4=[300,296,284,300,288,296,304,312,280];
+const recGround=x=>{ const s=Math.max(0,Math.min(7.999,x/80)), i=Math.floor(s), f=s-i, a=EXP_EDGE4[i], b=EXP_EDGE4[i+1], u=f*f*(3-2*f); return a+(b-a)*u+Math.sin(x*0.09)*2; };
+const MAPN4=[0,1,2,3,4,5,6,7].map(i=>[40+i*80,Math.round(recGround(40+i*80))-6]);
+let MAPBG4=null;
+function buildMapBg4(){ const cv2=document.createElement('canvas'); cv2.width=W*2; cv2.height=H*2; const c=cv2.getContext('2d'); c.scale(2,2); const R=mulberry(444), gy=x=>recGround(x);
+  let g=c.createLinearGradient(0,0,0,H); g.addColorStop(0,'#3A6AB0'); g.addColorStop(.5,'#9AC8E8'); g.addColorStop(.8,'#FFD8A8'); g.addColorStop(1,'#FFE8C0'); c.fillStyle=g; c.fillRect(0,0,W,H);
+  // sol naciente y arcoíris sobre la ciudad renacida
+  const sg=c.createRadialGradient(560,200,4,560,200,90); sg.addColorStop(0,'rgba(255,240,180,1)'); sg.addColorStop(.25,'rgba(255,220,150,.7)'); sg.addColorStop(1,'rgba(255,220,150,0)'); c.fillStyle=sg; c.fillRect(440,90,240,220);
+  ['#E04A4A','#F29A3A','#F2D84A','#5AC060','#4A8AE0','#8A5AC0'].forEach((col,i)=>{ c.strokeStyle=col; c.globalAlpha=.4; c.lineWidth=3; c.beginPath(); c.arc(560,300,110-i*3,Math.PI*1.05,Math.PI*1.95); c.stroke(); }); c.globalAlpha=1;
+  // nubes
+  for(let k=0;k<6;k++){ const x=40+k*105+R()*30, y=40+R()*50; c.fillStyle='rgba(255,255,255,.75)'; c.beginPath(); c.ellipse(x,y,22,7,0,0,7); c.ellipse(x+12,y-5,12,7,0,0,7); c.ellipse(x-10,y-3,10,6,0,0,7); c.fill(); }
+  // montañas verdes al fondo
+  [['#7AA0C0',200,.7],['#5A8A7A',236,.9]].forEach(([col,b,a])=>{ c.fillStyle=col; c.globalAlpha=a; c.beginPath(); c.moveTo(0,320); for(let x=0;x<=W;x+=4) c.lineTo(x,b+Math.abs(Math.sin(x*0.013+b))*36+Math.sin(x*0.07)*5); c.lineTo(W,320); c.closePath(); c.fill(); }); c.globalAlpha=1;
+  // 1 ruinas con andamios y grúa
+  for(let k=0;k<4;k++){ const x=8+k*17, h=24+R()*30, y=gy(x+6); c.fillStyle='#8A847C'; c.fillRect(x,y-h,13,h); c.strokeStyle='#C9A23A'; c.lineWidth=.7; c.strokeRect(x-1,y-h-2,15,h+2); for(let yy=y-6;yy>y-h;yy-=7){ c.beginPath(); c.moveTo(x-1,yy); c.lineTo(x+14,yy); c.stroke(); } }
+  c.strokeStyle='#E0B030'; c.lineWidth=1.4; c.beginPath(); c.moveTo(70,gy(70)); c.lineTo(70,180); c.lineTo(30,180); c.stroke();
+  // 2 campamento de carpas
+  ['#E07A4A','#4A8AC0','#E0B04A','#6AAA5A','#C9475B'].forEach((col,k)=>{ const x=90+k*13, y=gy(x); c.fillStyle=col; c.beginPath(); c.moveTo(x-7,y); c.lineTo(x,y-11); c.lineTo(x+7,y); c.closePath(); c.fill(); });
+  // 3 río que revive
+  c.fillStyle='rgba(70,160,220,.9)'; c.beginPath(); c.moveTo(166,gy(166)-2); for(let x=166;x<=232;x+=4) c.lineTo(x,gy(x)-2+Math.sin(x*0.3)*1); c.lineTo(232,H); c.lineTo(166,H); c.closePath(); c.fill();
+  c.strokeStyle='rgba(255,255,255,.7)'; c.lineWidth=.7; for(let k=0;k<4;k++){ c.beginPath(); for(let x=170;x<=228;x+=4) c.lineTo(x,gy(x)+4+k*6+Math.sin(x*0.4+k)*1); c.stroke(); }
+  for(let k=0;k<4;k++){ const x=176+k*16; c.strokeStyle='#4A8A3A'; c.lineWidth=1; c.beginPath(); c.moveTo(x,gy(x)-2); c.lineTo(x-1,gy(x)-12); c.stroke(); }
+  // 4 vivero: filas de árboles jóvenes
+  for(let k=0;k<8;k++){ const x=246+k*8, y=gy(x); c.strokeStyle='#5A3A20'; c.lineWidth=1; c.beginPath(); c.moveTo(x,y); c.lineTo(x,y-8-(k%3)*3); c.stroke(); c.fillStyle=k%2?'#4EA84E':'#6CC060'; c.beginPath(); c.arc(x,y-9-(k%3)*3,3.4,0,7); c.fill(); }
+  // 5 fábrica circular con paneles solares
+  { const x=330, y=gy(x); c.fillStyle='#8A9AA0'; c.fillRect(x-14,y-26,32,26); c.fillStyle='#6A7A80'; c.fillRect(x+10,y-42,6,16); c.fillStyle='#2A3A5A'; c.save(); c.translate(x-14,y-27); c.rotate(-0.3); c.fillRect(0,-8,22,8); c.restore();
+    c.fillStyle='rgba(255,255,255,.7)'; c.beginPath(); c.arc(x+13,y-48,4,0,7); c.arc(x+17,y-54,5,0,7); c.fill(); ['#3E8AD0','#E0B030','#4EA84E'].forEach((col,i)=>{ c.fillStyle=col; c.fillRect(x+22+i*6,y-7,5,7); }); }
+  // 6 pueblo cooperativo con huertas
+  for(let k=0;k<4;k++){ const x=410+k*16, y=gy(x); c.fillStyle='#F2E6C8'; c.fillRect(x-6,y-11,12,11); c.fillStyle='#B0503A'; c.beginPath(); c.moveTo(x-8,y-11); c.lineTo(x,y-17); c.lineTo(x+8,y-11); c.closePath(); c.fill(); }
+  for(let r=0;r<3;r++){ c.strokeStyle='#5AA040'; c.lineWidth=1.4; c.beginPath(); c.moveTo(404,gy(404)+5+r*4); c.lineTo(470,gy(470)+5+r*4); c.stroke(); }
+  // 7 puerto con contenedores, grúa y barco
+  c.fillStyle='rgba(40,130,200,.9)'; c.fillRect(480,gy(480)+6,80,H); ['#C9475B','#3E8AD0','#E0B030','#4EA84E','#C9475B','#E0B030'].forEach((col,i)=>{ c.fillStyle=col; c.fillRect(488+(i%3)*11,gy(500)-8-Math.floor(i/3)*7,10,6); });
+  c.strokeStyle='#E0B030'; c.lineWidth=1.4; c.beginPath(); c.moveTo(530,gy(530)); c.lineTo(530,236); c.lineTo(506,236); c.stroke();
+  c.fillStyle='#F4ECD8'; c.beginPath(); c.moveTo(538,gy(540)+16); c.lineTo(566,gy(540)+16); c.lineTo(560,gy(540)+22); c.lineTo(542,gy(540)+22); c.closePath(); c.fill(); c.fillStyle='#C9475B'; c.fillRect(548,gy(540)+10,6,6);
+  // 8 ciudad renacida con molinos y parques
+  ['#F2C860','#7AC0E0','#E08AA0','#9ADA7A','#F2C860'].forEach((col,k)=>{ const x=572+k*13, y=gy(x), h=20+((k*7)%5)*6; c.fillStyle=col; c.fillRect(x-5,y-h,11,h); c.fillStyle='rgba(255,255,255,.7)'; for(let yy=y-h+4;yy<y-4;yy+=6) c.fillRect(x-3,yy,7,2); });
+  [[600,150],[628,140]].forEach(([x,ty])=>{ c.strokeStyle='#F6F2EC'; c.lineWidth=1.4; c.beginPath(); c.moveTo(x,gy(x)-18); c.lineTo(x,ty); c.stroke(); for(let i=0;i<3;i++){ const a=i*2.094+0.4; c.beginPath(); c.moveTo(x,ty); c.lineTo(x+Math.cos(a)*12,ty+Math.sin(a)*12); c.stroke(); } });
+  // suelo, del gris al verde
+  const COL=['#8A8680','#8A8A6A','#6AA06A','#4EA84E','#7AA858','#7AB850','#C9B888','#6CC060'], EARTH=['#5A5450','#6A5A44','#5A4A36','#4A3826','#6A5A48','#7A5A3A','#8A7050','#6A5040'];
+  for(let i=0;i<8;i++){ const x0=i*80, x1=x0+80; c.fillStyle=EARTH[i]; c.beginPath(); c.moveTo(x0,H); for(let x=x0;x<=x1;x+=2) c.lineTo(x,gy(x)); c.lineTo(x1,H); c.closePath(); c.fill();
+    c.fillStyle=COL[i]; c.beginPath(); for(let x=x0;x<=x1;x+=2) c.lineTo(x,gy(x)-1); for(let x=x1;x>=x0;x-=2) c.lineTo(x,gy(x)+6); c.closePath(); c.fill(); }
+  // el color vuelve de izquierda a derecha
+  c.save(); c.globalCompositeOperation='saturation'; const sat=c.createLinearGradient(0,0,W,0); sat.addColorStop(0,'rgba(128,128,128,.85)'); sat.addColorStop(.45,'rgba(128,128,128,.35)'); sat.addColorStop(.8,'rgba(128,128,128,0)'); c.fillStyle=sat; c.fillRect(0,0,W,H); c.restore();
+  MAPBG4=cv2; }
+MEDALLAS.push({id:'reconstruccion',n:'Constructor de paz',d:'Termina La Reconstrucción y aprueba la Prueba del Constructor',c:()=>!!eco.constructor});
 scrApply();
 resize();
 legend();
