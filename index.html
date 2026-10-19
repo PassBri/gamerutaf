@@ -188,6 +188,9 @@ body.ovopen .touch,body.ovopen .fsbar,body.ovopen .rotfs{display:none!important}
 .rkbar{display:grid;grid-template-columns:2fr 1fr 1fr;gap:8px;margin-bottom:8px;align-items:end}.rkfl{display:flex;flex-direction:column;gap:3px;min-width:0}.rkfl span{font:700 11px var(--f-body);color:var(--muted)}.rkfl select,.rkfl input{width:100%;font:600 13px var(--f-body);background:var(--bg);color:var(--ink);border:1px solid var(--line);border-radius:9px;padding:7px 9px;min-height:38px;box-sizing:border-box}.rkck{grid-column:1/-1;display:flex;gap:6px;align-items:center;font:600 13px var(--f-body)}
 .rkinfo{display:flex;flex-wrap:wrap;justify-content:space-between;gap:6px;font-size:12.5px;color:var(--muted);margin:0 0 10px}.rkleg{white-space:nowrap}.rkleg i{margin-left:8px}
 @media (max-width:560px){.rkw{grid-template-columns:repeat(4,1fr)}.rkf{grid-template-columns:repeat(2,1fr)}.rkbar{grid-template-columns:1fr 1fr}.rkbar .rkfl:first-child{grid-column:1/-1}.rktime b{font-size:17px}}
+.rk6{grid-template-columns:repeat(6,1fr)}.rkprog{display:grid;grid-template-columns:repeat(8,1fr);gap:3px;margin-top:9px}.rkprog span{height:5px;border-radius:3px;background:var(--line)}.rkprog span.on{background:#F2B33D}
+.rkd{margin-top:8px}.rkd summary{cursor:pointer;list-style:none;display:inline-flex;align-items:center;gap:6px;min-height:36px;padding:0 12px;border-radius:9px;border:1px solid var(--line);font:700 13px var(--f-body);color:var(--ink);background:var(--panel)}.rkd summary::-webkit-details-marker{display:none}.rkd summary::after{content:'▾';font-size:12px}.rkd[open] summary::after{content:'▴'}.rkd .rkdc,.rkd[open] .rkdo{display:none}.rkd[open] .rkdc{display:inline}.rkdl{font:700 11px var(--f-body);color:#C9A45A;margin:10px 0 0;letter-spacing:.03em;text-transform:uppercase}.rktools{display:flex;gap:8px;margin:0 0 10px}
+@media (max-width:560px){.rk6{grid-template-columns:repeat(3,1fr)}}
 .gig{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:8px}.gi,.gblk{background:var(--bg);border:1px solid var(--line);border-radius:12px;padding:10px 12px}.gblk{margin-top:8px}.gt{font:700 13.5px var(--f-body)}.gv{font:800 22px var(--f-num);margin:2px 0}.gs{font-size:12.5px;line-height:1.45;margin-top:3px}.gsrc{font:700 10.5px var(--f-body);color:#C9A45A;margin-top:5px;letter-spacing:.02em}
 .moch{display:flex;height:24px;border-radius:8px;overflow:hidden;margin:7px 0 4px;font:700 11px var(--f-num);color:#fff}.moch span{display:grid;place-items:center;min-width:0;overflow:hidden}
 body.has-touch .ibtn{min-height:44px;min-width:44px}body.has-touch .fsbar button{min-width:44px;min-height:44px}body.has-touch #tipList,body.has-touch #tipMentor{min-height:44px}
@@ -4913,35 +4916,55 @@ async function rkSubmit(w,secs){
   return {run,best};
 }
 function rkPlace(run){ const list=rkRows().filter(r=>r.w===run.w&&r.d===run.d).sort((a,b)=>a.t-b.t); const i=list.findIndex(r=>rkKey(r)===rkKey(run)&&r.t<=run.t+0.05); return {pos:i<0?null:i+1,of:list.length}; }
-const RK_UI={w:'0',d:'sen',g:''};
+const RK_UI={w:'g',d:'sen',g:''};
 function rkTimes(r){ const all=rkRows(), k=String(r.a).toLowerCase()+'|'+String(r.g||'').toLowerCase(), T=[]; for(let w=0;w<=8;w++){ const m=all.filter(x=>x.w===w&&x.d===r.d&&String(x.a).toLowerCase()+'|'+String(x.g||'').toLowerCase()===k).sort((a,b)=>a.t-b.t)[0]; T.push(m?m.t:null); } return T; }
 function fmtTs(sec){ const m=Math.floor(sec/60), s2=Math.round(sec-m*60); return m+':'+(s2<10?'0':'')+s2; }
-function rkCard(r,i,d){ const DN={exp:'Explorador',sen:'Senderista',mon:'Montañista'}, T=rkTimes(r), sumW=T.slice(0,8).every(x=>x!=null)?T.slice(0,8).reduce((a,b)=>a+b,0):null, gen=r.w===8?r.t:(T[8]!=null?T[8]:sumW);
+const rkUK=r=>String(r.a).toLowerCase()+'|'+String(r.g||'').toLowerCase()+'|'+r.d;
+// resultado global: una fila por jugador con su avance, su tiempo total y sus finanzas más recientes
+function rkGlobal(rows){ const G={}; rows.forEach(r=>{ const k=rkUK(r); (G[k]=G[k]||[]).push(r); });
+  return Object.values(G).map(rs=>{ const T=[]; for(let w=0;w<=8;w++){ const m=rs.filter(x=>x.w===w).sort((a,b)=>a.t-b.t)[0]; T.push(m?m.t:null); }
+    const done=T.slice(0,8).filter(x=>x!=null).length, sum=T.slice(0,8).reduce((a,b)=>a+(b||0),0), total=T[8]!=null?T[8]:sum;
+    const last=rs.slice().sort((a,b)=>(b.w-a.w)||String(b.f||'').localeCompare(String(a.f||'')))[0];
+    return Object.assign({},last,{own:rs.some(x=>x.own),glob:{T,done,total,full:T[8]!=null}}); })
+   .sort((a,b)=>(b.glob.full-a.glob.full)||(b.glob.done-a.glob.done)||(a.glob.total-b.glob.total)); }
+function rkCard(r,i,d){ const DN={exp:'Explorador',sen:'Senderista',mon:'Montañista'}, gl=r.glob, T=gl?gl.T:rkTimes(r), sumW=T.slice(0,8).every(x=>x!=null)?T.slice(0,8).reduce((a,b)=>a+b,0):null, gen=r.w===8?r.t:(T[8]!=null?T[8]:sumW);
   const has=r.i!=null, de=has?(r.de||0):null, ie=r.ie!=null?r.ie:(has&&r.p!=null?((r.p+de)>0?Math.round(de/(r.p+de)*100):(de>0?999:0)):null), ba=r.ba!=null?r.ba:(has?r.i-r.gs:null);
   const cell=(l,v,k)=>`<div class="rkf-c"><small>${l}</small><b${k?` style="color:${SEMC[k]}"`:''}>${k?`<i style="background:${SEMC[k]}"></i>`:''}${v}</b></div>`, n=x=>x==null?'—':x;
+  const pill=(l,v,k)=>`<span class="rkp"${k?` style="color:${SEMC[k]}"`:''}>${k?`<i style="background:${SEMC[k]}"></i>`:''}${l} <b>${v}</b></span>`;
+  const kp=r.p>0?'v':r.p===0?'a':'r', ki=ie==null?null:semIE(ie);
   const medal=`<span class="rkm${i<3?' p'+i:''}">${i+1}</span>`, sub=[r.c,[r.gr,r.g].filter(Boolean).join(' ')].filter(Boolean).join(' · ');
+  const big=gl?(gl.full?fmtT(gl.total):gl.done?fmtT(gl.total):'—'):fmtT(r.t), lab=gl?(gl.full?'Ruta completa':gl.done+' de 8 mundos'):(r.w===8?'Ruta completa':'Mundo '+(r.w+1));
   return `<article class="rkcard${r.own?' own':''}">
-   <div class="rkh">${medal}<div class="rkn"><b>${esc(r.a)}</b>${r.own?' <span class="tag" style="background:var(--gold)">tú</span>':''}<div class="rksub">${esc(sub||'Sin colegio')}${d==='all'?' · '+(DN[r.d]||''):''} · ${esc(String(r.f||''))}</div></div>
-    <div class="rktime"><b>${fmtT(r.t)}</b><small>${r.w===8?'Ruta completa':'Mundo '+(r.w+1)}</small>${r.w!==8?`<small>General ${gen!=null?fmtT(gen):'—'}</small>`:''}</div></div>
-   <div class="rkw" aria-label="Tiempo por mundo">${T.slice(0,8).map((t,w)=>`<span class="rkt${w===r.w?' on':''}${t==null?' no':''}"><small>M${w+1}</small>${t==null?'—':fmtTs(t)}</span>`).join('')}</div>
-   ${has||r.p!=null?`<div class="rkf">${cell('Patrimonio',n(r.p),r.p>0?'v':r.p===0?'a':'r')}${cell('Balance / q',ba==null?'—':(ba>0?'+':'')+ba,ba==null?null:semBal(ba))}${cell('Endeudamiento',ie==null?'—':ie>=999?'alto':ie+' %',ie==null?null:semIE(ie))}${cell('Ahorro',has?(r.ta!=null?r.ta+' %':'—'):'—',has&&r.ta!=null?(r.ta>=20?'v':r.ta>=10?'a':'r'):null)}
-    ${cell('En alcancía',n(r.ah))}${cell('Inversión',n(r.iv))}${cell('Deudas',de==null?'—':de?'−'+de:'0',de==null?null:de?'r':'v')}${cell('Salud',n(r.sf),r.sf==null?null:r.sf>=60?'v':r.sf>=35?'a':'r')}</div>`:''}
-  </article>`; }
+   <div class="rkh">${medal}<div class="rkn"><b>${esc(r.a)}</b>${r.own?' <span class="tag" style="background:var(--gold)">tú</span>':''}<div class="rksub">${esc(sub||'Sin colegio')}${d==='all'?' · '+(DN[r.d]||''):''}</div></div>
+    <div class="rktime"><b>${big}</b><small>${lab}</small>${!gl&&r.w!==8?`<small>General ${gen!=null?fmtT(gen):'—'}</small>`:''}</div></div>
+   ${gl?`<div class="rkprog" title="${gl.done} de 8 mundos">${T.slice(0,8).map(t=>`<span class="${t!=null?'on':''}"></span>`).join('')}</div>`:''}
+   <div class="rkf rk6">${cell('Activos',r.p==null?'—':(r.p+(de||0)),null)}${cell('Pasivos',n(r.ps),r.ps?'a':null)}${cell('Patrimonio',n(r.p),r.p==null?null:kp)}${cell('Deudas',de==null?'—':de?'−'+de:'0',de==null?null:de?'r':'v')}${cell('Ahorros',n(r.ah))}${cell('Inversiones',n(r.iv))}</div>
+   <details class="rkd"><summary><span class="rkdo">Ver detalles</span><span class="rkdc">Ocultar detalles</span></summary>
+    <div class="rkdl">Tiempo por mundo</div>
+    <div class="rkw" aria-label="Tiempo por mundo">${T.slice(0,8).map((t,w)=>`<span class="rkt${!gl&&w===r.w?' on':''}${t==null?' no':''}"><small>M${w+1}</small>${t==null?'—':fmtTs(t)}</span>`).join('')}</div>
+    ${gl?`<div class="rksub" style="margin-top:6px">Tiempo general: <b>${gl.done?fmtT(gl.total):'—'}</b>${gl.full?' (ruta completa)':' (suma de los mundos terminados)'} · último registro: ${esc(String(r.f||''))} en ${r.w===8?'la ruta completa':'el Mundo '+(r.w+1)}</div>`:`<div class="rksub" style="margin-top:6px">Fecha: ${esc(String(r.f||''))}</div>`}
+    <div class="rkdl">Indicadores de salud financiera</div>
+    ${has||r.p!=null?`<div class="rkf">${cell('Balance / q',ba==null?'—':(ba>0?'+':'')+ba,ba==null?null:semBal(ba))}${cell('Endeudamiento',ie==null?'—':ie>=999?'alto':ie+' %',ki)}${cell('Tasa de ahorro',has&&r.ta!=null?r.ta+' %':'—',has&&r.ta!=null?(r.ta>=20?'v':r.ta>=10?'a':'r'):null)}${cell('Salud financiera',n(r.sf),r.sf==null?null:r.sf>=60?'v':r.sf>=35?'a':'r')}
+     ${cell('Ingresos / q',has?'+'+r.i:'—')}${cell('Gastos / q',has?'−'+r.gs:'—')}${cell('Activos que producen',n(r.ac))}${cell('Muertes financieras',n(r.mu||0),r.mu?'r':null)}</div>`:'<p class="muted" style="font-size:12px">Sin datos financieros en este registro.</p>'}
+   </details></article>`; }
 function renderRanking(el){
   if(!el) return;
   const sel=(id,opts,v,lab)=>`<label class="rkfl"><span>${lab}</span><select data-rk="${id}">${opts.map(([k,n])=>`<option value="${k}" ${String(v)===String(k)?'selected':''}>${esc(n)}</option>`).join('')}</select></label>`;
-  const w=+RK_UI.w, d=RK_UI.d, g=RK_UI.g.trim().toLowerCase(), myCl=(eco&&eco.clase&&eco.clase.code)||(profLoad().clase&&profLoad().clase.code)||(claseMine()&&claseMine().code)||''; if(RK_UI.cl==null) RK_UI.cl=!!myCl;
-  let list=rkRows().filter(r=>(!RK_UI.cl||!myCl||r.cl===myCl)&&r.w===w&&(d==='all'||r.d===d)&&(!g||(String(r.g||'')+' '+String(r.c||'')+' '+String(r.gr||'')).toLowerCase().includes(g))).sort((a,b)=>a.t-b.t).slice(0,15);
+  const wv=RK_UI.w, d=RK_UI.d, g=RK_UI.g.trim().toLowerCase(), myCl=(eco&&eco.clase&&eco.clase.code)||(profLoad().clase&&profLoad().clase.code)||(claseMine()&&claseMine().code)||''; if(RK_UI.cl==null) RK_UI.cl=!!myCl;
+  const base=rkRows().filter(r=>(!RK_UI.cl||!myCl||r.cl===myCl)&&(d==='all'||r.d===d)&&(!g||(String(r.g||'')+' '+String(r.c||'')+' '+String(r.gr||'')).toLowerCase().includes(g)));
+  const glob=wv==='g', list=glob?rkGlobal(base).slice(0,30):base.filter(r=>r.w===+wv).sort((a,b)=>a.t-b.t).slice(0,15);
   el.innerHTML=`<div class="rkbar">
-     ${sel('w',[...LV.map((L,i)=>[i,'Mundo '+(i+1)+' · '+L.name]),[8,'Ruta completa']],RK_UI.w,'Mundo')}
+     ${sel('w',[['g','Resultado global por jugador'],...LV.map((L,i)=>[i,'Mundo '+(i+1)+' · '+L.name]),[8,'Ruta completa']],RK_UI.w,'Ver')}
      ${sel('d',[['sen','Senderista'],['exp','Explorador'],['mon','Montañista'],['all','Todas']],RK_UI.d,'Dificultad')}
      <label class="rkfl"><span>Curso o colegio</span><input type="text" data-rk="g" placeholder="Filtrar" value="${esc(RK_UI.g)}"></label>
      ${myCl?`<label class="rkck"><input type="checkbox" id="rkCl" ${RK_UI.cl?'checked':''}> Solo mi clase (${esc(myCl)})</label>`:''}
    </div>
-   <div class="rkinfo"><span>${RK.shared&&RK.ready?'<b>Ranking compartido</b>, lo ven todos los jugadores':'<b>Ranking de este dispositivo</b>'} · gana el menor tiempo</span><span class="rkleg"><i style="background:${SEMC.v}"></i>sano <i style="background:${SEMC.a}"></i>cuidado <i style="background:${SEMC.r}"></i>riesgo</span></div>
+   <div class="rkinfo"><span>${RK.shared&&RK.ready?'<b>Ranking compartido</b>, lo ven todos los jugadores':'<b>Ranking de este dispositivo</b>'} · ${glob?'primero quien más mundos termina; si empatan, el menor tiempo total':'gana el menor tiempo'}</span><span class="rkleg"><i style="background:${SEMC.v}"></i>sano <i style="background:${SEMC.a}"></i>cuidado <i style="background:${SEMC.r}"></i>riesgo</span></div>
+   ${list.length>1?`<div class="rktools"><button type="button" class="btn sm" data-rkx="1">Desplegar todo</button><button type="button" class="btn sm" data-rkx="0">Recoger todo</button></div>`:''}
    ${list.length?`<div class="rkcards">${list.map((r,i)=>rkCard(r,i,d)).join('')}</div>`:'<p class="muted">Todavía no hay tiempos aquí. Termina un mundo para entrar al ranking.</p>'}
    ${list.length?'<p class="muted" style="font-size:12px;margin:10px 0 0">Balance / q: ingresos menos gastos por quincena. Endeudamiento: deudas ÷ todo lo que tiene (Guía 6: menos de 30 % es óptimo). Ahorro: tasa de ahorro sobre lo que gana.</p>':''}`;
   el.querySelectorAll('select[data-rk]').forEach(x=>x.onchange=()=>{ RK_UI[x.dataset.rk]=x.value; rkRefresh(); }); const ck=el.querySelector('#rkCl'); if(ck) ck.onchange=()=>{ RK_UI.cl=ck.checked; rkRefresh(); };
+  el.querySelectorAll('[data-rkx]').forEach(b=>b.onclick=()=>el.querySelectorAll('details.rkd').forEach(x=>x.open=b.dataset.rkx==='1'));
   const gi=el.querySelector('input[data-rk="g"]'); if(gi) gi.oninput=()=>{ RK_UI.g=gi.value; clearTimeout(gi._t); gi._t=setTimeout(()=>{ rkRefresh(); const n=document.querySelector('input[data-rk="g"]'); if(n){ n.focus(); n.setSelectionRange(n.value.length,n.value.length); } },350); };
 }
 // ---------- medallas (se guardan en este dispositivo entre partidas) ----------
