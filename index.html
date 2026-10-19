@@ -524,6 +524,7 @@ const CH={
  fomo:["                  ","                  ","                  ","                  ","  o    s       o  ","##################","##################"],
  trading:["                ","                ","                ","                ","   o   4     o  ","################","################"],
  lz_parca:["                    ","                    ","                    ","                    ","  o       5      o  ","####################","####################"],
+ ciudad:["                            ","                            ","                            ","                            ","   6    o     6   o     6   ","############################","############################"],
  poder:["                ","                ","                ","                ","   o   2    o   ","################","################"],
  negocio:["                ","                ","                ","                ","   1          o ","################","################"],
  racha:["                ","                ","                ","        o  o    ","   3   ##  ##   ","################","################"],
@@ -582,35 +583,35 @@ const LV=[
  {name:'El Valle',role:'Desempleado',step:'Identificación de ingresos',theme:0,costo:0,
   lesson:'En El Valle todavía no tienes ingreso fijo. Las monedas son tu dinero: recógelas, pero tu mochila tiene un límite. Busca el <b>casco de Empleo</b> sobre una plataforma: te dará un salario en cada quincena. Hay 3 páginas del <b>Cuaderno de Ruta</b> escondidas en las alturas. Terreno nuevo: un <b>pantano</b> que frena, un <b>río</b> con piedras que se hunden y un <b>muro de escalada</b> (mantén la flecha hacia el muro). Doña Rosa te espera en el camino… y un <b>gota a gota</b> también.',
   req:'Tener un empleo (salario)',
-  chunks:['start','poder','coins','pantano','billetes','job','ayuda','steps','page1','paciencia','colchon','rio','embalse','gap','vehiculo','bridge','lender','coins','calle','negocio','page2','curso','embalse','muro','steps','coins','racha','page3','camp']},
+  chunks:['start','poder','coins','pantano','billetes','job','ayuda','steps','ciudad','page1','paciencia','colchon','rio','embalse','gap','vehiculo','bridge','lender','coins','calle','negocio','page2','curso','embalse','muro','steps','coins','racha','page3','camp']},
  {name:'Base de la Montaña',role:'Empleado',step:'Control de gastos',theme:1,costo:1,
   lesson:'Las <b>hormigas</b> son gastos hormiga: si te tocan se llevan monedas. Salta encima de ellas para recuperar una. Desde aquí el costo de vida cobra 1 moneda por quincena. Aparecen el <b>banco</b> que cobra comisiones, la <b>nube de inflación</b>, las <b>tarjetas pre-aprobadas</b> y una <b>culebra</b> escondida en el pasto.',
   req:'Llegar al campamento con 10 monedas o más en la mano',
-  chunks:['start','poder','ants','billetes','pantano','vitrina','page1','tiendas','colchon','embalse','culebra','credito','fugas','antgap','ayuda','calle','negocio','page2','paciencia','embalse','banco','cloud','rio','vitrina','antgap','curso','racha','page3','ants','camp']},
+  chunks:['start','poder','ants','billetes','pantano','vitrina','ciudad','page1','tiendas','colchon','embalse','culebra','credito','fugas','antgap','ayuda','calle','ciudad','negocio','page2','paciencia','embalse','banco','cloud','rio','vitrina','antgap','curso','racha','page3','ants','camp']},
  {name:'Puntos de Observación',role:'Estratega',step:'Creación de ahorro',theme:2,costo:1,
   lesson:'Cada <b>alcancía</b> guarda la mitad de tus monedas apenas la tocas: págate primero. Si te golpean con la mano vacía, tu alcancía paga el golpe. Sin alcancía ni monedas, te quedas sin fondos.',
   req:'Tener 15 monedas o más en la alcancía',
-  chunks:['start','poder','steps','billetes','embalse','muro','mercado','puma','page1','apuros','colchon','embalse','prima','lender','vehiculo','cloud','sueno','rio','bridge','calle','negocio','page2','tiendas','embalse','banco','antgap','ayuda','pits','paciencia','trading','racha','page3','coins','camp']},
+  chunks:['start','poder','steps','billetes','embalse','muro','mercado','puma','ciudad','page1','apuros','colchon','embalse','prima','lender','vehiculo','cloud','sueno','rio','bridge','calle','ciudad','negocio','page2','tiendas','embalse','banco','antgap','ayuda','pits','paciencia','trading','racha','page3','coins','camp']},
  {name:'Primer Campamento',role:'Emprendedor',step:'Inversiones inteligentes',theme:3,costo:1,
   lesson:'Llega a los <b>lotes de inversión</b> con las monedas que piden y siembra. Se vuelven manantiales que te pagan en cada quincena, para siempre. Cuidado con las nubes de inflación.',
   req:'Tener al menos 1 activo',
-  chunks:['start','poder','invest','ants','mercado','cloud','rio','page1','tiendas','embalse','billetes','invest','vehiculo','credito','muro','sueno','calle','negocio','page2','curso','cripto','embalse','banco','puma','ayuda','mercado','invest','pantano','trading','racha','page3','coins','camp']},
+  chunks:['start','poder','invest','ants','mercado','cloud','rio','ciudad','page1','tiendas','embalse','billetes','invest','vehiculo','credito','muro','sueno','calle','ciudad','negocio','page2','curso','cripto','embalse','banco','puma','ayuda','mercado','invest','pantano','trading','racha','page3','coins','camp']},
  {name:'Campamento Avanzado',role:'Empresario',step:'Diversificación de recursos',theme:4,costo:2,
   lesson:'Bosque de niebla: ves poco (la <b>linterna</b> ayuda) y hay <b>costos ocultos</b>, zarzas que no se ven. Hay tres tipos de activo: <b>financiero</b>, <b>inmueble</b> y <b>emprendimiento</b>; no dependas de uno solo. Ojo con el <b>prestamista gota a gota</b>: da plata rápido, pero encadena.',
   req:'Tener activos de 2 tipos distintos',
-  chunks:['start','poder','invest','mercado','moving','cloud','hidden','page1','fomo','embalse','credito','lender','pantano','duo','bridge','calle','negocio','page2','tiendas','cripto','embalse','tower','banco','culebra','ayuda','invest','vehiculo','trading','racha','page3','coins','camp']},
+  chunks:['start','poder','invest','mercado','moving','cloud','hidden','ciudad','page1','fomo','embalse','credito','lender','pantano','duo','bridge','calle','ciudad','negocio','page2','tiendas','cripto','embalse','tower','banco','culebra','ayuda','invest','vehiculo','trading','racha','page3','coins','camp']},
  {name:'La Cima',role:'Inversionista',step:'Eliminación de pasivos',theme:5,costo:2,
   lesson:'El páramo de los frailejones. Caen <b>rocas</b> de las laderas: un <b>casco</b> es un seguro que cuesta poco cada quincena. Aquí no se sube con cadenas: llega <b>sin deudas</b>. Las pirámides doradas prometen duplicar tu plata; ya sabes cómo terminan.',
   req:'Cero deudas',
-  chunks:['start','poder','lender','credito','pyramid','rocks','page1','apuros','embalse','mercado','muro','lender','fugas','puma','cloud','calle','negocio','page2','fomo','cripto','embalse','sueno','rio','rocks','duo','banco','hidden','ayuda','trading','racha','page3','coins','camp']},
+  chunks:['start','poder','lender','credito','pyramid','rocks','ciudad','page1','apuros','embalse','mercado','muro','lender','fugas','puma','cloud','calle','ciudad','negocio','page2','fomo','cripto','embalse','sueno','rio','rocks','duo','banco','hidden','ayuda','trading','racha','page3','coins','camp']},
  {name:'Cumbre Personal',role:'Diversificador',step:'Construcción de patrimonio',theme:6,costo:2,
   lesson:'Tu <b>patrimonio</b> es todo lo que tienes (mano, alcancía y activos) menos lo que debes. Constrúyelo sin caer en trampas.',
   req:'Patrimonio de 80 o más',
-  chunks:['start','poder','tower','mercado','invest','rocks','vehiculo','page1','fomo','embalse','sueno','pyramid','pantano','credito','lender','puma','calle','negocio','page2','apuros','cripto','embalse','muro','billetes','rocks','banco','ayuda','prima','trading','racha','page3','coins','camp']},
+  chunks:['start','poder','tower','mercado','invest','rocks','vehiculo','ciudad','page1','fomo','embalse','sueno','pyramid','pantano','credito','lender','puma','calle','ciudad','negocio','page2','apuros','cripto','embalse','muro','billetes','rocks','banco','ayuda','prima','trading','racha','page3','coins','camp']},
  {name:'La Cordillera',role:'Mentor',step:'Libertad financiera',theme:7,costo:3,
   lesson:'Hielo resbaloso (los <b>crampones</b> ayudan) y el costo de vida más alto de la ruta. Para ser <b>mentor</b> tu ingreso pasivo debe cubrir tu costo de vida sin trabajar, y debes superar la Prueba del Mentor.',
   req:'Ingreso pasivo igual o mayor que el costo de vida (3)',
-  chunks:['start','poder','tower','mercado','moving','rocks','page1','fomo','embalse','cloud','vitrina','lender','muro','invest','sueno','calle','negocio','page2','apuros','cripto','embalse','rio','hidden','puma','pyramid','ayuda','vehiculo','duo','trading','racha','page3','antgap','lz_parca','camp']},
+  chunks:['start','poder','tower','mercado','moving','rocks','ciudad','page1','fomo','embalse','cloud','vitrina','lender','muro','invest','sueno','calle','ciudad','negocio','page2','apuros','cripto','embalse','rio','hidden','puma','pyramid','ayuda','vehiculo','duo','trading','racha','page3','antgap','lz_parca','camp']},
 ];
 
 const THEMES=[
@@ -732,6 +733,7 @@ const TIPS={
  vitrinaL:{t:'Compra por impulso',g:'Guía 3 y 4',x:'“¡Solo hoy!” busca que compres sin pensar. Aplica la regla de las 24 horas y pregúntate si estaba en tu presupuesto.'},
  tarjetaL:{t:'La tarjeta de crédito',g:'Guía 3',x:'El cupo no es tu plata. Si pagas solo el mínimo, el interés (cerca del 30 % al año) hace crecer la deuda. Paga el total y usa menos del 30 % del cupo.'},
  inflacionL:{t:'Inflación',g:'Guía 5',x:'Doña Inflación no te roba: sube los precios. Cada etiqueta +10 % hace que tu efectivo (en la mano y en la alcancía) compre menos. Si tienes una inversión que rinde, como un CDT, tu alcancía no pierde. Defensa: invertir el ahorro y comparar precios.'},
+ presupuesto5030:{t:'Necesidades, gustos y ahorro',g:'Guía 3',x:'Regla 50/30/20: cerca del 50 % de lo que ganas para necesidades (comida, baño, transporte, ropa), hasta el 30 % para gustos (cine, restaurante, compras) y al menos el 20 % para ahorrar. Los gustos están bien si caben en el presupuesto.'},
  decirno:{t:'Decir NO',g:'Guía 3 y 4',x:'Tu mejor defensa financiera es saber decir NO: al antojo, al crédito fácil, a la apuesta y a la presión de los demás. Con el bastón (tecla X o botón ¡NO!) apartas gastos, ladrones y facturas.'},
  parca:{t:'La Muerte Financiera',g:'Guía 5',x:'Aparece cuando te descuidas: deudas caras, gastos sin control y cero ahorro. Se aleja con buenos hábitos y en la cima se vence con salud financiera, ahorro e inversiones.'},
  trading:{t:'Trading y especulación',g:'Guía 4 y 6',x:'Comprar y vender rápido para ganar con los cambios de precio es especular, no invertir. Cada operación paga comisión y el apalancamiento agranda ganancias y pérdidas: la mayoría de quienes lo hacen a diario pierden plata.'},
@@ -970,7 +972,7 @@ function buildLevel(li){
   parts.forEach(({c,off})=>{ const w=c[0].length, top=R-ROWS-off;
     for(let r=0;r<R;r++) for(let x=0;x<w;x++){ const cr=r-top; let ch=' '; if(cr>=0&&cr<ROWS) ch=c[cr][x]; else if(cr>=ROWS && (c[ROWS-1][x]==='#'||c[ROWS-1][x]==='w')) ch=c[ROWS-1][x]; g[r].push(ch); } });
   const w=g[0].length;
-  const ents=[], mps=[], stones=[], blocks={}; let bi=0, pi=0; const oi={a:0,l:0,s:0};
+  const ents=[], mps=[], stones=[], blocks={}; let bi=0, pi=0, lugc=0; const oi={a:0,l:0,s:0};
   for(let r=0;r<R;r++) for(let c=0;c<w;c++){
     const ch=g[r][c], x=c*T, y=r*T;
     if('oagcpHBEJFMkQbDALSWfCrPZNVYGKTORXhmu'.includes(ch)) g[r][c]=' ';
@@ -991,6 +993,7 @@ function buildLevel(li){
     if(ch==='i') ents.push({t:'curso',x:x-8,y:y+T-36,w:40,h:36,used:false});
     if(ch==='t') ents.push({t:'apuros',x:x,y:y+T-24,w:24,h:24,used:false});
     if(ch==='s') ents.push({t:'fomo',x:x-10,y:y+T-40,w:46,h:40,used:false});
+    if(ch==='6'){ const lk=LUGK[(li*3+(lugc++))%LUGK.length], LL=LUG[lk]; ents.push({t:'lugar',k:lk,x:x-LL.w/2+12,y:y+T-LL.h,w:LL.w,h:LL.h,used:false,cd:0,hold:0}); }
     if(ch==='4') ents.push({t:'trading',x:x-12,y:y+T-50,w:48,h:50,cd:0});
     if(ch==='5') ents.push({t:'parcaJefe',x:x,x0:x,y:y+T-88,w:44,h:78,st:'dormida',tt:0,ph:0,dir:-1,hp:eco&&eco.diff==='exp'?3:eco&&eco.diff==='mon'?7:5,hpMax:eco&&eco.diff==='exp'?3:eco&&eco.diff==='mon'?7:5,pf:[]});
     if(ch==='1') { const NT=NEG[Math.min(NEG.length-1,li)]; ents.push({t:'negocio',k:Math.min(NEG.length-1,li),x:x-8,y:y+T-NT.h,w:NT.w,h:NT.h,used:false,cd:0,hold:0}); }
@@ -1477,6 +1480,76 @@ function drawDefense(p){ const u=1-p.atk/16, ang=-2.3+Math.min(1,u*1.6)*2.9, act
   ctx.restore();
   if(act){ ctx.save(); ctx.translate(26,-36); ctx.scale(p.face,1); const k=1+Math.max(0,(p.atk-8))*0.06; ctx.scale(k,k); ctx.fillStyle='#FFF3D6'; ctx.beginPath(); for(let i=0;i<10;i++){ const r=i%2?6:9.5, an=i*Math.PI/5; ctx.lineTo(Math.cos(an)*r*1.25,Math.sin(an)*r*0.85); } ctx.closePath(); ctx.fill(); ctx.strokeStyle='#6B2A1A'; ctx.lineWidth=0.8; ctx.stroke(); ctx.fillStyle='#6B2A1A'; ctx.font='900 7px Figtree, sans-serif'; ctx.textAlign='center'; ctx.fillText('¡NO!',0,2.6); ctx.restore(); } }
 
+// ---------- lugares de la ciudad: comer, baño, gustos, compras y suscripciones ----------
+const LUGK=['comida','cine','bano','ropa','restaurante','paseo','online','mall','subs','viaje'];
+const LUG={
+ comida:{n:'Corrientazo',sign:'CORRIENTAZO',c:1,tipo:'nec',w:78,h:62,wall:'#E7CFA8',aw:['#3E7A3A','#F4ECD8']},
+ bano:{n:'Baño público',sign:'BAÑOS',c:1,tipo:'nec',w:58,h:58,wall:'#DCE6EA',aw:['#2C5D8F','#F4ECD8']},
+ restaurante:{n:'Restaurante',sign:'RESTAURANTE',c:4,tipo:'des',w:92,h:66,wall:'#3A2A26',aw:['#1E1A18','#B8862F']},
+ cine:{n:'Cine',sign:'CINE',c:3,tipo:'des',w:96,h:72,wall:'#5A2A3A',aw:['#6B2A1A','#E8B64A']},
+ paseo:{n:'Paseo al parque',sign:'PARQUE',c:0,tipo:'ocio',w:96,h:64},
+ viaje:{n:'Agencia de viajes',sign:'VIAJES',c:10,tipo:'des',w:86,h:64,wall:'#EFE6D2',aw:['#2C5D8F','#F4ECD8']},
+ ropa:{n:'Tienda de ropa',sign:'ROPA',c:2,tipo:'nec',w:84,h:64,wall:'#F2E4E8',aw:['#C04F7A','#F4ECD8']},
+ mall:{n:'Centro comercial',sign:'CENTRO COMERCIAL',c:5,tipo:'imp',w:132,h:90,wall:'#C9D2DA'},
+ online:{n:'Compras en línea',sign:'PEDIDOS EN LÍNEA',c:3,tipo:'des',w:84,h:60,wall:'#2E3440'},
+ subs:{n:'Streaming',sign:'STREAMING',c:0,tipo:'fijo',w:76,h:70}};
+const TIPO_T={nec:['necesidad','#62C98A'],des:['gusto','#F2C230'],imp:['tentación','#EE6A5C'],ocio:['gratis','#9FD3FF'],fijo:['suscripción','#B9A8FF']};
+function lugOffer(e){ const L=LUG[e.k]; if(L.tipo==='ocio') return L.n+' · gratis'; return L.n+' · '+(L.c?'−'+L.c+(e.k==='online'?' +1 envío':''):'1 mes gratis')+' · '+TIPO_T[L.tipo][0]; }
+function lugarUpdate(e,p){ if(e.cd>0) e.cd--; const L=LUG[e.k], dx=Math.abs((p.x+p.w/2)-(e.x+e.w/2)); e.near=dx<e.w*0.8&&!e.used;
+  if(e.used) return; const door={x:e.x+e.w/2-16,y:e.y+e.h-34,w:32,h:34};
+  if(overlap(p,door)&&p.onGround&&Math.abs(p.vx)<0.9&&e.cd<=0){ e.hold=(e.hold||0)+1; if(e.hold>=36){ e.hold=0; lugarEntrar(e,p); } } else e.hold=Math.max(0,(e.hold||0)-3); }
+function lugarEntrar(e,p){ const L=LUG[e.k], extra=e.k==='online'?1:0, cost=L.c+extra;
+  if(e.k==='subs'){ e.used=true; if((eco.fijos||[]).some(f=>f.n==='Streaming')){ addText(e.x-40,e.y-24,'Ya pagas esta suscripción','#FFE18A'); return; } eco.fijos.push({n:'Streaming',c:1}); snd('bad'); learn('fuga');
+    toast('Suscripción: primer mes gratis…','…y desde la próxima quincena te cobra 1, cada quincena, aunque no la uses. Si no la usas, cancélala en el campamento (Mi balance · Gastos fijos y suscripciones).'); logD('Gasto','Suscripción de streaming (gasto fijo)',0); return; }
+  if(e.k==='viaje'){ if(eco.emb>=cost){ e.used=true; eco.emb-=cost; eco.suenos=eco.suenos||[]; eco.suenos.push('Viaje con la familia'); confetti(e.x+e.w/2,e.y,30); snd('gate'); logD('Gasto','Viaje pagado con la alcancía',-cost); saludAdd(3,'un sueño pagado con ahorro'); addText(e.x-50,e.y-26,'¡Viaje pagado con tu ahorro, sin deudas!','#C9CEFF'); }
+    else { e.cd=180; addText(e.x-60,e.y-26,'El viaje cuesta '+cost+': ahórralo en la alcancía (tienes '+eco.emb+'). Nunca lo pagues a crédito','#FFE18A'); } return; }
+  if(eco.hand+eco.emb<cost){ e.cd=180; addText(e.x-40,e.y-26,'No te alcanza: necesitas '+cost,'#FFC7BF'); return; }
+  e.used=true; const h=Math.min(cost,eco.hand); eco.hand-=h; eco.emb-=cost-h; snd(cost?'buy':'drop'); burst(e.x+e.w/2,e.y+e.h-20,'#FFE18A',8);
+  if(L.tipo==='nec'){ logD('Gasto','Necesidad: '+L.n.toLowerCase(),-cost); saludAdd(e.k==='comida'?2:1,'gasto necesario'); addText(e.x-50,e.y-26,(e.k==='comida'?'Almuerzo completo: ':e.k==='bano'?'Baño público: ':'Ropa que necesitabas: ')+'−'+cost+' · gasto necesario, está bien','#BFF5CF'); }
+  else if(L.tipo==='ocio'){ saludAdd(3,'ocio gratis'); logD('Gasto','Paseo gratis al parque',0); addText(e.x-50,e.y-26,'Paseo al parque: gratis y te recarga. El buen ocio no tiene que costar','#9FD3FF'); }
+  else if(L.tipo==='imp'){ logD('Gasto','Compra por impulso en el centro comercial',-cost); addText(e.x-60,e.y-26,'Entraste “solo a mirar” y saliste con −'+cost+' en cosas que no planeaste','#FFC7BF'); learn('vitrinaL'); }
+  else { eco.qDes=(eco.qDes||0)+cost; const ing=Math.max(1,finQ().ing), lim=Math.max(2,Math.ceil(ing*0.3)); logD('Gasto','Gusto: '+L.n.toLowerCase(),-cost);
+    if(eco.qDes<=lim) addText(e.x-60,e.y-26,L.n+': −'+cost+' · un gusto dentro de tu 30 % para gustos ('+eco.qDes+' de '+lim+'). ¡Disfrútalo!','#FFE18A');
+    else { saludAdd(-5,'gustos por encima del 30 %'); addText(e.x-60,e.y-26,L.n+': −'+cost+' · te pasaste del 30 % para gustos esta quincena ('+eco.qDes+' de '+lim+')','#FFC7BF'); }
+    if(e.k==='online') addText(e.x-60,e.y-40,'Comprar con un clic es fácil… y olvidarlo también: revisa antes de pagar','#FFC7BF'); }
+  learn('presupuesto5030'); }
+function drawLugar(e,x,y){ const L=LUG[e.k], w=e.w, h=e.h, fy=y+h, cx=x+w/2, t=S.t, open=!e.used;
+  ctx.save(); ctx.fillStyle='rgba(0,0,0,.22)'; ctx.beginPath(); ctx.ellipse(cx,fy,w*0.55,3.6,0,0,7); ctx.fill();
+  if(e.k==='paseo'){ // entrada del parque: arco, árboles y banca
+    ctx.fillStyle='#3E7A3A'; [[x+8,fy-34,14],[x+w-10,fy-38,16],[x+w*0.3,fy-44,12]].forEach(([tx,ty,r])=>{ ctx.fillStyle='#5A3A22'; ctx.fillRect(tx-1.5,ty,3,fy-ty); ctx.fillStyle='#3E7A3A'; ctx.beginPath(); ctx.arc(tx,ty,r,0,7); ctx.fill(); ctx.fillStyle='rgba(255,255,255,.12)'; ctx.beginPath(); ctx.arc(tx-r*0.3,ty-r*0.3,r*0.5,0,7); ctx.fill(); });
+    ctx.strokeStyle='#4E3220'; ctx.lineWidth=3; ctx.beginPath(); ctx.moveTo(cx-18,fy); ctx.lineTo(cx-18,fy-40); ctx.quadraticCurveTo(cx,fy-56,cx+18,fy-40); ctx.lineTo(cx+18,fy); ctx.stroke();
+    ctx.fillStyle='#8A5A34'; ctx.fillRect(x+w-30,fy-9,18,2.4); ctx.fillRect(x+w-30,fy-14,18,2); ctx.fillRect(x+w-29,fy-9,2,9); ctx.fillRect(x+w-15,fy-9,2,9);
+    ctx.fillStyle='#C04F7A'; for(let i=0;i<5;i++){ ctx.beginPath(); ctx.arc(x+4+i*6,fy-3,1.6,0,7); ctx.fill(); } }
+  else if(e.k==='subs'){ // valla con pantalla
+    ctx.fillStyle='#3A3E44'; ctx.fillRect(cx-2,fy-30,4,30); ctx.fillStyle='#14171C'; rr(x+2,fy-h,w-4,h-30,4); ctx.fill(); const g=ctx.createLinearGradient(x,fy-h,x+w,fy-30); g.addColorStop(0,'#6B2AA0'); g.addColorStop(1,'#C93A6A'); ctx.fillStyle=g; rr(x+5,fy-h+3,w-10,h-36,3); ctx.fill();
+    ctx.fillStyle='#FFF'; ctx.beginPath(); ctx.moveTo(cx-5,fy-h+12); ctx.lineTo(cx+7,fy-h+19); ctx.lineTo(cx-5,fy-h+26); ctx.closePath(); ctx.fill(); ctx.font='900 5.6px Figtree, sans-serif'; ctx.textAlign='center'; ctx.fillText('1 MES GRATIS',cx,fy-36-(t%60<30?0:0.5)); }
+  else if(e.k==='mall'){ const top=fy-h+12; const g=ctx.createLinearGradient(x,top,x+w,fy); g.addColorStop(0,'#D6E2EA'); g.addColorStop(1,'#8FA6B8'); ctx.fillStyle='#5A6670'; ctx.fillRect(x+2,top-2,w-4,h-10); ctx.fillStyle=g; ctx.fillRect(x+6,top+2,w-12,h-18);
+    for(let r=0;r<3;r++) for(let c=0;c<5;c++){ const lit=(r*5+c+Math.floor(t/50))%3; ctx.fillStyle=lit?'rgba(255,230,160,.55)':'rgba(255,255,255,.18)'; ctx.fillRect(x+9+c*(w-18)/5,top+5+r*(h-24)/3,(w-18)/5-3,(h-24)/3-4); }
+    ctx.strokeStyle='#E8B64A'; ctx.lineWidth=2; ctx.beginPath(); ctx.moveTo(x+14,fy-8); ctx.lineTo(x+46,top+18); ctx.stroke(); ctx.fillStyle='#3A4048'; ctx.fillRect(x+6,fy-8,w-12,8); nbDoor(cx-14,fy-24,28,24,true);
+    ['#C04F7A','#3E7A3A','#E8B64A'].forEach((c,i)=>{ ctx.fillStyle=c; rr(x+w-36+i*9,fy-10,7,8,1.5); ctx.fill(); }); }
+  else if(e.k==='online'){ // lockers de pedidos y camioneta
+    ctx.fillStyle=L.wall; rr(x+4,fy-h+14,w*0.55,h-14,3); ctx.fill(); for(let r=0;r<4;r++) for(let c=0;c<3;c++){ ctx.fillStyle=(r+c)%3?'#3E4652':'#E8B64A'; rr(x+7+c*13,fy-h+18+r*10,11,8,1); ctx.fill(); ctx.fillStyle='#14171C'; ctx.fillRect(x+15+c*13,fy-h+21+r*10,1.6,1.6); }
+    ctx.fillStyle='#F4ECD8'; rr(x+w*0.6,fy-24,w*0.4-2,16,4); ctx.fill(); ctx.fillStyle='#2C5D8F'; ctx.fillRect(x+w*0.6,fy-14,w*0.4-2,3); nbWheel(x+w*0.68,fy-6,5); nbWheel(x+w-10,fy-6,5);
+    ctx.fillStyle='#C9A06A'; for(let i=0;i<3;i++){ ctx.fillRect(x+w*0.62+i*7-((i%2)*2),fy-32-(i%2)*6,7,7); } ctx.fillStyle='#14171C'; rr(cx+12,fy-h+2,10,16,2); ctx.fill(); ctx.fillStyle='#7FD3FF'; ctx.fillRect(cx+13,fy-h+4,8,11); }
+  else { // edificio de calle
+    const top=fy-h+16; nbWall(x+3,top,w-6,h-16,L.wall,e.k==='restaurante'?0:5); nbTeja(x+3,fy-h+3,w-6,13,5);
+    nbDoor(cx-11,fy-30,22,30,open); nbWin(x+8,fy-30,w/2-24,16,true,e.k==='restaurante'?'#B8862F':null); nbWin(cx+16,fy-30,w/2-24,16,true,e.k==='restaurante'?'#B8862F':null);
+    if(L.aw) nbAwning(x+5,fy-40,w-10,8,L.aw[0],L.aw[1],7);
+    if(e.k==='comida'){ ctx.fillStyle='#3A3A40'; rr(x+10,fy-28,10,7,2); ctx.fill(); nbSmoke(x+15,fy-30,3); ctx.fillStyle='#2F4A3A'; rr(x+w-18,fy-22,14,18,1.5); ctx.fill(); ctx.fillStyle='#EDE8DA'; ctx.font='700 3.2px Figtree, sans-serif'; ctx.textAlign='center'; ctx.fillText('SOPA',x+w-11,fy-17); ctx.fillText('SECO',x+w-11,fy-13); ctx.fillText('JUGO',x+w-11,fy-9); }
+    if(e.k==='bano'){ ctx.fillStyle='#2C5D8F'; [[cx-6,0],[cx+6,1]].forEach(([px,f])=>{ ctx.beginPath(); ctx.arc(px,fy-26,1.6,0,7); ctx.fill(); if(f){ ctx.beginPath(); ctx.moveTo(px,fy-24); ctx.lineTo(px+2.4,fy-18); ctx.lineTo(px-2.4,fy-18); ctx.closePath(); ctx.fill(); } else ctx.fillRect(px-1.4,fy-24,2.8,6); }); ctx.fillStyle='#F4ECD8'; ctx.fillRect(cx-0.4,fy-28,0.8,10); }
+    if(e.k==='restaurante'){ ctx.fillStyle='#F4ECD8'; for(let i=0;i<2;i++){ ctx.beginPath(); ctx.ellipse(x+14+i*8,fy-21,3,1.2,0,0,7); ctx.fill(); } ctx.fillStyle='#FFD36B'; ctx.fillRect(x+w-20,fy-24,1,3); ctx.beginPath(); ctx.arc(x+w-19.5,fy-25,0.9+Math.sin(t*0.3)*0.2,0,7); ctx.fill(); ctx.fillStyle='#1E1A18'; ctx.fillRect(x+w-6,fy-16,2,16); ctx.fillStyle='#F4ECD8'; rr(x+w-10,fy-22,10,8,1); ctx.fill(); }
+    if(e.k==='cine'){ for(let i=0;i<14;i++){ ctx.fillStyle=(i+Math.floor(t/8))%2?'#FFE9A0':'#B8862F'; ctx.beginPath(); ctx.arc(x+8+i*(w-16)/13,fy-h+10,1.3,0,7); ctx.fill(); } ctx.fillStyle='#14171C'; [x+8,x+w-24].forEach(px=>{ rr(px,fy-30,16,20,1.5); ctx.fill(); }); ctx.fillStyle='#C93A2A'; ctx.fillRect(x+10,fy-28,12,16); ctx.fillStyle='#2C5D8F'; ctx.fillRect(x+w-22,fy-28,12,16); ctx.fillStyle='#FFF'; ctx.font='800 3px Figtree, sans-serif'; ctx.textAlign='center'; ctx.fillText('ESTRENO',x+16,fy-18); ctx.fillText('3D',x+w-16,fy-18); }
+    if(e.k==='viaje'){ ctx.fillStyle='#9FD3FF'; rr(x+8,fy-30,w/2-24,16,1); ctx.fill(); ctx.fillStyle='#6E7E78'; ctx.beginPath(); ctx.moveTo(x+8,fy-14); ctx.lineTo(x+14,fy-24); ctx.lineTo(x+20,fy-14); ctx.fill(); ctx.fillStyle='#FFF'; ctx.beginPath(); ctx.moveTo(cx+18,fy-24); ctx.lineTo(cx+30,fy-22); ctx.lineTo(cx+18,fy-20); ctx.closePath(); ctx.fill(); ctx.fillRect(cx+22,fy-25,1.4,6); }
+    if(e.k==='ropa'){ ctx.strokeStyle='#8A8F96'; ctx.lineWidth=0.6; ctx.beginPath(); ctx.moveTo(x+9,fy-27); ctx.lineTo(x+w/2-16,fy-27); ctx.stroke(); ['#C04F7A','#2C5D8F','#E8B64A'].forEach((c,i)=>{ ctx.fillStyle=c; ctx.beginPath(); const px=x+12+i*6; ctx.moveTo(px-2.4,fy-26); ctx.lineTo(px+2.4,fy-26); ctx.lineTo(px+3,fy-20); ctx.lineTo(px-3,fy-20); ctx.closePath(); ctx.fill(); }); ctx.fillStyle='#E9DCC0'; ctx.beginPath(); ctx.arc(cx+24,fy-28,2,0,7); ctx.fill(); ctx.fillStyle='#3E7A3A'; rr(cx+21,fy-26,6,10,2); ctx.fill(); } }
+  // letrero
+  const st=L.sign; ctx.font='900 '+(st.length>12?5.4:6.6)+'px Figtree, sans-serif'; const tw=ctx.measureText(st).width+14, sy=fy-h-(e.k==='mall'?2:e.k==='paseo'?-6:4);
+  ctx.fillStyle=e.k==='cine'?'#14171C':'#6B2A1A'; rr(cx-tw/2,sy,tw,11,3); ctx.fill(); ctx.strokeStyle='#B8862F'; ctx.lineWidth=1; rr(cx-tw/2,sy,tw,11,3); ctx.stroke(); ctx.fillStyle=e.k==='cine'?'#FFE9A0':'#FFF3D6'; ctx.textAlign='center'; ctx.fillText(st,cx,sy+8);
+  // precio y tipo
+  if(open){ const tp=TIPO_T[L.tipo], lab=lugOffer(e); ctx.font='700 5.4px Figtree, sans-serif'; const lw=ctx.measureText(lab).width+12; ctx.fillStyle='rgba(10,20,26,.66)'; rr(cx-lw/2,fy+3,lw,9,4); ctx.fill(); ctx.fillStyle=tp[1]; ctx.beginPath(); ctx.arc(cx-lw/2+5,fy+7.5,1.8,0,7); ctx.fill(); ctx.fillStyle='#FFF3D6'; ctx.fillText(lab,cx+2,fy+9.6);
+    if(e.near){ const k=(e.hold||0)/36, ry=fy-h*0.5; ctx.fillStyle='rgba(10,20,26,.55)'; ctx.beginPath(); ctx.arc(cx,ry,9,0,7); ctx.fill(); ctx.strokeStyle='rgba(255,255,255,.25)'; ctx.lineWidth=2; ctx.beginPath(); ctx.arc(cx,ry,7.4,0,7); ctx.stroke(); if(k>0){ ctx.strokeStyle=tp[1]; ctx.beginPath(); ctx.arc(cx,ry,7.4,-Math.PI/2,-Math.PI/2+k*Math.PI*2); ctx.stroke(); } ctx.fillStyle='#fff'; ctx.font='800 6px Figtree, sans-serif'; ctx.fillText(L.c?'$':'✓',cx,ry+2.2); ctx.font='700 4.6px Figtree, sans-serif'; ctx.fillText(k>0?'entrando…':'quédate para entrar',cx,ry+16); } }
+  else { ctx.font='700 5px Figtree, sans-serif'; ctx.fillStyle='rgba(255,255,255,.7)'; ctx.fillText('ya entraste',cx,fy+9); }
+  ctx.textAlign='left'; ctx.restore(); }
+
 function overlap(a,b){ return a.x<b.x+b.w && a.x+a.w>b.x && a.y<b.y+b.h && a.y+a.h>b.y; }
 
 function canStep(e,c){
@@ -1639,6 +1712,7 @@ function scoreAdd(n,why){ eco.score=Math.max(300,Math.min(900,(eco.score||650)+n
 function addDebt(name,saldo,cuota,kind){ try{ saludDebt(kind,name); }catch(e){} if(kind==='acuerdo') scoreAdd(-60,'reportado por no pagar'); else if(kind==='tarjeta') scoreAdd(-6); else if(kind==='credito') scoreAdd(-25,'crédito por encima de tu capacidad'); const d=eco.debts.find(x=>x.kind===kind); if(d) d.saldo+=saldo; else eco.debts.push({name,saldo,cuota,kind}); }
 
 function pulseExtras(p){
+  eco.qDes=0;
   saludPulse();
   negPulse(p);
   if(eco.salario>0){ eco.pq=(eco.pq||0)+1; if(eco.pq%2===0){ eco.pension=(eco.pension||0)+1; eco.cesantias=(eco.cesantias||0)+1; eco.hand=Math.max(0,eco.hand-1); addText(p.x-50,p.y-72,'Aportes: pensión +1 (de tu sueldo) · cesantías +1 (del empleador)','#C9CEFF'); learn('pension'); } }
@@ -2479,6 +2553,7 @@ function update(){
     if(e.t==='parca'){ parcaUpdate(e,p,prevBottom); continue; }
     if(e.t==='parcaJefe'){ parcaJefeUpdate(e,p,prevBottom); continue; }
     if(e.t==='trading'){ tradingUpdate(e,p); continue; }
+    if(e.t==='lugar'){ lugarUpdate(e,p); continue; }
     if(e.t==='camp'&&S.li===7&&parcaCampGate(e,p)) continue;
     if(e.t==='poder'){ if(overlap(p,e)) poderTake(e,p); continue; }
     if(e.t==='drop'){ if(overlap(p,e)){ const v=VALOR_V[e.k]||1; e.dead=true; ganar(v); eco.stats.drops+=v; if(S.ws) S.ws.coins+=v; snd('drop'); burst(e.x+6,e.y+8,VALOR_C[e.k]||'#FFD36B',4+v*2); if(e.k&&e.k!=='moneda'){ addText(e.x-10,e.y-8,'+'+v+' '+VALOR_N[e.k],VALOR_C[e.k]); } S.pops.push({x:e.x+6,y:e.y+8,life:14}); S.hudPop=10; } }
@@ -3383,6 +3458,7 @@ function drawEnts(only){
     else if(e.t==='negocio') drawNegocio(e,x,y);
     else if(e.t==='parca'||e.t==='parcaJefe') drawParca(e,x,y);
     else if(e.t==='trading') drawTrading(e,x,y);
+    else if(e.t==='lugar') drawLugar(e,x,y);
     else if(e.t==='poder') drawPoder(e,x,y);
     else if(e.t==='ladron') drawLadron(e,x,y);
     else if(e.t==='paciencia') drawPaciencia(e,x,y);
@@ -3510,13 +3586,13 @@ function hikerBody(air,w,color,o={}){
   const bob=GP.bob, hipY=-14+bob;
   // prendas según la etapa
   let jacket=color;
-  if(R===0) jacket=mix(color,'#3A3D44',.62);           // buzo gastado
+  if(R===0) jacket=mix(color,'#6B675C',.86);           // buzo viejo y desteñido
   if(R===4) jacket='#273041';                          // saco de empresario
   if(R===6) jacket=mix(color,'#1E2228',.45);           // gabán largo
   if(R===7) jacket='#6E5238';                          // ruana de mentor
   const jacketDark=mix(jacket,'#000000',.32), jacketLight=mix(jacket,'#FFFFFF',.28);
-  const pants=R===0?'#3A4150':R===4?'#1E2430':R===7?'#4A3F33':'#3D4652', pantsB=mix(pants,'#000000',.2);
-  const shoe=R===0?'#B9B4AA':R===4?'#15181D':'#6B4B2E';
+  const pants=R===0?'#4E4A44':R===4?'#1E2430':R===7?'#4A3F33':'#3D4652', pantsB=mix(pants,'#000000',.2);
+  const shoe=R===0?'#8E8778':R===4?'#15181D':'#6B4B2E';
   const big=G('mochila');
   const poleBack=![0,4,5,7].includes(R), poleFront=![0,2,3,4,5,7].includes(R);
   // brazo trasero (detrás del cuerpo) con su bastón
@@ -3527,9 +3603,11 @@ function hikerBody(air,w,color,o={}){
     ctx.strokeStyle=front?pants:pantsB; ctx.lineCap='round'; ctx.lineJoin='round';
     ctx.lineWidth=4.6; ctx.beginPath(); ctx.moveTo(hx0,hipY); ctx.lineTo(k.kx,k.ky); ctx.stroke();
     ctx.lineWidth=3.7; ctx.beginPath(); ctx.moveTo(k.kx,k.ky); ctx.lineTo(k.ax,k.ay); ctx.stroke();
-    if(R===0&&front){ ctx.fillStyle='#5A6170'; ctx.fillRect(k.kx-1.5,k.ky-1,3,2); } // remiendo en la rodilla
+    if(R===0&&front){ ctx.fillStyle='#6A5A44'; ctx.fillRect(k.kx-1.6,k.ky-1.2,3.2,2.6); ctx.strokeStyle='rgba(230,220,200,.6)'; ctx.lineWidth=.3; ctx.strokeRect(k.kx-1.4,k.ky-1,2.8,2.2); } // remiendo en la rodilla
+    if(R===0&&!front){ ctx.fillStyle='#2A2622'; ctx.beginPath(); ctx.ellipse((k.kx+k.ax)/2,(k.ky+k.ay)/2,1,0.8,0,0,7); ctx.fill(); } // roto en la pierna
     ctx.save(); ctx.translate(k.ax,k.ay); ctx.rotate(f.p||0);
     ctx.fillStyle=front?shoe:mix(shoe,'#000000',.2); rr(-2.6,-1.6,8,3.8,1.5); ctx.fill(); ctx.fillStyle=R===0?'#7C776E':'#2A1C10'; ctx.fillRect(-2.6,1.2,8,1.1);
+    if(R===0&&front){ ctx.fillStyle='#1E1A16'; ctx.beginPath(); ctx.arc(4.4,0,0.95,0,7); ctx.fill(); ctx.fillStyle=skin; ctx.beginPath(); ctx.arc(4.5,0,0.5,0,7); ctx.fill(); ctx.strokeStyle='#4A443A'; ctx.lineWidth=.4; ctx.beginPath(); ctx.moveTo(0.6,-1.6); ctx.quadraticCurveTo(-0.6,-0.4,-2.2,0.4); ctx.stroke(); ctx.fillStyle='#5A544A'; ctx.beginPath(); ctx.moveTo(1,2.3); ctx.lineTo(5.4,2.3); ctx.lineTo(5.4,3.4); ctx.closePath(); ctx.fill(); } // zapato roto: dedo afuera, cordón suelto y suela despegada
     if(G('botas')&&R!==0&&R!==4){ ctx.fillStyle='#E07A2A'; ctx.fillRect(-.6,-1.6,3,1); }
     if(G('crampones')){ ctx.fillStyle='#C9D3DA'; for(let q=0;q<3;q++){ ctx.beginPath(); ctx.moveTo(-1.6+q*3,2.3); ctx.lineTo(-.6+q*3,4.4); ctx.lineTo(.4+q*3,2.3); ctx.fill(); } }
     ctx.restore(); }
@@ -3557,12 +3635,20 @@ function hikerBody(air,w,color,o={}){
   ctx.fillStyle=jacketDark; rr(-7,-30+breath,13,17,4); ctx.fill();
   ctx.fillStyle=jacket; rr(-6,-30+breath,12,15,4); ctx.fill();
   ctx.fillStyle=jacketLight; ctx.fillRect(3,-28+breath,2,11);
+  if(R===0){ // ropa gastada: parches cosidos, un roto y el ruedo deshilachado
+    ctx.setLineDash([.6,.5]); ctx.lineWidth=.35;
+    ctx.fillStyle='#8A6A4A'; ctx.fillRect(-4.8,-27.4+breath,4.4,3.8); ctx.strokeStyle='rgba(240,230,210,.75)'; ctx.strokeRect(-4.6,-27.2+breath,4,3.4);
+    ctx.fillStyle='#4E6A5A'; ctx.fillRect(1.2,-20.6+breath,3.6,3); ctx.strokeRect(1.4,-20.4+breath,3.2,2.6); ctx.setLineDash([]);
+    ctx.fillStyle='#1E1C1A'; ctx.beginPath(); ctx.ellipse(4.2,-25.6+breath,1,0.75,0.3,0,7); ctx.fill();
+    ctx.fillStyle=jacketDark; for(let i=0;i<5;i++){ ctx.beginPath(); ctx.moveTo(-6+i*2.5,-15.4+breath); ctx.lineTo(-4.8+i*2.5,-13.2+breath); ctx.lineTo(-3.5+i*2.5,-15.4+breath); ctx.fill(); }
+    ctx.strokeStyle='rgba(200,190,170,.5)'; ctx.lineWidth=.3; for(let i=0;i<4;i++){ ctx.beginPath(); ctx.moveTo(-5+i*3,-14+breath); ctx.lineTo(-5.3+i*3,-12.2+breath); ctx.stroke(); } }
   if(R===4){ // camisa, solapas y corbata
     ctx.fillStyle='#F2F0EA'; ctx.beginPath(); ctx.moveTo(-1,-30+breath); ctx.lineTo(3,-30+breath); ctx.lineTo(1,-22+breath); ctx.fill();
     ctx.fillStyle=color; ctx.beginPath(); ctx.moveTo(0.4,-28+breath); ctx.lineTo(1.6,-28+breath); ctx.lineTo(2,-21+breath); ctx.lineTo(1,-19.5+breath); ctx.lineTo(0,-21+breath); ctx.fill();
     ctx.fillStyle='#3A465A'; ctx.beginPath(); ctx.moveTo(-2,-30+breath); ctx.lineTo(0,-24+breath); ctx.lineTo(-3,-26+breath); ctx.fill(); ctx.beginPath(); ctx.moveTo(4,-30+breath); ctx.lineTo(2.4,-24+breath); ctx.lineTo(5,-26+breath); ctx.fill(); }
   else { ctx.fillStyle='rgba(0,0,0,.35)'; ctx.fillRect(0,-29+breath,1,14); }
-  ctx.fillStyle=R===3?'#6B4423':'#2A2F36'; ctx.fillRect(-6,-16,12,3);
+  ctx.fillStyle=R===3?'#6B4423':R===0?'#7A6A4A':'#2A2F36'; ctx.fillRect(-6,-16,12,3);
+  if(R===0){ ctx.fillStyle='#E4DCCA'; ctx.beginPath(); ctx.moveTo(-6.6,-13.6); ctx.lineTo(-4,-13.6); ctx.lineTo(-5.4,-10.4); ctx.closePath(); ctx.fill(); ctx.beginPath(); ctx.moveTo(4,-13.6); ctx.lineTo(6.6,-13.6); ctx.lineTo(5.4,-10.4); ctx.closePath(); ctx.fill(); ctx.strokeStyle='rgba(120,110,90,.6)'; ctx.lineWidth=.3; ctx.beginPath(); ctx.moveTo(-5.3,-13.4); ctx.lineTo(-5.4,-11); ctx.moveTo(5.3,-13.4); ctx.lineTo(5.4,-11); ctx.stroke(); } // bolsillos vacíos, volteados
   if(R===3){ ctx.fillStyle='#9AA3AA'; ctx.fillRect(3,-17,1.4,5); ctx.fillStyle='#C98A1A'; ctx.fillRect(-4,-17,2,4); } // cinturón de herramientas
   if(R!==4&&R!==7){ ctx.fillStyle=R===0?'#2E302E':'#3E5E4A'; ctx.fillRect(-5,-30+breath,2,13); }
   if(R===1){ ctx.strokeStyle='#4A8FD3'; ctx.lineWidth=.7; ctx.beginPath(); ctx.moveTo(-1,-30+breath); ctx.lineTo(1,-24+breath); ctx.lineTo(3,-30+breath); ctx.stroke(); ctx.fillStyle='#F4F6F8'; rr(-.4,-24+breath,3,4,.6); ctx.fill(); ctx.fillStyle='#4A8FD3'; ctx.fillRect(-.4,-24+breath,3,1); } // carné de empleado
