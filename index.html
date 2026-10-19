@@ -178,6 +178,8 @@ details.more p{margin:8px 0 0!important}
 .nblist{display:grid;gap:8px;margin-top:8px}.nblist div{background:var(--bg);border-radius:10px;padding:10px 12px;border-left:3px solid #9AA3F0}.nblist b{display:block;font-size:14px}.nblist span{font-size:11px;color:#B9C0FF;font-weight:800;letter-spacing:.08em;text-transform:uppercase}.nblist p{margin:4px 0 0!important;font-size:13.5px;color:var(--muted)!important}
 .kbhint{margin:0;text-align:center;font-size:13px;color:var(--muted)}body.has-touch .kbhint{display:none}
 .rot{display:none;margin:0;font-size:13px;color:var(--muted);text-align:center}
+body.ovopen .touch,body.ovopen .fsbar,body.ovopen .rotfs{display:none!important}body.fs.ovopen .ov{position:fixed;inset:0;z-index:45;padding:calc(10px + env(safe-area-inset-top,0px)) 10px calc(10px + env(safe-area-inset-bottom,0px))}
+@media (max-width:560px){.foot #bNext{flex:1 1 100%}.foot #bRetry,.foot #bMapBack{flex:1 1 40%;padding-left:8px;padding-right:8px}.foot .hidem{display:none}.foot #nextMsg{font-size:12px;flex-basis:100%}}
 body.has-touch .ibtn{min-height:44px;min-width:44px}body.has-touch .fsbar button{min-width:44px;min-height:44px}body.has-touch #tipList,body.has-touch #tipMentor{min-height:44px}
 .rotfs{display:none;position:fixed;inset:0;z-index:45;background:rgba(8,14,18,.94);flex-direction:column;align-items:center;justify-content:center;gap:14px;color:#F4ECD8;text-align:center;padding:24px;font:600 16px var(--f-body)}
 .rotfs b{font:400 26px var(--f-display,Georgia),serif}.rotfs span{max-width:280px;color:#C9CFD4;font-size:14px}
@@ -3555,7 +3557,7 @@ function hikerBody(air,w,color,o={}){
     ctx.strokeStyle='#E2B85A'; ctx.lineWidth=0.55; ctx.stroke();
     ctx.strokeStyle='rgba(244,236,216,.55)'; ctx.lineWidth=0.4; ctx.beginPath(); pts.forEach((q,i)=>i?ctx.lineTo(q[0],q[1]+1.1):ctx.moveTo(q[0],q[1]+1.1)); ctx.stroke(); ctx.beginPath(); pts.forEach((q,i)=>i?ctx.lineTo(q[0],q[2]-1.1):ctx.moveTo(q[0],q[2]-1.1)); ctx.stroke();
     ctx.fillStyle='rgba(0,0,0,.18)'; for(let i=1;i<N;i+=2){ const q=pts[i]; ctx.fillRect(q[0]-0.6,q[1],1.2,q[2]-q[1]); }
-    const mid=pts[4]; ctx.save(); ctx.translate(-L*0.5,(mid[1]+mid[2])/2+0.2); ctx.rotate(Math.cos(tt*1.4-2.1)*0.06); ctx.scale(fl,1); ctx.fillStyle='#FFF3D6'; ctx.font='900 3.3px Figtree, sans-serif'; ctx.textAlign='center'; ctx.textBaseline='middle'; ctx.fillText('BUSCO EMPLEO',0,0); ctx.restore();
+    const mid=pts[4]; ctx.save(); ctx.translate(-L*0.5,(mid[1]+mid[2])/2+0.2); ctx.rotate(Math.cos(tt*1.4-2.1)*0.06); ctx.scale(fl,1); ctx.fillStyle='#FFF3D6'; ctx.font='900 3.3px Figtree, sans-serif'; ctx.textAlign='center'; ctx.textBaseline='middle'; { const tw=ctx.measureText('BUSCO EMPLEO').width, maxW=L*0.8; if(tw>maxW) ctx.scale(maxW/tw,1); } ctx.fillText('BUSCO EMPLEO',0,0); ctx.restore();
     ctx.restore(); }
   else if(R===2){ ctx.save(); ctx.translate(hx,hy); ctx.rotate(-.25); ctx.fillStyle='#EFE3C2'; ctx.fillRect(-1,-7,11,7); ctx.strokeStyle='#C9B98F'; ctx.lineWidth=.5; ctx.beginPath(); ctx.moveTo(2.6,-7); ctx.lineTo(2.6,0); ctx.moveTo(6.3,-7); ctx.lineTo(6.3,0); ctx.stroke(); ctx.strokeStyle='#C9475B'; ctx.lineWidth=.7; ctx.beginPath(); ctx.moveTo(0,-2); ctx.lineTo(3,-4); ctx.lineTo(6,-3); ctx.lineTo(9,-6); ctx.stroke(); ctx.restore(); } // mapa abierto
   else if(R===3){ ctx.save(); ctx.translate(hx+1,hy+1); ctx.strokeStyle='#3A2A1A'; ctx.lineWidth=.6; ctx.beginPath(); ctx.moveTo(0,-2); ctx.lineTo(0,2); ctx.stroke(); ctx.fillStyle='#4A3A2A'; ctx.fillRect(-2,2,4,5); ctx.fillStyle='#FFD27A'; ctx.fillRect(-1.2,2.8,2.4,3.4);
@@ -3965,6 +3967,7 @@ cv.addEventListener('pointerup',ptrEnd); cv.addEventListener('pointercancel',ptr
 /* ================= PANTALLAS ================= */
 const ov=document.getElementById('ov'), box=document.getElementById('ovBox');
 function openOv(html,wide){ box.className='box'+(wide?' wide':''); box.innerHTML=html; ov.hidden=false; const f=box.querySelector('.btn:not([disabled])'); if(f&&!wide&&!f.closest('.qopts')&&!document.body.classList.contains('has-touch')) try{f.focus({preventScroll:true})}catch(e){} }
+(function(){ const sync=()=>{ const o=document.getElementById('ov'); document.body.classList.toggle('ovopen',!!o&&!o.hidden); }; try{ new MutationObserver(sync).observe(document.getElementById('ov'),{attributes:true,attributeFilter:['hidden']}); }catch(e){} setTimeout(sync,0); })();
 function closeOv(){ ov.hidden=true; keys={left:false,right:false,jump:false}; try{cv.focus({preventScroll:true})}catch(e){} }
 
 
@@ -4275,7 +4278,7 @@ function renderCamp(msg){ try{ medCheck(); }catch(e){}
   ${pane[tab]}
   <div class="foot">
     ${final?`<button class="btn gold" type="button" id="bNext" aria-disabled="${!canGo}" style="${canGo?'':'opacity:.6'}">Presentar la Prueba del Mentor</button>`:`<button class="btn" type="button" id="bNext" aria-disabled="${!canGo}" style="${canGo?'':'opacity:.6'}">Seguir subiendo</button>`}
-    <button class="btn alt" type="button" id="bRetry">Repetir el mundo (conservas tus finanzas)</button>
+    <button class="btn alt" type="button" id="bRetry">Repetir el mundo<span class="hidem"> (conservas tus finanzas)</span></button>
     <button class="btn alt" type="button" id="bMapBack">Volver al mapa</button>
     ${!S.retoRes?'<span class="muted" id="nextMsg">Para seguir, elige una opción del <b>reto financiero</b> (arriba, en Reto y meta).</span>':(!ok?'<span class="muted" id="nextMsg">Te falta cumplir la meta del campamento: usa Repetir el mundo o el Mercado.</span>':'<span id="nextMsg"></span>')}
   </div>`, true);
