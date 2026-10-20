@@ -735,7 +735,7 @@ const THEMES=[
 ];
 
 const DIFF={
- exp:{n:'Explorador',d:'Para empezar (10 a 13 años): golpes suaves, costo de vida a la mitad, brújula de regalo y pistas en las preguntas.',hurt:.5,cost:.5,enemy:.7,req:.7,loan:.75,hint:true,rock:1.5},
+ exp:{n:'Explorador',d:'Para empezar (10 a 13 años): golpes suaves, costo de vida más bajo, brújula de regalo y pistas en las preguntas.',hurt:.5,cost:.7,enemy:.7,req:.7,loan:.75,hint:true,rock:1.5},
  sen:{n:'Senderista',d:'La experiencia normal: golpes, intereses y metas como en la vida real.',hurt:1,cost:1,enemy:1,req:1,loan:1,hint:false,rock:1},
  mon:{n:'Montañista',d:'Golpes duros, vida cara, intereses que crecen y enemigos rápidos. Sin pistas.',hurt:1.4,cost:1.5,enemy:1.3,req:1.25,loan:1.4,hint:false,rock:.7}};
 const Dif=()=>DIFF[(eco&&eco.diff)||'sen'];
@@ -1052,6 +1052,9 @@ const cuotas=()=>eco.debts.reduce((s,d)=>s+Math.min(d.cuota,d.saldo),0);
 const tipos=()=>new Set(eco.assets.map(a=>a.type)).size;
 const patrimonio=()=>eco.hand+eco.emb+(eco.colchon||0)+(eco.negocio?eco.negocio.val+(eco.negocio.caja||0):0)+(eco.pension||0)+(eco.cesantias||0)+(eco.crypto&&!eco.crypto.lost?eco.crypto.v:0)+eco.assets.reduce((s,a)=>s+a.value,0)+(eco.lujos||[]).reduce((s,a)=>s+a.value,0)-debtTot();
 const costo=()=>Math.round(LV[S.li].costo*Dif().cost);
+// tope de sueldo por tramo: el ingreso crece con la experiencia, no sin límite (evita alcancías de miles en Explorador)
+const salTope=()=>2+Math.ceil(((S&&S.li)||0)*0.4);
+function salUp(){ if((eco.salario||0)<salTope()){ eco.salario=(eco.salario||0)+1; return true; } eco.emb+=2; return false; }
 const flujo=()=>eco.salario+ingresoAct()-costo()-cuotas()-primas()-fijos();
 const chained=()=>eco.debts.some(d=>d.kind==='gota');
 
@@ -3101,7 +3104,7 @@ function update(){ try{ botStep(); }catch(e){}
     else if(e.t==='tienda'){ const pair=S.L.ents.filter(q=>q.t==='tienda'&&q.grp===e.grp); if(!e.done&&overlap(p,e)&&!pair.some(q=>q.bought)){ e.bought=true; pair.forEach(q=>q.done=true); const up=(eco.shocks||[]).some(k=>/[Mm]ercado/.test(k.n))?1:0, tot=(e.k==='A'?6:5)+up; const l=takeCoins(tot); if(up) addText(e.x-40,e.y-34,'Con el decreto, el mercado cuesta 1 más','#FFC7BF'); learn('comparar'); logD('Gasto','Mercado en la tienda '+(e.k==='A'?'del aviso grande (4 + 2 de envío)':'sin recargos'),-l);
         addText(e.x-50,e.y-20,e.k==='A'?'Decía 4… pero con envío fueron 6. La otra cobraba 5':'Total 5, sin letra pequeña: comparaste bien',e.k==='A'?'#FFC7BF':'#BFF5CF'); eco.stats.compara=(eco.stats.compara||0)+(e.k==='B'?1:0); snd(e.k==='A'?'bad':'buy'); }
       if(e.k==='B'&&!e.done&&p.x>e.x+3*T){ pair.forEach(q=>q.done=true); const l=takeCoins(4); learn('comparar'); addText(p.x-60,p.y-30,'Sin mercado: comiste en la calle −4. Lo necesario se planea','#FFC7BF'); logD('Gasto','Comida en la calle por no hacer mercado',-l); } }
-    else if(e.t==='curso'){ if(!e.used&&overlap(p,e)){ if(eco.hand>=4){ e.used=true; eco.hand-=4; eco.salario+=1; eco.stats.cursos=(eco.stats.cursos||0)+1; busy(150,'Estudiando el curso técnico'); learn('curso'); addText(e.x-50,e.y-24,'¡Te certificaste! Salario +1 por quincena, para siempre','#BFF5CF'); logD('Inversión','Curso técnico (capital humano)',-4); confetti(e.x+20,e.y,14); }
+    else if(e.t==='curso'){ if(!e.used&&overlap(p,e)&&(eco.salario||0)>=salTope()){ if(!e.topeMsg){ e.topeMsg=1; addText(e.x-70,e.y-24,'Tu sueldo ya está en el tope de este tramo ('+salTope()+'): en el próximo mundo el curso vale más','#9FD3FF'); } } else if(!e.used&&overlap(p,e)){ if(eco.hand>=4){ e.used=true; eco.hand-=4; eco.salario+=1; eco.stats.cursos=(eco.stats.cursos||0)+1; busy(150,'Estudiando el curso técnico'); learn('curso'); addText(e.x-50,e.y-24,'¡Te certificaste! Salario +1 por quincena, para siempre','#BFF5CF'); logD('Inversión','Curso técnico (capital humano)',-4); confetti(e.x+20,e.y,14); }
         else if(!e.warn){ e.warn=1; learn('curso'); addText(e.x-50,e.y-24,'El curso cuesta 4: vale la pena ahorrar para estudiar','#FFE18A'); } } }
     else if(e.t==='apuros'){ if(!e.used&&overlap(p,e)){ e.used=true; learn('generosidad'); if(eco.hand>=4){ eco.hand-=2; eco.favor=2; eco.stats.ayudas=(eco.stats.ayudas||0)+1; stampAt(e.x+12,e.y-10,'AYUDA SOLIDARIA','sin desfinanciarte'); addText(e.x-50,e.y-30,'Le diste 2 para el pasaje: “¡Gracias, no lo olvidaré!”','#BFF5CF'); logD('Gasto','Ayudaste a otro senderista',-2); snd('save'); }
         else addText(e.x-60,e.y-30,'Con menos de 4 no te alcanza: primero lo tuyo. “Gracias igual”','#FFE18A'); } }
@@ -6635,7 +6638,7 @@ RETOS.push(
   {l:'Tomar agua de cualquier lado para ahorrar',fx:()=>{ payEvent(4,'Enfermedad por agua contaminada','salud'); return 'El agua contaminada te enfermó: la cita y los remedios costaron más que el agua limpia.'; }}]}),
  ()=>({t:'Después del incendio',x:'Te ofrecen dos trabajos: quemar más monte para potreros, o un proyecto de reforestación.',opts:[
   {l:'Quemar monte: pagan más rápido',fx:()=>{ eco.hand=Math.min(cap(),eco.hand+4); verdeAdd(-15,'quemar el monte'); return 'Plata rápida hoy y menos agua, suelo y trabajo mañana (−15 huella verde).'; }},
-  {l:'Reforestación con pagos por servicios ambientales',fx:()=>{ eco.salario=(eco.salario||0)+1; verdeAdd(8,'reforestar'); return 'Un trabajo estable que cuida el agua: +1 de salario y +8 de huella verde.'; }},
+  {l:'Reforestación con pagos por servicios ambientales',fx:()=>{ salUp(); verdeAdd(8,'reforestar'); return 'Un trabajo estable que cuida el agua: +1 de salario y +8 de huella verde.'; }},
   {l:'Nada, esperar a que otro lo arregle',fx:()=>'Mientras nadie restaura, el daño crece y nos cuesta a todos.'}]}),
  ()=>({t:'La comunidad',x:'Los vecinos proponen una olla comunitaria y un fondo de ayuda mutua.',opts:[
   {l:'No participo, cada quien con lo suyo',fx:()=>'Solo se resiste peor. La comunidad organizada es un activo.'},
@@ -6956,7 +6959,7 @@ RETOS.push(
   {l:'Aporto 3',fx:()=>{ eco.hand=Math.max(0,eco.hand-3); verdeAdd(10,'agua limpia'); saludAdd(5,'menos gastos de salud'); return 'El río revivió: menos enfermedades y volvió la pesca (+10 huella verde, +5 salud financiera).'; }},
   {l:'Seguir botando al río, es gratis',fx:()=>{ verdeAdd(-12,'contaminar el río'); return 'Gratis para ti hoy, caro para todos mañana (−12 huella verde).'; }}]}),
  ()=>({t:'El vivero',x:'Puedes montar un vivero de árboles nativos con 6 monedas.',opts:[
-  {l:'Montarlo y vender plántulas',fx:()=>{ eco.hand=Math.max(0,eco.hand-6); eco.salario=(eco.salario||0)+1; verdeAdd(8,'vivero'); return 'Ahora vendes plántulas a la reforestación: +1 de ingreso cada quincena y +8 de huella verde.'; }},
+  {l:'Montarlo y vender plántulas',fx:()=>{ eco.hand=Math.max(0,eco.hand-6); salUp(); verdeAdd(8,'vivero'); return 'Ahora vendes plántulas a la reforestación: +1 de ingreso cada quincena y +8 de huella verde.'; }},
   {l:'Mejor vender la madera que quedó',fx:()=>{ eco.hand=Math.min(cap(),eco.hand+4); verdeAdd(-10,'vender madera'); return 'Ganaste 4 una sola vez… y el bosque tardará más en volver (−10 huella verde).'; }},
   {l:'Esperar a tener más plata',fx:()=>'A veces esperar es prudente, pero un negocio pequeño y bien pensado puede empezar ya.'}]}),
  ()=>({t:'Se dañó la licuadora',x:'¿Qué haces?',opts:[
@@ -6969,7 +6972,7 @@ RETOS.push(
   {l:'Prestar todo al que ofrezca más interés',fx:()=>'El que promete más interés suele ser el más riesgoso. Un fondo comunitario cuida primero el capital.'}]}),
  ()=>({t:'Tu primer negocio en el puerto',x:'Te va bien vendiendo café de la región.',opts:[
   {l:'Mezclar la plata del negocio con la de la casa',fx:()=>'Al mes no sabías si ganabas o perdías. Separa siempre las cuentas.'},
-  {l:'Llevar flujo de caja, formalizarte y pagar precio justo al caficultor',fx:()=>{ eco.salario=(eco.salario||0)+1; return 'Con cuentas claras y proveedores contentos, el negocio crece: +1 de ingreso cada quincena.'; }},
+  {l:'Llevar flujo de caja, formalizarte y pagar precio justo al caficultor',fx:()=>{ salUp(); return 'Con cuentas claras y proveedores contentos, el negocio crece: +1 de ingreso cada quincena.'; }},
   {l:'Acaparar el café para subir el precio',fx:()=>{ eco.hand=Math.min(cap(),eco.hand+3); saludAdd(-10,'acaparar'); return 'Ganaste 3, pero perdiste la confianza del pueblo (−10 salud financiera).'; }}]}),
  ()=>({t:'Tu legado',x:'Te piden enseñar en la escuela lo que aprendiste en la Ruta Financiera.',opts:[
   {l:'No tengo tiempo',fx:()=>'Lo que no se enseña, se olvida… y los errores se repiten.'},
@@ -7526,7 +7529,7 @@ function casoFx(fx){ const p=S.p, out=[];
   if(fx.embToHand){ const m=eco.emb; eco.emb=0; eco.hand=Math.min(cap(),eco.hand+m); }
   if(fx.hand){ if(fx.hand>0){ eco.hand=Math.min(cap(),eco.hand+fx.hand); logD('Ingreso','Decisión del camino',fx.hand); } else { const v=Math.min(-fx.hand,eco.hand); eco.hand-=v; logD('Gasto','Decisión del camino',-v); } }
   if(fx.emb){ if(fx.emb>0){ eco.emb+=fx.emb; eco.stats.saved+=fx.emb; logD('Ahorro','Decisión del camino',fx.emb); } else { const v=Math.min(-fx.emb,eco.emb); eco.emb-=v; } }
-  if(fx.salario){ eco.salario=(eco.salario||0)+fx.salario; }
+  if(fx.salario){ const tope=salTope(); if((eco.salario||0)+fx.salario<=tope) eco.salario=(eco.salario||0)+fx.salario; else { eco.emb+=2; S.salTopeMsg=1; try{ addText(S.p.x-60,S.p.y-44,'Tu sueldo ya está en el tope de este tramo ('+tope+'): +2 a la alcancía','#9FD3FF'); }catch(e){} } }
   if(fx.verde) verdeAdd(fx.verde,fx.verde>0?'decisión verde':'decisión que daña');
   if(fx.debt) addDebt(...fx.debt);
   if(fx.shock) addShock(...fx.shock);
