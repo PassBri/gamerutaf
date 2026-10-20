@@ -538,6 +538,7 @@ body.has-touch .t-keys{display:none}
 .t-av .swatches{gap:6px}
 .t-av .lb{margin:6px 0 4px}
 @media (max-width:900px){ .t-wrap{grid-template-columns:1fr!important} }
+.mopts{display:grid;gap:8px;margin:10px 0 4px}.mopt{display:flex;flex-direction:column;gap:3px;text-align:left;border:1px solid var(--line);background:var(--bg);color:var(--ink);border-radius:12px;padding:11px 14px;cursor:pointer;font:500 13px var(--f-body)}.mopt b{font-size:14.5px}.mopt span{color:var(--muted)}.mopt:hover,.mopt:focus-visible{border-color:var(--gold);outline:none}
 </style>
 
 <div class="wrap">
@@ -1231,7 +1232,7 @@ function startLevel(li){
   S.li=li; S.L=buildLevel(li); S.mode='play'; S.muerte=null; S.parcaBoss=null; S.parcaCd=null; S.jefeM=null; S.fight=null;
   S.p=newHiker();
   S.cam=0; S.camY=Math.max(0,S.p.y-H*0.58); S.parts=[]; S.texts=[]; S.rain=[]; S.loose=[]; S.pops=[]; S.t=0; S.pulse=0; S.check={x:S.p.x,y:S.p.y};
-  S.freeze=0; S.shake=0; S.hudPop=0; S.coinFly=[]; S.pigFx=[]; S.shards=[]; S.flashes=[]; S.loot=[]; S.stamps=[]; S.cracks=[]; S.bolts=[]; S.sick=0; S.flashSky=0; if(S.p) S.p.caught=null; S.embPop=0; S.amb=null; S.rocks=[]; S.fees=[]; S.falling=[]; S.swampT=0; S.tgt=null; S.jumpHold=0; S.coach=li===0?600:240; S.toast=null; S.busy=null; S.dis=null; S.boulders=[]; S.waves=[]; S.safe=null; if(S.p){ S.p.antic=0; S.p.landT=0; S.p.toT=0; S.p.tuck=0; } S.wdeaths=0; S.retoDone=false;
+  S.freeze=0; S.shake=0; S.hudPop=0; S.medBag=false; S.coinFly=[]; S.pigFx=[]; S.shards=[]; S.flashes=[]; S.loot=[]; S.stamps=[]; S.cracks=[]; S.bolts=[]; S.sick=0; S.flashSky=0; if(S.p) S.p.caught=null; S.embPop=0; S.amb=null; S.rocks=[]; S.fees=[]; S.falling=[]; S.swampT=0; S.tgt=null; S.jumpHold=0; S.coach=li===0?600:240; S.toast=null; S.busy=null; S.dis=null; S.boulders=[]; S.waves=[]; S.safe=null; if(S.p){ S.p.antic=0; S.p.landT=0; S.p.toT=0; S.p.tuck=0; } S.wdeaths=0; S.retoDone=false;
   S.ws={coins:0,salary:0,rent:0,cost:0,cuotas:0,primas:0,fijos:0,saved:0,invested:0,lost:{},hist:[0]}; S.ws.hist=[patrimonio()];
   try{ if(document.body.classList.contains('has-touch')&&!document.body.classList.contains('fs')&&!window.__noAutoFs) fsToggle(true); else resize(); }catch(e){}
   S.arrivalHand=0; S.quizDone=false; S.campRes=null; S.banner=150;
@@ -1386,7 +1387,8 @@ function powerSweep(p){ const b={x:p.x-5,y:p.y-(p.big?12:2),w:p.w+10,h:p.h+(p.bi
     e.dead=true; eco.hand=Math.min(cap(),eco.hand+1); eco.stats.stomps=(eco.stats.stomps||0)+1; stampAt(e.x+e.w/2,e.y-6,'GASTO EVITADO','racha de disciplina'); tiedPoof(e); snd('stomp'); burst(e.x+e.w/2,e.y+e.h/2,'#FFD36B',10); } }
 // ---------- salud financiera y muerte financiera ----------
 function salud(){ return eco?(eco.salud??100):100; }
-function saludAdd(d,why){ if(!eco||!S.L||!d||['map','finale','muerte'].includes(S.mode)) return; if(d<0) d=Math.min(-1,Math.round(d*Dif().hurt)); const s0=salud(); eco.salud=Math.max(0,Math.min(100,s0+d));
+const saludF=()=>Math.min(1,0.3+0.06*(S.li||0)); // mundo 1: 30 % del golpe; llega al 100 % en el mundo 13
+function saludAdd(d,why){ if(!eco||!S.L||!d||['map','finale','muerte'].includes(S.mode)) return; if(d<0){ d=Math.min(-1,Math.round(d*Dif().hurt*saludF())); S.saludT=S.t; } const s0=salud(); eco.salud=Math.max(0,Math.min(100,s0+d));
   if(d<0){ S.saludLog=S.saludLog||[]; S.saludLog.push({w:why||'mala decisión',d}); if(S.saludLog.length>60) S.saludLog.shift(); S.saludHit=24;
     if(S.p&&d<=-5&&!S.collect) addText(S.p.x-60,S.p.y-64,'Salud financiera '+d+': '+(why||''),'#FF9A8C');
     if(eco.salud<35&&s0>=35){ toast('¡Tu salud financiera está en riesgo!','Llevas muchas malas decisiones seguidas: deudas caras, compras por impulso o apuestas. Si llega a 0 sufrirás una muerte financiera. Ahorra, paga deudas e invierte para recuperarla.'); snd('bad'); } }
@@ -1749,7 +1751,10 @@ function moveY(e){
   return null;
 }
 
-function addText(x,y,txt,col){ if(S.collect){ if(txt) S.collect.push({txt:String(txt),col:col||'#fff'}); return; } let k=0; while(k<6&&(S.texts||[]).some(t=>t.life>30&&Math.abs(t.y-y)<12&&Math.abs(t.x-x)<170)){ y-=13; k++; } S.texts.push({x,y,txt,col:col||'#fff',life:70}); }
+function shortTxt(t){ t=String(t||''); const i=t.search(/\.\s/); if(i>14) t=t.slice(0,i); if(t.length>52){ t=t.slice(0,52); t=t.slice(0,Math.max(30,t.lastIndexOf(' ')))+'…'; } return t; }
+function addText(x,y,txt,col){ if(S.collect){ if(txt) S.collect.push({txt:String(txt),col:col||'#fff'}); return; } if(!txt) return; S.texts=S.texts||[]; const t=shortTxt(txt);
+  if(S.texts.some(q=>q.txt===t&&q.life>20)) return; const live=S.texts.filter(q=>q.life>12); if(live.length>=3) live[0].life=Math.min(live[0].life,12);
+  let k=0; while(k<4&&S.texts.some(q=>q.life>20&&Math.abs(q.y-y)<14&&Math.abs(q.x-x)<150)){ y-=15; k++; } S.texts.push({x,y,txt:t,col:col||'#fff',life:90,max:90}); }
 function toast(title,text){ S.toast={title,text,life:440}; }
 let tipShown=null;
 function syncTip(){ const el=document.getElementById('tip'); if(!el) return; const t=S.toast;
@@ -2488,7 +2493,7 @@ function desUpdate(){
     if(tt===70&&eco.assets.some(a=>a.type==='inm')){ if(has('casco')){ addText(p.x-70,p.y-40,'Tu casa se agrietó: el seguro cubrió la reparación','#C9CEFF'); snd('save'); } else { payEvent(2,'Reparar tu casa después del terremoto','terremoto'); } } }
   else if(C.k==='tormenta'){ if(!C.wd) C.wd=Math.random()<.5?-1:1; p.vx+=C.wd*0.07; if(tt%70===10){ S.bolts.push({x:p.x+p.w/2+(Math.random()-.5)*150,t:0}); } }
   else if(C.k==='enfermedad'){ S.sick=C.dur-tt; if(tt===1) payEvent(3,'Cita médica y medicamentos','salud'); if(tt%50===0){ addText(p.x-10,p.y-14,'¡Achís!','#D9F2DF'); for(let i=0;i<5;i++) S.parts.push({x:p.x+p.w/2+(p.face||1)*8,y:p.y+8,vx:(p.face||1)*(1+Math.random()*2),vy:(Math.random()-.5),life:20,col:'rgba(200,240,200,.8)'}); } }
-  else if(C.k==='familiar'&&tt===1){ payEvent(3,'Medicamentos y transporte para tu mamá','familia'); }
+  else if(C.k==='familiar'&&tt===1){ mamaEvent(); }
   else if(C.k==='sequia'&&tt===1){ addShock('Agua, luz y comida más caras (sequía)',1,2); addText(p.x-70,p.y-30,'Sequía: el costo de vida sube 1 por 2 quincenas','#FFC7BF'); logD('Gasto','Sequía: costo de vida +1 por 2 quincenas',0); }
   else if(C.k==='invierno'){ if(tt===1){ addShock('Reparaciones por la ola invernal',1,1); addText(p.x-70,p.y-30,'Ola invernal: arreglos de la casa −1 en la quincena','#9FD3FF'); } p.vx*=0.995; }
   else if(C.k==='guerra'&&tt===1){ addShock('Combustible y alimentos más caros (guerra lejana)',1,3); const car=(eco.lujos||[]).some(l=>/arro|oto/.test(l.n)); if(car) addShock('Gasolina más cara',1,2); addText(p.x-70,p.y-30,'Guerra lejana: combustible y comida más caros'+(car?' (y tu vehículo gasta más)':''),'#FFC7BF'); logD('Gasto','Crisis internacional: precios más altos',0); }
@@ -2962,6 +2967,7 @@ function update(){
   p.squash+= (1-p.squash)*0.2;
   if(p.onGround && Math.abs(p.vx)>0.3) p.walk+=gaitStep(p.vx,3.3);
   if(p.inv>0) p.inv--; if(p.flash>0) p.flash--;
+  { const iv=Math.round(120+180*saludF()); if(eco&&salud()>0&&salud()<70&&S.t-(S.saludT||0)>300&&S.t%iv===0){ eco.salud=Math.min(70,salud()+1); S.saludUp=12; } } // recuperación suave si no te golpean
   if(salud()<=0&&!S.busy&&!p.caught){ muerteStart(); return; }
   if(atkPressed){ atkPressed=false; if(!(p.atkCd>0)&&!S.busy&&!p.caught){ p.atk=16; p.atkCd=26; p.swing=(p.swing||0)+1; p.atkHit=0; snd('drop'); if(!eco.seenNo){ eco.seenNo=1; learn('decirno'); } } }
   if(p.atkCd>0) p.atkCd--; if(p.atk>0){ p.atk--; if(p.atk<=12&&p.atk>=5) defendHit(p); }
@@ -2991,7 +2997,7 @@ function update(){
     if(e.t==='parca'){ parcaUpdate(e,p,prevBottom); continue; }
     if(e.t==='parcaJefe'){ parcaJefeUpdate(e,p,prevBottom); continue; }
     if(e.t==='jefeM'){ jefeMUpdate(e,p,prevBottom); continue; }
-    if(e.t==='nido'){ nidoUpdate(e,p,prevBottom); continue; } if(e.t==='dian'){ dianUpdate(e,p); continue; } if(e.t==='dano'){ danoUpdate(e,p); continue; } if(e.t==='restaura'){ restauraUpdate(e,p); continue; } if(e.t==='atajo'){ atajoUpdate(e,p); continue; }
+    if(e.t==='nido'){ nidoUpdate(e,p,prevBottom); continue; } if(e.t==='mama'){ mamaUpdate(e,p); continue; } if(e.t==='dian'){ dianUpdate(e,p); continue; } if(e.t==='dano'){ danoUpdate(e,p); continue; } if(e.t==='restaura'){ restauraUpdate(e,p); continue; } if(e.t==='atajo'){ atajoUpdate(e,p); continue; }
     if(e.t==='trading'){ tradingUpdate(e,p); continue; }
     if(e.t==='lugar'){ lugarUpdate(e,p); continue; }
     if(e.t==='camp'&&S.li===7&&parcaCampGate(e,p)) continue;
@@ -3098,7 +3104,7 @@ function update(){
   if(S.debris&&S.debris.length){ S.debris.forEach(d=>{ d.x+=d.vx; d.y+=d.vy; d.vy+=0.28; d.rot+=d.vr+d.vx*.05; d.life--; }); S.debris=S.debris.filter(d=>d.life>0); }
   pigFxUpdate();
   S.parts.forEach(q=>{ q.x+=q.vx; q.y+=q.vy; q.vy+=q.conf?0.08:0.15; if(q.conf) q.vx*=0.98; q.life--; }); S.parts=S.parts.filter(q=>q.life>0); if(S.parts.length>220) S.parts.splice(0,S.parts.length-220);
-  S.texts.forEach(q=>{ q.y-=0.45; q.life--; }); S.texts=S.texts.filter(q=>q.life>0);
+  S.texts.forEach(q=>{ q.y-=0.22; q.life--; }); S.texts=S.texts.filter(q=>q.life>0);
   S.pops.forEach(q=>q.life--); S.pops=S.pops.filter(q=>q.life>0);
   if(L.bump && --L.bump.t<=0) L.bump=null;
   // cámara
@@ -3245,7 +3251,7 @@ function platLand(wasAir){
   else if(pl.type==='carro'&&(wasAir||pl.stand===150)){ if(wasAir) pl.wob=20; if((pl.n||0)<3&&((wasAir&&!pl.n)||pl.stand===150)){ pl.stand=0; pl.wob=14; const cst=carNext(pl); pl.n=(pl.n||0)+1; pl.lastT=S.t; pl.charged=pl.n>=3;
       const v=Math.min(cst[1],eco.hand); eco.hand-=v; if(S.ws) S.ws.lost.pasivos=(S.ws.lost.pasivos||0)+cst[1];
       logD('Gasto',cst[0]+' del carro (pasivo)',-cst[1]); addText(x-44,y-16,'−'+cst[1]+' '+cst[0]+(v<cst[1]?' (no te alcanzó)':'')+': el carro es un pasivo','#FFC7BF');
-      debris(x+7,y+10,cst[2]); snd('bad'); learn(pl.n>1?'carroGastos':'pasivo'); busy(cst[3],cst[4]); } }
+      debris(x+7,y+10,cst[2]); snd('bad'); learn(pl.n>1?'carroGastos':'pasivo'); busy(cst[3],cst[4]); if(S.busy){ S.busy.work=WORK_K[cst[0]]||'papel'; S.busy.what=cst[0]; } } }
 }
 function plab(fn){ if(S.plabels){ S.plabels.push([fn,ctx.getTransform()]); } else fn(); }
 function drawPlatLabels(){ const L=S.plabels; S.plabels=null; if(!L) return; for(const [fn,m] of L){ ctx.save(); ctx.setTransform(m); try{ fn(); }catch(e){} ctx.restore(); } }
@@ -3917,7 +3923,7 @@ function drawEnts(only){
     else if(e.t==='negocio') drawNegocio(e,x,y);
     else if(e.t==='parca'||e.t==='parcaJefe') drawParca(e,x,y);
     else if(e.t==='jefeM') drawJefeM(e,x,y);
-    else if(e.t==='nido') drawNido(e,x,y); else if(e.t==='dian') drawDian(e,x,y); else if(e.t==='dano') drawDano(e,x,y); else if(e.t==='restaura') drawRestaura(e,x,y); else if(e.t==='atajo') drawAtajo(e,x,y);
+    else if(e.t==='nido') drawNido(e,x,y); else if(e.t==='mama') drawMama(e,x,y); else if(e.t==='dian') drawDian(e,x,y); else if(e.t==='dano') drawDano(e,x,y); else if(e.t==='restaura') drawRestaura(e,x,y); else if(e.t==='atajo') drawAtajo(e,x,y);
     else if(e.t==='trading') drawTrading(e,x,y);
     else if(e.t==='lugar') drawLugar(e,x,y);
     else if(e.t==='poder') drawPoder(e,x,y);
@@ -4187,6 +4193,7 @@ function hikerBody(air,w,color,o={}){
 
 function drawBusy(){
   const b=S.busy; if(!b||!S.p) return; const p=S.p, cx=p.x+p.w/2-S.cam, top=p.y-62, pr=1-b.t/b.n, secs=Math.ceil(b.t/60);
+  if(b.work){ drawWorkPanel(b,cx,p.y+p.h); return; }
   ctx.save(); ctx.font='800 8px Figtree, sans-serif'; const tw=Math.max(110,ctx.measureText(b.label).width+44); const bx=Math.round(Math.max(4,Math.min(W-tw-4,cx-tw/2)));
   ctx.fillStyle='rgba(10,20,26,.86)'; rr(bx,top-14,tw,24,7); ctx.fill(); ctx.strokeStyle='#F2B33D'; ctx.lineWidth=1; rr(bx,top-14,tw,24,7); ctx.stroke();
   // reloj
@@ -4194,8 +4201,6 @@ function drawBusy(){
   ctx.fillStyle='#fff'; ctx.font='800 7px "IBM Plex Mono", monospace'; ctx.textAlign='center'; ctx.fillText(secs,rx,ry+2.5);
   ctx.textAlign='left'; ctx.font='800 8px Figtree, sans-serif'; ctx.fillStyle='#FFE18A'; ctx.fillText(b.label+'…',bx+25,top-4);
   ctx.fillStyle='rgba(255,255,255,.15)'; rr(bx+25,top+1,tw-33,3,1.5); ctx.fill(); ctx.fillStyle='#F2B33D'; rr(bx+25,top+1,Math.max(2,(tw-33)*pr),3,1.5); ctx.fill();
-  // herramienta que se mueve
-  const a=Math.sin((S.t||0)*.35)*.6; ctx.translate(cx+10,p.y+10); ctx.rotate(a); ctx.fillStyle='#C9D3DA'; ctx.fillRect(-1,-9,2,9); ctx.beginPath(); ctx.arc(0,-10,2.6,0,7); ctx.fill(); ctx.fillStyle='rgba(10,20,26,.9)'; ctx.fillRect(-1,-12.5,2,2.4);
   ctx.restore();
 }
 function powerAura(p,x,y){ const k=p.bigK||1, cy=y-26*k, a=p.power<90?(Math.floor(p.power/6)%2?0.35:0.8):0.8, r=30*k+Math.sin(S.t*0.3)*2;
@@ -4219,7 +4224,7 @@ function drawHiker(){
   drawChain(x,y);
   const moving=Math.abs(p.vx)>0.3;
   const ant=p.antic>0?1-(p.antic-1)/JUMP_ANT:0, landE=p.landT>0?(p.landK||0)*Math.sin(Math.PI*Math.min(1,(JUMP_LAND-p.landT+2)/JUMP_LAND))*(p.landT>JUMP_LAND*0.5?1:p.landT/(JUMP_LAND*0.5)):0;
-  const jp={antic:ant*(keys.jump?1:0.75),land:Math.max(landE,p.crouch?0.95:0),to:p.toT||0,run:!!p.jumpRun,tuck:p.tuck||0};
+  const jp={antic:ant*(keys.jump?1:0.75),land:Math.max(landE,(p.crouch||(S.busy&&S.busy.work))?0.95:0),to:p.toT||0,run:!!p.jumpRun,tuck:p.tuck||0};
   const lean=(ant*0.24+landE*0.28)+(p.onGround&&moving?0.04+0.14*Math.min(1,Math.abs(p.vx)/3.3):(p.vy<0?0.1:(p.vy>3?-0.04:0.04)))+(chained()?0.08:0)+(mood()==='tired'?0.06:0)+(p.climb?-0.22:0)+(peso()>=6?0.06:0);
   const breath=p.idle>0?Math.sin(p.idle*0.08)*0.8:0;
   ctx.save(); ctx.translate(x,y); const sq=1+(p.squash-1)*0.45, bk=(p.bigK||1)*(p.growT>0&&!reduced?1+Math.sin(p.growT*0.9)*0.06:1); ctx.scale(p.face*((2-sq)*0.5+0.5)*bk,sq*bk);
@@ -4460,11 +4465,12 @@ function draw(){
   ctx.save();
   const sh=S.shake&&!reduced?S.shake:0;
   ctx.translate(sh?(Math.random()-.5)*sh:0, -Math.round(S.camY)+(sh?(Math.random()-.5)*sh:0));
-  drawDeco(th); drawArenaBack(); S.plabels=[]; drawPlats(th); drawTiles(th); drawArenaFloor(); { const by=S.L.rows*T; if(by<S.camY+H){ ctx.fillStyle=th.earth; ctx.fillRect(0,by,W,S.camY+H-by+2); ctx.fillStyle='rgba(0,0,0,.18)'; ctx.fillRect(0,by,W,S.camY+H-by+2); } } drawEnts(); drawArenaFront(); drawPlatLabels(); drawHiker(); drawPigFx(); drawWorldHazards(); drawBusy(); drawFront();
+  drawDeco(th); drawArenaBack(); S.plabels=[]; drawPlats(th); drawTiles(th); drawArenaFloor(); { const by=S.L.rows*T; if(by<S.camY+H){ ctx.fillStyle=th.earth; ctx.fillRect(0,by,W,S.camY+H-by+2); ctx.fillStyle='rgba(0,0,0,.18)'; ctx.fillRect(0,by,W,S.camY+H-by+2); } } drawEnts(); drawArenaFront(); drawPlatLabels(); drawHiker(); drawPigFx(); drawWorldHazards(); drawBusy(); try{ drawMedBag(); }catch(e){} drawFront();
   S.pops.forEach(q=>{ const k=1-q.life/14; ctx.globalAlpha=1-k; ctx.save(); ctx.globalCompositeOperation='lighter'; drop(q.x-S.cam,q.y-k*10,1+k*0.8,'#8EE0FF'); ctx.restore(); }); ctx.globalAlpha=1;
   S.parts.forEach(q=>{ ctx.globalAlpha=Math.min(1,q.life/20); ctx.fillStyle=q.col; if(q.conf){ ctx.save(); ctx.translate(q.x-S.cam,q.y); ctx.rotate(q.rot+=0.2); ctx.fillRect(-2,-1,4,2.4); ctx.restore(); } else if(q.dust){ ctx.beginPath(); ctx.arc(q.x-S.cam,q.y,q.r*(1.4-q.life/40),0,7); ctx.fill(); } else ctx.fillRect(q.x-S.cam,q.y,3,3); }); ctx.globalAlpha=1;
-  ctx.font='800 11px Figtree, sans-serif'; ctx.textAlign='center';
-  S.texts.forEach(q=>{ ctx.globalAlpha=Math.min(1,q.life/25); const x=Math.max(70,Math.min(W-70,q.x-S.cam)); ctx.fillStyle='rgba(0,0,0,.55)'; ctx.fillText(q.txt,x+1,q.y+1); ctx.fillStyle=q.col; ctx.fillText(q.txt,x,q.y); });
+  ctx.font='700 8.5px Figtree, sans-serif'; ctx.textAlign='center';
+  S.texts.forEach(q=>{ const age=(q.max||90)-q.life, a=Math.min(1,q.life/22,age/6)*0.92; const tw=ctx.measureText(q.txt).width+12, x=Math.max(tw/2+4,Math.min(W-tw/2-4,q.x-S.cam)), y=q.y+(age<6?(6-age)*0.8:0);
+    ctx.globalAlpha=a*0.85; ctx.fillStyle='rgba(10,18,24,.62)'; rr(x-tw/2,y-9,tw,13,6.5); ctx.fill(); ctx.globalAlpha=a; ctx.fillStyle=q.col; ctx.beginPath(); ctx.arc(x-tw/2+5,y-2.5,1.8,0,7); ctx.fill(); ctx.fillText(q.txt,x+2,y); });
   ctx.globalAlpha=1; ctx.textAlign='left';
   ctx.restore();
   drawAmbient(th);
@@ -7142,6 +7148,146 @@ function dipEngrave(c,r,x0,x1,base,H,ink,side){ // grabado en línea fina: tres 
   if(kind==='ruinas'){ for(let k=0;k<8;k++){ const bx=x0+W0*(0.15+k*0.1), hh=40+R()*70; c.beginPath(); c.moveTo(bx,base); c.lineTo(bx,base-hh); c.lineTo(bx+12,base-hh+10); c.lineTo(bx+22,base-hh-6); c.lineTo(bx+32,base-hh+14); c.lineTo(bx+32,base); c.stroke(); for(let y=base-hh+18;y<base;y+=3.2){ c.globalAlpha=.3; c.beginPath(); c.moveTo(bx,y); c.lineTo(bx+32,y); c.stroke(); } c.globalAlpha=.75; } c.strokeStyle='#4E9A4E'; c.lineWidth=2; const sx=x0+W0*0.08; c.beginPath(); c.moveTo(sx,base); c.lineTo(sx,base-22); c.stroke(); c.beginPath(); c.ellipse(sx-6,base-18,7,3,-.5,0,7); c.ellipse(sx+6,base-22,7,3,.5,0,7); c.stroke(); }
   if(kind==='ciudad'){ for(let k=0;k<9;k++){ const bx=x0+W0*(0.12+k*0.085), hh=36+((k*37)%5)*14; c.strokeRect(bx,base-hh,30,hh); for(let y=base-hh+6;y<base-6;y+=10){ c.strokeRect(bx+5,y,6,5); c.strokeRect(bx+18,y,6,5); } } [0.05,0.92].forEach(f=>{ const mx=x0+W0*f, my=base-120; c.beginPath(); c.moveTo(mx,base); c.lineTo(mx,my); c.stroke(); for(let i=0;i<3;i++){ const a=i*2.094+0.5; c.beginPath(); c.moveTo(mx,my); c.lineTo(mx+Math.cos(a)*30,my+Math.sin(a)*30); c.stroke(); } }); }
   c.globalAlpha=1; c.restore(); }
+/* ================= TALLER: lo que cuesta mantener el carro, en un recuadro de primer plano ================= */
+const WORK_K={'Repuesto: llanta':'llanta','Repuesto: batería':'bateria','Cambio de aceite':'aceite','Gasolina':'gasolina','Repuesto: espejo':'espejo','Parqueadero':'parqueo','SOAT':'papel','Tecnomecánica':'papel','Impuesto vehicular':'papel'};
+const eio=t=>t<.5?2*t*t:1-Math.pow(-2*t+2,2)/2, seg=(u,a,b)=>Math.max(0,Math.min(1,(u-a)/(b-a)));
+function wkWheel(cx,cy,r,rot,flat){ ctx.save(); ctx.translate(cx,cy); if(flat){ ctx.fillStyle='#151515'; ctx.beginPath(); ctx.ellipse(0,1.2,r*1.08,r*0.9,0,0,7); ctx.fill(); } else { ctx.fillStyle='#151515'; ctx.beginPath(); ctx.arc(0,0,r,0,7); ctx.fill(); }
+  ctx.strokeStyle='#2A2A2A'; ctx.lineWidth=1; ctx.beginPath(); ctx.arc(0,0,r-2,0,7); ctx.stroke(); ctx.rotate(rot); ctx.fillStyle='#B8BEC4'; ctx.beginPath(); ctx.arc(0,0,r*0.52,0,7); ctx.fill(); ctx.fillStyle='#7E858C';
+  for(let i=0;i<5;i++){ const a=i*Math.PI*2/5; ctx.beginPath(); ctx.arc(Math.cos(a)*r*0.3,Math.sin(a)*r*0.3,1.1,0,7); ctx.fill(); } ctx.fillStyle='#DDE2E6'; ctx.beginPath(); ctx.arc(0,0,1.6,0,7); ctx.fill(); ctx.restore(); }
+function wkCruceta(cx,cy,rot){ ctx.save(); ctx.translate(cx,cy); ctx.rotate(rot); ctx.strokeStyle='#8A9097'; ctx.lineWidth=2.2; ctx.lineCap='round'; ctx.beginPath(); ctx.moveTo(-13,0); ctx.lineTo(13,0); ctx.moveTo(0,-13); ctx.lineTo(0,13); ctx.stroke(); ctx.strokeStyle='#C9CFD4'; ctx.lineWidth=0.8; ctx.beginPath(); ctx.moveTo(-12,-0.6); ctx.lineTo(12,-0.6); ctx.stroke();
+  ctx.fillStyle='#E0B030'; ctx.beginPath(); ctx.arc(13,0,2.2,0,7); ctx.fill(); ctx.restore(); }
+function wkGlove(x,y,rot){ ctx.save(); ctx.translate(x,y); ctx.rotate(rot||0); ctx.fillStyle='#E0B030'; rr(-4,-3,9,7,2.5); ctx.fill(); ctx.fillStyle='#B8862F'; ctx.fillRect(-7,-2,4,5); ctx.restore(); }
+function wkScene(k,u,w,h,t,lbl){ // u: avance 0..1 · el recuadro mide w × h con origen arriba a la izquierda
+  const g=ctx.createLinearGradient(0,0,0,h); g.addColorStop(0,'#3A4650'); g.addColorStop(1,'#26303A'); ctx.fillStyle=g; ctx.fillRect(0,0,w,h);
+  ctx.fillStyle='#1C232A'; ctx.fillRect(0,h-9,w,9); ctx.fillStyle='rgba(255,255,255,.06)'; for(let x=0;x<w;x+=12) ctx.fillRect(x,h-9,6,1); // piso de taller
+  const ok=u>0.92;
+  if(k==='llanta'){ const lift=Math.sin(Math.min(1,u*4)*Math.PI/2)*3*(u<0.92?1:Math.max(0,1-(u-0.92)*12)), by=h-24-lift;
+    // costado del carro con guardabarro
+    ctx.fillStyle='#B8323C'; ctx.beginPath(); ctx.moveTo(-4,by-20); ctx.lineTo(w+4,by-20); ctx.lineTo(w+4,by+6); ctx.lineTo(w/2+20,by+6); ctx.arc(w/2,by+6,20,0,Math.PI,true); ctx.lineTo(-4,by+6); ctx.closePath(); ctx.fill();
+    ctx.fillStyle='rgba(255,255,255,.25)'; ctx.fillRect(-4,by-17,w+8,1.5); ctx.fillStyle='#0E1216'; ctx.beginPath(); ctx.arc(w/2,by+6,20,Math.PI,0); ctx.fill();
+    // gato hidráulico
+    ctx.fillStyle='#C9603F'; ctx.fillRect(w/2+28,h-12,16,3); ctx.fillStyle='#9AA3AA'; ctx.fillRect(w/2+34,by+6,4,h-12-(by+6)); ctx.fillStyle='#C9603F'; ctx.fillRect(w/2+31,by+4,10,3);
+    const hx=w/2, hy=by+8;
+    if(u<0.36){ wkWheel(hx,hy,13,0,true); const a=-eio(u/0.36)*Math.PI*3; wkCruceta(hx,hy,a); wkGlove(hx+Math.cos(a)*13,hy+Math.sin(a)*13,a); if(Math.floor(t/7)%5===0){ ctx.fillStyle='#FFE18A'; ctx.fillRect(hx+6,hy-9,2,2); } ctx.fillStyle='#FF9A8C'; ctx.font='800 6px Figtree, sans-serif'; ctx.fillText('PINCHADA',4,h-13); }
+    else if(u<0.56){ const v=seg(u,0.36,0.56); wkWheel(hx-v*80,hy+v*v*4,13,-v*6,true); wkWheel(hx+(1-v)*80,hy,13,(1-v)*6,false); }
+    else { wkWheel(hx,hy,13,0,false); const a=eio(seg(u,0.56,0.92))*Math.PI*3; if(!ok){ wkCruceta(hx,hy,a); wkGlove(hx+Math.cos(a)*13,hy+Math.sin(a)*13,a); } }
+  }
+  else if(k==='espejo'){ // puerta del carro con el espejo lateral
+    ctx.fillStyle='#1E2A3A'; ctx.fillRect(0,14,w,h-23); ctx.fillStyle='#9FC6DC'; ctx.beginPath(); ctx.moveTo(10,14); ctx.lineTo(38,-2); ctx.lineTo(w,-2); ctx.lineTo(w,14); ctx.closePath(); ctx.fill(); ctx.fillStyle='rgba(255,255,255,.35)'; ctx.fillRect(50,2,30,2);
+    ctx.fillStyle='#2E3A4A'; ctx.fillRect(28,12,10,6); const mx=22, my=12;
+    const mirror=(x,y,rot,broken)=>{ ctx.save(); ctx.translate(x,y); ctx.rotate(rot); ctx.fillStyle='#1E2A3A'; rr(-14,-8,18,14,4); ctx.fill(); ctx.fillStyle=broken?'#7A8A96':'#BFE2F2'; rr(-12,-6,14,10,3); ctx.fill();
+      if(broken){ ctx.strokeStyle='#2A3440'; ctx.lineWidth=.7; ctx.beginPath(); ctx.moveTo(-8,-6); ctx.lineTo(-5,-1); ctx.lineTo(-10,3); ctx.moveTo(-5,-1); ctx.lineTo(1,2); ctx.moveTo(-5,-1); ctx.lineTo(0,-5); ctx.stroke(); } ctx.restore(); };
+    if(u<0.3){ const v=seg(u,0.12,0.3); mirror(mx,my+v*v*44,v*1.2,true); if(v>0.9) { ctx.fillStyle='#BFE2F2'; for(let i=0;i<5;i++) ctx.fillRect(mx-10+i*5,h-12-((i*3)%4),2,1.5); } }
+    else if(u<0.62){ const v=eio(seg(u,0.3,0.62)); const x=mx+(1-v)*60, y=my+(1-v)*30; mirror(x,y,(1-v)*0.6,false); wkGlove(x+6,y+6,0.3); }
+    else { mirror(mx,my,0,false); if(!ok){ const a=t*0.5; ctx.save(); ctx.translate(36,15); ctx.rotate(Math.sin(a)*0.5); ctx.fillStyle='#E0B030'; ctx.fillRect(0,-2,9,4); ctx.fillStyle='#C9CFD4'; ctx.fillRect(-7,-0.6,7,1.2); ctx.restore(); } }
+    if(ok){ const s=(t%40)/40; ctx.save(); ctx.beginPath(); ctx.rect(mx-12,my-6,14,10); ctx.clip(); ctx.fillStyle='rgba(255,255,255,.8)'; ctx.fillRect(mx-16+s*24,my-8,3,16); ctx.restore(); }
+  }
+  else if(k==='gasolina'){ // surtidor, manguera y tanque con aguja
+    ctx.fillStyle='#C9283C'; rr(5,6,36,h-15,3); ctx.fill(); ctx.fillStyle='#F4ECD8'; rr(8,9,30,15,2); ctx.fill(); const gal=(u*3.4).toFixed(2), pes=Math.round(u*52000).toLocaleString('es-CO');
+    ctx.fillStyle='#1E1E1E'; ctx.font='700 4.6px "IBM Plex Mono", monospace'; ctx.fillText('GAL '+gal,9.5,15.5); ctx.fillText('$'+pes,9.5,22); ctx.fillStyle='#F2C230'; ctx.fillRect(8,27,30,3);
+    ctx.fillStyle='#B8323C'; rr(w-46,10,46,h-24,5); ctx.fill(); ctx.fillStyle='#8A2A30'; rr(w-38,18,9,9,2); ctx.fill(); // carro y tapa del tanque
+    ctx.strokeStyle='#1E1E1E'; ctx.lineWidth=2.4; ctx.beginPath(); ctx.moveTo(40,30); ctx.bezierCurveTo(56,h-6,w-60,h-6,w-40,24); ctx.stroke();
+    ctx.strokeStyle='rgba(242,194,48,.85)'; ctx.lineWidth=1.2; ctx.setLineDash([2,4]); ctx.lineDashOffset=-t*0.8; if(!ok&&u>0.08){ ctx.beginPath(); ctx.moveTo(40,30); ctx.bezierCurveTo(56,h-6,w-60,h-6,w-40,24); ctx.stroke(); } ctx.setLineDash([]);
+    ctx.fillStyle='#2A2A2A'; ctx.save(); ctx.translate(w-38,22); ctx.rotate(-0.5); ctx.fillRect(-8,-2,10,5); ctx.restore(); wkGlove(w-44,26,0.2);
+    // medidor de combustible
+    const gx=w-23, gy=h-18; ctx.fillStyle='#0E1216'; ctx.beginPath(); ctx.arc(gx,gy,9,Math.PI,0); ctx.fill(); ctx.strokeStyle='#F4ECD8'; ctx.lineWidth=.8; ctx.beginPath(); ctx.arc(gx,gy,7,Math.PI,0); ctx.stroke();
+    ctx.fillStyle='#FF9A8C'; ctx.font='800 4px Figtree, sans-serif'; ctx.fillText('E',gx-9,gy+3); ctx.fillStyle='#BFF5CF'; ctx.fillText('F',gx+6.5,gy+3);
+    const na=Math.PI+eio(u)*Math.PI; ctx.strokeStyle='#FF6A3A'; ctx.lineWidth=1.2; ctx.beginPath(); ctx.moveTo(gx,gy); ctx.lineTo(gx+Math.cos(na)*7,gy+Math.sin(na)*7); ctx.stroke();
+  }
+  else if(k==='aceite'){ // capó abierto, motor, embudo y la tarrina que vierte
+    ctx.fillStyle='#B8323C'; ctx.save(); ctx.translate(8,6); ctx.rotate(-0.5); ctx.fillRect(0,0,52,4); ctx.restore();
+    ctx.fillStyle='#4A5058'; rr(14,22,62,h-31,4); ctx.fill(); ctx.fillStyle='#5E6670'; for(let i=0;i<4;i++) rr(20+i*14,26,10,8,2); ctx.fill();
+    ctx.fillStyle='#C9CFD4'; ctx.beginPath(); ctx.moveTo(44,20); ctx.lineTo(56,20); ctx.lineTo(51,30); ctx.lineTo(49,30); ctx.closePath(); ctx.fill();
+    const tilt=ok?0:Math.min(1,u*5)*1.1; ctx.save(); ctx.translate(70,12); ctx.rotate(-tilt); ctx.fillStyle='#E0B030'; rr(0,-6,16,20,2); ctx.fill(); ctx.fillStyle='#1E1E1E'; ctx.font='800 4px Figtree, sans-serif'; ctx.fillText('OIL',3,6); ctx.fillStyle='#C9A23A'; ctx.fillRect(-4,-4,5,3); ctx.restore(); wkGlove(86,20,0);
+    if(!ok&&u>0.12){ ctx.strokeStyle='#C98A1A'; ctx.lineWidth=2; ctx.beginPath(); ctx.moveTo(64,10); ctx.quadraticCurveTo(54,12,50,21); ctx.stroke(); for(let i=0;i<3;i++){ const d=((t*0.08+i/3)%1); ctx.fillStyle='rgba(255,210,90,.8)'; ctx.beginPath(); ctx.arc(64-d*13,10+d*d*11,0.9,0,7); ctx.fill(); } }
+    const lv=eio(u); ctx.fillStyle='#1E1E1E'; rr(w-20,10,8,h-20,2); ctx.fill(); ctx.fillStyle=lv>0.8?'#62C98A':'#C98A1A'; rr(w-19,10+(h-22)*(1-lv),6,(h-22)*lv+1,1.5); ctx.fill();
+    ctx.fillStyle='#F4ECD8'; ctx.font='800 4.4px Figtree, sans-serif'; ctx.fillText('NIVEL',w-25,h-11);
+  }
+  else if(k==='bateria'){ const bx=w/2-24, byy=h-36; ctx.fillStyle='#1E1E1E'; rr(bx,byy,48,26,3); ctx.fill(); ctx.fillStyle='#2E3A4A'; ctx.fillRect(bx,byy,48,6);
+    ctx.fillStyle='#C9283C'; ctx.fillRect(bx+6,byy-4,6,4); ctx.fillStyle='#5A5A5A'; ctx.fillRect(bx+36,byy-4,6,4); ctx.fillStyle='#fff'; ctx.font='800 7px Figtree, sans-serif'; ctx.fillText('+',bx+7,byy+5); ctx.fillText('−',bx+37,byy+5);
+    const clamp=(x0,y0,x1,y1,col,v)=>{ const x=x0+(x1-x0)*v, y=y0+(y1-y0)*v; ctx.strokeStyle=col; ctx.lineWidth=2; ctx.beginPath(); ctx.moveTo(x0,y0-30); ctx.quadraticCurveTo(x0,y0-6,x,y-4); ctx.stroke(); ctx.fillStyle=col; ctx.beginPath(); ctx.moveTo(x-4,y-8); ctx.lineTo(x+4,y-8); ctx.lineTo(x+2,y); ctx.lineTo(x-2,y); ctx.fill(); };
+    const v1=eio(seg(u,0.05,0.28)), v2=eio(seg(u,0.3,0.5)); clamp(bx-6,byy+8,bx+9,byy-3,'#C9283C',v1); clamp(bx+60,byy+8,bx+39,byy-3,'#222',v2);
+    if((u>0.27&&u<0.33)||(u>0.49&&u<0.55)){ for(let i=0;i<6;i++){ const a=Math.random()*6.28; ctx.strokeStyle='#FFE18A'; ctx.lineWidth=1; ctx.beginPath(); const sx=u<0.4?bx+9:bx+39; ctx.moveTo(sx,byy-4); ctx.lineTo(sx+Math.cos(a)*7,byy-4+Math.sin(a)*7); ctx.stroke(); } }
+    const ch=seg(u,0.5,0.92); for(let i=0;i<5;i++){ ctx.fillStyle=ch*5>i?(ch>0.95?'#62C98A':'#F2C230'):'rgba(255,255,255,.15)'; ctx.fillRect(bx+6+i*7.6,byy+12,6,7); }
+  }
+  else if(k==='parqueo'){ ctx.fillStyle='#1F5FAF'; rr(10,6,24,24,3); ctx.fill(); ctx.fillStyle='#fff'; ctx.font='800 18px Figtree, sans-serif'; ctx.textAlign='center'; ctx.fillText('P',22,25); ctx.textAlign='left';
+    ctx.fillStyle='#8E949A'; rr(w-48,8,26,h-17,3); ctx.fill(); ctx.fillStyle='#0E1216'; ctx.fillRect(w-44,12,18,8); ctx.fillStyle='#62C98A'; ctx.font='700 5px "IBM Plex Mono", monospace'; ctx.fillText('$'+(Math.round(eio(u)*4000)).toLocaleString('es-CO'),w-43,18);
+    const tl=eio(seg(u,0.2,0.85))*20; ctx.fillStyle='#F4ECD8'; ctx.fillRect(w-41,26,12,tl); ctx.fillStyle='#1E1E1E'; for(let i=3;i<tl-2;i+=3) ctx.fillRect(w-39,26+i,8,0.8);
+    ctx.fillStyle='#5A6068'; ctx.fillRect(38,h-20,5,11); ctx.save(); ctx.translate(40,h-18); ctx.rotate(-Math.PI/2*eio(seg(u,0.85,1))); ctx.fillStyle='#E0B030'; ctx.fillRect(0,-1.5,28,3); ctx.fillStyle='#C9283C'; for(let i=4;i<28;i+=9) ctx.fillRect(i,-1.5,4,3); ctx.restore();
+  }
+  else { // papeles: SOAT, tecnomecánica e impuesto vehicular
+    const doc=lbl==='SOAT'?'SOAT':lbl==='Tecnomecánica'?'REVISIÓN TÉCNICO-MECÁNICA':'IMPUESTO VEHICULAR';
+    ctx.fillStyle='#6E4A2A'; rr(w/2-30,4,60,h-12,3); ctx.fill(); ctx.fillStyle='#C9CFD4'; rr(w/2-8,2,16,5,1.5); ctx.fill(); ctx.fillStyle='#F4ECD8'; ctx.fillRect(w/2-26,9,52,h-20);
+    ctx.fillStyle='#1E2A3A'; ctx.font='800 4.4px Figtree, sans-serif'; ctx.textAlign='center'; ctx.fillText(doc,w/2,15); ctx.textAlign='left';
+    const nl=Math.floor(eio(seg(u,0.05,0.7))*5); for(let i=0;i<5;i++){ ctx.fillStyle=i<nl?'#5A6470':'rgba(90,100,112,.18)'; ctx.fillRect(w/2-22,20+i*5,i%2?30:40,1.4); }
+    if(u<0.7){ const px=w/2-22+((t*1.4)%40), py=20+nl*5; ctx.save(); ctx.translate(px,py); ctx.rotate(0.6); ctx.fillStyle='#2E5E9A'; ctx.fillRect(-1,-12,2.4,12); ctx.restore(); }
+    const sv=seg(u,0.72,0.84), down=sv<1?Math.sin(sv*Math.PI):0; if(u>0.72){ ctx.save(); ctx.translate(w/2+16,24-12*(1-sv)+(sv<1?-down*4:0)); if(u<0.84){ ctx.fillStyle='#6E4A2A'; ctx.fillRect(-3,-16,6,10); ctx.fillStyle='#3A3A3A'; rr(-8,-6,16,6,1.5); ctx.fill(); } ctx.restore(); }
+    if(u>=0.84){ ctx.save(); ctx.translate(w/2+12,30); ctx.rotate(-0.25); ctx.strokeStyle='#C9283C'; ctx.lineWidth=1.4; ctx.strokeRect(-14,-6,28,11); ctx.fillStyle='#C9283C'; ctx.font='800 6px Figtree, sans-serif'; ctx.textAlign='center'; ctx.fillText('PAGADO',0,2); ctx.restore(); ctx.textAlign='left'; }
+  }
+  if(ok){ ctx.fillStyle='rgba(98,201,138,.92)'; ctx.beginPath(); ctx.arc(w-10,10,7,0,7); ctx.fill(); ctx.strokeStyle='#fff'; ctx.lineWidth=1.8; ctx.beginPath(); ctx.moveTo(w-13,10); ctx.lineTo(w-10.5,12.5); ctx.lineTo(w-6.5,7.5); ctx.stroke(); }
+}
+function drawWorkPanel(b,cx,feetY){ const W2=132, H2=64, hb=18, pr=1-b.t/b.n, secs=Math.ceil(b.t/60); const bx=Math.round(Math.max(4,Math.min(W-W2-4,cx-W2/2))), by=Math.round(feetY-58-H2-hb);
+  ctx.save(); ctx.fillStyle='rgba(0,0,0,.35)'; rr(bx+2,by+3,W2,H2+hb,8); ctx.fill();
+  ctx.fillStyle='rgba(10,20,26,.94)'; rr(bx,by,W2,H2+hb,8); ctx.fill(); ctx.strokeStyle='#F2B33D'; ctx.lineWidth=1.2; rr(bx,by,W2,H2+hb,8); ctx.stroke();
+  // cola del globo hacia el senderista
+  ctx.fillStyle='rgba(10,20,26,.94)'; ctx.beginPath(); ctx.moveTo(cx-6,by+H2+hb); ctx.lineTo(cx,by+H2+hb+8); ctx.lineTo(cx+6,by+H2+hb); ctx.fill();
+  // encabezado: reloj, tarea y barra
+  const rx=bx+10, ry=by+9; ctx.strokeStyle='rgba(255,255,255,.25)'; ctx.lineWidth=2; ctx.beginPath(); ctx.arc(rx,ry,5.5,0,7); ctx.stroke(); ctx.strokeStyle='#F2B33D'; ctx.beginPath(); ctx.arc(rx,ry,5.5,-Math.PI/2,-Math.PI/2+Math.PI*2*pr); ctx.stroke();
+  ctx.fillStyle='#fff'; ctx.font='800 5.6px "IBM Plex Mono", monospace'; ctx.textAlign='center'; ctx.fillText(secs,rx,ry+2); ctx.textAlign='left';
+  ctx.font='800 7.2px Figtree, sans-serif'; ctx.fillStyle='#FFE18A'; let lt=b.label; while(ctx.measureText(lt+'…').width>W2-26&&lt.length>6) lt=lt.slice(0,-1); ctx.fillText(lt+'…',bx+19,by+8);
+  ctx.fillStyle='rgba(255,255,255,.15)'; rr(bx+19,by+11,W2-27,3,1.5); ctx.fill(); ctx.fillStyle='#F2B33D'; rr(bx+19,by+11,Math.max(2,(W2-27)*pr),3,1.5); ctx.fill();
+  // primer plano de la tarea
+  ctx.save(); ctx.translate(bx+6,by+hb); ctx.beginPath(); rr(0,0,W2-12,H2-6,5); ctx.clip(); wkScene(b.work,pr,W2-12,H2-6,S.t||0,b.what); ctx.restore();
+  ctx.restore(); }
+/* ================= EMERGENCIA FAMILIAR: tu mamá se enfermó y tú decides cómo pagar y le llevas el medicamento ================= */
+Object.assign(TIPS,{eps:{t:'Afiliación a salud (EPS)',g:'Guía 5',x:'Estar afiliado a una EPS (contributivo o subsidiado) cubre consultas y medicamentos: el copago es mucho menor que pagar todo particular. Cuesta tiempo en filas y trámites, pero protege tu bolsillo.'}});
+function mamaEvent(){ const p=S.p; if(!p||S.L.ents.some(e=>e.t==='mama'&&!e.done)){ payEvent(3,'Medicamentos y transporte para tu mamá','familia'); return; }
+  S.mode='mama'; const emb=eco.emb, falta=Math.max(0,3-emb);
+  openOv(`<div class="eyebrow">Imprevisto familiar</div><h2>Tu mamá está enferma</h2>
+   <p>El médico le formuló medicamentos y hay que llevarlos hoy. Cuestan <b>3 monedas</b> con el transporte. ¿Cómo lo resuelves?</p>
+   <div class="mopts">
+    <button class="mopt" data-m="fondo"><b>💧 Pagar con mi fondo de emergencia</b><span>${emb>=3?'Tu alcancía tiene '+emb+': alcanza sin deudas.':'Tu alcancía tiene '+emb+': te faltan '+falta+' y saldrán de tu bolsillo (o quedarás debiendo).'}</span></button>
+    <button class="mopt" data-m="eps"><b>🏥 Ir a la EPS o al centro de salud</b><span>Solo pagas 1 de copago, pero pierdes tiempo haciendo la fila.</span></button>
+    <button class="mopt" data-m="gota"><b>💸 Pedir un gota a gota</b><span>Te prestan ya… pero debes 6 con cobros cada quincena y llega el cobrador.</span></button>
+    <button class="mopt" data-m="nada"><b>⏳ Esperar a ver si se mejora sola</b><span>No gastas hoy, pero la enfermedad puede empeorar.</span></button>
+   </div>`);
+  box.querySelectorAll('[data-m]').forEach(b=>b.onclick=()=>{ const m=b.dataset.m; closeOv(); S.mode='play';
+    if(m==='nada'){ saludAdd(-10,'no atender a tu mamá'); addShock('Tu mamá empeoró: más gastos médicos',1,3); logD('Pérdida','Tu mamá empeoró por no atenderla a tiempo',0); toast('Tu mamá empeoró','Esperar salió más caro: ahora hay gastos médicos por 3 quincenas. Un fondo de emergencia o la EPS te habrían dejado atenderla a tiempo.'); snd('bad'); return; }
+    if(m==='fondo'){ const debe0=debtTot(); payEvent(3,'Medicamentos y transporte para tu mamá','familia'); if(debtTot()===debe0){ saludAdd(4,'fondo de emergencia'); learn('emb'); } }
+    else if(m==='eps'){ payEvent(1,'Copago de la EPS por los medicamentos de tu mamá','familia'); busy(170,'Haciendo la fila en la EPS por los medicamentos'); learn('eps'); }
+    else { addDebt('Gota a gota para los medicamentos',6,2,'gota'); logD('Pérdida','Gota a gota para los medicamentos de tu mamá: debes 6',0); learn('lender'); }
+    mamaSpawn(m); toast('Lleva el medicamento','Tu mamá está más adelante en el camino. Camina hasta ella para entregarle la bolsa de la farmacia.'); });
+}
+function mamaSpawn(m){ const p=S.p, L=S.L, J=L.ents.find(e=>e.t==='jefeM'); let c=Math.floor(p.x/T)+12; const cmax=J?Math.floor(J.x/T)-20:L.w-6;
+  if(c>cmax) c=Math.max(Math.floor(p.x/T)+5,cmax); while(c<L.w-2&&(L.surf[c]==null||L.surf[c]<0)) c++;
+  L.ents.push({t:'mama',x:c*T,y:L.surf[c]*T-30,w:24,h:30,done:false,how:m,dir:-1,tt:0}); S.medBag=true; }
+function mamaUpdate(e,p){ e.tt++; e.near=Math.abs((p.x+p.w/2)-(e.x+e.w/2))<110&&Math.abs((p.y+p.h)-(e.y+e.h))<90; e.dir=p.x>e.x?1:-1;
+  if(!e.done&&S.medBag&&overlap(p,{x:e.x-6,y:e.y,w:e.w+12,h:e.h})){ e.done=true; S.medBag=false; e.hearts=120;
+    const bien=e.how!=='gota'; saludAdd(bien?5:2,'cuidar a tu familia'); confetti(e.x+12,e.y,20); snd('gate');
+    stampAt(e.x+12,e.y-8,'¡GRACIAS, MIJO!','le llevaste el medicamento'); logD('Ahorro','Le llevaste el medicamento a tu mamá'+(bien?' sin endeudarte':''),0);
+    addText(e.x-60,e.y-26,bien?'Tu mamá ya tiene su medicamento y tú no quedaste endeudado':'Tu mamá ya tiene su medicamento… y tú quedaste con el gota a gota',bien?'#BFF5CF':'#FFE18A'); } }
+const LOOK_MAMA=()=>Object.assign({},LOOK_NPC.abuela,{top:'#3E7A9A',throws:0});
+function drawMama(e,x,y){ const cx=x+e.w/2, fy=y+e.h;
+  // corredor de la casa: techo de teja, pared y la silla
+  ctx.fillStyle='#E8D8B8'; ctx.fillRect(cx-30,fy-46,60,46); ctx.fillStyle='#CDB890'; ctx.fillRect(cx-30,fy-8,60,8);
+  ctx.fillStyle='#A8452E'; ctx.beginPath(); ctx.moveTo(cx-38,fy-44); ctx.lineTo(cx,fy-62); ctx.lineTo(cx+38,fy-44); ctx.closePath(); ctx.fill(); ctx.fillStyle='rgba(0,0,0,.18)'; ctx.fillRect(cx-30,fy-44,60,3);
+  ctx.fillStyle='#5A3A22'; ctx.fillRect(cx+12,fy-34,12,34); ctx.fillStyle='#4A8AC0'; ctx.fillRect(cx-25,fy-36,11,10); ctx.fillStyle='#fff'; ctx.fillRect(cx-20,fy-36,1,10);
+  ctx.fillStyle='#6E4A2A'; ctx.fillRect(cx-12,fy-12,16,3); ctx.fillRect(cx-11,fy-12,2,12); ctx.fillRect(cx+1,fy-12,2,12); ctx.fillRect(cx+2,fy-24,2,13);
+  ctx.fillStyle='rgba(0,0,0,.22)'; ctx.beginPath(); ctx.ellipse(cx-4,fy,12,2.4,0,0,7); ctx.fill();
+  rigDraw(e,cx-4,fy-3,0.8,LOOK_MAMA(),16,{wave:e.done&&e.hearts>0});
+  // cobija sobre las piernas
+  ctx.fillStyle=e.done?'#E07A9A':'#9A6ABA'; rr(cx-14,fy-14,18,8,3); ctx.fill(); ctx.strokeStyle='rgba(255,255,255,.4)'; ctx.lineWidth=.6; ctx.beginPath(); ctx.moveTo(cx-12,fy-11); ctx.lineTo(cx+2,fy-11); ctx.stroke();
+  if(!e.done){ // enferma: gotica de sudor y globo con el medicamento
+    const by=y-30+Math.sin(e.tt*0.06)*1.5; ctx.fillStyle='#9FD3FF'; ctx.beginPath(); ctx.ellipse(cx+4,y+4+((e.tt>>2)%8),1.2,1.8,0,0,7); ctx.fill();
+    ctx.fillStyle='rgba(255,255,255,.96)'; rr(cx-34,by-14,68,18,7); ctx.fill(); ctx.beginPath(); ctx.moveTo(cx-6,by+4); ctx.lineTo(cx-2,by+9); ctx.lineTo(cx+2,by+4); ctx.fill();
+    ctx.fillStyle='#C9283C'; rr(cx-30,by-10,10,10,2); ctx.fill(); ctx.fillStyle='#fff'; ctx.fillRect(cx-26,by-8,2,6); ctx.fillRect(cx-28,by-6,6,2);
+    ctx.fillStyle='#1B2A33'; ctx.font='700 6.5px Figtree, sans-serif'; ctx.fillText(e.near?'¿Me trajo la droga?':'Mijo, me siento mal',cx-17,by-3);
+    ctx.fillStyle='#FFE18A'; ctx.font='800 7px Figtree, sans-serif'; ctx.textAlign='center'; ctx.fillText('TU MAMÁ',cx,fy+10); ctx.textAlign='left'; }
+  else { if(e.hearts>0) e.hearts--; for(let i=0;i<3;i++){ const t=((e.tt*0.8+i*30)%90)/90; ctx.globalAlpha=1-t; ctx.fillStyle='#E04A6A'; const hx=cx-6+i*6, hy=y-6-t*26; ctx.beginPath(); ctx.arc(hx-1.4,hy,1.8,0,7); ctx.arc(hx+1.4,hy,1.8,0,7); ctx.moveTo(hx-3.1,hy+0.6); ctx.lineTo(hx,hy+3.8); ctx.lineTo(hx+3.1,hy+0.6); ctx.fill(); } ctx.globalAlpha=1;
+    ctx.fillStyle='#BFF5CF'; ctx.font='800 7px Figtree, sans-serif'; ctx.textAlign='center'; ctx.fillText('✓ TU MAMÁ',cx,fy+10); ctx.textAlign='left'; } }
+function drawMedBag(){ if(!S.medBag||!S.p||!S.L) return; const p=S.p, x=p.x+p.w/2-S.cam+p.face*9, y=p.y+p.h*0.55+Math.sin(S.t*0.2)*0.8;
+  ctx.save(); ctx.translate(x,y); ctx.fillStyle='#F4F4F0'; rr(-5,-4,10,10,1.5); ctx.fill(); ctx.strokeStyle='#C9CFD4'; ctx.lineWidth=.8; ctx.beginPath(); ctx.arc(0,-4,2.6,Math.PI,0); ctx.stroke(); ctx.fillStyle='#2E9A5A'; ctx.fillRect(-1,-1,2,6); ctx.fillRect(-3,1,6,2); ctx.restore();
+  const M=S.L.ents.find(e=>e.t==='mama'&&!e.done); if(M){ const sx=M.x+M.w/2-S.cam; if(sx>W-10||sx<10){ const right=sx>W-10, ax=right?W-16:16, ay=Math.max(S.camY+40,Math.min(S.camY+H-40,M.y)); ctx.save(); ctx.fillStyle='rgba(10,20,26,.85)'; rr(right?ax-62:ax-4,ay-9,66,18,8); ctx.fill(); ctx.fillStyle='#FFE18A'; ctx.font='800 8px Figtree, sans-serif'; ctx.textAlign=right?'right':'left'; ctx.fillText(right?'Tu mamá ▶':'◀ Tu mamá',right?ax:ax+2,ay+3); ctx.restore(); ctx.textAlign='left'; } } }
 /* ================= DIPLOMAS v2: diseño de certificado de expedición (cumbre + sendero + parche) ================= */
 // Tokens por ruta: tinta, acento, acento claro, texto, papel, y la paleta de la ilustración (cielo arriba, cielo abajo, sol, 4 planos de montaña lejos→cerca)
 const DIP_ART=[
