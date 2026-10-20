@@ -455,6 +455,48 @@ body.est-retro #cv{image-rendering:pixelated;image-rendering:crisp-edges;filter:
 body.est-cine #cv{filter:contrast(1.12) saturate(.9) sepia(.08)}
 body.est-cine .stage::after{content:"";position:absolute;inset:0;pointer-events:none;box-shadow:inset 0 0 80px rgba(0,0,0,.55);background:linear-gradient(180deg,rgba(0,0,0,.35) 0,transparent 7%,transparent 93%,rgba(0,0,0,.35) 100%)}
 @media (prefers-reduced-motion: reduce){.scrp{animation:none}.fsbar .nuevo-c{animation:none}}
+/* portada: pantalla completa, sin recortes, en celular y en computador */
+.ov.tov{position:fixed;inset:0;z-index:60;display:block;overflow:auto;-webkit-overflow-scrolling:touch;padding:max(16px,env(safe-area-inset-top)) 16px max(16px,env(safe-area-inset-bottom));backdrop-filter:none;
+ background:radial-gradient(120% 70% at 20% 0%,rgba(242,179,61,.16),transparent 60%),radial-gradient(90% 60% at 100% 10%,rgba(92,194,234,.12),transparent 60%),linear-gradient(180deg,#0B141A 0%,#10202A 55%,#0B141A 100%)}
+.ov.tov::before{content:"";position:fixed;left:0;right:0;bottom:0;height:42vh;pointer-events:none;opacity:.55;background:
+ linear-gradient(transparent,#0B141A 92%),
+ url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1200 300' preserveAspectRatio='none'%3E%3Cpath d='M0 300 L0 190 L120 120 L190 160 L300 70 L390 150 L470 110 L560 170 L660 60 L760 150 L840 120 L930 170 L1040 90 L1120 140 L1200 110 L1200 300Z' fill='%2316303C'/%3E%3Cpath d='M0 300 L0 230 L140 180 L260 220 L380 170 L500 230 L640 160 L780 220 L900 180 L1040 230 L1200 190 L1200 300Z' fill='%23112630'/%3E%3C/svg%3E") bottom/100% 100% no-repeat}
+.box.tbox{position:relative;background:transparent;border:0;padding:0;width:min(1120px,100%);max-height:none;overflow:visible;margin:0 auto}
+.t-wrap{display:grid;grid-template-columns:minmax(0,.9fr) minmax(0,1.1fr);gap:28px;align-items:start;padding:8px 0 24px}
+.t-hero{position:sticky;top:16px;padding:18px 6px;text-align:left}
+.t-seal{width:clamp(96px,14vw,150px);height:auto;display:block;margin:0 0 14px;filter:drop-shadow(0 10px 22px rgba(0,0,0,.55))}
+.t-title{font-family:var(--f-display);font-weight:400;font-size:clamp(40px,5.6vw,66px)!important;line-height:1!important;margin:6px 0 12px!important;letter-spacing:-.01em;background:linear-gradient(180deg,#FFF3D6,#E8B64A);-webkit-background-clip:text;background-clip:text;color:transparent}
+.t-lead{font-size:clamp(15px,1.5vw,17px);line-height:1.5;color:#CFDBE0!important;max-width:46ch}
+.t-chips{list-style:none;padding:0;margin:14px 0;display:flex;flex-wrap:wrap;gap:8px}
+.t-chips li{font:700 12.5px var(--f-body);padding:6px 11px;border-radius:999px;background:rgba(255,255,255,.06);border:1px solid rgba(242,179,61,.35);color:#F4E6C4}
+.t-chips b{color:var(--gold);font-family:var(--f-num)}
+.t-keys{display:flex;flex-wrap:wrap;gap:6px 14px;font-size:12.5px;color:var(--muted);margin:10px 0 16px}
+.t-keys kbd{margin-right:3px}
+.t-rank{width:auto}
+.t-card{background:linear-gradient(180deg,rgba(26,42,51,.96),rgba(18,31,38,.96));border:1px solid rgba(242,179,61,.22);border-radius:20px;padding:20px 22px 0;box-shadow:0 24px 60px rgba(0,0,0,.45)}
+.t-step{display:flex;align-items:center;gap:10px;margin:18px 0 6px}
+.t-step:first-child{margin-top:2px}
+.t-step h3{margin:0;font:400 20px var(--f-display);color:var(--ink)}
+.t-n{width:26px;height:26px;border-radius:50%;display:grid;place-items:center;font:800 13px var(--f-num);background:var(--gold);color:#2A1A00;flex:none}
+.t-card fieldset.reg{border:0;padding:0;margin:0;background:transparent!important;box-shadow:none!important}
+.t-card fieldset.reg legend{display:none}
+.t-av{display:grid;grid-template-columns:150px 1fr;gap:16px;align-items:center}
+.t-av canvas{width:150px;height:150px;border-radius:16px;background:rgba(0,0,0,.18);border:1px solid var(--line)}
+.seg .btn[aria-pressed="true"],.row[data-g] .btn[aria-pressed="true"]{border-color:var(--gold);color:#FFE7B0;background:rgba(242,179,61,.12)}
+.t-act{position:sticky;bottom:0;margin:18px -22px 0;padding:14px 22px calc(14px + env(safe-area-inset-bottom,0px));display:flex;gap:10px;flex-wrap:wrap;background:linear-gradient(180deg,rgba(18,31,38,.0),rgba(18,31,38,.98) 30%);border-radius:0 0 20px 20px}
+.t-act .btn{flex:1 1 200px;font-size:16px;padding:13px 18px}
+@media (max-width:900px){
+ .t-wrap{grid-template-columns:1fr;gap:14px}
+ .t-hero{position:static;text-align:center;padding:6px 0 0}
+ .t-seal{margin:0 auto 8px;width:96px}
+ .t-lead{margin-left:auto!important;margin-right:auto!important}
+ .t-chips,.t-keys{justify-content:center}
+ .t-keys{display:none}
+ .t-card{padding:16px 16px 0;border-radius:18px}
+ .t-act{margin:16px -16px 0;padding:12px 16px calc(12px + env(safe-area-inset-bottom,0px))}
+}
+@media (max-width:420px){ .t-av{grid-template-columns:110px 1fr;gap:12px} .t-av canvas{width:110px;height:110px} .t-title{font-size:40px!important} }
+body.has-touch .t-keys{display:none}
 </style>
 
 <div class="wrap">
@@ -4464,9 +4506,9 @@ cv.addEventListener('pointerup',ptrEnd); cv.addEventListener('pointercancel',ptr
 
 /* ================= PANTALLAS ================= */
 const ov=document.getElementById('ov'), box=document.getElementById('ovBox');
-function openOv(html,wide){ box.className='box'+(wide?' wide':''); box.innerHTML=html; ov.hidden=false; const f=box.querySelector('.btn:not([disabled])'); if(f&&!wide&&!f.closest('.qopts')&&!document.body.classList.contains('has-touch')) try{f.focus({preventScroll:true})}catch(e){} }
+function openOv(html,wide){ ov.classList.remove('tov'); box.className='box'+(wide?' wide':''); box.innerHTML=html; ov.hidden=false; const f=box.querySelector('.btn:not([disabled])'); if(f&&!wide&&!f.closest('.qopts')&&!document.body.classList.contains('has-touch')) try{f.focus({preventScroll:true})}catch(e){} }
 (function(){ const sync=()=>{ const o=document.getElementById('ov'); document.body.classList.toggle('ovopen',!!o&&!o.hidden); }; try{ new MutationObserver(sync).observe(document.getElementById('ov'),{attributes:true,attributeFilter:['hidden']}); }catch(e){} setTimeout(sync,0); })();
-function closeOv(){ ov.hidden=true; keys={left:false,right:false,jump:false}; try{cv.focus({preventScroll:true})}catch(e){} }
+function closeOv(){ ov.classList.remove('tov'); ov.hidden=true; keys={left:false,right:false,jump:false}; try{cv.focus({preventScroll:true})}catch(e){} }
 
 
 /* ================= REGISTRO DEL SENDERISTA ================= */
@@ -4509,20 +4551,45 @@ function titleScreen(){
   S={mode:'title'}; S.L=null; document.getElementById('mapBar').hidden=true;
   const sv=loadSave();
   let ruta=sv?(sv.eco.ruta||'variada'):'variada', color=sv?sv.eco.color:COLORS[1], skin=sv?sv.eco.skin:1, head=sv?sv.eco.head:'gorra', diff=sv?sv.eco.diff:'sen';
-  openOv(`<img class="hero" src="art/cima.jpg" alt="" onerror="this.remove()"><div class="eyebrow">Un juego de educación financiera de Ruta a la Cima · basado en sus 7 guías</div>
-  <h2>Ruta Financiera</h2>
-  <p>Sube del Valle a la Cordillera con tu mochila y tus bastones. Gana tu dinero, ahórralo, inviértelo y no te dejes encadenar por las deudas. Cada campamento solo se abre si tus finanzas están listas.</p>
-  ${profileForm(sv?Object.assign({},profLoad(),{name:sv.eco.name,colegio:sv.eco.colegio||profLoad().colegio,grado:sv.eco.grado||profLoad().grado,grupo:sv.eco.grupo||profLoad().grupo,pais:sv.eco.pais||profLoad().pais,ciudad:sv.eco.ciudad||profLoad().ciudad}):profLoad())}
-  <label class="lb">Color de la chaqueta</label><div class="swatches" data-g="color">${COLORS.map((c,i)=>`<button type="button" class="sw" style="background:${c}" data-v="${c}" aria-label="Chaqueta ${i+1}" aria-pressed="${c===color}"></button>`).join('')}</div>
-  <label class="lb">Tono de piel</label><div class="swatches" data-g="skin">${SKINS.map((c,i)=>`<button type="button" class="sw" style="background:${c}" data-v="${i}" aria-label="Tono de piel ${i+1}" aria-pressed="${i===skin}"></button>`).join('')}</div>
-  <label class="lb">En la cabeza</label><div class="row" data-g="head"><button type="button" class="btn sm alt" data-v="gorra" aria-pressed="${head==='gorra'}">Gorra</button><button type="button" class="btn sm alt" data-v="gorro" aria-pressed="${head==='gorro'}">Gorro de lana</button></div>
-  <label class="lb">Tipo de ruta</label><div class="row" data-g="ruta"><button type="button" class="btn sm alt" data-v="variada" aria-pressed="${ruta==='variada'}">Variada: cambia en cada partida</button><button type="button" class="btn sm alt" data-v="fija" aria-pressed="${ruta==='fija'}">Fija: igual para todos (competencias)</button></div>
-  <label class="lb">Dificultad</label><div class="modes" data-g="diff">${Object.entries(DIFF).map(([k,d])=>`<button type="button" class="mode" data-v="${k}" aria-pressed="${k===diff}"><b>${d.n}</b><span>${d.d}</span></button>`).join('')}</div>
-  <div class="keys"><span><kbd>←</kbd> <kbd>→</kbd></span><span>Caminar (también A y D)</span><span><kbd>Espacio</kbd> <kbd>↑</kbd></span><span>Saltar; mantén para saltar más alto</span><span><kbd>P</kbd></span><span>Pausa</span></div>
-  <div class="row">${sv?`<button class="btn" id="bCont" type="button">Continuar en el mundo ${sv.li+1}</button><button class="btn alt" id="bNew" type="button">Empezar de nuevo</button>`:`<button class="btn" id="bNew" type="button">Empezar la ruta</button>`}<button class="btn alt" id="bRank" type="button">Ver ranking</button></div>`);
+  const sello=(typeof SELLO!=='undefined'&&SELLO.src)?SELLO.src:'';
+  const nR=(typeof nRutas==='function')?nRutas():4;
+  openOv(`<div class="t-wrap">
+   <section class="t-hero">
+    ${sello?`<img class="t-seal" src="${sello}" alt="Sello de Ruta a la Cima">`:''}
+    <div class="eyebrow">Un juego de educación financiera de Ruta a la Cima</div>
+    <h2 class="t-title">Ruta Financiera</h2>
+    <p class="t-lead">Sube del Valle a la Cordillera con tu mochila y tus bastones. Gana tu dinero, ahórralo, inviértelo y no te dejes encadenar por las deudas. Cada campamento solo se abre si tus finanzas están listas.</p>
+    <ul class="t-chips"><li><b>${nR}</b> rutas</li><li><b>${nR*8}</b> mundos</li><li>Jefes finales</li><li>Diploma por ruta</li><li>Basado en 7 guías</li></ul>
+    <div class="t-keys"><span><kbd>←</kbd><kbd>→</kbd> caminar</span><span><kbd>Espacio</kbd> saltar</span><span><kbd>↓</kbd> agacharse</span><span><kbd>X</kbd> decir NO</span><span><kbd>P</kbd> pausa</span></div>
+    <button class="btn alt t-rank" id="bRank" type="button">🏆 Ver ranking</button>
+   </section>
+   <section class="t-card">
+    <div class="t-step"><span class="t-n">1</span><h3>Tu registro</h3></div>
+    ${profileForm(sv?Object.assign({},profLoad(),{name:sv.eco.name,colegio:sv.eco.colegio||profLoad().colegio,grado:sv.eco.grado||profLoad().grado,grupo:sv.eco.grupo||profLoad().grupo,pais:sv.eco.pais||profLoad().pais,ciudad:sv.eco.ciudad||profLoad().ciudad}):profLoad())}
+    <div class="t-step"><span class="t-n">2</span><h3>Tu senderista</h3></div>
+    <div class="t-av">
+     <canvas id="tPrev" width="240" height="240" aria-label="Vista previa de tu senderista"></canvas>
+     <div class="t-avopts">
+      <label class="lb">Color de la chaqueta</label><div class="swatches" data-g="color">${COLORS.map((c,i)=>`<button type="button" class="sw" style="background:${c}" data-v="${c}" aria-label="Chaqueta ${i+1}" aria-pressed="${c===color}"></button>`).join('')}</div>
+      <label class="lb">Tono de piel</label><div class="swatches" data-g="skin">${SKINS.map((c,i)=>`<button type="button" class="sw" style="background:${c}" data-v="${i}" aria-label="Tono de piel ${i+1}" aria-pressed="${i===skin}"></button>`).join('')}</div>
+      <label class="lb">En la cabeza</label><div class="row seg" data-g="head"><button type="button" class="btn sm alt" data-v="gorra" aria-pressed="${head==='gorra'}">Gorra</button><button type="button" class="btn sm alt" data-v="gorro" aria-pressed="${head==='gorro'}">Gorro de lana</button></div>
+     </div>
+    </div>
+    <div class="t-step"><span class="t-n">3</span><h3>Tu partida</h3></div>
+    <label class="lb">Tipo de ruta</label><div class="row seg" data-g="ruta"><button type="button" class="btn sm alt" data-v="variada" aria-pressed="${ruta==='variada'}">Variada: cambia en cada partida</button><button type="button" class="btn sm alt" data-v="fija" aria-pressed="${ruta==='fija'}">Fija: igual para todos</button></div>
+    <label class="lb">Dificultad</label><div class="modes" data-g="diff">${Object.entries(DIFF).map(([k,d])=>`<button type="button" class="mode" data-v="${k}" aria-pressed="${k===diff}"><b>${d.n}</b><span>${d.d}</span></button>`).join('')}</div>
+    <div class="t-act">${sv?`<button class="btn gold" id="bCont" type="button">Continuar en el mundo ${sv.li+1}</button><button class="btn alt" id="bNew" type="button">Empezar de nuevo</button>`:`<button class="btn gold" id="bNew" type="button">Empezar la ruta ▸</button>`}</div>
+   </section></div>`);
+  ov.classList.add('tov'); box.classList.add('tbox'); ov.scrollTop=0;
   box.querySelectorAll('[data-g]').forEach(gr=>gr.querySelectorAll('[data-v]').forEach(b=>b.onclick=()=>{
     const g=gr.dataset.g, v=b.dataset.v; if(g==='color') color=v; if(g==='skin') skin=+v; if(g==='head') head=v; if(g==='diff') diff=v; if(g==='ruta') ruta=v;
     gr.querySelectorAll('[data-v]').forEach(x=>x.setAttribute('aria-pressed',x===b)); }));
+  // vista previa animada del senderista con lo que eligió
+  const pc=document.getElementById('tPrev'); if(pc){ const pg=pc.getContext('2d'); let ph=0; const tick=()=>{ if(!document.body.contains(pc)||ov.hidden) return; ph+=0.12;
+      pg.setTransform(1,0,0,1,0,0); pg.clearRect(0,0,240,240); const g=pg.createRadialGradient(120,150,10,120,150,120); g.addColorStop(0,'rgba(242,179,61,.18)'); g.addColorStop(1,'rgba(242,179,61,0)'); pg.fillStyle=g; pg.fillRect(0,0,240,240);
+      pg.fillStyle='rgba(0,0,0,.3)'; pg.beginPath(); pg.ellipse(120,206,40,7,0,0,7); pg.fill();
+      const sv2=ctx; try{ ctx=pg; pg.translate(120,214); pg.scale(3.6,3.6); hikerBody(false,Math.sin(ph),color,{phase:ph,spd:0.55,lean:0.06,gear:(sv&&sv.eco.gear)||null,skin,head,mood:'happy',blink:(Math.floor(ph*8)%90)<3,role:1}); }catch(e){ pc.style.display='none'; } finally{ ctx=sv2; }
+      requestAnimationFrame(tick); }; requestAnimationFrame(tick); }
   const pf=()=>profRead();
   document.getElementById('bNew').onclick=()=>{ const f=pf(); eco=newEco(f.name,color,Object.assign({skin,head,diff,ruta},f)); eco.clase=f.clase||null; claseImg(eco.clase); preTest(); };
   document.getElementById('bRank').onclick=()=>showRanking(titleScreen);
