@@ -4090,10 +4090,13 @@ function hikerBody(air,w,color,o={}){
     ctx.strokeStyle=front?pants:pantsB; ctx.lineCap='round'; ctx.lineJoin='round';
     ctx.lineWidth=4.6; ctx.beginPath(); ctx.moveTo(hx0,hipY); ctx.lineTo(k.kx,k.ky); ctx.stroke();
     ctx.lineWidth=3.7; ctx.beginPath(); ctx.moveTo(k.kx,k.ky); ctx.lineTo(k.ax,k.ay); ctx.stroke();
+    { const hiC=mix(front?pants:pantsB,'#FFFFFF',.18), shC=mix(front?pants:pantsB,'#000000',.28); ctx.strokeStyle=hiC; ctx.lineWidth=1.1; ctx.beginPath(); ctx.moveTo(hx0+1.2,hipY+1); ctx.lineTo(k.kx+1.1,k.ky); ctx.lineTo(k.ax+0.9,k.ay-1.2); ctx.stroke();
+      ctx.strokeStyle=shC; ctx.lineWidth=0.7; ctx.beginPath(); ctx.moveTo(k.kx-1.4,k.ky-0.8); ctx.quadraticCurveTo(k.kx-0.2,k.ky+0.6,k.kx+1.2,k.ky+0.2); ctx.stroke(); ctx.beginPath(); ctx.moveTo(k.ax-1.6,k.ay-2.2); ctx.lineTo(k.ax+1.6,k.ay-2.2); ctx.stroke(); }
     if(R===0&&front){ ctx.fillStyle='#6A5A44'; ctx.fillRect(k.kx-1.6,k.ky-1.2,3.2,2.6); ctx.strokeStyle='rgba(230,220,200,.6)'; ctx.lineWidth=.3; ctx.strokeRect(k.kx-1.4,k.ky-1,2.8,2.2); } // remiendo en la rodilla
     if(R===0&&!front){ ctx.fillStyle='#2A2622'; ctx.beginPath(); ctx.ellipse((k.kx+k.ax)/2,(k.ky+k.ay)/2,1,0.8,0,0,7); ctx.fill(); } // roto en la pierna
     ctx.save(); ctx.translate(k.ax,k.ay); ctx.rotate(f.p||0);
-    ctx.fillStyle=front?shoe:mix(shoe,'#000000',.2); rr(-2.6,-1.6,8,3.8,1.5); ctx.fill(); ctx.fillStyle=R===0?'#7C776E':'#2A1C10'; ctx.fillRect(-2.6,1.2,8,1.1);
+    ctx.fillStyle=front?shoe:mix(shoe,'#000000',.2); rr(-2.6,-1.6,8,3.8,1.5); ctx.fill(); ctx.fillStyle=mix(front?shoe:mix(shoe,'#000000',.2),'#FFFFFF',.2); rr(2.4,-1.3,3,2.2,1.1); ctx.fill(); ctx.fillStyle=R===0?'#7C776E':'#2A1C10'; ctx.fillRect(-2.6,1.2,8,1.1);
+    if(R!==0){ ctx.strokeStyle='rgba(240,230,210,.6)'; ctx.lineWidth=0.35; for(let q=0;q<3;q++){ ctx.beginPath(); ctx.moveTo(-0.6+q*1.1,-1.5); ctx.lineTo(0.2+q*1.1,-0.6); ctx.stroke(); } }
     if(R===0&&front){ ctx.fillStyle='#1E1A16'; ctx.beginPath(); ctx.arc(4.4,0,0.95,0,7); ctx.fill(); ctx.fillStyle=skin; ctx.beginPath(); ctx.arc(4.5,0,0.5,0,7); ctx.fill(); ctx.strokeStyle='#4A443A'; ctx.lineWidth=.4; ctx.beginPath(); ctx.moveTo(0.6,-1.6); ctx.quadraticCurveTo(-0.6,-0.4,-2.2,0.4); ctx.stroke(); ctx.fillStyle='#5A544A'; ctx.beginPath(); ctx.moveTo(1,2.3); ctx.lineTo(5.4,2.3); ctx.lineTo(5.4,3.4); ctx.closePath(); ctx.fill(); } // zapato roto: dedo afuera, cordón suelto y suela despegada
     if(G('botas')&&R!==0&&R!==4){ ctx.fillStyle='#E07A2A'; ctx.fillRect(-.6,-1.6,3,1); }
     if(G('crampones')){ ctx.fillStyle='#C9D3DA'; for(let q=0;q<3;q++){ ctx.beginPath(); ctx.moveTo(-1.6+q*3,2.3); ctx.lineTo(-.6+q*3,4.4); ctx.lineTo(.4+q*3,2.3); ctx.fill(); } }
@@ -4104,10 +4107,17 @@ function hikerBody(air,w,color,o={}){
   leg(0,false);
   ctx.save(); ctx.rotate(lean); ctx.translate(0,bob);
   // mochila (pequeña y gastada para el desempleado, delgada para el empresario)
-  ctx.save(); ctx.translate(0,pack*0.6-bob*0.45);
+  const lagY=Math.sin(gph*2-1.25)*1.1*Math.min(1,spd*1.6)+(air?Math.max(-2.2,Math.min(2.2,(o.vy||0)*0.28)):0), lagR=Math.sin(gph*2-1.7)*0.045*Math.min(1,spd*1.6)+(air?Math.max(-.08,Math.min(.08,(o.vy||0)*0.012)):0);
+  ctx.save(); ctx.translate(0,pack*0.6-bob*0.45+lagY); ctx.translate(-5,-28); ctx.rotate(-lagR); ctx.translate(5,28);
   const pw=R===0?8:R===4?7:(big?12:10), ph=R===0?16:R===4?18:(big?25:22);
-  ctx.fillStyle=R===0?'#3A3A36':'#2F4A3A'; rr(-5-pw,-15-ph,pw,ph,3); ctx.fill();
-  ctx.fillStyle=R===0?'#4A4A44':'#3E5E4A'; rr(-4-pw,-14-ph,pw-2,ph-2,3); ctx.fill();
+  { const base=R===0?'#4A4A44':'#3E5E4A', dk=mix(base,'#000000',.32), lt=mix(base,'#FFFFFF',.2), x0=-5-pw, y0=-15-ph;
+    ctx.fillStyle=dk; rr(x0,y0,pw,ph,3); ctx.fill(); ctx.fillStyle=base; rr(x0+1,y0+1,pw-2,ph-2.5,3); ctx.fill();
+    ctx.fillStyle=lt; rr(x0+1.4,y0+1.2,pw-3.6,2,1); ctx.fill(); ctx.fillRect(x0+1.2,y0+3,1,ph-6);
+    ctx.fillStyle='rgba(0,0,0,.22)'; ctx.fillRect(x0+pw-2.4,y0+2,1.2,ph-4);
+    ctx.strokeStyle='rgba(230,225,210,.35)'; ctx.lineWidth=0.35; ctx.setLineDash([0.7,0.6]); rr(x0+1.6,y0+1.6,pw-3.2,ph-3.6,2.4); ctx.stroke(); ctx.setLineDash([]);
+    if(R!==4){ const qy=y0+ph*0.55, qh=ph*0.32; ctx.fillStyle=dk; rr(x0+1.2,qy,pw-2.6,qh,2); ctx.fill(); ctx.fillStyle=mix(base,'#000000',.12); rr(x0+1.6,qy+0.4,pw-3.4,qh-0.9,1.8); ctx.fill();
+      ctx.strokeStyle='#C9CFD4'; ctx.lineWidth=0.4; ctx.beginPath(); ctx.moveTo(x0+2.2,qy+1.4); ctx.lineTo(x0+pw-2.6,qy+1.4); ctx.stroke(); ctx.fillStyle='#E0B030'; ctx.fillRect(x0+pw-3.6,qy+1,1,2); }
+    if(R!==0&&R!==4){ ctx.fillStyle='#1E2E24'; for(const fy of [y0+ph*0.28,y0+ph*0.5]){ ctx.fillRect(x0-0.4,fy,pw+0.2,1.3); ctx.fillStyle='#9AA3AA'; ctx.fillRect(x0+pw*0.25,fy-0.3,1.8,1.9); ctx.fillStyle='#1E2E24'; } } }
   if(R!==0&&R!==4){ ctx.fillStyle='#24392C'; ctx.fillRect(-4-pw,-26,pw-2,1.5); rr(-5-pw,-23,4,7,1.5); ctx.fill();
     ctx.fillStyle='#E07A2A'; rr(-5-pw,-20-ph,pw+1,6,3); ctx.fill(); ctx.fillStyle='#B85E1C'; ctx.fillRect(-1-pw,-20-ph,1.4,6); ctx.fillRect(3-pw,-20-ph,1.4,6); }
   if(R===0){ ctx.strokeStyle='#6A6A60'; ctx.lineWidth=.8; ctx.beginPath(); ctx.moveTo(-4-pw,-24); ctx.lineTo(-2-pw,-20); ctx.stroke(); }
@@ -4121,7 +4131,10 @@ function hikerBody(air,w,color,o={}){
   // torso
   ctx.fillStyle=jacketDark; rr(-7,-30+breath,13,17,4); ctx.fill();
   ctx.fillStyle=jacket; rr(-6,-30+breath,12,15,4); ctx.fill();
-  ctx.fillStyle=jacketLight; ctx.fillRect(3,-28+breath,2,11);
+  ctx.save(); rr(-6,-30+breath,12,15,4); ctx.clip(); ctx.fillStyle=mix(jacket,'#000000',.16); ctx.fillRect(-6,-30+breath,4.6,15); ctx.fillStyle=mix(jacket,'#000000',.1); ctx.fillRect(-6,-17.5+breath,12,2.5); ctx.restore();
+  ctx.fillStyle=jacketLight; ctx.fillRect(3,-28+breath,2,11); ctx.fillStyle=mix(jacketLight,'#FFFFFF',.3); ctx.fillRect(4,-27+breath,.7,6);
+  if(R!==4&&R!==0){ ctx.strokeStyle=mix(jacketDark,'#000000',.2); ctx.lineWidth=0.35; ctx.setLineDash([0.7,0.55]); ctx.beginPath(); ctx.moveTo(-5.4,-27.6+breath); ctx.quadraticCurveTo(-1,-29.2+breath,4.8,-27.6+breath); ctx.stroke(); ctx.beginPath(); ctx.moveTo(-5.6,-19+breath); ctx.lineTo(5.6,-19+breath); ctx.stroke(); ctx.setLineDash([]);
+    ctx.fillStyle=mix(jacket,'#FFFFFF',.12); ctx.beginPath(); ctx.moveTo(-1.2,-30.4+breath); ctx.lineTo(3.4,-30.4+breath); ctx.lineTo(2.2,-27.8+breath); ctx.lineTo(0,-27.8+breath); ctx.closePath(); ctx.fill(); }
   if(R===0){ // ropa gastada: parches cosidos, un roto y el ruedo deshilachado
     ctx.setLineDash([.6,.5]); ctx.lineWidth=.35;
     ctx.fillStyle='#8A6A4A'; ctx.fillRect(-4.8,-27.4+breath,4.4,3.8); ctx.strokeStyle='rgba(240,230,210,.75)'; ctx.strokeRect(-4.6,-27.2+breath,4,3.4);
@@ -4133,11 +4146,12 @@ function hikerBody(air,w,color,o={}){
     ctx.fillStyle='#F2F0EA'; ctx.beginPath(); ctx.moveTo(-1,-30+breath); ctx.lineTo(3,-30+breath); ctx.lineTo(1,-22+breath); ctx.fill();
     ctx.fillStyle=color; ctx.beginPath(); ctx.moveTo(0.4,-28+breath); ctx.lineTo(1.6,-28+breath); ctx.lineTo(2,-21+breath); ctx.lineTo(1,-19.5+breath); ctx.lineTo(0,-21+breath); ctx.fill();
     ctx.fillStyle='#3A465A'; ctx.beginPath(); ctx.moveTo(-2,-30+breath); ctx.lineTo(0,-24+breath); ctx.lineTo(-3,-26+breath); ctx.fill(); ctx.beginPath(); ctx.moveTo(4,-30+breath); ctx.lineTo(2.4,-24+breath); ctx.lineTo(5,-26+breath); ctx.fill(); }
-  else { ctx.fillStyle='rgba(0,0,0,.35)'; ctx.fillRect(0,-29+breath,1,14); }
+  else { ctx.fillStyle='rgba(0,0,0,.38)'; ctx.fillRect(0.3,-28.6+breath,0.9,13.4); ctx.fillStyle='rgba(220,226,232,.75)'; for(let zy=-28;zy<-15.6;zy+=1.1) ctx.fillRect(0.45,zy+breath,0.6,0.45); if(R!==0){ ctx.fillStyle='#C9CFD4'; rr(0.1,-27.4+breath,1.3,2.4,0.4); ctx.fill(); } }
   ctx.fillStyle=R===3?'#6B4423':R===0?'#7A6A4A':'#2A2F36'; ctx.fillRect(-6,-16,12,3);
   if(R===0){ ctx.fillStyle='#E4DCCA'; ctx.beginPath(); ctx.moveTo(-6.6,-13.6); ctx.lineTo(-4,-13.6); ctx.lineTo(-5.4,-10.4); ctx.closePath(); ctx.fill(); ctx.beginPath(); ctx.moveTo(4,-13.6); ctx.lineTo(6.6,-13.6); ctx.lineTo(5.4,-10.4); ctx.closePath(); ctx.fill(); ctx.strokeStyle='rgba(120,110,90,.6)'; ctx.lineWidth=.3; ctx.beginPath(); ctx.moveTo(-5.3,-13.4); ctx.lineTo(-5.4,-11); ctx.moveTo(5.3,-13.4); ctx.lineTo(5.4,-11); ctx.stroke(); } // bolsillos vacíos, volteados
   if(R===3){ ctx.fillStyle='#9AA3AA'; ctx.fillRect(3,-17,1.4,5); ctx.fillStyle='#C98A1A'; ctx.fillRect(-4,-17,2,4); } // cinturón de herramientas
-  if(R!==4&&R!==7){ ctx.fillStyle=R===0?'#2E302E':'#3E5E4A'; ctx.fillRect(-5,-30+breath,2,13); }
+  if(R!==4&&R!==7){ const sc=R===0?'#2E302E':'#2F4A3A'; ctx.fillStyle=sc; ctx.fillRect(-5,-30+breath,2.2,13); ctx.fillStyle=mix(sc,'#FFFFFF',.22); ctx.fillRect(-4.6,-30+breath,0.6,13); ctx.fillStyle=mix(sc,'#000000',.35); ctx.fillRect(-2.9,-30+breath,0.4,13);
+    if(R!==0){ ctx.fillStyle='#1E2E24'; ctx.fillRect(-5,-24.6+breath,7.2,1.1); ctx.fillStyle='#9AA3AA'; rr(-1.2,-25+breath,2.2,1.9,0.5); ctx.fill(); ctx.fillStyle='#1E2E24'; rr(-4.8,-17.6+breath,1.8,2.4,0.6); ctx.fill(); ctx.fillStyle='#C9CFD4'; ctx.fillRect(-4.6,-17.2+breath,1.4,0.6); } }
   if(R===1){ ctx.strokeStyle='#4A8FD3'; ctx.lineWidth=.7; ctx.beginPath(); ctx.moveTo(-1,-30+breath); ctx.lineTo(1,-24+breath); ctx.lineTo(3,-30+breath); ctx.stroke(); ctx.fillStyle='#F4F6F8'; rr(-.4,-24+breath,3,4,.6); ctx.fill(); ctx.fillStyle='#4A8FD3'; ctx.fillRect(-.4,-24+breath,3,1); } // carné de empleado
   if(R===2){ ctx.fillStyle='#1E2228'; ctx.beginPath(); ctx.arc(0.6,-24+breath,1.5,0,7); ctx.arc(3.6,-24+breath,1.5,0,7); ctx.fill(); ctx.fillStyle='#6FA8D8'; ctx.fillRect(0.2,-24.6+breath,.8,.8); ctx.fillRect(3.2,-24.6+breath,.8,.8); } // binoculares
   if(R===5){ ctx.fillStyle=mix(color,'#FFFFFF',.55); ctx.fillRect(-1,-30+breath,4,2); } // cuello alto
@@ -4148,6 +4162,8 @@ function hikerBody(air,w,color,o={}){
   const AF=hold?armPts({t:0.75+aF.t*holdK,b:0.9},1.5):armPts({t:0.12+aF.t*holdK+(R===7?0.25:0),b:aF.b+(R===4?-0.2:0)},1.5);
   const hx=AF.hx, hy=AF.hy-bob;
   ctx.strokeStyle=jacketDark; ctx.lineWidth=3.5; ctx.lineCap='round'; ctx.lineJoin='round'; ctx.beginPath(); ctx.moveTo(1.5,-27+breath); ctx.lineTo(AF.ex,AF.ey-bob); ctx.lineTo(hx,hy); ctx.stroke();
+  ctx.strokeStyle=jacket; ctx.lineWidth=2.1; ctx.beginPath(); ctx.moveTo(1.9,-27.4+breath); ctx.lineTo(AF.ex+0.3,AF.ey-bob-0.3); ctx.lineTo(hx+0.2,hy-0.3); ctx.stroke(); ctx.strokeStyle=jacketLight; ctx.lineWidth=0.6; ctx.beginPath(); ctx.moveTo(2.4,-27.8+breath); ctx.lineTo(AF.ex+0.7,AF.ey-bob-0.6); ctx.stroke();
+  { const ux=hx-AF.ex, uy=hy-(AF.ey-bob), ul=Math.hypot(ux,uy)||1; ctx.strokeStyle=mix(jacketDark,'#000000',.25); ctx.lineWidth=3.6; ctx.lineCap='butt'; ctx.beginPath(); ctx.moveTo(hx-ux/ul*1.6,hy-uy/ul*1.6); ctx.lineTo(hx-ux/ul*0.7,hy-uy/ul*0.7); ctx.stroke(); ctx.lineCap='round'; }
   if(R===0){ // banderín "busco empleo"
     const tt=(typeof S!=='undefined'?S.t:0)*0.16, fl=ctx.getTransform().a<0?-1:1;
     ctx.save(); ctx.translate(hx+0.5,hy); ctx.rotate(-.06+sw*.06);
@@ -4172,6 +4188,8 @@ function hikerBody(air,w,color,o={}){
   // cabeza y cara expresiva
   let md=o.mood||'ok'; if(R===0&&md==='ok') md='worried';
   const by=breath;
+  ctx.fillStyle=skinD; ctx.fillRect(-0.6,-32.6+by,3.4,2.6); // cuello
+  ctx.save(); ctx.translate(1,-31.4+by); ctx.scale(0.86,0.86); ctx.translate(-1,31.4-by);
   if(R===0){ ctx.fillStyle=jacketDark; ctx.beginPath(); ctx.arc(0,-37.5+by,7.2,0,7); ctx.fill(); } // capucha (atrás)
   ctx.fillStyle=R===0?'#2E302E':'#2F3A44'; ctx.fillRect(-2,-32+by,6,3);
   if(R===6){ ctx.fillStyle=color; ctx.fillRect(-4,-32+by,9,3.4); ctx.save(); ctx.translate(-4,-31+by); ctx.rotate(.5+Math.sin((S.t||0)*.12)*.15); ctx.fillRect(-9,-1.2,9,2.6); ctx.restore(); } // bufanda al viento
@@ -4203,6 +4221,7 @@ function hikerBody(air,w,color,o={}){
   else if(G('casco')){ ctx.fillStyle='#E07A2A'; ctx.beginPath(); ctx.arc(1,-39+by,6.6,Math.PI,0); ctx.fill(); ctx.fillRect(-5.8,-40+by,13.4,2); ctx.fillStyle='rgba(255,255,255,.4)'; ctx.fillRect(-1,-44+by,4,1.2); }
   else { ctx.fillStyle='#2B3440'; ctx.beginPath(); ctx.arc(1,-39+by,6,Math.PI,0); ctx.fill(); ctx.fillRect(-5,-40+by,12,2); ctx.fillStyle='#1B2129'; rr(4,-41+by,8,2.4,1.2); ctx.fill(); ctx.fillStyle=color; ctx.fillRect(-1,-44+by,3,1.4); }
   if(G('linterna')&&R!==3&&R!==7&&R!==0){ ctx.fillStyle='#E8ECEF'; rr(3,-43.5+by,4,2.6,1); ctx.fill(); ctx.fillStyle='#FFF2B0'; ctx.fillRect(6,-43+by,1.4,1.6); }
+  ctx.restore();
   ctx.restore();
   leg(1,true);
   // faldón del gabán o de la ruana, por encima de las piernas
