@@ -6619,7 +6619,7 @@ function buildMapBg3(){ const cv2=document.createElement('canvas'); cv2.width=W*
 
 MEDALLAS.push({id:'colapso',n:'Sobreviviente',d:'Supera El Colapso y aprueba la Prueba de la Resiliencia',c:()=>!!eco.resiliente});
 /* ================= RUTA 4 · LA RECONSTRUCCIÓN: del gris al color (mundos 25 a 32) ================= */
-const ALT4=[300,300,1200,900,1800,500,1500,20,2600];
+const ALT4=[300,300,1200,900,1800,500,20,1500,2600];
 const reqN4=li=>({24:Math.round(30*Dif().req),25:Math.round(15*Dif().req),28:Math.round(150*Dif().req),31:Math.round(300*Dif().req)})[li];
 LV.push(
  {name:'Las Ruinas de la Ciudad',bioma:'Ciudad en ruinas',tag:'Plan de reconstrucción',role:'Reconstructor',step:'Presupuesto para reconstruir',theme:24,costo:5,desF:1.1,
@@ -7007,6 +7007,141 @@ function drawNido(e,x,y){ const fy=y+e.h, cx=x+e.w/2, Th=THEMES[LV[S.li].theme]|
   if(e.spawn>0){ ctx.strokeStyle='rgba(255,120,90,'+(e.spawn/24)+')'; ctx.lineWidth=2; ctx.beginPath(); ctx.arc(cx,y+5,8+(24-e.spawn),Math.PI,0); ctx.stroke(); } }
 Object.assign(TIPS,{nido:{t:'Nido de gastos hormiga',g:'Guía 1 y 3',x:'Los gastos hormiga nacen de un hábito que se repite (el tinto, la gaseosa, el domicilio). Esquivar cada uno ayuda, pero lo que más ahorra es cortar la fuente: cambiar el hábito o cancelar la suscripción.'}});
 MEDALLAS.push({id:'nidos',n:'Cazador de hormigueros',d:'Destruye 5 nidos de gastos hormiga',c:()=>(eco.stats.nidos||0)>=5});
+/* ================= DIPLOMAS v2: diseño de certificado de expedición (cumbre + sendero + parche) ================= */
+// Tokens por ruta: tinta, acento, acento claro, texto, papel, y la paleta de la ilustración (cielo arriba, cielo abajo, sol, 4 planos de montaña lejos→cerca)
+const DIP_ART=[
+ {ink:'#6B2A1A',acc:'#B8862F',acc2:'#E2B85A',txt:'#3A2A20',pap:'#F4EBD8',sky:['#F2C890','#F8E6C4'],sun:'#FFF1CF',pl:['#B9B6C4','#8E8AA4','#5E5A7A','#3A3450'],snow:'#FBF6EE',tag:'5.330 m · LA CORDILLERA'},
+ {ink:'#1E5A6A',acc:'#C9963A',acc2:'#F0CB7A',txt:'#1E2E2E',pap:'#EEF2E8',sky:['#9CCFDE','#F2E6C8'],sun:'#FFF6DA',pl:['#B8D4D6','#7EAEB4','#4A7E86','#24525A'],snow:'#F8FCFC',tag:'0 a 5.000 m · DEL MAR AL GLACIAR'},
+ {ink:'#3A2A2E',acc:'#C9602A',acc2:'#F0A060',txt:'#2A2024',pap:'#F1E9DF',sky:['#4A2E36','#F09A5A'],sun:'#FFD49A',pl:['#8A6A66','#5E4648','#3E2E32','#22181C'],snow:'#E8DCD4',tag:'GUERRA · DESASTRES · CRISIS'},
+ {ink:'#2E6A3E',acc:'#C9A23A',acc2:'#F0D27A',txt:'#1E2E22',pap:'#F1F4E4',sky:['#8CC4E8','#FBE8C0'],sun:'#FFF4D0',pl:['#BCD8C0','#86B88E','#4E8E5E','#2A5E3A'],snow:'#FFFFFF',tag:'DEL GRIS AL COLOR'}];
+function dipTopo(c,x0,y0,w,h,col,seed){ // curvas de nivel como en un mapa topográfico
+  const R=mulberry(seed); c.save(); c.beginPath(); c.rect(x0,y0,w,h); c.clip(); c.strokeStyle=col; c.lineWidth=1;
+  for(let k=0;k<5;k++){ const cx=x0+R()*w, cy=y0+R()*h, ph=R()*6, n=10+Math.floor(R()*6);
+    for(let j=1;j<=n;j++){ const rad=j*17; c.globalAlpha=j%5===0?0.12:0.055; c.lineWidth=j%5===0?1.4:0.9; c.beginPath();
+      for(let a=0;a<=Math.PI*2+0.05;a+=0.05){ const rr2=rad*(1+0.22*Math.sin(a*3+ph+j*0.15)+0.12*Math.sin(a*5-ph)+0.06*Math.sin(a*9+j)); const X=cx+Math.cos(a)*rr2*1.35, Y=cy+Math.sin(a)*rr2; a?c.lineTo(X,Y):c.moveTo(X,Y); } c.stroke(); } }
+  c.restore(); c.globalAlpha=1; }
+function dipRidge(R,x0,x1,base,amp,rough){ const pts=[]; let y=base; for(let x=x0;x<=x1;x+=8){ y=base-amp*(0.5+0.5*Math.sin(x*0.004+R()*0.3))+(R()-.5)*rough; pts.push([x,y]); } return pts; }
+function dipFill(c,pts,bottom,col){ c.fillStyle=col; c.beginPath(); c.moveTo(pts[0][0],bottom); pts.forEach(p=>c.lineTo(p[0],p[1])); c.lineTo(pts[pts.length-1][0],bottom); c.closePath(); c.fill(); }
+function dipPeak(c,cx,base,hw,h,col,snow,shade){ c.fillStyle=col; c.beginPath(); c.moveTo(cx-hw,base); c.lineTo(cx-hw*0.35,base-h*0.62); c.lineTo(cx-hw*0.12,base-h*0.8); c.lineTo(cx,base-h); c.lineTo(cx+hw*0.22,base-h*0.78); c.lineTo(cx+hw*0.5,base-h*0.55); c.lineTo(cx+hw,base); c.closePath(); c.fill();
+  c.fillStyle=shade; c.beginPath(); c.moveTo(cx,base-h); c.lineTo(cx+hw*0.22,base-h*0.78); c.lineTo(cx+hw*0.5,base-h*0.55); c.lineTo(cx+hw,base); c.lineTo(cx+hw*0.08,base); c.lineTo(cx+hw*0.1,base-h*0.5); c.closePath(); c.fill();
+  if(snow){ c.fillStyle=snow; c.beginPath(); c.moveTo(cx,base-h); c.lineTo(cx-hw*0.12,base-h*0.8); c.lineTo(cx-hw*0.2,base-h*0.7); c.lineTo(cx-hw*0.08,base-h*0.74); c.lineTo(cx+hw*0.02,base-h*0.66); c.lineTo(cx+hw*0.12,base-h*0.74); c.lineTo(cx+hw*0.22,base-h*0.78); c.closePath(); c.fill(); } }
+function dipScene(c,r,x,y,w,h){ // ilustración de afiche de parque nacional: planos planos, sol con rayos y la escena propia de la ruta
+  const A=DIP_ART[r], R=mulberry(91+r*17), b=y+h; c.save(); c.beginPath(); c.rect(x,y,w,h); c.clip();
+  let g=c.createLinearGradient(0,y,0,b); g.addColorStop(0,A.sky[0]); g.addColorStop(1,A.sky[1]); c.fillStyle=g; c.fillRect(x,y,w,h);
+  const sx=x+w*(r===2?0.72:0.5), sy=y+h*0.62; c.save(); c.translate(sx,sy); c.globalAlpha=r===2?0.16:0.22; c.fillStyle=A.sun; for(let i=0;i<24;i++){ c.rotate(Math.PI*2/24); c.beginPath(); c.moveTo(0,0); c.lineTo(-24,-w); c.lineTo(24,-w); c.closePath(); c.fill(); } c.restore();
+  c.fillStyle=A.sun; c.beginPath(); c.arc(sx,sy,58,0,7); c.fill(); c.globalAlpha=.35; c.beginPath(); c.arc(sx,sy,74,0,7); c.fill(); c.globalAlpha=1;
+  // nubes planas
+  for(let k=0;k<4;k++){ const cx=x+80+R()*(w-160), cy=y+30+R()*70; c.fillStyle='rgba(255,255,255,'+(r===2?.18:.55)+')'; c.beginPath(); c.ellipse(cx,cy,60,10,0,0,7); c.ellipse(cx+20,cy-8,30,10,0,0,7); c.fill(); }
+  const P=A.pl;
+  if(r===0){ // los Andes: cordillera nevada, bandera en la cumbre, frailejones y el sendero
+    dipFill(c,dipRidge(R,x,x+w,b-120,40,10),b,P[0]);
+    [[0.18,170,130],[0.38,220,170],[0.84,190,150]].forEach(([f,hw,hh])=>dipPeak(c,x+w*f,b-40,hw,hh,P[1],A.snow,'rgba(30,20,50,.18)'));
+    dipPeak(c,x+w*0.62,b-40,210,165,P[2],A.snow,'rgba(20,10,40,.22)'); const fx=x+w*0.62, fy=b-40-165; c.strokeStyle=A.ink; c.lineWidth=3; c.beginPath(); c.moveTo(fx,fy); c.lineTo(fx,fy-44); c.stroke(); c.fillStyle='#C0392B'; c.beginPath(); c.moveTo(fx,fy-44); c.lineTo(fx+34,fy-34); c.lineTo(fx,fy-24); c.fill();
+    dipFill(c,dipRidge(R,x,x+w,b-30,22,6),b,P[3]);
+    for(let k=0;k<9;k++){ const fx2=x+40+k*(w-80)/8+R()*20, fy2=b-12-R()*10; c.fillStyle='#4A3A2A'; c.fillRect(fx2-2,fy2-22,4,22); c.fillStyle='#B8C49A'; for(let j=0;j<7;j++){ c.save(); c.translate(fx2,fy2-22); c.rotate(-Math.PI/2+(j-3)*0.38); c.beginPath(); c.ellipse(7,0,8,2.2,0,0,7); c.fill(); c.restore(); } }
+  } else if(r===1){ // del mar al glaciar: olas y palmeras, salar, dunas y nevados
+    dipFill(c,dipRidge(R,x,x+w,b-150,30,8),b,P[0]); dipFill(c,dipRidge(R,x,x+w,b-46,8,3),b,P[1]);
+    [[0.7,160,150],[0.86,190,180]].forEach(([f,hw,hh])=>dipPeak(c,x+w*f,b-60,hw,hh,P[2],A.snow,'rgba(10,30,40,.2)'));
+    c.fillStyle='#E8C890'; c.beginPath(); c.moveTo(x+w*0.34,b-40); for(let X=x+w*0.34;X<=x+w*0.66;X+=6){ const t=(X-x-w*0.34)/(w*0.32); c.lineTo(X,b-40-Math.sin(t*Math.PI)*(26+Math.abs(Math.sin((X-x)*0.025))*30)); } c.lineTo(x+w*0.66,b); c.lineTo(x+w*0.34,b); c.closePath(); c.fill(); c.fillStyle='rgba(160,110,60,.25)'; c.beginPath(); c.moveTo(x+w*0.5,b-40); for(let X=x+w*0.5;X<=x+w*0.66;X+=6){ const t=(X-x-w*0.34)/(w*0.32); c.lineTo(X,b-40-Math.sin(t*Math.PI)*(26+Math.abs(Math.sin((X-x)*0.025))*30)); } c.lineTo(x+w*0.66,b); c.lineTo(x+w*0.5,b); c.fill();
+    c.fillStyle='#FAF7F0'; c.beginPath(); c.ellipse(x+w*0.29,b-44,w*0.1,14,0,0,7); c.fill(); c.strokeStyle='rgba(150,140,130,.5)'; c.lineWidth=1; for(let k=0;k<14;k++){ const X=x+w*0.2+R()*w*0.18, Y=b-60+R()*20; c.beginPath(); c.moveTo(X,Y); c.lineTo(X+10,Y+3); c.lineTo(X+18,Y); c.stroke(); }
+    c.fillStyle='#E6CE96'; c.beginPath(); c.moveTo(x,b-50); c.quadraticCurveTo(x+w*0.2,b-58,x+w*0.3,b-36); c.lineTo(x+w*0.3,b); c.lineTo(x,b); c.fill(); c.fillStyle='#3E86B0'; c.fillRect(x,b-40,w*0.2,40); c.strokeStyle='rgba(255,255,255,.7)'; c.lineWidth=2; for(let k=0;k<4;k++){ c.beginPath(); for(let X=x;X<=x+w*0.2;X+=6) c.lineTo(X,b-34+k*9+Math.sin(X*0.08+k)*2.4); c.stroke(); }
+    [[0.06,-1],[0.15,1]].forEach(([f,d])=>{ const px=x+w*f, py=b-50; c.strokeStyle='#5A3A20'; c.lineWidth=5; c.beginPath(); c.moveTo(px,py); c.quadraticCurveTo(px+d*8,py-40,px+d*4,py-70); c.stroke(); c.fillStyle='#2E6A3A'; for(let j=0;j<6;j++){ c.save(); c.translate(px+d*4,py-70); c.rotate(-2.8+j*0.56); c.beginPath(); c.ellipse(16,0,18,4,0,0,7); c.fill(); c.restore(); } });
+    dipFill(c,dipRidge(R,x+w*0.6,x+w,b-30,16,5),b,P[3]);
+  } else if(r===2){ // el colapso: volcán en erupción y ciudad en ruinas, con un amanecer de esperanza
+    dipFill(c,dipRidge(R,x,x+w,b-110,30,10),b,P[0]);
+    const vx=x+w*0.28; c.fillStyle=P[2]; c.beginPath(); c.moveTo(vx-260,b-30); c.lineTo(vx-40,b-250); c.lineTo(vx+40,b-250); c.lineTo(vx+260,b-30); c.closePath(); c.fill();
+    c.strokeStyle='#FF7A2A'; c.lineWidth=7; c.lineCap='round'; c.beginPath(); c.moveTo(vx-10,b-248); c.quadraticCurveTo(vx-60,b-150,vx-120,b-40); c.stroke(); c.beginPath(); c.moveTo(vx+12,b-248); c.quadraticCurveTo(vx+70,b-150,vx+140,b-40); c.stroke(); c.lineCap='butt';
+    for(let k=0;k<8;k++){ c.fillStyle='rgba(60,46,50,'+(0.75-k*0.07)+')'; c.beginPath(); c.arc(vx+k*22,b-270-k*24,26+k*10,0,7); c.fill(); }
+    for(let k=0;k<9;k++){ const bx=x+w*0.5+k*60, hh=60+R()*90; c.fillStyle=P[3]; c.beginPath(); c.moveTo(bx,b); c.lineTo(bx,b-hh); c.lineTo(bx+16,b-hh+14); c.lineTo(bx+30,b-hh-8); c.lineTo(bx+46,b-hh+20); c.lineTo(bx+46,b); c.closePath(); c.fill(); c.fillStyle='rgba(255,190,110,.55)'; c.fillRect(bx+10,b-hh*0.5,6,6); c.fillRect(bx+28,b-hh*0.3,6,6); }
+    dipFill(c,dipRidge(R,x,x+w,b-22,12,6),b,P[3]); c.fillStyle='#62C98A'; c.strokeStyle='#2E6A3E'; c.lineWidth=3; const sp=x+w*0.62; c.beginPath(); c.moveTo(sp,b-22); c.lineTo(sp,b-56); c.stroke(); c.beginPath(); c.ellipse(sp-10,b-48,11,5,-0.5,0,7); c.ellipse(sp+10,b-54,11,5,0.5,0,7); c.fill();
+  } else { // la reconstrucción: ciudad nueva de colores, molinos, río limpio y arcoíris
+    ['#E04A4A','#F29A3A','#F2D84A','#5AC060','#4A8AE0','#8A5AC0'].forEach((col,i)=>{ c.strokeStyle=col; c.globalAlpha=.55; c.lineWidth=9; c.beginPath(); c.arc(x+w*0.5,b-20,300-i*9,Math.PI*1.05,Math.PI*1.95); c.stroke(); }); c.globalAlpha=1;
+    dipFill(c,dipRidge(R,x,x+w,b-120,40,8),b,P[0]); dipFill(c,dipRidge(R,x,x+w,b-70,26,6),b,P[1]);
+    const cols=['#F2C860','#7AC0E0','#E08AA0','#9ADA7A','#F2A860','#B0A0E0'];
+    for(let k=0;k<11;k++){ const bx=x+w*0.3+k*46, hh=50+((k*37)%5)*18; c.fillStyle=cols[k%6]; c.fillRect(bx,b-40-hh,38,hh); c.fillStyle='rgba(255,255,255,.7)'; for(let yy=b-40-hh+8;yy<b-48;yy+=14){ c.fillRect(bx+6,yy,8,7); c.fillRect(bx+22,yy,8,7); } c.fillStyle=A.ink; c.fillRect(bx-2,b-42-hh,42,4); }
+    [[0.14,160],[0.22,190],[0.88,170]].forEach(([f,th])=>{ const mx=x+w*f, my=b-th; c.strokeStyle='#FBFAF6'; c.lineWidth=4; c.beginPath(); c.moveTo(mx,b-30); c.lineTo(mx,my); c.stroke(); c.lineWidth=3; for(let i=0;i<3;i++){ const a=i*2.094+0.5; c.beginPath(); c.moveTo(mx,my); c.lineTo(mx+Math.cos(a)*40,my+Math.sin(a)*40); c.stroke(); } });
+    dipFill(c,dipRidge(R,x,x+w,b-34,10,4),b,P[2]); c.fillStyle='#5CB8E8'; c.beginPath(); c.moveTo(x,b-10); c.quadraticCurveTo(x+w*0.4,b-26,x+w,b-8); c.lineTo(x+w,b); c.lineTo(x,b); c.fill();
+  }
+  // sendero punteado hacia la cumbre
+  c.setLineDash([10,9]); c.strokeStyle='rgba(255,248,230,.85)'; c.lineWidth=3; c.beginPath(); c.moveTo(x+30,b-6); c.bezierCurveTo(x+w*0.25,b-14,x+w*0.38,b-40,x+w*0.5,b-52); c.stroke(); c.setLineDash([]);
+  // grano de impresión
+  for(let i=0;i<1400;i++){ c.fillStyle='rgba(0,0,0,'+(R()*0.05)+')'; c.fillRect(x+R()*w,y+R()*h,1.4,1.4); }
+  c.restore(); }
+function dipArcText(c,t,cx,cy,rad,start,font,col,inside){ c.save(); c.font=font; c.fillStyle=col; c.textAlign='center'; const chars=[...t]; const ws=chars.map(ch=>c.measureText(ch).width+1.5); const tot=ws.reduce((a,b)=>a+b,0); let a=start-(inside?-1:1)*tot/rad/2;
+  chars.forEach((ch,i)=>{ const step=ws[i]/rad; a+=(inside?-1:1)*step/2; c.save(); c.translate(cx+Math.cos(a)*rad,cy+Math.sin(a)*rad); c.rotate(a+(inside?-Math.PI/2:Math.PI/2)); c.fillText(ch,0,0); c.restore(); a+=(inside?-1:1)*step/2; }); c.restore(); }
+function dipPatch(c,r,cx,cy,R0){ // parche bordado de la ruta
+  const A=DIP_ART[r]; c.save(); c.fillStyle='rgba(0,0,0,.22)'; c.beginPath(); c.arc(cx+4,cy+6,R0,0,7); c.fill();
+  c.fillStyle=A.ink; c.beginPath(); c.arc(cx,cy,R0,0,7); c.fill(); c.strokeStyle=A.acc2; c.lineWidth=3; c.setLineDash([5,4]); c.beginPath(); c.arc(cx,cy,R0-6,0,7); c.stroke(); c.setLineDash([]);
+  const ig=c.createRadialGradient(cx-14,cy-14,4,cx,cy,R0-30); ig.addColorStop(0,A.acc); ig.addColorStop(1,A.ink); c.fillStyle=ig; c.beginPath(); c.arc(cx,cy,R0-30,0,7); c.fill(); c.save(); c.translate(cx,cy); c.scale(1.08,1.08); c.translate(-cx,-cy); dipEmblem(c,r,cx,cy,A.acc2); c.restore();
+  c.strokeStyle=A.acc; c.lineWidth=3; c.beginPath(); c.arc(cx,cy,R0-30,0,7); c.stroke();
+  dipArcText(c,'RUTA '+(r+1)+' · '+RUTAS[r].n.toUpperCase(),cx,cy,R0-17,-Math.PI/2,'800 15px Figtree, sans-serif',A.pap,false);
+  dipArcText(c,'RUTA A LA CIMA',cx,cy,R0-17,Math.PI/2,'800 13px Figtree, sans-serif',A.acc2,true);
+  c.restore(); }
+function dipStamp(c,r,x,y,rad,rot,txt){ // sello de goma como el de los libros de cumbre
+  const A=DIP_ART[r]; c.save(); c.translate(x,y); c.rotate(rot); c.globalAlpha=.82; c.strokeStyle=A.acc; c.fillStyle=A.acc; c.lineWidth=4; c.beginPath(); c.arc(0,0,rad,0,7); c.stroke(); c.lineWidth=1.6; c.beginPath(); c.arc(0,0,rad-9,0,7); c.stroke();
+  dipArcText(c,'CIMA ALCANZADA',0,0,rad-20,-Math.PI/2,'800 13px Figtree, sans-serif',A.acc,false); dipArcText(c,txt,0,0,rad-20,Math.PI/2,'700 11px Figtree, sans-serif',A.acc,true);
+  c.beginPath(); c.moveTo(-26,12); c.lineTo(-8,-12); c.lineTo(0,-2); c.lineTo(10,-18); c.lineTo(28,12); c.closePath(); c.fill(); c.font='800 12px "IBM Plex Mono", monospace'; c.textAlign='center'; c.fillText(String(r+1).padStart(2,'0'),0,30);
+  // tinta irregular
+  c.globalCompositeOperation='destination-out'; const R=mulberry(7+r); for(let i=0;i<120;i++){ c.globalAlpha=R()*0.5; c.beginPath(); c.arc((R()-.5)*rad*2,(R()-.5)*rad*2,R()*2.6,0,7); c.fill(); }
+  c.restore(); }
+certURL=function(r){ if(r==null) r=Math.max(0,rutaDe(S.li)); const D=DIPLOMAS[r]||DIPLOMAS[0], A=DIP_ART[r]||DIP_ART[0];
+  const Wc=1600, Hc=1131, c0=document.createElement('canvas'); c0.width=Wc; c0.height=Hc; const c=c0.getContext('2d'); const R=mulberry(13+r);
+  const INK=A.ink, ACC=A.acc, TXT=A.txt, PAP=A.pap;
+  // papel con fibras, viñeta cálida y borde de tinta
+  c.fillStyle='#2A2420'; c.fillRect(0,0,Wc,Hc);
+  c.fillStyle=PAP; c.fillRect(18,18,Wc-36,Hc-36);
+  for(let i=0;i<6000;i++){ c.fillStyle='rgba(110,80,40,'+(R()*0.05)+')'; c.fillRect(18+R()*(Wc-36),18+R()*(Hc-36),1+R()*2,1); }
+  for(let i=0;i<120;i++){ c.strokeStyle='rgba(120,90,50,'+(R()*0.08)+')'; c.lineWidth=.6; c.beginPath(); const fx=R()*Wc, fy=R()*Hc; c.moveTo(fx,fy); c.quadraticCurveTo(fx+R()*20,fy+R()*8,fx+10+R()*30,fy+R()*10); c.stroke(); }
+  const vg=c.createRadialGradient(Wc/2,Hc/2,350,Wc/2,Hc/2,980); vg.addColorStop(0,'rgba(255,255,255,0)'); vg.addColorStop(1,'rgba(120,80,40,.18)'); c.fillStyle=vg; c.fillRect(18,18,Wc-36,Hc-36);
+  dipTopo(c,30,30,Wc-60,Hc-60,INK,200+r*11);
+  c.strokeStyle=INK; c.lineWidth=3; c.strokeRect(40,40,Wc-80,Hc-80); c.lineWidth=1; c.strokeRect(50,50,Wc-100,Hc-100);
+  // marcas de esquina como en un mapa
+  [[40,40,1,1],[Wc-40,40,-1,1],[40,Hc-40,1,-1],[Wc-40,Hc-40,-1,-1]].forEach(([x,y,sx,sy])=>{ c.fillStyle=INK; c.beginPath(); c.moveTo(x,y); c.lineTo(x+sx*46,y); c.lineTo(x,y+sy*46); c.closePath(); c.fill(); c.fillStyle=ACC; c.beginPath(); c.arc(x+sx*13,y+sy*13,4,0,7); c.fill(); });
+  // ilustración tipo afiche con arco superior
+  const ix=90, iy=72, iw=Wc-180, ih=262; c.save(); c.beginPath(); c.moveTo(ix,iy+ih); c.lineTo(ix,iy+60); c.quadraticCurveTo(ix,iy,ix+60,iy); c.lineTo(ix+iw-60,iy); c.quadraticCurveTo(ix+iw,iy,ix+iw,iy+60); c.lineTo(ix+iw,iy+ih); c.closePath(); c.clip(); dipScene(c,r,ix,iy,iw,ih); c.restore();
+  c.strokeStyle=INK; c.lineWidth=4; c.beginPath(); c.moveTo(ix,iy+ih); c.lineTo(ix,iy+60); c.quadraticCurveTo(ix,iy,ix+60,iy); c.lineTo(ix+iw-60,iy); c.quadraticCurveTo(ix+iw,iy,ix+iw,iy+60); c.lineTo(ix+iw,iy+ih); c.closePath(); c.stroke();
+  // franja inferior de la ilustración con el lema
+  c.fillStyle=INK; c.fillRect(ix,iy+ih,iw,34); c.fillStyle=A.acc2; c.font='800 15px Figtree, sans-serif'; c.textAlign='left'; c.fillText('RUTA FINANCIERA',ix+24,iy+ih+23); c.textAlign='right'; c.fillText(A.tag,ix+iw-24,iy+ih+23);
+  // parche bordado centrado sobre la franja
+  dipPatch(c,r,Wc/2,iy+ih+10,84);
+  const sp=(t,x,y,f,col,ls)=>{ c.font=f; c.fillStyle=col; const chars=[...t]; const w=chars.reduce((a,ch)=>a+c.measureText(ch).width+ls,-ls); let xx=x-w/2; c.textAlign='left'; chars.forEach(ch=>{ c.fillText(ch,xx,y); xx+=c.measureText(ch).width+ls; }); };
+  c.textAlign='center'; c.fillStyle=INK; c.font='56px "Young Serif", Georgia, serif'; c.fillText(D.t,Wc/2,514);
+  sp('SE OTORGA A',Wc/2,550,'700 15px Figtree, sans-serif',TXT,6);
+  const nm=eco.name||'Senderista'; c.textAlign='center'; c.fillStyle=TXT; let fs=84; c.font=fs+'px "Young Serif", Georgia, serif'; while(c.measureText(nm).width>900&&fs>40){ fs-=4; c.font=fs+'px "Young Serif", Georgia, serif'; } c.fillText(nm,Wc/2,626);
+  const nw=Math.max(460,c.measureText(nm).width+120); c.strokeStyle=ACC; c.lineWidth=2; c.beginPath(); c.moveTo(Wc/2-nw/2,646); c.lineTo(Wc/2+nw/2,646); c.stroke(); for(const s of [-1,1]){ c.fillStyle=ACC; c.beginPath(); c.moveTo(Wc/2+s*nw/2,639); c.lineTo(Wc/2+s*(nw/2+10),646); c.lineTo(Wc/2+s*nw/2,653); c.fill(); }
+  const pl=profLine(); if(pl){ c.fillStyle=TXT; c.font='600 16px Figtree, sans-serif'; c.fillText(pl,Wc/2,670); }
+  const ND=nivelDiploma(); c.fillStyle=TXT; c.font='500 19px Figtree, sans-serif'; c.fillText(D.msg,Wc/2,pl?696:684);
+  // nivel como sello rectangular inclinado junto al nombre
+  { c.save(); c.translate(Wc-300,592); c.rotate(-0.12); c.globalAlpha=.85; c.strokeStyle=ND.col; c.lineWidth=3; c.strokeRect(-92,-30,184,60); c.lineWidth=1; c.strokeRect(-86,-24,172,48); c.fillStyle=ND.col; c.font='800 22px Figtree, sans-serif'; c.textAlign='center'; c.fillText('NIVEL '+ND.m.toUpperCase(),0,-1); c.font='700 10px Figtree, sans-serif'; c.fillText(ND.t,0,15); c.restore(); }
+  // perfil del sendero: los 8 mundos como campamentos, con lo que aprendió en cada uno
+  const px0=170, px1=Wc-170, base=850, top=752, AL=ALTR(r)||[]; const alts=[0,1,2,3,4,5,6,7].map(i=>AL[i]||i*500), amin=Math.min(...alts), amax=Math.max(...alts)||1;
+  const PT=alts.map((a,i)=>[px0+i*(px1-px0)/7, base-14-(a-amin)/Math.max(1,amax-amin)*(base-top-30)]);
+  c.fillStyle='rgba(0,0,0,.04)'; c.beginPath(); c.moveTo(px0-40,base); c.lineTo(px0-40,PT[0][1]+10); PT.forEach(p=>c.lineTo(p[0],p[1])); c.lineTo(px1+40,PT[7][1]); c.lineTo(px1+40,base); c.closePath(); c.fill();
+  c.save(); c.clip(); c.strokeStyle=INK; c.globalAlpha=.18; c.lineWidth=1; for(let X=px0-60;X<px1+60;X+=9){ c.beginPath(); c.moveTo(X,base); c.lineTo(X+40,top-20); c.stroke(); } c.restore();
+  c.strokeStyle=INK; c.lineWidth=1.4; c.beginPath(); c.moveTo(px0-40,base); c.lineTo(px1+40,base); c.stroke();
+  c.strokeStyle=ACC; c.lineWidth=3.5; c.setLineDash([12,7]); c.beginPath(); c.moveTo(px0-40,PT[0][1]+10); PT.forEach(p=>c.lineTo(p[0],p[1])); c.lineTo(px1+40,PT[7][1]); c.stroke(); c.setLineDash([]);
+  c.textAlign='left'; sp('LO QUE APRENDIÓ EN '+RUTAS[r].n.toUpperCase()+' · SU SENDERO MUNDO POR MUNDO',Wc/2,top-26,'800 13px Figtree, sans-serif',ACC,3);
+  PT.forEach(([X,Y],i)=>{ const li=r*8+i, ok=(eco.logros||[])[li]===2; c.fillStyle=PAP; c.beginPath(); c.arc(X,Y,15,0,7); c.fill(); c.lineWidth=3; c.strokeStyle=ok?INK:'rgba(0,0,0,.3)'; c.stroke(); if(ok){ c.fillStyle=INK; c.beginPath(); c.arc(X,Y,10,0,7); c.fill(); }
+    c.fillStyle=ok?PAP:'rgba(0,0,0,.45)'; c.font='800 13px Figtree, sans-serif'; c.textAlign='center'; c.fillText(ok?'✓':String(li+1),X,Y+5);
+    if(i===7){ c.strokeStyle=INK; c.lineWidth=2; c.beginPath(); c.moveTo(X,Y-15); c.lineTo(X,Y-44); c.stroke(); c.fillStyle='#C0392B'; c.beginPath(); c.moveTo(X,Y-44); c.lineTo(X+22,Y-37); c.lineTo(X,Y-30); c.fill(); }
+    c.fillStyle=TXT; c.font='600 11px "IBM Plex Mono", monospace'; c.fillText(fmtM(alts[i])+' m',X,base+16);
+    const words=LV[li].step.split(' '), lines=['']; words.forEach(wd=>{ const t=(lines[lines.length-1]+' '+wd).trim(); c.font='700 13px Figtree, sans-serif'; if(c.measureText(t).width>150&&lines[lines.length-1]) lines.push(wd); else lines[lines.length-1]=t; });
+    c.fillStyle=ok?TXT:'rgba(0,0,0,.45)'; c.font='700 13px Figtree, sans-serif'; lines.slice(0,2).forEach((ln,k)=>c.fillText(ln,X,base+34+k*15)); });
+  // libreta de cumbre: datos en una franja tipo boleto
+  const nW=(r+1)*8, ts=(eco.stars||[]).slice(0,nW).reduce((a,b)=>a+(b||0),0), M=[['PATRIMONIO',patrimonio()],['INGRESO ACTIVOS',ingresoAct()],['ACTIVOS',activosN()],['AHORRO',eco.emb],['INVERTIDO',eco.stats.invested||0],['DATACRÉDITO',eco.score||650],['HUELLA VERDE',verde()],['ESTRELLAS',ts+'/'+nW*3]];
+  const sy=944, sx0=170, sw=(Wc-340)/M.length; c.strokeStyle=INK; c.lineWidth=1.2; c.setLineDash([4,4]); c.beginPath(); c.moveTo(sx0,sy-28); c.lineTo(Wc-170,sy-28); c.moveTo(sx0,sy+22); c.lineTo(Wc-170,sy+22); c.stroke(); c.setLineDash([]);
+  M.forEach(([l,v],i)=>{ const X=sx0+i*sw+sw/2; c.textAlign='center'; c.fillStyle=INK; c.font='700 22px "IBM Plex Mono", monospace'; c.fillText(String(v),X,sy+2); c.fillStyle=TXT; c.font='800 9.5px Figtree, sans-serif'; c.fillText(l,X,sy+16); if(i) { c.strokeStyle='rgba(0,0,0,.15)'; c.lineWidth=1; c.beginPath(); c.moveTo(sx0+i*sw,sy-20); c.lineTo(sx0+i*sw,sy+16); c.stroke(); } });
+  // firmas y sello de cumbre
+  const CL=eco.clase, fimg=claseImg(CL), sigY=1022;
+  [[330,'Brian Suárez','Fundador · Ruta a la Cima',null],[Wc-330,CL?(fimg&&fimg.complete&&fimg.naturalWidth?'':CL.doc||''):'',CL?[CL.doc,CL.cargo].filter(Boolean).join(' · ')+(CL.col?' · '+CL.col:''):(eco.colegio?'Docente · '+eco.colegio:'Docente acompañante'),CL&&fimg&&fimg.complete&&fimg.naturalWidth?fimg:null]].forEach(([x,n,role,img])=>{
+    c.strokeStyle=TXT; c.lineWidth=1; c.beginPath(); c.moveTo(x-150,sigY); c.lineTo(x+150,sigY); c.stroke(); if(img) c.drawImage(img,x-110,sigY-70,220,72);
+    if(n){ c.save(); c.translate(x,sigY-10); c.transform(1,0,-0.25,1,0,0); c.fillStyle='#24324A'; c.font='38px "Young Serif", Georgia, serif'; c.textAlign='center'; c.fillText(n,0,0); c.restore(); }
+    c.fillStyle=TXT; c.textAlign='center'; c.font='700 '+(role.length>48?12:14)+'px Figtree, sans-serif'; c.fillText(role.length>70?role.slice(0,69)+'…':role,x,sigY+20); });
+  const d=new Date(), fecha=d.toLocaleDateString('es-CO',{day:'numeric',month:'short',year:'numeric'}).toUpperCase();
+  dipStamp(c,r,300,596,64,-0.18,fecha);
+  let h=2166136261; for(const ch of nm+patrimonio()+(eco.seed||0)+ts+'r'+r){ h^=ch.charCodeAt(0); h=Math.imul(h,16777619)>>>0; } const code='RF'+(r+1)+'-'+h.toString(36).toUpperCase().padStart(7,'0').slice(0,4)+'-'+(h>>>7).toString(36).toUpperCase().slice(0,4);
+  c.fillStyle=TXT; c.font='600 12px Figtree, sans-serif'; c.textAlign='left'; c.fillText(d.toLocaleDateString('es-CO',{day:'numeric',month:'long',year:'numeric'})+'  ·  Dificultad '+Dif().n,104,Hc-60); c.textAlign='right'; c.fillText('Código de verificación '+code,Wc-104,Hc-60); c.textAlign='left';
+  return c0.toDataURL('image/png'); };
 scrApply();
 resize();
 legend();
