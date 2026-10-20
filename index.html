@@ -5076,8 +5076,8 @@ function endingReport(){ try{ medCheck(); }catch(e){}
       const blob=await (await fetch(url)).blob(); let dl=null; try{ dl=window.claude&&window.claude.use?await window.claude.use('downloads'):null; }catch(_){ dl=null; }
       if(dl){ try{ await dl.save({filename:name,data:blob}); msg.textContent=' Listo.'; }catch(err){ msg.textContent=err&&err.code==='declined'?'':' No se pudo descargar aquí.'; } return; }
       const a=document.createElement('a'); a.href=URL.createObjectURL(blob); a.download=name; document.body.appendChild(a); a.click(); setTimeout(()=>{ URL.revokeObjectURL(a.href); a.remove(); },500); };
-    document.getElementById('bCert').onclick=()=>dipDl(rr0,cert);
-    document.querySelectorAll('[data-dip]').forEach(b=>b.onclick=()=>{ const k=+b.dataset.dip; dipDl(k,certURL(k)); });
+    document.getElementById('bCert').onclick=()=>dipDl(rr0,certURL(rr0,2));
+    document.querySelectorAll('[data-dip]').forEach(b=>b.onclick=()=>{ const k=+b.dataset.dip; dipDl(k,certURL(k,2)); });
   };
   if(fli+1<LV.length) save(fli+1); else clearSave(); rkSubmit(RUTAS[rutaDe(fli)].code,eco.stats.frames/60); show();
 }
@@ -7084,8 +7084,8 @@ function dipStamp(c,r,x,y,rad,rot,txt){ // sello de goma como el de los libros d
   // tinta irregular
   c.globalCompositeOperation='destination-out'; const R=mulberry(7+r); for(let i=0;i<120;i++){ c.globalAlpha=R()*0.5; c.beginPath(); c.arc((R()-.5)*rad*2,(R()-.5)*rad*2,R()*2.6,0,7); c.fill(); }
   c.restore(); }
-certURL=function(r){ if(r==null) r=Math.max(0,rutaDe(S.li)); const D=DIPLOMAS[r]||DIPLOMAS[0], A=DIP_ART[r]||DIP_ART[0];
-  const Wc=1600, Hc=1131, c0=document.createElement('canvas'); c0.width=Wc; c0.height=Hc; const c=c0.getContext('2d'); const R=mulberry(13+r);
+certURL=function(r,sc){ if(r==null) r=Math.max(0,rutaDe(S.li)); sc=sc||1; const D=DIPLOMAS[r]||DIPLOMAS[0], A=DIP_ART[r]||DIP_ART[0];
+  const Wc=1600, Hc=1131, c0=document.createElement('canvas'); c0.width=Wc*sc; c0.height=Hc*sc; const c=c0.getContext('2d'); c.scale(sc,sc); const R=mulberry(13+r);
   const INK=A.ink, ACC=A.acc, TXT=A.txt, PAP=A.pap;
   // papel con fibras, viñeta cálida y borde de tinta
   c.fillStyle='#2A2420'; c.fillRect(0,0,Wc,Hc);
@@ -7107,12 +7107,12 @@ certURL=function(r){ if(r==null) r=Math.max(0,rutaDe(S.li)); const D=DIPLOMAS[r]
   const sp=(t,x,y,f,col,ls)=>{ c.font=f; c.fillStyle=col; const chars=[...t]; const w=chars.reduce((a,ch)=>a+c.measureText(ch).width+ls,-ls); let xx=x-w/2; c.textAlign='left'; chars.forEach(ch=>{ c.fillText(ch,xx,y); xx+=c.measureText(ch).width+ls; }); };
   c.textAlign='center'; c.fillStyle=INK; c.font='56px "Young Serif", Georgia, serif'; c.fillText(D.t,Wc/2,514);
   sp('SE OTORGA A',Wc/2,550,'700 15px Figtree, sans-serif',TXT,6);
-  const nm=eco.name||'Senderista'; c.textAlign='center'; c.fillStyle=TXT; let fs=84; c.font=fs+'px "Young Serif", Georgia, serif'; while(c.measureText(nm).width>900&&fs>40){ fs-=4; c.font=fs+'px "Young Serif", Georgia, serif'; } c.fillText(nm,Wc/2,626);
+  const nm=eco.name||'Senderista'; c.textAlign='center'; c.fillStyle=TXT; let fs=84; c.font=fs+'px "Young Serif", Georgia, serif'; while(c.measureText(nm).width>700&&fs>40){ fs-=4; c.font=fs+'px "Young Serif", Georgia, serif'; } c.fillText(nm,Wc/2,626);
   const nw=Math.max(460,c.measureText(nm).width+120); c.strokeStyle=ACC; c.lineWidth=2; c.beginPath(); c.moveTo(Wc/2-nw/2,646); c.lineTo(Wc/2+nw/2,646); c.stroke(); for(const s of [-1,1]){ c.fillStyle=ACC; c.beginPath(); c.moveTo(Wc/2+s*nw/2,639); c.lineTo(Wc/2+s*(nw/2+10),646); c.lineTo(Wc/2+s*nw/2,653); c.fill(); }
   const pl=profLine(); if(pl){ c.fillStyle=TXT; c.font='600 16px Figtree, sans-serif'; c.fillText(pl,Wc/2,670); }
   const ND=nivelDiploma(); c.fillStyle=TXT; c.font='500 19px Figtree, sans-serif'; c.fillText(D.msg,Wc/2,pl?696:684);
   // nivel como sello rectangular inclinado junto al nombre
-  { c.save(); c.translate(Wc-300,592); c.rotate(-0.12); c.globalAlpha=.85; c.strokeStyle=ND.col; c.lineWidth=3; c.strokeRect(-92,-30,184,60); c.lineWidth=1; c.strokeRect(-86,-24,172,48); c.fillStyle=ND.col; c.font='800 22px Figtree, sans-serif'; c.textAlign='center'; c.fillText('NIVEL '+ND.m.toUpperCase(),0,-1); c.font='700 10px Figtree, sans-serif'; c.fillText(ND.t,0,15); c.restore(); }
+  { c.save(); c.translate(Wc-268,592); c.rotate(-0.12); c.globalAlpha=.85; c.strokeStyle=ND.col; c.lineWidth=3; c.strokeRect(-92,-30,184,60); c.lineWidth=1; c.strokeRect(-86,-24,172,48); c.fillStyle=ND.col; c.font='800 22px Figtree, sans-serif'; c.textAlign='center'; c.fillText('NIVEL '+ND.m.toUpperCase(),0,-1); let f2=10; c.font='700 '+f2+'px Figtree, sans-serif'; while(c.measureText(ND.t).width>164&&f2>7){ f2-=0.5; c.font='700 '+f2+'px Figtree, sans-serif'; } c.fillText(ND.t,0,15); c.restore(); }
   // perfil del sendero: los 8 mundos como campamentos, con lo que aprendió en cada uno
   const px0=170, px1=Wc-170, base=850, top=752, AL=ALTR(r)||[]; const alts=[0,1,2,3,4,5,6,7].map(i=>AL[i]||i*500), amin=Math.min(...alts), amax=Math.max(...alts)||1;
   const PT=alts.map((a,i)=>[px0+i*(px1-px0)/7, base-14-(a-amin)/Math.max(1,amax-amin)*(base-top-30)]);
@@ -7138,7 +7138,7 @@ certURL=function(r){ if(r==null) r=Math.max(0,rutaDe(S.li)); const D=DIPLOMAS[r]
     if(n){ c.save(); c.translate(x,sigY-10); c.transform(1,0,-0.25,1,0,0); c.fillStyle='#24324A'; c.font='38px "Young Serif", Georgia, serif'; c.textAlign='center'; c.fillText(n,0,0); c.restore(); }
     c.fillStyle=TXT; c.textAlign='center'; c.font='700 '+(role.length>48?12:14)+'px Figtree, sans-serif'; c.fillText(role.length>70?role.slice(0,69)+'…':role,x,sigY+20); });
   const d=new Date(), fecha=d.toLocaleDateString('es-CO',{day:'numeric',month:'short',year:'numeric'}).toUpperCase();
-  dipStamp(c,r,300,596,64,-0.18,fecha);
+  dipStamp(c,r,262,596,64,-0.18,fecha);
   let h=2166136261; for(const ch of nm+patrimonio()+(eco.seed||0)+ts+'r'+r){ h^=ch.charCodeAt(0); h=Math.imul(h,16777619)>>>0; } const code='RF'+(r+1)+'-'+h.toString(36).toUpperCase().padStart(7,'0').slice(0,4)+'-'+(h>>>7).toString(36).toUpperCase().slice(0,4);
   c.fillStyle=TXT; c.font='600 12px Figtree, sans-serif'; c.textAlign='left'; c.fillText(d.toLocaleDateString('es-CO',{day:'numeric',month:'long',year:'numeric'})+'  ·  Dificultad '+Dif().n,104,Hc-60); c.textAlign='right'; c.fillText('Código de verificación '+code,Wc-104,Hc-60); c.textAlign='left';
   return c0.toDataURL('image/png'); };
