@@ -1397,9 +1397,9 @@ function powerSweep(p){ const b={x:p.x-5,y:p.y-(p.big?12:2),w:p.w+10,h:p.h+(p.bi
 // ---------- salud financiera y muerte financiera ----------
 function salud(){ return eco?(eco.salud??100):100; }
 const saludF=()=>Math.min(1,0.3+0.06*(S.li||0)); // mundo 1: 30 % del golpe; llega al 100 % en el mundo 13
-function saludAdd(d,why){ if(!eco||!S.L||!d||['map','finale','muerte'].includes(S.mode)) return; if(d<0){ d=Math.min(-1,Math.round(d*Dif().hurt*saludF())); S.saludT=S.t; } const s0=salud(); eco.salud=Math.max(0,Math.min(100,s0+d));
+function saludAdd(d,why){ if(!eco||!S.L||!d||['map','finale','muerte'].includes(S.mode)) return; if(d<0){ d=Math.min(-1,Math.round(d*Dif().hurt*saludF())); S.saludT=S.t; } const s0=salud(); eco.salud=Math.max(0,Math.min(100,s0+d)); { const m=S.saludMsg; if(m&&S.t-m.t<40&&Math.sign(m.d)===Math.sign(d)){ m.d+=d; m.why=why||m.why; m.t=S.t; } else S.saludMsg={d,why:why||(d>0?'buena decisión':'mala decisión'),t:S.t}; } if(!(eco.seen&&eco.seen.saludFin)) try{ learn('saludFin'); }catch(e){}
   if(d<0){ S.saludLog=S.saludLog||[]; S.saludLog.push({w:why||'mala decisión',d}); if(S.saludLog.length>60) S.saludLog.shift(); S.saludHit=24;
-    if(S.p&&d<=-5&&!S.collect) addText(S.p.x-60,S.p.y-64,'Salud financiera '+d+': '+(why||''),'#FF9A8C');
+    if(S.p&&d<=-10&&!S.collect) addText(S.p.x-60,S.p.y-64,'Salud financiera '+d+': '+(why||''),'#FF9A8C');
     if(eco.salud<35&&s0>=35){ toast('¡Tu salud financiera está en riesgo!','Llevas muchas malas decisiones seguidas: deudas caras, compras por impulso o apuestas. Si llega a 0 sufrirás una muerte financiera. Ahorra, paga deudas e invierte para recuperarla.'); snd('bad'); } }
   else S.saludUp=20; }
 function saludFromLog(cat,txt,v){ const t=(txt||'').toLowerCase(); let d=0;
@@ -1443,6 +1443,7 @@ function drawSaludHud(){ if(!eco||!S.L) return; const s=salud(), col=s>=60?'#62C
   const beat=s<35?1+Math.max(0,Math.sin(S.t*0.25))*0.25:1; ctx.save(); ctx.translate(14,y+2.2); ctx.scale(0.62*beat,0.62*beat); ctx.fillStyle=col; ctx.beginPath(); ctx.moveTo(0,4); ctx.bezierCurveTo(-7,-1,-4,-7,0,-3); ctx.bezierCurveTo(4,-7,7,-1,0,4); ctx.fill(); ctx.restore();
   // etiqueta pequeña que solo se hace notar al cambiar o en riesgo
   const loud=S.saludHit>0||S.saludUp>0||s<35; ctx.globalAlpha=loud?0.95:0.55; ctx.font='800 5.4px Figtree, sans-serif'; ctx.fillStyle=loud?col:'#E9EEF2'; ctx.fillText('SALUD FINANCIERA',21,y+4.2); ctx.font='800 5.6px "IBM Plex Mono", monospace'; ctx.fillStyle=loud?col:'#fff'; ctx.textAlign='right'; ctx.fillText(String(s),x0-4,y+4.3); ctx.textAlign='left';
+  { const m=S.saludMsg; if(m&&S.t-m.t<170){ const a2=Math.min(1,(170-(S.t-m.t))/30), txt=(m.d>0?'+':'')+m.d+' · '+m.why; ctx.globalAlpha=a2; ctx.font='800 5.8px Figtree, sans-serif'; const tw=ctx.measureText(txt).width+10, xm=x0+6; ctx.fillStyle=m.d>0?'rgba(30,90,55,.96)':'rgba(120,30,25,.96)'; rr(xm,y-2.2,tw,8.4,4.2); ctx.fill(); ctx.fillStyle=m.d>0?'#BFF5CF':'#FFC7BF'; ctx.fillText(txt,xm+5,y+4); ctx.globalAlpha=1; } }
   ctx.restore();
   if(s<35&&S.mode==='play'&&!reduced){ const a=(0.12+Math.max(0,Math.sin(S.t*0.12))*0.16)*(1-s/35); const g=ctx.createRadialGradient(W/2,H/2,H*0.35,W/2,H/2,W*0.62); g.addColorStop(0,'rgba(200,30,30,0)'); g.addColorStop(1,'rgba(200,30,30,'+a+')'); ctx.fillStyle=g; ctx.fillRect(0,0,W,H); } }
 function drawMuerteFx(){ const M=S.muerte; if(!M||S.mode!=='muerte') return; const t=++M.t, p=S.p;
@@ -2569,7 +2570,9 @@ function bossUpdate(e,p){
    cadera que sube al caminar y baja al correr, brazos en oposición. Encima: lanzamiento con
    preparación (brazo atrás), descarga y seguimiento; reacción al golpe; respiración; mirada al jugador. */
 const SHC={a:document.createElement('canvas'),b:document.createElement('canvas')};
-function shaded(bx,by,bw,bh,fn,o){ // dibuja fn en un lienzo aparte y le aplica luz del mundo, oclusión, luz de borde y contorno
+let SH_IN=false;
+function shaded(bx,by,bw,bh,fn,o){ if(SH_IN){ fn(); return; } SH_IN=true; try{ return shaded0(bx,by,bw,bh,fn,o); } finally{ SH_IN=false; } }
+function shaded0(bx,by,bw,bh,fn,o){ // dibuja fn en un lienzo aparte y le aplica luz del mundo, oclusión, luz de borde y contorno
   if(S.lowQ){ fn(); return; } o=o||{}; const main=ctx; let m; try{ m=main.getTransform(); }catch(e){ fn(); return; }
   const P=[[bx,by],[bx+bw,by],[bx,by+bh],[bx+bw,by+bh]].map(([x,y])=>[m.a*x+m.c*y+m.e,m.b*x+m.d*y+m.f]);
   const x0=Math.floor(Math.min(P[0][0],P[1][0],P[2][0],P[3][0]))-3, y0=Math.floor(Math.min(P[0][1],P[1][1],P[2][1],P[3][1]))-3, x1=Math.ceil(Math.max(P[0][0],P[1][0],P[2][0],P[3][0]))+3, y1=Math.ceil(Math.max(P[0][1],P[1][1],P[2][1],P[3][1]))+3, w=x1-x0, h=y1-y0;
@@ -3208,12 +3211,14 @@ function globoInit(e){ if(e.bl) return; e.bl=[]; const n=7; for(let i=0;i<n;i++)
 function globoKnot(e){ return {x:e.x+28+Math.sin(S.t*0.05+(e.ph||0))*1.5,y:e.y+50}; }
 function globoUpdate(e,p){ globoInit(e); if(e.gone){ e.y-=1.4; e.x+=0.4; if(e.y<S.camY-160) e.dead=true; return; }
   const kn=globoKnot(e), dx=(p.x+p.w/2)-kn.x, near=Math.abs(dx)<160&&p.y>e.y0-40&&p.y<e.y0+220;
-  if(p.caught===e){ e.y=Math.max(e.y0-130,e.y-0.55); e.x+=Math.sin(S.t*0.02)*0.3; e.hold=(e.hold||0)+1; const inv=(eco.assets||[]).length>0, every=inv?90:55;
+  if(e.xs==null) e.xs=e.x0;
+  if(p.caught===e){ const ny=Math.max(e.y0-130,e.y-0.55), nk=ny+50; const hit=(yy)=>{ const r=Math.floor(yy/T); for(const xx of [kn.x-p.w/2+1,kn.x+p.w/2-1]) if(solid(Math.floor(xx/T),r)) return true; return false; }; if(!hit(nk+1)&&!hit(nk+p.h*0.5)) e.y=ny; const nx=e.x+Math.sin(S.t*0.02)*0.3; if(!hit(e.y+52)) e.x=nx; e.x0=e.x-Math.sin(S.t*0.01+e.ph)*(e.amp||16); e.hold=(e.hold||0)+1; const inv=(eco.assets||[]).length>0, every=inv?90:55;
     if(e.hold%every===0){ const l=eco.hand>0?1:0; eco.hand-=l; if(S.ws) S.ws.lost.inflacion=(S.ws.lost.inflacion||0)+l; if(l){ logD('Pérdida','Inflación: precios inflados mientras te elevaba',-1); S.hudPop=10; } addText(p.x-40,p.y+30,l?'−1 '+GLOBO_TXT[(e.hold/every|0)%7].toLowerCase()+' más caro':'¡precios por las nubes!','#FFC7BF'); snd('bad'); }
     if(e.hold===90&&inv) addText(p.x-50,p.y+44,'Tu inversión te sostiene: pierdes más lento','#BFF5CF');
-    if(e.hold>420) globoRelease(e,p,'Los globos se cansaron… caes');
+    p.inflate=Math.min(1,e.hold/INFL_MAX); if(e.hold===Math.round(INFL_MAX*0.5)) addText(p.x-60,p.y-30,'¡Te estás inflando como los precios! Salta para reventar globos','#FFE18A');
+    if(e.hold>=INFL_MAX) globoExplota(e,p);
     return; }
-  e.ty=near?e.y0+34:e.y0+Math.sin(S.t*0.02+e.ph)*6; e.y+=(e.ty-e.y)*0.03; e.x0+=near?Math.sign(dx)*0.28*Dif().enemy:0; e.x=e.x0+Math.sin(S.t*0.01+e.ph)*(near?16:70);
+  e.ty=near?e.y0+34:e.y0+Math.sin(S.t*0.02+e.ph)*6; e.y+=(e.ty-e.y)*0.03; if(near) e.x0=Math.max(e.xs-140,Math.min(e.xs+140,e.x0+Math.sign(dx)*0.28*Dif().enemy)); e.amp=(e.amp==null?70:e.amp)+((near?16:70)-(e.amp==null?70:e.amp))*0.02; const tx=e.x0+Math.sin(S.t*0.01+e.ph)*e.amp; e.x+=Math.max(-2.2,Math.min(2.2,tx-e.x));
   if(e.grabCd>0){ e.grabCd--; return; }
   // pisar los globos desde arriba revienta uno
   if(p.vy>0&&overlap(p,{x:e.x+6,y:e.y-8,w:44,h:18})&&p.y+p.h-p.vy<=e.y+4){ globoPop(e,false); p.vy=-7.5; return; }
@@ -3225,16 +3230,21 @@ function globoPop(e,fromGrab){ const live=e.bl.filter(b=>b.alive); if(!live.leng
   const bx=e.x+28+b.dx, by=e.y+12+b.dy; for(let i=0;i<8;i++) S.parts.push({x:bx,y:by,vx:(Math.random()-.5)*4,vy:(Math.random()-.5)*4,life:16,col:GLOBO_COL[b.k]}); snd('stomp'); S.shake=reduced?0:2;
   addText(bx-30,by-10,'¡Pop! '+GLOBO_TXT[b.k].toLowerCase()+': comparé precios','#BFF5CF');
   if(fromGrab&&S.p.caught===e){ e.need--; if(e.need<=0) globoRelease(e,S.p,'¡Te soltaste! Comparar precios y ahorrar en un CDT te defiende de la inflación'); }
-  if(e.n<=0){ e.gone=true; if(S.p.caught===e) globoRelease(e,S.p,'¡Desinflaste los precios!'); eco.stats.stomps++; confetti(bx,by,10); } else if(e.n<=2&&!e.gone){ e.gone=true; if(S.p.caught===e) S.p.caught=null; addText(e.x,e.y-10,'Los globos que quedan se van volando','#C9CEFF'); } }
-function globoRelease(e,p,msg){ p.caught=null; p.vy=-3; p.inv=50; e.grabCd=200; e.hold=0; addText(p.x-80,p.y-20,msg,'#BFF5CF'); }
+  if(e.n<=0){ e.gone=true; if(S.p.caught===e) globoRelease(e,S.p,'¡Desinflaste los precios!'); eco.stats.stomps++; confetti(bx,by,10); } else if(e.n<=2&&!e.gone){ e.gone=true; if(S.p.caught===e) globoRelease(e,S.p,'¡Te soltaste! Quedan pocos globos'); addText(e.x,e.y-10,'Los globos que quedan se van volando','#C9CEFF'); } }
+const INFL_MAX=330;
+function drawInflHud(){ const p=S.p; if(!p||!p.caught||!(p.inflate>0)) return; const k=p.inflate, x=p.x+p.w/2-S.cam, y=p.y+p.h+14; ctx.save(); ctx.fillStyle='rgba(10,20,26,.75)'; rr(x-26,y,52,7,3.5); ctx.fill(); ctx.fillStyle=k>0.75?'#EE5A4A':'#F2963D'; rr(x-25,y+1,50*k,5,2.5); ctx.fill(); ctx.fillStyle='#fff'; ctx.font='800 5px Figtree, sans-serif'; ctx.textAlign='center'; ctx.fillText(k>0.75?'¡VAS A REVENTAR!':'INFLÁNDOTE',x,y+5.2); ctx.textAlign='left'; ctx.restore(); }
+function globoExplota(e,p){ const l=Math.ceil(eco.hand*0.3); eco.hand-=l; if(S.ws) S.ws.lost.inflacion=(S.ws.lost.inflacion||0)+l; logD('Pérdida','La inflación te infló hasta reventar: perdiste poder de compra',-l);
+  globoRelease(e,p,'¡PUM! La inflación te reventó: −'+l); e.gone=true; p.inflate=0; p.skel=SKEL_T; saludAdd(-8,'la inflación te reventó'); S.shake=reduced?0:7; snd('shatter');
+  const cx=p.x+p.w/2, cy=p.y+p.h/2; for(let i=0;i<26;i++){ const a=Math.random()*6.28, v=2+Math.random()*4; S.parts.push({x:cx,y:cy,vx:Math.cos(a)*v,vy:Math.sin(a)*v-1.5,life:34,col:i%3?eco.color:'#F2C230'}); } S.flashes=S.flashes||[]; S.flashes.push({x:cx,y:cy,t:12});
+  toast('¡La inflación te reventó!','Te quedaste colgado de los precios inflados hasta reventar: perdiste el '+30+' % de tu efectivo y quedaste en los huesos por 20 segundos. Para no inflarte: compara precios, ahorra en un CDT o invierte, y salta a tiempo para reventar los globos.'); learn('cloud'); }
+function globoRelease(e,p,msg){ p.inflate=0; p.caught=null; p.vy=-3; p.inv=50; e.grabCd=200; e.hold=0; for(let k=0;k<6;k++){ const r=Math.floor((p.y+p.h-2)/T); if(solid(Math.floor((p.x+2)/T),r)||solid(Math.floor((p.x+p.w-2)/T),r)) p.y-=T*0.5; else break; } addText(p.x-80,p.y-20,msg,'#BFF5CF'); }
 function drawGlobos(e,x,y){ globoInit(e); const kn=globoKnot(e), kx=kn.x-S.cam, ky=kn.y, cx=x+28, cy=y+12, lift=S.p&&S.p.caught===e;
   ctx.save(); ctx.lineWidth=0.7; ctx.strokeStyle='rgba(240,240,240,.75)';
   e.bl.forEach(b=>{ if(!b.alive) return; const bx=cx+b.dx+Math.sin(S.t*0.04+b.ph)*1.6, by=cy+b.dy+Math.cos(S.t*0.05+b.ph)*1.4; b.sx=bx; b.sy=by; ctx.beginPath(); ctx.moveTo(bx,by+b.r); ctx.quadraticCurveTo((bx+kx)/2+Math.sin(S.t*0.06+b.ph)*3,(by+ky)/2,kx,ky); ctx.stroke(); });
   e.bl.slice().sort((a,b2)=>a.dy-b2.dy).forEach(b=>{ if(!b.alive) return; const bx=b.sx, by=b.sy, r=b.r*(lift?1+0.04*Math.sin(S.t*0.2+b.ph):1);
-    ctx.fillStyle=mix(GLOBO_COL[b.k],'#000000',.25); ctx.beginPath(); ctx.ellipse(bx+0.6,by+0.6,r,r*1.15,0,0,7); ctx.fill();
-    ctx.fillStyle=GLOBO_COL[b.k]; ctx.beginPath(); ctx.ellipse(bx,by,r,r*1.15,0,0,7); ctx.fill();
+    { const c0=GLOBO_COL[b.k], g=ctx.createRadialGradient(bx-r*0.35,by-r*0.45,r*0.1,bx,by,r*1.25); g.addColorStop(0,mix(c0,'#FFFFFF',.35)); g.addColorStop(0.5,c0); g.addColorStop(1,mix(c0,'#000000',.38)); ctx.fillStyle=g; ctx.beginPath(); ctx.moveTo(bx,by+r*1.15); ctx.bezierCurveTo(bx-r*1.25,by+r*0.9,bx-r*1.1,by-r*1.2,bx,by-r*1.15); ctx.bezierCurveTo(bx+r*1.1,by-r*1.2,bx+r*1.25,by+r*0.9,bx,by+r*1.15); ctx.fill(); ctx.strokeStyle=mix(c0,'#000000',.5); ctx.lineWidth=0.6; ctx.stroke(); ctx.strokeStyle='rgba(240,240,240,.75)'; ctx.lineWidth=0.7; }
     ctx.beginPath(); ctx.moveTo(bx-1.6,by+r*1.15+1.6); ctx.lineTo(bx+1.6,by+r*1.15+1.6); ctx.lineTo(bx,by+r*1.15-0.4); ctx.fill();
-    ctx.fillStyle='rgba(255,255,255,.45)'; ctx.beginPath(); ctx.ellipse(bx-r*0.38,by-r*0.45,r*0.22,r*0.36,-0.5,0,7); ctx.fill();
+    ctx.fillStyle='rgba(255,255,255,.45)'; ctx.beginPath(); ctx.ellipse(bx-r*0.38,by-r*0.45,r*0.22,r*0.36,-0.5,0,7); ctx.fill(); ctx.fillStyle='rgba(255,255,255,.8)'; ctx.beginPath(); ctx.arc(bx-r*0.2,by-r*0.75,r*0.08,0,7); ctx.fill(); ctx.fillStyle=mix(GLOBO_COL[b.k],'#000000',.35);
     ctx.fillStyle='#fff'; ctx.font='800 4.2px sans-serif'; ctx.textAlign='center'; ctx.fillText(GLOBO_TXT[b.k],bx,by+0.6); ctx.font='800 5px sans-serif'; ctx.fillText('+%',bx,by+6); });
   // nudo con etiqueta de precio
   ctx.fillStyle='#FBF7EC'; ctx.save(); ctx.translate(kx,ky); ctx.rotate(Math.sin(S.t*0.05)*0.2); ctx.beginPath(); ctx.moveTo(-9,0); ctx.lineTo(6,0); ctx.lineTo(9,4); ctx.lineTo(6,8); ctx.lineTo(-9,8); ctx.closePath(); ctx.fill(); ctx.fillStyle='#B8323C'; ctx.font='800 4.6px sans-serif'; ctx.textAlign='center'; ctx.fillText('INFLACIÓN',-1.4,5.6); ctx.restore();
@@ -3799,7 +3809,8 @@ function drop(x,y,s=1,col,sx=1){
 }
 const VALOR=['moneda','moneda','billete','moneda','diamante','bono','moneda','lingote','billete','joya','moneda','moneda'];
 const VALOR_V={moneda:1,billete:2,bono:2,joya:2,lingote:3,diamante:4};
-function ganar(v,why){ const toH=Math.max(0,Math.min(v,cap()-eco.hand)); eco.hand+=toH; const over=v-toH; if(over>0){ eco.emb+=over; if(!S.fullMsg||S.t-S.fullMsg>90){ S.fullMsg=S.t; if(S.p) addText(S.p.x-60,S.p.y-34,'Mochila llena: +'+over+' fue a tu alcancía','#9FD3FF'); } } return over; }
+function ganar(v,why){ if(eco&&v>0){ eco.gainAcc=(eco.gainAcc||0)+v; while(eco.gainAcc>=8){ eco.gainAcc-=8; saludAdd(1,'ganaste plata en el camino'); } }
+  const toH=Math.max(0,Math.min(v,cap()-eco.hand)); eco.hand+=toH; const over=v-toH; if(over>0){ eco.emb+=over; if(!S.fullMsg||S.t-S.fullMsg>90){ S.fullMsg=S.t; if(S.p) addText(S.p.x-60,S.p.y-34,'Mochila llena: +'+over+' fue a tu alcancía','#9FD3FF'); } } return over; }
 const VALOR_N={moneda:'moneda',billete:'billete',bono:'bono',diamante:'diamante',lingote:'lingote de oro',joya:'joya'};
 const VALOR_C={moneda:'#E2B85A',billete:'#EDE2C6',bono:'#F4E3A0',diamante:'#9FE8FF',lingote:'#FFD36B',joya:'#FF8FA8'};
 function valuable(k,x,y,s=1,t=0){ // objetos de valor que se recogen (todos valen 1)
@@ -3898,9 +3909,14 @@ function piggy(x,y,used,e){
   ctx.fillStyle='#fff'; ctx.font='800 8px Figtree, sans-serif'; ctx.textAlign='center'; ctx.fillText(full?'¡LLENA!':'ALCANCÍA',x+16,y+44);
   ctx.fillStyle='rgba(0,0,0,.4)'; rr(x+4,y+47,24,3,1.5); ctx.fill(); ctx.fillStyle=full?'#62C98A':'#F2C85A'; rr(x+4,y+47,24*lv,3,1.5); ctx.fill(); ctx.textAlign='left';
 }
-function drawEnts(only){
+const PROP_SHADE=new Set(['emb','bank','camp','curso','tienda','negocio','lote','lugar','veh','page','pyr','colchon','slot','trading','prima','job','offer','semilla','btc','card','bill','impulse','fomo','fuga','apuros','paciencia','poder','scroll','dian','restaura','atajo','nido','cloud','rockgen']);
+function drawEnts(only){ const L=S.L; if(S.lowQ) return drawEnts0(only);
+  for(const e of L.ents){ if(e.dead||(only&&!only.includes(e.t))) continue; const x=e.x-S.cam; if(x+(e.w||0)<-80||x>W+80) continue;
+    if(PROP_SHADE.has(e.t)){ const w=e.w||24, h=e.h||24, pad=e.t==='cloud'?70:34; shaded(x-pad,e.y-pad-24,w+pad*2,h+pad*2+24,()=>drawEnts0([e.t],e),{lit:.12,dark:.22,cheap:1}); }
+    else drawEnts0([e.t],e); } }
+function drawEnts0(only,one){
   const L=S.L;
-  for(const e of L.ents){
+  for(const e of (one?[one]:L.ents)){
     if(e.dead) continue;
     if(only&&!only.includes(e.t)) continue;
     const x=e.x-S.cam, y=e.y; if(x+(e.w||0)<-80||x>W+80) continue;
@@ -4535,7 +4551,7 @@ function draw(){
   ctx.save();
   const sh=S.shake&&!reduced?S.shake:0;
   ctx.translate(sh?(Math.random()-.5)*sh:0, -Math.round(S.camY)+(sh?(Math.random()-.5)*sh:0));
-  drawDeco(th); drawArenaBack(); S.plabels=[]; drawPlats(th); drawTiles(th); drawArenaFloor(); { const by=S.L.rows*T; if(by<S.camY+H){ ctx.fillStyle=th.earth; ctx.fillRect(0,by,W,S.camY+H-by+2); ctx.fillStyle='rgba(0,0,0,.18)'; ctx.fillRect(0,by,W,S.camY+H-by+2); } } drawEnts(); drawArenaFront(); drawPlatLabels(); drawHiker(); drawPigFx(); drawWorldHazards(); drawBusy(); try{ drawMedBag(); }catch(e){} drawFront();
+  drawDeco(th); drawArenaBack(); S.plabels=[]; drawPlats(th); drawTiles(th); drawArenaFloor(); { const by=S.L.rows*T; if(by<S.camY+H){ ctx.fillStyle=th.earth; ctx.fillRect(0,by,W,S.camY+H-by+2); ctx.fillStyle='rgba(0,0,0,.18)'; ctx.fillRect(0,by,W,S.camY+H-by+2); } } drawEnts(); drawArenaFront(); drawPlatLabels(); drawHiker(); drawPigFx(); drawWorldHazards(); drawBusy(); try{ drawMedBag(); drawInflHud(); }catch(e){} drawFront();
   S.pops.forEach(q=>{ const k=1-q.life/14; ctx.globalAlpha=1-k; ctx.save(); ctx.globalCompositeOperation='lighter'; drop(q.x-S.cam,q.y-k*10,1+k*0.8,'#8EE0FF'); ctx.restore(); }); ctx.globalAlpha=1;
   S.parts.forEach(q=>{ ctx.globalAlpha=Math.min(1,q.life/20); ctx.fillStyle=q.col; if(q.conf){ ctx.save(); ctx.translate(q.x-S.cam,q.y); ctx.rotate(q.rot+=0.2); ctx.fillRect(-2,-1,4,2.4); ctx.restore(); } else if(q.dust){ ctx.beginPath(); ctx.arc(q.x-S.cam,q.y,q.r*(1.4-q.life/40),0,7); ctx.fill(); } else ctx.fillRect(q.x-S.cam,q.y,3,3); }); ctx.globalAlpha=1;
   ctx.font='700 8.5px Figtree, sans-serif'; ctx.textAlign='center';
@@ -7559,6 +7575,10 @@ function skelBody(air,w,o,split){ // split: 0 armado · 1 huesos separados (para
   if(!sp){ ctx.fillStyle='#E2B04A'; rr(-3.4,-31.6,8.4,2.4,1.2); ctx.fill(); ctx.strokeStyle='#E2B04A'; ctx.lineWidth=1.8; ctx.beginPath(); ctx.moveTo(-2,-30.4); ctx.quadraticCurveTo(-6,-29+Math.sin(t*0.2)*1.2,-10,-28.6+Math.sin(t*0.2-1)*1.6); ctx.stroke(); }
   ctx.restore(); }
 { const _hb=hikerBody; hikerBody=function(air,w,color,o={}){ const p=(typeof S!=='undefined'&&S.p)||null;
+    if(p&&p.inflate>0&&!(p.skel>0)&&S.mode!=='title'){ const k=p.inflate, wob=Math.sin(S.t*0.4)*0.04*k; ctx.save(); ctx.translate(0,-20); ctx.scale(1+k*0.75+wob,1+k*0.22-wob); ctx.translate(0,20); _hb(air,w,color,o);
+      ctx.globalCompositeOperation='source-atop'; ctx.fillStyle='rgba(230,70,60,'+(k*0.28)+')'; ctx.fillRect(-30,-60,60,64); ctx.globalCompositeOperation='source-over';
+      ctx.fillStyle='rgba(255,140,130,'+(0.5*k)+')'; ctx.beginPath(); ctx.arc(5.5,-33.5,1.4+k*1.2,0,7); ctx.fill(); if(k>0.7&&(S.t>>2)%2){ ctx.strokeStyle='rgba(255,255,255,.8)'; ctx.lineWidth=0.4; for(const [a,b2] of [[-14,-26],[14,-24],[0,-48]]){ ctx.beginPath(); ctx.moveTo(a*0.8,b2); ctx.lineTo(a*1.15,b2-2); ctx.stroke(); } }
+      ctx.restore(); return; }
     if(!p||!(p.skel>0)||S.mode==='title') return _hb(air,w,color,o);
     const left=p.skel, rec=left<90?1-left/90:0; // últimos 1,5 s: se recompone
     if(rec<=0){ skelBody(air,w,o,0); return; }
@@ -7653,6 +7673,7 @@ drawAnt=function(e,x,y){
   ctx.restore();
   antIcon(ANT_K[antKind(e)],x+9,y-11+Math.sin(S.t*0.08+e.x)*1.5,S.t*0.07+e.x*0.1); };
 Object.assign(TIPS,{jaguar:{t:'El jaguar: un imprevisto grande',g:'Guía 5',x:'El jaguar es el felino más grande de América y vive en las selvas y llanos de Colombia. En el juego es un imprevisto: llega sin avisar. El fondo de emergencia y los seguros te permiten aguantar el golpe.'}});
+Object.assign(TIPS,{saludFin:{t:'Cómo funciona tu salud financiera',g:'Guía 7',x:'La barra de arriba mide tus hábitos. SUBE: ganar plata en el camino (+1 por cada 8 monedas), ahorrar en la alcancía (+3), invertir (+4), pagar deudas, gastos necesarios, vencer jefes y destruir nidos. BAJA: gastos hormiga, compras por impulso, deudas caras, apuestas, estafas y pasivos. Junto a la barra ves cada cambio y su motivo. Si llega a 0 sufres una muerte financiera.'}});
 /* ================= DIPLOMAS v2: diseño de certificado de expedición (cumbre + sendero + parche) ================= */
 // Tokens por ruta: tinta, acento, acento claro, texto, papel, y la paleta de la ilustración (cielo arriba, cielo abajo, sol, 4 planos de montaña lejos→cerca)
 const DIP_ART=[
