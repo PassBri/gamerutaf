@@ -1419,11 +1419,20 @@ function muertePanel(){ const C=S.muerte.causas, li=C.map(c=>`<li><b>${esc(c.k.c
   <h3>Consecuencias en el juego</h3><p>Vuelves al inicio de este mundo, pierdes lo que tenías en mano, tus deudas se juntan en un solo acuerdo de pago y tu DataCrédito baja 100 puntos. Tu diploma también lo tendrá en cuenta.</p>
   <div class="row" style="margin-top:12px"><button class="btn gold" type="button" id="bRevive">Negociar mis deudas y volver a empezar</button></div>`);
   const b=document.getElementById('bRevive'); if(b) b.onclick=muerteRevivir; }
-function drawSaludHud(){ if(!eco||!S.L) return; const s=salud(), x=W-118, y=104, w=90, col=s>=60?'#62C98A':s>=35?'#F2C230':'#EE5A4A';
-  ctx.save(); ctx.fillStyle='rgba(10,20,26,.62)'; rr(x-8,y-2,118,22,8); ctx.fill(); if(S.saludHit>0){ S.saludHit--; ctx.strokeStyle='rgba(238,90,74,'+(S.saludHit/24)+')'; ctx.lineWidth=2; rr(x-8,y-2,118,22,8); ctx.stroke(); }
-  const beat=s<35?1+Math.max(0,Math.sin(S.t*0.25))*0.25:1; ctx.save(); ctx.translate(x+2,y+9); ctx.scale(beat,beat); ctx.fillStyle=col; ctx.beginPath(); ctx.moveTo(0,4); ctx.bezierCurveTo(-7,-1,-4,-7,0,-3); ctx.bezierCurveTo(4,-7,7,-1,0,4); ctx.fill(); ctx.restore();
-  ctx.font='700 6.4px Figtree, sans-serif'; ctx.fillStyle='#E9EEF2'; ctx.fillText('SALUD FINANCIERA',x+10,y+6); ctx.fillStyle='#fff'; ctx.font='800 7px "IBM Plex Mono", monospace'; ctx.textAlign='right'; ctx.fillText(String(s),x+w+16,y+6.2); ctx.textAlign='left';
-  ctx.fillStyle='rgba(255,255,255,.16)'; rr(x+10,y+10,w+6,5,2.5); ctx.fill(); ctx.fillStyle=col; rr(x+10,y+10,Math.max(2,(w+6)*s/100),5,2.5); ctx.fill();
+function drawSaludHud(){ if(!eco||!S.L) return; const s=salud(), col=s>=60?'#62C98A':s>=35?'#F2C230':'#EE5A4A';
+  // barra larga y delgada en el borde superior: siempre a la vista, sin tapar el juego
+  S.saludGhost=S.saludGhost==null?s:S.saludGhost+(s-S.saludGhost)*(S.saludGhost>s?0.04:0.25);
+  const x0=92, x1=W-10, y=3, h=4, w=x1-x0; ctx.save();
+  ctx.globalAlpha=0.9; ctx.fillStyle='rgba(10,20,26,.55)'; rr(6,y-2.5,W-12,h+5,4.5); ctx.fill();
+  ctx.fillStyle='rgba(255,255,255,.12)'; rr(x0,y,w,h,2); ctx.fill();
+  if(S.saludGhost>s+0.5){ ctx.fillStyle='rgba(255,140,120,.75)'; rr(x0,y,w*S.saludGhost/100,h,2); ctx.fill(); }
+  const g=ctx.createLinearGradient(x0,0,x0+w,0); g.addColorStop(0,col); g.addColorStop(1,s>=60?'#9BF0B8':s>=35?'#FFE18A':'#FF8A7A'); ctx.fillStyle=g; rr(x0,y,Math.max(2,w*s/100),h,2); ctx.fill();
+  for(const m of [35,60]){ ctx.fillStyle='rgba(10,20,26,.7)'; ctx.fillRect(x0+w*m/100-0.5,y,1,h); }
+  if(S.saludHit>0){ S.saludHit--; ctx.strokeStyle='rgba(238,90,74,'+(S.saludHit/24)+')'; ctx.lineWidth=1.5; rr(x0-1,y-1,w+2,h+2,3); ctx.stroke(); }
+  if(S.saludUp>0){ S.saludUp--; ctx.strokeStyle='rgba(98,201,138,'+(S.saludUp/20)+')'; ctx.lineWidth=1.2; rr(x0-1,y-1,w+2,h+2,3); ctx.stroke(); }
+  const beat=s<35?1+Math.max(0,Math.sin(S.t*0.25))*0.25:1; ctx.save(); ctx.translate(14,y+2.2); ctx.scale(0.62*beat,0.62*beat); ctx.fillStyle=col; ctx.beginPath(); ctx.moveTo(0,4); ctx.bezierCurveTo(-7,-1,-4,-7,0,-3); ctx.bezierCurveTo(4,-7,7,-1,0,4); ctx.fill(); ctx.restore();
+  // etiqueta pequeña que solo se hace notar al cambiar o en riesgo
+  const loud=S.saludHit>0||S.saludUp>0||s<35; ctx.globalAlpha=loud?0.95:0.55; ctx.font='800 5.4px Figtree, sans-serif'; ctx.fillStyle=loud?col:'#E9EEF2'; ctx.fillText('SALUD FINANCIERA',21,y+4.2); ctx.font='800 5.6px "IBM Plex Mono", monospace'; ctx.fillStyle=loud?col:'#fff'; ctx.textAlign='right'; ctx.fillText(String(s),x0-4,y+4.3); ctx.textAlign='left';
   ctx.restore();
   if(s<35&&S.mode==='play'&&!reduced){ const a=(0.12+Math.max(0,Math.sin(S.t*0.12))*0.16)*(1-s/35); const g=ctx.createRadialGradient(W/2,H/2,H*0.35,W/2,H/2,W*0.62); g.addColorStop(0,'rgba(200,30,30,0)'); g.addColorStop(1,'rgba(200,30,30,'+a+')'); ctx.fillStyle=g; ctx.fillRect(0,0,W,H); } }
 function drawMuerteFx(){ const M=S.muerte; if(!M||S.mode!=='muerte') return; const t=++M.t, p=S.p;
@@ -2997,7 +3006,7 @@ function update(){
     if(e.t==='parca'){ parcaUpdate(e,p,prevBottom); continue; }
     if(e.t==='parcaJefe'){ parcaJefeUpdate(e,p,prevBottom); continue; }
     if(e.t==='jefeM'){ jefeMUpdate(e,p,prevBottom); continue; }
-    if(e.t==='nido'){ nidoUpdate(e,p,prevBottom); continue; } if(e.t==='mama'){ mamaUpdate(e,p); continue; } if(e.t==='dian'){ dianUpdate(e,p); continue; } if(e.t==='dano'){ danoUpdate(e,p); continue; } if(e.t==='restaura'){ restauraUpdate(e,p); continue; } if(e.t==='atajo'){ atajoUpdate(e,p); continue; }
+    if(e.t==='nido'){ nidoUpdate(e,p,prevBottom); continue; } if(e.t==='mama'){ mamaUpdate(e,p); continue; } if(e.t==='caso'){ casoUpdate(e,p); continue; } if(e.t==='dian'){ dianUpdate(e,p); continue; } if(e.t==='dano'){ danoUpdate(e,p); continue; } if(e.t==='restaura'){ restauraUpdate(e,p); continue; } if(e.t==='atajo'){ atajoUpdate(e,p); continue; }
     if(e.t==='trading'){ tradingUpdate(e,p); continue; }
     if(e.t==='lugar'){ lugarUpdate(e,p); continue; }
     if(e.t==='camp'&&S.li===7&&parcaCampGate(e,p)) continue;
@@ -3923,7 +3932,7 @@ function drawEnts(only){
     else if(e.t==='negocio') drawNegocio(e,x,y);
     else if(e.t==='parca'||e.t==='parcaJefe') drawParca(e,x,y);
     else if(e.t==='jefeM') drawJefeM(e,x,y);
-    else if(e.t==='nido') drawNido(e,x,y); else if(e.t==='mama') drawMama(e,x,y); else if(e.t==='dian') drawDian(e,x,y); else if(e.t==='dano') drawDano(e,x,y); else if(e.t==='restaura') drawRestaura(e,x,y); else if(e.t==='atajo') drawAtajo(e,x,y);
+    else if(e.t==='nido') drawNido(e,x,y); else if(e.t==='mama') drawMama(e,x,y); else if(e.t==='caso') drawCaso(e,x,y); else if(e.t==='dian') drawDian(e,x,y); else if(e.t==='dano') drawDano(e,x,y); else if(e.t==='restaura') drawRestaura(e,x,y); else if(e.t==='atajo') drawAtajo(e,x,y);
     else if(e.t==='trading') drawTrading(e,x,y);
     else if(e.t==='lugar') drawLugar(e,x,y);
     else if(e.t==='poder') drawPoder(e,x,y);
@@ -6175,7 +6184,7 @@ function drawAtajo(e,x,y){ const D=DANO[e.k], fy=y+e.h, cx=x+e.w/2; if(e.used) r
   ctx.fillStyle='#6A4A2A'; rr(x+2,fy-14,e.w-4,14,2); ctx.fill(); ctx.strokeStyle='#3A2414'; ctx.lineWidth=1; ctx.strokeRect(x+2,fy-14,e.w-4,14);
   ctx.fillStyle='#F2C230'; ctx.font='900 10px Figtree, sans-serif'; ctx.textAlign='center'; ctx.fillText('$',cx,fy-4);
   ctx.font='800 6px Figtree, sans-serif'; const tw=ctx.measureText(D.mal[0]).width+10; ctx.fillStyle='rgba(60,10,10,.85)'; rr(cx-tw/2,fy-34,tw,12,3); ctx.fill(); ctx.fillStyle='#FFD08A'; ctx.fillText(D.mal[0],cx,fy-25.5); ctx.textAlign='left'; }
-function drawVerdeHud(){ if(!eco||!S.L||(S.li<8&&verde()>=100)) return;  const v=verde(), x=W-118, y=130, w=90, col=v>=70?'#62C98A':v>=40?'#F2C230':'#EE5A4A';
+function drawVerdeHud(){ if(!eco||!S.L||(S.li<8&&verde()>=100)) return;  const v=verde(), x=W-118, y=104, w=90, col=v>=70?'#62C98A':v>=40?'#F2C230':'#EE5A4A';
   ctx.save(); ctx.fillStyle='rgba(10,20,26,.62)'; rr(x-8,y-2,118,22,8); ctx.fill(); if(S.verdeHit>0){ S.verdeHit--; ctx.strokeStyle=S.verdeD>0?'rgba(98,201,138,'+(S.verdeHit/24)+')':'rgba(238,120,74,'+(S.verdeHit/24)+')'; ctx.lineWidth=2; rr(x-8,y-2,118,22,8); ctx.stroke(); }
   ctx.fillStyle='#4E9A5A'; ctx.beginPath(); ctx.ellipse(x+2,y+9,4,6,0.6,0,7); ctx.fill(); ctx.strokeStyle='#BFF5CF'; ctx.lineWidth=.6; ctx.beginPath(); ctx.moveTo(x-1,y+13); ctx.lineTo(x+5,y+5); ctx.stroke();
   ctx.font='700 6.4px Figtree, sans-serif'; ctx.fillStyle='#fff'; ctx.fillText('HUELLA VERDE',x+10,y+6); ctx.textAlign='right'; ctx.fillText(String(v),x+w+16,y+6); ctx.textAlign='left';
@@ -7288,6 +7297,176 @@ function drawMama(e,x,y){ const cx=x+e.w/2, fy=y+e.h;
 function drawMedBag(){ if(!S.medBag||!S.p||!S.L) return; const p=S.p, x=p.x+p.w/2-S.cam+p.face*9, y=p.y+p.h*0.55+Math.sin(S.t*0.2)*0.8;
   ctx.save(); ctx.translate(x,y); ctx.fillStyle='#F4F4F0'; rr(-5,-4,10,10,1.5); ctx.fill(); ctx.strokeStyle='#C9CFD4'; ctx.lineWidth=.8; ctx.beginPath(); ctx.arc(0,-4,2.6,Math.PI,0); ctx.stroke(); ctx.fillStyle='#2E9A5A'; ctx.fillRect(-1,-1,2,6); ctx.fillRect(-3,1,6,2); ctx.restore();
   const M=S.L.ents.find(e=>e.t==='mama'&&!e.done); if(M){ const sx=M.x+M.w/2-S.cam; if(sx>W-10||sx<10){ const right=sx>W-10, ax=right?W-16:16, ay=Math.max(S.camY+40,Math.min(S.camY+H-40,M.y)); ctx.save(); ctx.fillStyle='rgba(10,20,26,.85)'; rr(right?ax-62:ax-4,ay-9,66,18,8); ctx.fill(); ctx.fillStyle='#FFE18A'; ctx.font='800 8px Figtree, sans-serif'; ctx.textAlign=right?'right':'left'; ctx.fillText(right?'Tu mamá ▶':'◀ Tu mamá',right?ax:ax+2,ay+3); ctx.restore(); ctx.textAlign='left'; } } }
+/* ================= DECISIONES DEL CAMINO: un caso de la vida real en cada mundo ================= */
+// fx: hand, emb, salud, verde, salario (+/−) · debt:[nombre,saldo,cuota,tipo] · shock:[nombre,costo,quincenas] · busy:[cuadros,texto] · pay:[n,texto] · risk:[prob,n,texto] · learn
+const CASOS=[
+ // Ruta 1 · La Montaña
+ {npc:'guia',t:'Dos ofertas de trabajo',x:'Te ofrecen jornal en la cosecha (pagan hoy) o entrar de aprendiz a un taller (no pagan hoy, pero aprendes un oficio).',o:[
+  {l:'Jornal en la cosecha',d:'3 monedas hoy',fx:{hand:3},r:'Plata rápida para hoy. Sirve, pero no sube tu ingreso de mañana.'},
+  {l:'Aprendiz en el taller',d:'Hoy nada, pero +1 de sueldo para siempre',fx:{salario:1,busy:[110,'Aprendiendo el oficio'],salud:4},r:'Invertiste tiempo en aprender: tu ingreso sube cada quincena. Eso es capital humano.'},
+  {l:'Esperar algo mejor sin hacer nada',d:'No ganas nada',fx:{salud:-4},r:'Mientras esperas, los gastos siguen. Cualquier ingreso honesto es un primer paso.'}]},
+ {npc:'abuela',t:'La tienda de la esquina',x:'El tendero te ofrece fiado: “llévese el mecato y me paga la otra quincena”.',o:[
+  {l:'Llevar fiado',d:'Debes 4 desde ya',fx:{debt:['Fiado en la tienda',4,1,'consumo']},r:'El fiado también es deuda: lo pequeño se acumula sin que lo notes.'},
+  {l:'Anotar y comprar solo lo necesario',d:'Gastas 1',fx:{hand:-1,salud:4,learn:'presupuesto5030'},r:'Anotar tus gastos es el primer paso para controlarlos.'},
+  {l:'Comprar todo de contado',d:'Gastas 4 en antojos',fx:{hand:-4,salud:-3,learn:'ant'},r:'No quedaste debiendo, pero te gastaste la quincena en gastos hormiga.'}]},
+ {npc:'asesor',t:'La prima de mitad de año',x:'Te llegó una prima de 6 monedas. ¿Qué haces con ella?',o:[
+  {l:'Toda a la alcancía',d:'+6 de ahorro',fx:{emb:6,salud:5},r:'Págate primero: tu fondo de emergencia creció de una.'},
+  {l:'Mitad ahorro y mitad gusto',d:'+3 alcancía, +3 en mano',fx:{emb:3,hand:3,salud:3},r:'Un equilibrio sano: disfrutas sin olvidar tu meta.'},
+  {l:'Estrenar celular',d:'Se va toda la prima',fx:{salud:-5,learn:'vitrinaL'},r:'El celular pierde valor el día que lo sacas de la caja: era un pasivo.'}]},
+ {npc:'guia',t:'¿Moto o máquina?',x:'Con tus ahorros podrías dar la cuota inicial de una moto o comprar una máquina para trabajar.',o:[
+  {l:'Moto a crédito',d:'Debes 10, cuota de 2',fx:{debt:['Crédito de la moto',10,2,'consumo'],salud:-3,learn:'pasivo'},r:'La moto te cobra cuota, gasolina y SOAT cada quincena: es un pasivo.'},
+  {l:'Máquina para trabajar',d:'Pagas 4 y ganas +1 cada quincena',fx:{hand:-4,salario:1,salud:4,learn:'activo'},r:'Un activo pone plata en tu bolsillo: esa es la prueba del activo real.'},
+  {l:'Seguir ahorrando',d:'No compras nada todavía',fx:{emb:1,salud:1},r:'Decidir con calma también es una buena decisión.'}]},
+ {npc:'asesor',t:'La inversión milagrosa',x:'Un amigo te asegura que su “negocio” paga 30 % al mes. “Métale todo, es seguro”.',o:[
+  {l:'Meter toda tu plata',d:'Arriesgas todo lo que tienes en mano',fx:{handAll:-1,salud:-10,learn:'pyr'},r:'Era una pirámide: los primeros cobran con la plata de los últimos. Perdiste todo.'},
+  {l:'Revisar si está vigilado',d:'Pierdes tiempo, no plata',fx:{busy:[100,'Consultando la lista de la Superfinanciera'],salud:5,learn:'pyr'},r:'No estaba vigilado. Si promete mucho y rápido, desconfía.'},
+  {l:'Meter un poquito “para probar”',d:'Arriesgas 2',fx:{hand:-2,salud:-3},r:'Perdiste 2. En una pirámide no hay cantidad segura.'}]},
+ {npc:'asesor',t:'La tarjeta preaprobada',x:'El banco te llama: “Tiene una tarjeta de crédito preaprobada, sin cuota de manejo el primer mes”.',o:[
+  {l:'Aceptarla y estrenar',d:'Debes 6 con intereses',fx:{debt:['Tarjeta preaprobada',6,1,'tarjeta'],salud:-3,learn:'tarjetaL'},r:'Lo “gratis” era solo el primer mes. Ahora pagas intereses y cuota de manejo.'},
+  {l:'Rechazarla por ahora',d:'Sin deudas',fx:{salud:4},r:'Una tarjeta solo conviene si pagas el total cada mes y la necesitas.'},
+  {l:'Aceptarla solo para emergencias',d:'La guardas sin usar',fx:{salud:1,learn:'tarjetaL'},r:'Puede servir, pero revisa la cuota de manejo y nunca la uses como sueldo.'}]},
+ {npc:'abuela',t:'¿Asegurar la casa?',x:'Te ofrecen un seguro de hogar por 2 monedas. Doña Rosa dice que el año pasado se inundó media vereda.',o:[
+  {l:'Tomar el seguro',d:'Pagas 2',fx:{hand:-2,salud:5,learn:'seguros'},r:'Un pago pequeño y fijo te protege de una pérdida grande.'},
+  {l:'Arriesgarse',d:'Ahorras 2… o pierdes 6',fx:{risk:[0.5,6,'Se inundó la casa y no tenías seguro']},r:'Sin seguro, el riesgo es todo tuyo.'},
+  {l:'Ahorrar esas 2 en la alcancía',d:'+2 al fondo de emergencia',fx:{hand:-2,emb:2,salud:2},r:'El fondo ayuda, pero un desastre grande puede superarlo. Seguro y fondo se complementan.'}]},
+ {npc:'mentor',t:'Tu sobrino pide consejo',x:'Tu sobrino ganó su primer sueldo y no sabe qué hacer con él.',o:[
+  {l:'Enseñarle a hacer presupuesto',d:'Le dedicas tiempo',fx:{busy:[90,'Enseñándole a hacer su presupuesto'],salud:8,learn:'legado'},r:'Enseñar es el mejor legado: así se rompe el ciclo de las deudas.'},
+  {l:'Prestarle plata sin acuerdo',d:'Le das 4',fx:{hand:-4,salud:-3},r:'Prestar sin acuerdo daña la plata y la relación. Mejor enséñale a pescar.'},
+  {l:'Decirle que no es tu problema',d:'Nada',fx:{salud:-2},r:'La libertad financiera también es ayudar a otros a subir.'}]},
+ // Ruta 2 · La Expedición
+ {npc:'asesor',t:'Dos deudas a la vez',x:'Tienes una tarjeta al 28 % anual y un préstamo de un amigo sin intereses. Te sobran 3 monedas.',o:[
+  {l:'Abonar a la más cara (la tarjeta)',d:'Método avalancha',fx:{hand:-3,salud:6,learn:'bolaNieve'},r:'Atacar primero la deuda más cara ahorra intereses.'},
+  {l:'Pagar solo los mínimos',d:'Te quedas con las 3',fx:{salud:-4},r:'Pagar el mínimo alarga la deuda años y la vuelve más cara.'},
+  {l:'Pedir otro préstamo para pagarlas',d:'Debes 6 más',fx:{debt:['Préstamo para tapar deudas',6,2,'consumo'],salud:-8},r:'Tapar una deuda con otra solo la agranda.'}]},
+ {npc:'profe',t:'¿Con o sin factura?',x:'Un cliente te ofrece pagarte más si no le das factura “y así nadie se entera”.',o:[
+  {l:'Con factura y declarar',d:'Ganas 3 y cumples',fx:{hand:3,salud:4,learn:'impuestos'},r:'La formalidad te abre créditos, contratos grandes y te protege de multas.'},
+  {l:'Sin factura',d:'Ganas 4, con riesgo de multa',fx:{hand:4,salud:-5,risk:[0.5,5,'Multa por evasión']},r:'Evadir parece ganancia hasta que llega la multa.'},
+  {l:'No venderle',d:'Nada',fx:{},r:'Perdiste la venta. Podías venderle con factura.'}]},
+ {npc:'guia',t:'Una quincena sin pedidos',x:'Este mes no te salió trabajo y el arriendo se vence.',o:[
+  {l:'Usar el fondo de emergencia',d:'Sacas 3 de la alcancía',fx:{emb:-3,hand:3,salud:3},r:'Para esto existe el fondo: te sostuvo sin endeudarte.'},
+  {l:'Pedir un gota a gota',d:'Debes 6 con cobros diarios',fx:{debt:['Gota a gota del arriendo',6,2,'gota']},r:'El gota a gota cobra intereses altísimos: la escasez se vuelve deuda.'},
+  {l:'Recortar gastos y vender lo que no usas',d:'Ganas 2',fx:{hand:2,salud:5,learn:'escasez'},r:'Bajar gastos y convertir pasivos en plata es resistir la escasez.'}]},
+ {npc:'asesor',t:'El cliente que paga a 90 días',x:'Un supermercado quiere todo tu pedido, pero te paga en 3 meses.',o:[
+  {l:'Aceptar todo a crédito',d:'Vendes mucho, cobras tarde',fx:{shock:['Flujo de caja negativo: pagaste insumos sin cobrar',1,2]},r:'Vender no es cobrar: te quedaste sin efectivo para operar.'},
+  {l:'Pedir anticipo del 50 %',d:'Recibes 3 ya',fx:{hand:3,salud:5,learn:'flujoCaja'},r:'Con anticipo, tu flujo de caja sigue positivo.'},
+  {l:'No venderle',d:'Nada',fx:{},r:'Se puede negociar: el anticipo era la salida.'}]},
+ {npc:'abuela',t:'Seguro exequial y de salud',x:'La cooperativa ofrece un seguro familiar por 2 monedas.',o:[
+  {l:'Tomarlo',d:'Pagas 2',fx:{hand:-2,salud:5,learn:'seguros'},r:'Protegerte de lo que no controlas también es inteligencia financiera.'},
+  {l:'No tomarlo',d:'Te quedas con las 2',fx:{risk:[0.4,5,'Gastos médicos sin seguro']},r:'Sin seguro, cualquier imprevisto sale de tu bolsillo.'},
+  {l:'Preguntar qué cubre antes de firmar',d:'Pierdes un rato',fx:{busy:[80,'Leyendo la póliza'],hand:-2,salud:6},r:'Leer la póliza evita sorpresas: sabes qué cubre y qué no.'}]},
+ {npc:'profe',t:'¿CDT o celular nuevo?',x:'Tienes 4 monedas libres. En el páramo aprendiste del interés compuesto.',o:[
+  {l:'Un CDT a largo plazo',d:'Las 4 crecen en la alcancía',fx:{hand:-4,emb:5,salud:5,learn:'compuesto'},r:'El interés compuesto premia la paciencia: tus 4 ya son 5.'},
+  {l:'El celular nuevo',d:'Se van las 4',fx:{hand:-4,salud:-4},r:'Hoy lo disfrutas, mañana vale la mitad.'},
+  {l:'La cripto que vi en TikTok',d:'Arriesgas 4',fx:{hand:-4,salud:-5,learn:'fomo'},r:'Comprar por moda sin entender es apostar, no invertir.'}]},
+ {npc:'asesor',t:'Tu pensión',x:'Te proponen hacer aportes voluntarios a pensión con beneficio tributario.',o:[
+  {l:'Aportar un poco cada quincena',d:'3 hoy a tu futuro',fx:{hand:-3,emb:4,salud:5,learn:'pensionV'},r:'Lo que aportas hoy, con interés compuesto, es tu tranquilidad de mañana.'},
+  {l:'Lo dejo para después',d:'Nada',fx:{salud:-3},r:'Cada año que esperas, tu pensión será más pequeña.'},
+  {l:'Retirar las cesantías para un viaje',d:'Ganas 4 hoy',fx:{hand:4,salud:-6},r:'Las cesantías son para vivienda, estudio o desempleo: gastarlas en viajes te deja sin respaldo.'}]},
+ {npc:'mentor',t:'La herencia de la abuela',x:'Recibiste 8 monedas de herencia.',o:[
+  {l:'Diversificar: ahorro, CDT y negocio',d:'+4 alcancía y +1 de ingreso',fx:{emb:4,salario:1,salud:6,learn:'canasta'},r:'Repartir en varios activos protege y hace crecer el legado.'},
+  {l:'Hacer una fiesta inolvidable',d:'Se va todo',fx:{salud:-8},r:'La fiesta se olvida; la herencia no vuelve.'},
+  {l:'Prestarla a un primo sin papeles',d:'Quizás no vuelva',fx:{salud:-4},r:'Prestar sin acuerdo escrito suele terminar en plata perdida y familia peleada.'}]},
+ // Ruta 3 · El Colapso
+ {npc:'asesor',t:'Rumor de “corralito”',x:'Todos dicen que los bancos van a cerrar y la gente corre a sacar su plata.',o:[
+  {l:'Sacar todo y guardarlo en casa',d:'Tu ahorro queda en efectivo',fx:{embToHand:1,salud:-5,risk:[0.5,4,'Te robaron el efectivo guardado en casa']},r:'El efectivo en casa se pierde, se roba o se daña.'},
+  {l:'Dejarla en la entidad vigilada',d:'Tus depósitos tienen seguro',fx:{salud:5},r:'Los depósitos en entidades vigiladas tienen seguro de depósitos: el pánico es peor que el rumor.'},
+  {l:'Comprar dólares en la calle',d:'Cambias 3',fx:{hand:-3,salud:-6},r:'Los billetes eran falsos. En la crisis abundan las estafas.'}]},
+ {npc:'abuela',t:'El vecino lo perdió todo',x:'La erupción dejó a tu vecino sin casa. Te pide quedarse unos días.',o:[
+  {l:'Recibirlo y repartir gastos',d:'Un poco más de gasto',fx:{shock:['Gastos compartidos con tu vecino',1,1],salud:6},r:'La comunidad es un activo: hoy por él, mañana por ti.'},
+  {l:'Cobrarle arriendo al triple',d:'Ganas 3',fx:{hand:3,salud:-8},r:'Aprovecharse de la desgracia ajena rompe la confianza que te va a sostener.'},
+  {l:'Ayudarle a pedir el subsidio oficial',d:'Pierdes un rato',fx:{busy:[100,'Acompañando a tu vecino a la alcaldía'],salud:5},r:'Las ayudas oficiales no se cobran: acompañar también es ayudar.'}]},
+ {npc:'guia',t:'Reparar la casa',x:'Un maestro sin licencia cobra la mitad que un ingeniero.',o:[
+  {l:'El barato sin licencia',d:'Pagas 2',fx:{hand:-2,risk:[0.5,4,'La reparación se cayó con la réplica']},r:'Lo barato sale caro si hay que hacerlo dos veces.'},
+  {l:'Con licencia y por etapas',d:'Pagas 3',fx:{hand:-3,salud:5,learn:'reconstruccion'},r:'Por etapas y bien hecho: sin deudas impagables y sin sorpresas.'},
+  {l:'Esperar la siguiente quincena',d:'Nada por ahora',fx:{salud:-1},r:'Esperar puede ser prudente, pero el daño crece.'}]},
+ {npc:'profe',t:'Tus documentos',x:'Viene otra creciente. ¿Qué haces con tus documentos?',o:[
+  {l:'Copias digitales en la nube',d:'Gratis',fx:{salud:5},r:'Con copias digitales puedes reclamar seguros y ayudas aunque pierdas el papel.'},
+  {l:'Nada, ya veremos',d:'Nada',fx:{risk:[0.5,3,'Perdiste los documentos y pagaste el trámite']},r:'Sin documentos todo trámite cuesta más.'},
+  {l:'Pagar a un tramitador',d:'Pagas 3',fx:{hand:-3,salud:-3},r:'Los trámites oficiales son casi gratis: el tramitador es un gasto innecesario.'}]},
+ {npc:'asesor',t:'Te pagaron en plena hiperinflación',x:'Mañana todo costará más.',o:[
+  {l:'Comprar hoy lo esencial no perecedero',d:'Gastas 2 en comida',fx:{hand:-2,salud:4,learn:'hiperinflacion'},r:'Cuando todo sube, lo necesario se compra a tiempo.'},
+  {l:'Guardar los billetes',d:'Se derriten',fx:{hand:-3,salud:-2},r:'En hiperinflación, el efectivo guardado pierde valor cada día.'},
+  {l:'Especular revendiendo arroz',d:'Ganas 3',fx:{hand:3,salud:-8},r:'Especular con la necesidad rompe la comunidad que te sostiene.'}]},
+ {npc:'guia',t:'El agua está contaminada',x:'El pozo del pueblo huele raro.',o:[
+  {l:'Comprar un filtro',d:'Pagas 2',fx:{hand:-2,salud:5},r:'Prevenir una enfermedad cuesta menos que curarla.'},
+  {l:'Tomarla igual',d:'Gratis… por ahora',fx:{risk:[0.7,4,'Te enfermaste por el agua contaminada'],salud:-3},r:'El agua contaminada sale muy cara.'},
+  {l:'Esperar el carrotanque oficial',d:'Haces fila',fx:{busy:[110,'Haciendo fila por agua potable'],salud:3},r:'Paciencia y lo esencial primero.'}]},
+ {npc:'profe',t:'Madera quemada barata',x:'Venden madera del bosque calcinado muy barata para revender.',o:[
+  {l:'Comprar para revender',d:'Ganas 3',fx:{hand:3,verde:-10,salud:-5},r:'Esa madera era de tala ilegal: el bosque tarda décadas en volver.'},
+  {l:'Unirte a la brigada de reforestación',d:'Trabajo pagado',fx:{salario:1,verde:8,salud:4,learn:'negocioVerde'},r:'Restaurar también es un ingreso.'},
+  {l:'No participar',d:'Nada',fx:{},r:'Al menos no empeoraste el daño.'}]},
+ {npc:'mentor',t:'Trueque en la tierra de nadie',x:'En el mercado de trueque nadie revisa la balanza.',o:[
+  {l:'Trueque justo',d:'Cambias lo que sobra por lo que falta',fx:{salud:5},r:'La confianza es la moneda más valiosa en la crisis.'},
+  {l:'Engañar en el peso',d:'Ganas 3',fx:{hand:3,salud:-8},r:'Ganaste hoy y perdiste la confianza de todos.'},
+  {l:'No participar',d:'Nada',fx:{salud:-1},r:'Solo se resiste peor que en comunidad.'}]},
+ // Ruta 4 · La Reconstrucción
+ {npc:'asesor',t:'Subsidio de vivienda',x:'Abrieron convocatoria de subsidio para reconstruir.',o:[
+  {l:'Postularte con papeles en regla',d:'Haces el trámite',fx:{busy:[120,'Postulándote al subsidio oficial'],emb:5,salud:5},r:'Te salió el subsidio: los trámites oficiales no se pagan.'},
+  {l:'Pagarle a un “gestor”',d:'Pagas 4',fx:{hand:-4,salud:-6},r:'Era un estafador: las ayudas oficiales no se venden.'},
+  {l:'No postularte',d:'Nada',fx:{salud:-1},r:'Perdiste una ayuda que era tuya por derecho.'}]},
+ {npc:'guia',t:'Empleo formal o informal',x:'Te ofrecen dos trabajos: uno formal con prestaciones y otro informal que paga un poco más hoy.',o:[
+  {l:'El formal',d:'+1 de sueldo, salud y pensión',fx:{salario:1,salud:5,learn:'formal'},r:'Con prestaciones tienes salud, pensión y cesantías: un piso para crecer.'},
+  {l:'El informal',d:'+4 hoy',fx:{hand:4,salud:-3},r:'Más plata hoy, pero sin protección si te enfermas o envejeces.'},
+  {l:'Seguir en el rebusque',d:'+1 hoy',fx:{hand:1},r:'El rebusque sostiene, pero no construye.'}]},
+ {npc:'profe',t:'El río volvió a tener peces',x:'Los vecinos están pescando.',o:[
+  {l:'Pescar respetando la talla mínima',d:'Ganas 2',fx:{hand:2,verde:3,salud:3},r:'Así hay pesca hoy y mañana.'},
+  {l:'Pescar con dinamita',d:'Ganas 5',fx:{hand:5,verde:-12,salud:-6},r:'Acabaste con los peces de mañana y con la confianza del pueblo.'},
+  {l:'Vender el pescado de otros sin permiso',d:'Ganas 3',fx:{hand:3,salud:-6},r:'Eso es robo, aunque parezca negocio.'}]},
+ {npc:'asesor',t:'Plata para el vivero',x:'Necesitas 4 monedas para ampliar el vivero.',o:[
+  {l:'Microcrédito de la cooperativa',d:'Debes 4 con tasa justa y +1 de ingreso',fx:{debt:['Microcrédito de la cooperativa',4,1,'consumo'],salario:1,salud:2},r:'Un crédito para producir puede ser bueno si la cuota cabe en tu flujo.'},
+  {l:'Gota a gota',d:'Debes 8 con cobros diarios',fx:{debt:['Gota a gota para el vivero',8,2,'gota']},r:'El gota a gota se come la ganancia del negocio.'},
+  {l:'Ahorrar unas quincenas primero',d:'Nada por ahora',fx:{emb:1,salud:2},r:'Crecer con ahorro propio es más lento pero sin riesgo.'}]},
+ {npc:'guia',t:'Se dañó la nevera',x:'La nevera del negocio dejó de enfriar.',o:[
+  {l:'Repararla con garantía',d:'Pagas 2',fx:{hand:-2,salud:4,learn:'economiaCircular'},r:'Reparar antes que comprar nuevo: economía circular.'},
+  {l:'Una nueva a cuotas',d:'Debes 8',fx:{debt:['Nevera nueva a cuotas',8,2,'tarjeta']},r:'Nueva, sí, pero con deuda por algo que se arreglaba.'},
+  {l:'Botar la vieja en el río',d:'Gratis',fx:{verde:-10,salud:-4},r:'Los electrodomésticos botados envenenan el agua de todos.'}]},
+ {npc:'abuela',t:'Asamblea de la cooperativa',x:'Hoy se vota si se hace auditoría a las cuentas del fondo.',o:[
+  {l:'Ir y votar por la auditoría',d:'Pierdes un rato',fx:{busy:[80,'En la asamblea de la cooperativa'],salud:6,learn:'cooperativa'},r:'Las cuentas claras cuidan la plata de todos.'},
+  {l:'No ir',d:'Nada',fx:{salud:-2},r:'Si nadie vigila, la plata común se pierde.'},
+  {l:'Vender tu voto',d:'Ganas 2',fx:{hand:2,salud:-8},r:'Vendiste la confianza de toda la comunidad por 2 monedas.'}]},
+ {npc:'asesor',t:'Pedido grande del exterior',x:'Un comprador extranjero quiere 200 libras de café.',o:[
+  {l:'Aceptar con contrato y anticipo',d:'+4 hoy y +1 de ingreso',fx:{hand:4,salario:1,salud:5,learn:'comercioJusto'},r:'Contrato, anticipo y precio justo: así crece un negocio.'},
+  {l:'Aceptar sin contrato',d:'Te arriesgas',fx:{risk:[0.5,4,'El comprador nunca pagó'],hand:2},r:'Sin contrato no hay cómo cobrar.'},
+  {l:'Rechazar por miedo',d:'Nada',fx:{salud:-1},r:'El miedo también tiene costo: era una buena oportunidad bien negociada.'}]},
+ {npc:'mentor',t:'Los jóvenes del barrio',x:'Te piden que les enseñes lo que aprendiste en la Ruta Financiera.',o:[
+  {l:'Dar un taller gratis de finanzas',d:'Le dedicas tiempo',fx:{busy:[90,'Dando el taller de finanzas'],salud:8,learn:'pazLegado'},r:'Tu legado es que otros no repitan el colapso.'},
+  {l:'Cobrarles caro',d:'Ganas 3',fx:{hand:3,salud:-3},r:'Enseñar también puede ser negocio, pero no a costa de quien no tiene.'},
+  {l:'No tengo tiempo',d:'Nada',fx:{salud:-2},r:'Lo que no se enseña, se olvida.'}]}];
+function addCaso(L,li){ if(!L||!CASOS[li]) return; const J=L.ents.find(e=>e.t==='jefeM'), xmax=J?J.x-24*T:L.w*T*0.8;
+  for(let c=Math.floor(L.w*0.44);c<Math.floor(L.w*0.44)+80&&c<L.w-4;c++){ const s=L.surf[c]; if(s==null||s<0||c*T>xmax) continue; if(L.surf[c+1]!==s||L.surf[c-1]!==s) continue;
+    if(L.ents.some(e=>e.t!=='drop'&&e.t!=='coin'&&Math.abs(e.x-c*T)<4*T&&Math.abs(e.y-s*T)<5*T)) continue;
+    L.ents.push({t:'caso',x:c*T,y:s*T-30,w:20,h:30,k:li,used:false,dir:-1,tt:0}); return; } }
+{ const _bl2=buildLevel; buildLevel=function(li){ const L=_bl2(li); try{ addCaso(L,li); }catch(e){} return L; }; }
+function casoFx(fx){ const p=S.p, out=[];
+  if(fx.handAll){ const l=eco.hand; eco.hand=0; if(l) logD('Pérdida','Inversión milagrosa (pirámide)',-l); }
+  if(fx.embToHand){ const m=eco.emb; eco.emb=0; eco.hand=Math.min(cap(),eco.hand+m); }
+  if(fx.hand){ if(fx.hand>0){ eco.hand=Math.min(cap(),eco.hand+fx.hand); logD('Ingreso','Decisión del camino',fx.hand); } else { const v=Math.min(-fx.hand,eco.hand); eco.hand-=v; logD('Gasto','Decisión del camino',-v); } }
+  if(fx.emb){ if(fx.emb>0){ eco.emb+=fx.emb; eco.stats.saved+=fx.emb; logD('Ahorro','Decisión del camino',fx.emb); } else { const v=Math.min(-fx.emb,eco.emb); eco.emb-=v; } }
+  if(fx.salario){ eco.salario=(eco.salario||0)+fx.salario; }
+  if(fx.verde) verdeAdd(fx.verde,fx.verde>0?'decisión verde':'decisión que daña');
+  if(fx.debt) addDebt(...fx.debt);
+  if(fx.shock) addShock(...fx.shock);
+  if(fx.risk){ if(Math.random()<fx.risk[0]){ if(fx.risk[1]>0) payEvent(fx.risk[1],fx.risk[2],'decision'); out.push('mal'); } else out.push('bien'); }
+  if(fx.salud) saludAdd(fx.salud,fx.salud>0?'buena decisión':'mala decisión');
+  if(fx.learn) learn(fx.learn);
+  if(fx.busy) busy(fx.busy[0],fx.busy[1]);
+  return out; }
+function casoOpen(e){ const C=CASOS[e.k]; if(!C) return; S.mode='caso';
+  openOv(`<div class="eyebrow">Decisión del camino · Mundo ${e.k+1}</div><h2>${esc(C.t)}</h2><p>${esc(C.x)}</p>
+   <div class="mopts">${C.o.map((o,i)=>`<button class="mopt" data-c="${i}"><b>${esc(o.l)}</b><span>${esc(o.d)}</span></button>`).join('')}</div>`);
+  box.querySelectorAll('[data-c]').forEach(b=>b.onclick=()=>{ const i=+b.dataset.c, o=C.o[i]; closeOv(); S.mode='play'; e.used=true; e.pick=i; eco.casos=eco.casos||[]; eco.casos[e.k]=i;
+    const res=casoFx(o.fx||{}); const good=(o.fx&&o.fx.salud||0)>0; snd(good?'gate':'bad'); if(good) confetti(e.x+10,e.y,12);
+    toast(o.l,o.r+(res.includes('mal')&&o.fx.risk&&o.fx.risk[2]?' Esta vez pasó: '+o.fx.risk[2].toLowerCase()+'.':res.includes('bien')?' Esta vez tuviste suerte.':'')); }); }
+function casoUpdate(e,p){ e.tt++; e.dir=p.x>e.x?1:-1; e.near=Math.abs((p.x+p.w/2)-(e.x+e.w/2))<120&&Math.abs((p.y+p.h)-(e.y+e.h))<90;
+  if(!e.used&&!S.busy&&overlap(p,{x:e.x-4,y:e.y,w:e.w+8,h:e.h})) casoOpen(e); }
+function drawCaso(e,x,y){ const C=CASOS[e.k], cx=x+e.w/2, fy=y+e.h, kind=C.npc||'guia', N=NPCS[kind]||{col:'#8E5A9A'};
+  ctx.fillStyle='rgba(0,0,0,.22)'; ctx.beginPath(); ctx.ellipse(cx,fy,10,2.4,0,0,7); ctx.fill();
+  rigDraw(e,cx,fy,0.82,Object.assign({top:N.col,throws:0},LOOK_NPC[kind]||{}),16,{wave:e.near&&!e.used});
+  if(!e.used){ const b=Math.sin(e.tt*0.1)*2, by=y-24+b; ctx.fillStyle='#F2B33D'; ctx.beginPath(); ctx.arc(cx,by,9,0,7); ctx.fill(); ctx.beginPath(); ctx.moveTo(cx-3,by+7); ctx.lineTo(cx,by+13); ctx.lineTo(cx+3,by+7); ctx.fill();
+    ctx.fillStyle='#2A1A00'; ctx.font='900 12px "Young Serif", Georgia, serif'; ctx.textAlign='center'; ctx.fillText('?',cx,by+4.5);
+    if(e.near){ ctx.font='800 7px Figtree, sans-serif'; const tw=ctx.measureText(C.t).width+12; ctx.fillStyle='rgba(10,20,26,.85)'; rr(cx-tw/2,by-24,tw,13,6); ctx.fill(); ctx.fillStyle='#FFE18A'; ctx.fillText(C.t,cx,by-15); }
+    ctx.fillStyle='#FFE18A'; ctx.font='800 6.5px Figtree, sans-serif'; ctx.fillText('DECISIÓN',cx,fy+9); ctx.textAlign='left'; }
+  else { ctx.fillStyle='#BFF5CF'; ctx.font='800 6.5px Figtree, sans-serif'; ctx.textAlign='center'; ctx.fillText('✓ DECIDISTE',cx,fy+9); ctx.textAlign='left'; } }
 /* ================= DIPLOMAS v2: diseño de certificado de expedición (cumbre + sendero + parche) ================= */
 // Tokens por ruta: tinta, acento, acento claro, texto, papel, y la paleta de la ilustración (cielo arriba, cielo abajo, sol, 4 planos de montaña lejos→cerca)
 const DIP_ART=[
