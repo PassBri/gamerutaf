@@ -2752,6 +2752,12 @@ const LOOK_LADRON={top:'#3A3D44',topD:'#24262C',pants:'#1E2228',shoes:'#E9ECEF',
   torso:(sh,hp)=>{ ctx.fillStyle='#24262C'; rr(-7,sh-3,14,hp-sh+5,5); ctx.fill(); ctx.fillStyle='#3A3D44'; rr(-6,sh-3,12,hp-sh+4,5); ctx.fill(); ctx.fillStyle='#24262C'; rr(-4,hp-7,9,4,2); ctx.fill(); ctx.strokeStyle='#C9D3DA'; ctx.lineWidth=.5; ctx.beginPath(); ctx.moveTo(0.5,sh-2); ctx.lineTo(0.5,hp-1); ctx.stroke(); }};
 const ROBO=[['celular','Te robaron el celular',4],['billetera','Te robaron la billetera',0],['bolso','Te robaron el bolso',5],['dinero','Te arrebataron el dinero de la mano',0]];
 function backToStart(){ const p=S.p, y=groundY(2)-p.h; p.x=2*T; p.y=y; p.vx=0; p.vy=0; p.on=null; p.caught=null; p.ride=null; S.cam=0; S.camY=Math.max(0,p.y-H*0.58); p.inv=120; S.freeze=reduced?0:10; }
+// personajes que caminan: siempre pisan suelo (bloque o tabla) y suben o bajan como máximo un escalón de 2 bloques
+function standRow(c,r){ return (solid(c,r)||oneway(c,r))&&!solid(c,r-1); }
+function snapDown(e,foot){ const c=Math.max(0,Math.min(S.L.w-1,Math.floor((e.x+e.w/2)/T))); for(let r=Math.max(1,Math.floor((e.y+foot-T)/T));r<S.L.rows;r++) if(standRow(c,r)){ e.y=r*T-foot; return true; } const sr=S.L.surf[c]; if(sr!=null&&sr>0){ e.y=sr*T-foot; return true; } return false; }
+function walkSnap(e,nx,foot){ const c=Math.floor((nx+e.w/2)/T); if(c<0||c>=S.L.w) return false; const cur=e.y+foot; let best=null;
+  for(let r=Math.max(1,Math.floor((cur-2.2*T)/T));r<=Math.min(S.L.rows-1,Math.floor((cur+2.2*T)/T));r++) if(standRow(c,r)){ const gy=r*T; if(Math.abs(gy-cur)<=2.2*T&&(best==null||Math.abs(gy-cur)<Math.abs(best-cur))) best=gy; }
+  if(best==null) return false; e.x=nx; e.y=best-foot; return true; }
 function ladronGround(e,nx){ const c=Math.max(0,Math.min(S.L.w-1,Math.floor((nx+e.w/2)/T))), sr=S.L.surf[c]; if(sr==null||sr<0) return false; const gy=sr*T-e.h; if(Math.abs(gy-e.y)>T*2.2&&e.st!=='huye') return false; e.x=nx; e.y=gy; return true; }
 function ladronUpdate(e,p){
   if(e.flash>0) e.flash--; if(e.hitCd>0) e.hitCd--;
@@ -3082,14 +3088,14 @@ function update(){ try{ botStep(); }catch(e){}
     else if(e.t==='npc'){ e.near=Math.abs(p.x-e.x)<120&&Math.abs(p.y-e.y)<90; if(!e.used&&overlap(p,e)){ e.used=true; const N=NPCS[e.k], r=N.fx(); eco.stats.helps=(eco.stats.helps||0)+1; snd('gate'); confetti(e.x+10,e.y,14); addText(e.x-30,e.y-34,N.n+' te ayudó','#C9CEFF'); eco.seen=eco.seen||{}; const first=!eco.seen.ayuda; eco.seen.ayuda=1; toast(N.n+' · '+N.rol,r+(first?' · Nuevo concepto, red de apoyo (Guía 7): nadie sube solo.':'')); } }
     else if(e.t==='veh'){ if(overlap(p,e)){ e.dead=true; buyVeh(e); } }
     else if(e.t==='bank'){ e.lab++; const dx=(p.x+p.w/2)-(e.x+e.w/2); if(Math.abs(dx)<300&&Math.abs(p.y-e.y)<220){ if(--e.cd<=0){ e.cd=Math.round((110+rnd(60))/Dif().enemy); const sx=e.x+e.w/2, sy=e.y+22, tt=42; S.fees.push({x:sx,y:sy,w:16,h:12,vx:(p.x+p.w/2-sx)/tt,vy:((p.y+8)-sy)/tt-0.125*tt,n:['CUOTA DE MANEJO','COMISIÓN','SEGURO NO PEDIDO'][rnd(3)],life:220}); learn('banco'); } } }
-    else if(e.t==='cobrador'){ const sp=1.25*Dif().enemy; e.x+=Math.sign(p.x-e.x)*Math.min(sp,Math.abs(p.x-e.x)); e.y+=Math.sign(p.y-4-e.y)*Math.min(sp*0.7,Math.abs(p.y-4-e.y)); if(--e.life<=0||!chained()) e.dead=true;
+    else if(e.t==='cobrador'){ const sp=1.25*Dif().enemy; if(!e.gr){ e.gr=1; snapDown(e,29); } walkSnap(e,e.x+Math.sign(p.x-e.x)*Math.min(sp,Math.abs(p.x-e.x)),29); // corre por el suelo detrás de ti if(--e.life<=0||!chained()) e.dead=true;
       if(!e.dead&&overlap(p,e)){ e.dead=true; if(hurt(2,'el cobrador del gota a gota','gota')) logD('Pérdida','Cobrador del gota a gota',-2); learn('cobrador'); } }
     else if(e.t==='gotaJefe'||e.t==='creditoJefe') bossUpdate(e,p);
     else if(e.t==='lanza') lanzaUpdate(e,p);
     else if(e.t==='slot') slotUpdate(e,p);
     else if(e.t==='ruina') ruinaUpdate(e,p);
     else if(e.t==='lender'){
-      const sp=Dif().enemy; if(Math.abs(p.x-e.x0)<240) e.x0+=Math.sign(p.x-e.x0)*0.35*sp; e.x=e.x0+Math.sin(S.t*0.014*sp+e.ph)*55; e.y=e.y0+Math.sin(S.t*0.035*sp+e.ph)*34;
+      const sp=Dif().enemy; if(!e.gr){ e.gr=1; snapDown(e,34); } if(Math.abs(p.x-e.x0)<240) e.x0+=Math.sign(p.x-e.x0)*0.35*sp; { const nx=e.x0+Math.sin(S.t*0.014*sp+e.ph)*55; if(!walkSnap(e,nx,34)) e.x0=e.x-Math.sin(S.t*0.014*sp+e.ph)*55; } // camina por el suelo: no vuela
       if(overlap(p,e)){ e.dead=true; eco.hand+=8; const debt=Math.round(16*Dif().loan); addDebt('Gota a gota',debt,2,'gota'); if(S.ws) S.ws.lost.gota=(S.ws.lost.gota||0)+(debt-8); eco.stats.traps++; addText(e.x-30,e.y-10,'+8 monedas… y ahora debes '+debt,'#FFC7BF'); logD('Deuda','Gota a gota: +8 hoy, debes '+debt,8-debt); learn('lender'); snd('bad'); burst(e.x+10,e.y+10,'#C9475B',12); }
     }
     else if(e.t==='cloud') globoUpdate(e,p);
