@@ -3009,7 +3009,7 @@ function update(){ try{ botStep(); }catch(e){}
   if(p.onGround && Math.abs(p.vx)>0.3) p.walk+=gaitStep(p.vx,3.3);
   if(p.inv>0) p.inv--; if(p.flash>0) p.flash--;
   { const iv=Math.round(120+180*saludF()); if(eco&&salud()>0&&salud()<70&&S.t-(S.saludT||0)>300&&S.t%iv===0){ eco.salud=Math.min(70,salud()+1); S.saludUp=12; } } // recuperación suave si no te golpean
-  try{ skelTick(p); arenaRecarga(p); hoyoTick(p); caidaTick(p); caidaUpdate(); }catch(e){}
+  try{ skelTick(p); arenaRecarga(p); hoyoTick(p); caidaTick(p); caidaUpdate(); viajeTick(p); }catch(e){}
   if(salud()<=0&&!S.busy&&!p.caught){ muerteStart(); return; }
   if(atkPressed){ atkPressed=false; if(!(p.atkCd>0)&&!S.busy&&!p.caught){ p.atk=16; p.atkCd=26; p.swing=(p.swing||0)+1; p.atkHit=0; snd('drop'); if(!eco.seenNo){ eco.seenNo=1; learn('decirno'); } } }
   if(p.atkCd>0) p.atkCd--; if(p.atk>0){ p.atk--; if(p.atk<=12&&p.atk>=5) defendHit(p); }
@@ -4556,7 +4556,7 @@ function draw(){
   ctx.save();
   const sh=S.shake&&!reduced?S.shake:0;
   ctx.translate(sh?(Math.random()-.5)*sh:0, -Math.round(S.camY)+(sh?(Math.random()-.5)*sh:0));
-  drawDeco(th); drawArenaBack(); try{ drawHoyos(); }catch(e){} S.plabels=[]; drawPlats(th); drawTiles(th); drawArenaFloor(); { const by=S.L.rows*T; if(by<S.camY+H){ ctx.fillStyle=th.earth; ctx.fillRect(0,by,W,S.camY+H-by+2); ctx.fillStyle='rgba(0,0,0,.18)'; ctx.fillRect(0,by,W,S.camY+H-by+2); } } drawEnts(); drawArenaFront(); drawPlatLabels(); drawHiker(); drawPigFx(); drawWorldHazards(); drawBusy(); try{ drawMedBag(); drawInflHud(); drawRecargas(); drawHoyoHud(); }catch(e){} drawFront();
+  drawDeco(th); drawArenaBack(); try{ drawHoyos(); drawViajeWorld(); }catch(e){} S.plabels=[]; drawPlats(th); drawTiles(th); drawArenaFloor(); { const by=S.L.rows*T; if(by<S.camY+H){ ctx.fillStyle=th.earth; ctx.fillRect(0,by,W,S.camY+H-by+2); ctx.fillStyle='rgba(0,0,0,.18)'; ctx.fillRect(0,by,W,S.camY+H-by+2); } } drawEnts(); drawArenaFront(); drawPlatLabels(); drawHiker(); drawPigFx(); drawWorldHazards(); drawBusy(); try{ drawMedBag(); drawInflHud(); drawRecargas(); drawHoyoHud(); drawViajeFront(); }catch(e){} drawFront();
   S.pops.forEach(q=>{ const k=1-q.life/14; ctx.globalAlpha=1-k; ctx.save(); ctx.globalCompositeOperation='lighter'; drop(q.x-S.cam,q.y-k*10,1+k*0.8,'#8EE0FF'); ctx.restore(); }); ctx.globalAlpha=1;
   S.parts.forEach(q=>{ ctx.globalAlpha=Math.min(1,q.life/20); ctx.fillStyle=q.col; if(q.conf){ ctx.save(); ctx.translate(q.x-S.cam,q.y); ctx.rotate(q.rot+=0.2); ctx.fillRect(-2,-1,4,2.4); ctx.restore(); } else if(q.dust){ ctx.beginPath(); ctx.arc(q.x-S.cam,q.y,q.r*(1.4-q.life/40),0,7); ctx.fill(); } else ctx.fillRect(q.x-S.cam,q.y,3,3); }); ctx.globalAlpha=1;
   ctx.font='700 8.5px Figtree, sans-serif'; ctx.textAlign='center';
@@ -7844,12 +7844,237 @@ BOT.ovT=0;
 function botOverlay(){ if(!BOT.on) return; const m=S.mode; BOT.ovT++;
   const click=id=>{ const b=document.getElementById(id); if(b&&!b.disabled&&b.offsetParent!==null){ b.click(); return true; } return false; };
   if(m==='muerte'){ if(click('bRevive')) BOT.ovT=0; return; }
+  { const pr=box.querySelector('[data-pr]'); if(pr&&!ov.hidden&&BOT.ovT>4){ pr.click(); BOT.ovT=0; return; } }
   if(m==='caso'||m==='mama'){ const b=box.querySelector('.mopt,[data-m="fondo"],[data-c="0"]'); if(b&&BOT.ovT>3){ b.click(); BOT.ovT=0; } return; }
   if(m==='camp'&&BOT.ovT>8){ BOT.ovT=0; const li=S.li; if(li+1<LV.length){ try{ save(li+1); }catch(e){} showMap(li+1,{from:li}); } else BOT.on=false; return; }
   if(BOT.ovT>4&&(click('bMapGo')||click('bGo'))){ BOT.ovT=0; return; }
   if(m==='play'&&!ov.hidden&&BOT.ovT>6){ const b=box.querySelector('button.primary,button'); if(b){ b.click(); BOT.ovT=0; } } }
 setInterval(()=>{ try{ botOverlay(); }catch(e){} },500);
 function drawBotBadge(){ if(!BOT.on) return; ctx.save(); ctx.font='800 7px Figtree, sans-serif'; const t='🤖 PILOTO AUTOMÁTICO · B para salir'; const tw=ctx.measureText(t).width+12; ctx.fillStyle='rgba(90,40,150,.85)'; rr(W/2-tw/2,H-24,tw,13,6.5); ctx.fill(); ctx.fillStyle='#fff'; ctx.textAlign='center'; ctx.fillText(t,W/2,H-15); ctx.restore(); ctx.textAlign='left'; }
+/* ================= EL VIAJE DEL SENDERISTA: ideas de los libros «El viaje del senderista» y «Teoría del viaje transformativo» =================
+   1 promesa · 2 viajar ligero · 3 fogata · 4 decir no · 5 clima · 6 mirador · 7 señales · 8 red de apoyo · 9 descenso · 10 autoevaluación */
+Object.assign(TIPS,{
+ promesa:{t:'La promesa del senderista',g:'El viaje del senderista · 1.7 y 5.2',x:'Una meta financiera sirve cuando es específica, medible, alcanzable y con fecha: «tener 15 en la alcancía antes del mundo 5» se puede cumplir y revisar; «ahorrar más» no.'},
+ ligero:{t:'Viajar ligero',g:'El viaje del senderista · 4.4',x:'Las deudas y los pasivos cuelgan de tu mochila: pesan cada quincena. Soltarlos (pagar, vender lo que pierde valor) te deja subir más liviano. Sin deudas ni pasivos saltas un poco más alto.'},
+ fogata:{t:'La fogata del campamento',g:'El viaje del senderista · 4.9',x:'Tres leños mantienen el fuego: ahorrar, aprender y un buen hábito. La constancia supera a la intensidad: un poco cada mundo enciende la fogata y el siguiente tramo empieza con más energía.'},
+ priorizar:{t:'Priorizar: el arte de decir no',g:'El viaje del senderista · 6.2',x:'No puedes tenerlo todo. Antes de decir sí pregúntate: ¿esto me acerca a mi meta o es una distracción disfrazada? Decir no a lo que no suma es decir sí a lo que importa.'},
+ clima:{t:'Cuando cambia el clima',g:'El viaje del senderista · 6.4',x:'En la montaña y en el dinero el clima cambia: baja el ingreso, sube un precio, llega un gasto. No abandones el plan: ajústalo. Pregúntate: ¿qué otras opciones tengo?'},
+ mirador:{t:'El mirador: descansar también es avanzar',g:'El viaje del senderista · 6.9',x:'El descanso planeado es parte del plan: mirar cuánto llevas, recargar energía y seguir. Quien nunca para se agota y decide peor.'},
+ senal:{t:'Señales en el camino',g:'El viaje del senderista · 7.4',x:'Cuando tus decisiones van en la misma dirección aparecen oportunidades: personas, puertas y recursos que encajan. Las buenas rachas no son suerte: son coherencia.'},
+ red:{t:'Tu red de apoyo es un bastón',g:'El viaje del senderista · 4.7',x:'Pedir ayuda no es debilidad, es sabiduría. Las personas que conociste en el camino pueden sostenerte cuando el terreno se pone difícil.'},
+ descenso:{t:'El descenso',g:'Teoría del viaje transformativo · fase 7',x:'Bajar de la cima no es retroceder: es mirar lo vivido, agradecer y llevar lo aprendido a la siguiente montaña.'},
+ autoeval:{t:'Autoevaluación del viaje',g:'Teoría del viaje transformativo · 3.2',x:'Calificarte de 1 a 10 y compararlo con lo que hiciste de verdad te muestra dónde te ves mejor (o peor) de lo que eres. Así se ajusta la ruta.'}});
+
+const VJ_NOTAS='El viaje del senderista';
+function vjInit(){ const p=S.p; S.vj={emb0:eco.emb,seen0:Object.keys(eco.seen||{}).length,lost:0,streak:0,coliN:0,coliCd:0,coli:null,rest:false,restT:0,clima:null,climaT:0,climaDone:false,tent:null,desc:false,ayuda:false,lostCoins:0,coinsWorld:0};
+  if(p) p.vjLight=0; }
+
+// ---------- colocar las piezas nuevas en cada mundo (fuera de L.ents para que nada las borre)
+function vjFlat(L,c0,n){ for(let c=c0;c<Math.min(L.w-n-2,c0+60);c++){ const s=L.surf[c]; if(s==null||s<2) continue; let ok=true; for(let d=0;d<n;d++) if(L.surf[c+d]!==s||(L.g[s-1]&&L.g[s-1][c+d]!==' ')) { ok=false; break; } if(ok&&!(L.hoyos||[]).some(H=>c+n>H.c-3&&c<H.c+H.WD+3)&&!L.ents.some(e=>e.t!=='drop'&&e.x>(c-2)*T&&e.x<(c+n+2)*T)) return c; } return -1; }
+{ const _bl4=buildLevel; buildLevel=function(li){ const L=_bl4(li); try{ const J=L.ents.find(e=>e.t==='jefeM'), xmax=J?J.x/T-30:L.w*0.8; L.vj={};
+    if(li>=1){ const c=vjFlat(L,Math.floor(L.w*0.27),3); if(c>0&&c<xmax) L.vj.tent={x:c*T,y:L.surf[c]*T,used:false}; }
+    { const c=vjFlat(L,Math.floor(L.w*0.38),3); if(c>0&&c<xmax) L.vj.mir={x:c*T,y:L.surf[c]*T}; }
+    if(li>=1) L.vj.climaX=Math.floor(L.w*0.47)*T;
+  }catch(e){ L.vj={}; } return L; }; }
+{ const _sl=startLevel; startLevel=function(li){ _sl(li); try{ vjInit(); vjFogataBono(); vjRedBtn(); }catch(e){} }; }
+
+// ---------- 1 · LA PROMESA DEL SENDERISTA
+function vjPromesaOpts(li){ const e=eco.emb||0, r=renta(); const hasta=Math.min(LV.length-1,li+2);
+  return [
+   {k:'emb',v:e+6+li,hasta,txt:'Tener '+(e+6+li)+' en la alcancía al llegar al campamento del mundo '+(hasta+1),ico:'🐷'},
+   {k:'deuda',v:0,hasta,txt:'Llegar sin deudas a los campamentos de los mundos '+(li+1)+' al '+(hasta+1),ico:'🎒'},
+   {k:'activo',v:r+1,hasta,txt:'Conseguir un activo o negocio que me pague '+(r+1)+' por quincena antes del mundo '+(hasta+1),ico:'🌱'}]; }
+function vjPromesaProg(P){ if(!P) return 0; if(P.k==='emb') return Math.min(1,(eco.emb||0)/Math.max(1,P.v)); if(P.k==='deuda') return eco.debts.length?0:Math.min(1,((S.li||0)-P.desde+1)/Math.max(1,P.hasta-P.desde+1)); if(P.k==='activo') return Math.min(1,(renta()+(typeof negRen==='function'?negRen():0))/Math.max(1,P.v)); return 0; }
+function vjPromesaOk(P){ if(P.k==='emb') return eco.emb>=P.v; if(P.k==='activo') return renta()+(typeof negRen==='function'?negRen():0)>=P.v; if(P.k==='deuda') return P.limpio&&S.li>=P.hasta; return false; }
+{ const _li=levelIntro; levelIntro=function(li){ if(!eco||eco.promesa||(eco.promesaSkip===li)||window.__noPromesa) return _li(li);
+    const O=vjPromesaOpts(li); document.getElementById('mapBar').hidden=true; S.mode='intro'; S.li=li; S.L=buildLevel(li); S.cam=0; S.t=0; S.p=newHiker(); S.camY=Math.max(0,S.p.y-H*0.58); S.parts=[];S.texts=[];S.rain=[];S.loose=[];S.pops=[];S.pulse=0;S.banner=0;S.shake=0;S.hudPop=0;S.amb=null;S.rocks=[];S.fees=[];S.falling=[];S.toast=null;
+    openOv(`<div class="eyebrow">Antes de empezar el mundo ${li+1} · ${VJ_NOTAS} 1.7</div><h2>La promesa del senderista</h2>
+     <p>Elige <b>una meta concreta</b> para los próximos tramos. Debe ser específica, medible y con fecha: así sabrás si la cumpliste. Se revisa en cada campamento.</p>
+     <div class="mopts">${O.map((o,i)=>`<button class="mopt" type="button" data-pr="${i}"><b>${o.ico} ${esc(o.txt)}</b><span>${o.k==='emb'?'Ahorrar con un número y una fecha.':o.k==='deuda'?'Subir liviano: nada que te cobre cada quincena.':'Que tu plata trabaje para ti.'}</span></button>`).join('')}</div>
+     <label class="muted" style="display:block;margin-top:10px">¿Para qué lo haces? (opcional, tu porqué)<br><input id="prPorque" maxlength="60" placeholder="Ej.: para ayudarle a mi mamá" style="width:100%;margin-top:4px;padding:8px;border-radius:10px;border:1px solid rgba(255,255,255,.25);background:rgba(255,255,255,.08);color:inherit;font:inherit"></label>`);
+    box.querySelectorAll('[data-pr]').forEach(b=>b.onclick=()=>{ const o=O[+b.dataset.pr]; const inp=document.getElementById('prPorque');
+      eco.promesa=Object.assign({},o,{desde:li,limpio:true,porque:(inp&&inp.value||'').trim().slice(0,60)}); eco.seen=eco.seen||{}; eco.seen.promesa=1; snd('gate'); _li(li); }); }; }
+function vjPromesaCamp(){ const P=eco.promesa; if(!P) return null; if(P.k==='deuda'&&eco.debts.length) P.limpio=false;
+  let res=null; if(vjPromesaOk(P)) res='ok'; else if(S.li>=P.hasta||(P.k==='deuda'&&!P.limpio)) res='no';
+  if(res){ eco.promesas=eco.promesas||[]; eco.promesas.push({txt:P.txt,ok:res==='ok',w:S.li}); eco.promesa=null; eco.promesaSkip=null;
+    if(res==='ok'){ try{ saludAdd(8,'cumpliste tu promesa'); }catch(e){} eco.emb+=3; logD('Ahorro','Cumpliste tu promesa: '+P.txt,3); }
+    else logD('Ahorro','La promesa no se cumplió: '+P.txt,0); }
+  return {P,res}; }
+
+// ---------- 2 · VIAJAR LIGERO
+function vjLigero(){ return !eco.debts.length&&!(eco.lujos||[]).some(l=>!l.viaje); }
+{ const _dj=doJump; doJump=function(p,sw){ _dj(p,sw); try{ if(vjLigero()&&!sw){ p.vy*=1.05; if(!(p.vjLight>0)&&Math.random()<0.25) p.vjLight=40; } }catch(e){} }; }
+function drawCargas(){ const p=S.p; if(!p||!eco) return; const ds=eco.debts.slice(0,3); if(!ds.length) return; const bx=p.x+p.w/2-S.cam-(p.face||1)*10, by=p.y-2;
+  ds.forEach((d,i)=>{ const sw=Math.sin(S.t*0.12+i*1.7)*2.2, x=bx-(p.face||1)*(3+i*5)+sw, y=by+6+i*4; ctx.strokeStyle='rgba(60,50,40,.8)'; ctx.lineWidth=0.8; ctx.beginPath(); ctx.moveTo(bx,by); ctx.lineTo(x,y); ctx.stroke();
+    const r=3.2+Math.min(3,d.saldo/8); ctx.fillStyle=d.kind==='gota'?'#7A2A24':'#4A4038'; ctx.beginPath(); ctx.arc(x,y+r,r,0,7); ctx.fill(); ctx.fillStyle='rgba(255,255,255,.18)'; ctx.beginPath(); ctx.arc(x-r*0.35,y+r*0.6,r*0.35,0,7); ctx.fill();
+    ctx.fillStyle='#FFC7BF'; ctx.font='800 5px Figtree, sans-serif'; ctx.textAlign='center'; ctx.fillText('−'+d.saldo,x,y+r+1.8); ctx.textAlign='left'; });
+}
+
+// ---------- 3 · LA FOGATA
+function vjLenos(){ const li=S.li, V=S.vj||{}; const dia=(eco.diario||[]).filter(d=>d.w===li);
+  const ahorro=(eco.emb||0)>(V.emb0||0)||dia.some(d=>d.cat==='Ahorro'&&d.v>0);
+  const pages=[0,1,2].filter(i=>eco.pages[li]&(1<<i)).length, nuevos=Object.keys(eco.seen||{}).length-(V.seen0||0);
+  const aprender=pages>=2||nuevos>=2;
+  const malos=dia.filter(d=>d.cat==='Gasto'&&/impulso|vitrina|antojo|hormiga|lujo|marca|aviso grande|apuesta/i.test(d.txt)).length+(V.tentSi?1:0);
+  const habito=malos<=1;
+  return {ahorro,aprender,habito,malos,pages,nuevos,n:(ahorro?1:0)+(aprender?1:0)+(habito?1:0)}; }
+function vjFogataBono(){ const n=eco.fogataPend||0; eco.fogataPend=0; if(!n) return; const d=n===3?6:n===2?3:1; setTimeout(()=>{ try{ if(S.mode==='play'){ saludAdd(d,'fogata del campamento'); addText(S.p.x-40,S.p.y-30,'La fogata te dio energía: +'+d+' de salud','#FFD36B'); } }catch(e){} },900); }
+function fogataSVG(n){ const L=['#8A5A2A','#8A5A2A','#8A5A2A'], on='#C27A2E'; const f=n/3;
+  return `<svg viewBox="0 0 120 90" width="120" height="90" aria-hidden="true"><ellipse cx="60" cy="80" rx="46" ry="7" fill="rgba(0,0,0,.25)"/>
+   ${f>0?`<ellipse cx="60" cy="58" rx="${22+f*16}" ry="${16+f*14}" fill="rgba(255,170,60,${0.12+f*0.18})"/>
+   <path d="M60 ${70-34*f} C ${50-6*f} ${60-14*f}, ${44} 66, 60 72 C 76 66, ${70+6*f} ${60-14*f}, 60 ${70-34*f}Z" fill="#F26B21"/>
+   <path d="M60 ${70-22*f} C 54 ${62-6*f}, 52 68, 60 72 C 68 68, 66 ${62-6*f}, 60 ${70-22*f}Z" fill="#FFD36B"/>`:''}
+   <rect x="30" y="70" width="60" height="7" rx="3.5" fill="${n>=1?on:L[0]}" transform="rotate(-12 60 73)"/>
+   <rect x="30" y="70" width="60" height="7" rx="3.5" fill="${n>=2?on:L[1]}" transform="rotate(12 60 73)"/>
+   <rect x="38" y="74" width="44" height="6" rx="3" fill="${n>=3?on:L[2]}"/></svg>`; }
+
+// ---------- 4 · DECIR NO (tres tentaciones, eliges una)
+const TENT=[
+ {l:'Salida a cine y comida con los amigos',d:'Cuesta 4 hoy',c:4},{l:'Tenis en oferta 2x1 que no necesitas',d:'Cuesta 5',c:5},{l:'Rifa del barrio',d:'Cuesta 2 y casi nunca ganas',c:2},
+ {l:'Otra suscripción de series',d:'+1 de gasto fijo cada quincena',fijo:1},{l:'Celular nuevo a cuotas',d:'Debes 8',debt:8},{l:'Apostar al partido',d:'Cuesta 3 y la casa casi siempre gana',c:3},
+ {l:'Ropa de marca en la vitrina',d:'Cuesta 4',c:4},{l:'Domicilio todos los días de la semana',d:'Cuesta 3',c:3}];
+const TENT_BIEN=[{l:'Un plan barato: caminata y empanadas con los amigos',d:'Cuesta 1 y también disfrutas',c:1,bien:1},{l:'Decir no a todo y guardar 3 para mi promesa',d:'+3 a la alcancía',ahorro:3,bien:2}];
+function vjTentOpen(T){ T.used=true; learn('priorizar'); S.mode='caso'; const pick=[...TENT].sort(()=>Math.random()-.5).slice(0,2); const b=TENT_BIEN[Math.random()<0.5?0:1]; const O=[...pick,b].sort(()=>Math.random()-.5);
+  const P=eco.promesa; openOv(`<div class="eyebrow">Decir no · ${VJ_NOTAS} 6.2</div><h2>Tres tentaciones en el camino</h2><p>Solo puedes elegir <b>una</b>. ${P?'Tu promesa: <b>'+esc(P.txt)+'</b>. ¿Cuál te acerca a ella?':'¿Cuál te acerca a la cima y cuál es una distracción disfrazada?'}</p>
+   <div class="mopts">${O.map((o,i)=>`<button class="mopt" type="button" data-tn="${i}"><b>${esc(o.l)}</b><span>${esc(o.d)}</span></button>`).join('')}</div>`);
+  box.querySelectorAll('[data-tn]').forEach(bt=>bt.onclick=()=>{ const o=O[+bt.dataset.tn]; closeOv(); S.mode='play'; const p=S.p;
+    if(o.bien===2){ const v=Math.min(3,eco.hand); eco.hand-=v; eco.emb+=v; saludAdd(4,'dijiste no a las distracciones'); logD('Ahorro','Dijiste no a tres tentaciones',v); addText(p.x-60,p.y-30,'¡Dijiste no! +'+v+' a la alcancía','#9FD3FF'); stampAt(p.x+p.w/2,p.y-10,'¡DIJISTE NO!','priorizar es elegir'); }
+    else if(o.bien===1){ const v=Math.min(1,eco.hand); eco.hand-=v; saludAdd(2,'disfrutar sin endeudarte'); logD('Gasto','Plan barato con amigos',-v); addText(p.x-60,p.y-30,'Disfrutar también es parte del camino (7.12)','#BFF5CF'); }
+    else { S.vj.tentSi=true; if(o.c){ const v=Math.min(o.c,eco.hand); eco.hand-=v; logD('Gasto','Tentación: '+o.l,-v); } if(o.fijo){ eco.fijos=eco.fijos||[]; eco.fijos.push({n:o.l,c:o.fijo}); } if(o.debt) addDebt(o.l,o.debt,2,'consumo');
+      saludAdd(-3,'una distracción disfrazada'); addText(p.x-60,p.y-30,'¿Te acercó a tu meta? Era una distracción','#FFC7BF'); }
+    toast('Priorizar es decir no','Elegir una cosa es renunciar a otras. Antes de decir sí pregúntate: ¿esto me acerca a mi meta? «Decir no a lo que no suma es decir sí a lo que importa.»'); }); }
+function drawTent(T){ const x=T.x-S.cam, y=T.y; if(x<-60||x>W+60) return; ctx.save(); ctx.fillStyle='rgba(0,0,0,.2)'; ctx.beginPath(); ctx.ellipse(x+30,y,30,4,0,0,7); ctx.fill();
+  ctx.fillStyle='#6E4A2A'; ctx.fillRect(x+4,y-38,3,38); ctx.fillRect(x+53,y-38,3,38); const cols=['#C9475B','#F2C230','#2E7BC4'];
+  for(let i=0;i<6;i++){ ctx.fillStyle=cols[i%3]; ctx.beginPath(); ctx.moveTo(x+i*10,y-42); ctx.lineTo(x+i*10+10,y-42); ctx.lineTo(x+i*10+5,y-34); ctx.fill(); }
+  ctx.fillStyle='#8A5A2A'; rr(x+2,y-16,56,16,2); ctx.fill(); ctx.fillStyle='#F4ECD8'; ctx.font='800 6px Figtree, sans-serif'; ctx.textAlign='center'; ctx.fillText(T.used?'YA ELEGISTE':'3 TENTACIONES',x+30,y-6);
+  if(!T.used){ ['🎟️','👟','📱'].forEach((g,i)=>{ ctx.font='10px sans-serif'; ctx.fillText(g,x+12+i*18,y-20+Math.sin(S.t*0.08+i)*1.5); }); } ctx.restore(); ctx.textAlign='left'; }
+
+// ---------- 5 · EL CLIMA CAMBIA
+const CLIMAS={niebla:{n:'Niebla',x:'No ves lejos: avanza despacio y mira antes de saltar. Como cuando no sabes cuánto vas a ganar este mes: gasta con prudencia hasta que aclare.'},
+ lluvia:{n:'Aguacero',x:'El camino resbala y avanzas más lento. Como cuando suben los precios: tu plata rinde menos, ajusta el ritmo, no el destino.'},
+ viento:{n:'Viento en contra',x:'Cuesta avanzar. Como cuando bajan los ingresos: haz pasos más cortos pero no te detengas.'}};
+function vjClimaTick(p){ const V=S.vj, L=S.L; if(!V||!L.vj) return;
+  if(!V.climaDone&&L.vj.climaX&&p.x>L.vj.climaX&&!(S.fight&&S.fight.on)){ V.climaDone=true; const k=['niebla','lluvia','viento'][S.li%3]; V.clima=k; V.climaT=1500; learn('clima'); snd('bad');
+    stampAt(p.x+p.w/2,p.y-10,'¡CAMBIÓ EL CLIMA!',CLIMAS[k].n.toLowerCase()+' · ¿qué otras opciones tengo?'); toast('Cambió el clima: '+CLIMAS[k].n,CLIMAS[k].x+' «Ajusta el plan, no lo abandones.» (6.4)'); }
+  if(V.climaT>0){ V.climaT--; if(S.fight&&S.fight.on) V.climaT=0; if(!V.climaT){ addText(p.x-40,p.y-30,'Aclaró: te adaptaste al clima','#BFF5CF'); saludAdd(2,'te adaptaste al cambio'); V.clima=null; return; }
+    if(V.clima==='lluvia'&&p.onGround) p.vx*=0.985; if(V.clima==='viento'&&p.onGround&&p.vx>0.5) p.vx=Math.max(0.5,p.vx-0.09); } }
+function drawClima(){ const V=S.vj; if(!V||!V.climaT||!S.p) return; const p=S.p, a=Math.min(1,V.climaT/60,(1500-V.climaT)/60+0.01);
+  if(V.clima==='niebla'){ const cx=p.x+p.w/2-S.cam, cy=p.y+10; const g=ctx.createRadialGradient(cx,cy,60,cx,cy,260); g.addColorStop(0,'rgba(225,232,236,0)'); g.addColorStop(1,'rgba(225,232,236,'+(0.82*a)+')'); ctx.fillStyle=g; ctx.fillRect(0,S.camY,W,H); }
+  else if(V.clima==='lluvia'){ ctx.strokeStyle='rgba(190,215,240,'+(0.45*a)+')'; ctx.lineWidth=1; ctx.beginPath(); for(let i=0;i<70;i++){ const x=(i*53+S.t*3.2)%(W+40)-20, y=S.camY+((i*97+S.t*9)%H); ctx.moveTo(x,y); ctx.lineTo(x-3,y+9); } ctx.stroke(); ctx.fillStyle='rgba(40,60,80,'+(0.12*a)+')'; ctx.fillRect(0,S.camY,W,H); }
+  else if(V.clima==='viento'){ ctx.strokeStyle='rgba(255,255,255,'+(0.35*a)+')'; ctx.lineWidth=1.2; for(let i=0;i<14;i++){ const y=S.camY+30+((i*61)%(H-60)), x=W-((S.t*7+i*137)%(W+120)); ctx.beginPath(); ctx.moveTo(x,y); ctx.quadraticCurveTo(x+20,y-4,x+44,y); ctx.stroke(); } }
+  ctx.save(); ctx.font='800 7px Figtree, sans-serif'; const t=CLIMAS[V.clima].n+' · '+Math.ceil(V.climaT/60)+' s'; const tw=ctx.measureText(t).width+14; ctx.fillStyle='rgba(10,20,26,.6)'; rr(W-tw-8,S.camY+H-26,tw,13,6.5); ctx.fill(); ctx.fillStyle='#E8F1F6'; ctx.fillText(t,W-tw-1,S.camY+H-17); ctx.restore(); }
+
+// ---------- 6 · EL MIRADOR
+function vjMirTick(p){ const M=S.L.vj&&S.L.vj.mir, V=S.vj; if(!M||V.rest) return; const near=Math.abs(p.x+p.w/2-(M.x+24))<26&&p.onGround;
+  if(near&&Math.abs(p.vx)<0.4&&!keys.left&&!keys.right){ V.restT++; if(V.restT>=120){ V.rest=true; learn('mirador'); saludAdd(5,'descansaste en el mirador'); snd('save'); confetti(M.x+24,M.y-30,10);
+      const pct=Math.round(p.x/(S.L.w*T)*100); stampAt(M.x+24,M.y-40,'MIRADOR','llevas el '+pct+' % · alcancía '+eco.emb); toast('Descansaste en el mirador','Llevas el '+pct+' % del camino, '+eco.hand+' en la mano y '+eco.emb+' en la alcancía. Mirar cuánto llevas también es avanzar. (6.9)'); } }
+  else V.restT=Math.max(0,V.restT-2); }
+function drawMir(M){ const x=M.x-S.cam, y=M.y; if(x<-80||x>W+80) return; const V=S.vj||{}; ctx.save();
+  ctx.fillStyle='rgba(0,0,0,.2)'; ctx.beginPath(); ctx.ellipse(x+24,y,26,3.5,0,0,7); ctx.fill();
+  ctx.fillStyle='#5A3A22'; ctx.fillRect(x+6,y-10,3,10); ctx.fillRect(x+39,y-10,3,10); ctx.fillStyle='#8A5A2A'; rr(x+2,y-13,44,4,1.5); ctx.fill(); rr(x+4,y-22,40,3,1.5); ctx.fill(); ctx.fillRect(x+6,y-22,2,10); ctx.fillRect(x+40,y-22,2,10);
+  ctx.fillStyle='#6E4A2A'; ctx.fillRect(x+52,y-34,2.4,34); ctx.fillStyle='#2E6B4A'; rr(x+40,y-46,30,13,3); ctx.fill(); ctx.fillStyle='#F4ECD8'; ctx.font='800 6px Figtree, sans-serif'; ctx.textAlign='center'; ctx.fillText('MIRADOR',x+55,y-37.5);
+  if(!V.rest&&S.p&&Math.abs(S.p.x-M.x)<140){ const k=Math.min(1,(V.restT||0)/120); ctx.fillStyle='rgba(10,20,26,.7)'; rr(x-2,y-62,54,12,6); ctx.fill(); ctx.fillStyle='rgba(255,255,255,.18)'; rr(x+2,y-53,46,2,1); ctx.fill(); ctx.fillStyle='#FFD36B'; rr(x+2,y-53,46*k,2,1); ctx.fill(); ctx.fillStyle='#F4ECD8'; ctx.font='800 5.5px Figtree, sans-serif'; ctx.fillText('Quédate quieto: descansa',x+25,y-55.5); }
+  ctx.restore(); ctx.textAlign='left'; }
+
+// ---------- 7 · SEÑALES EN EL CAMINO (colibrí que guía a una oportunidad)
+function vjStreak(ds){ const V=S.vj; if(!V||S.mode!=='play') return; if(ds<0){ V.lost-=ds; V.streak=0; return; } if(ds>0) V.streak++;
+  if(V.streak>=6&&V.coliN<2&&V.coliCd<=0&&!V.coli&&!(S.fight&&S.fight.on)){ const p=S.p, L=S.L; let c=Math.floor(p.x/T)+12; while(c<L.w-4&&(L.surf[c]==null||L.surf[c]<1||hazardAt(c,L.surf[c]-1))) c++; if(c>=L.w-4) return;
+    const k=['billete','diamante','bono','lingote'][V.coliN%4], D={t:'drop',x:c*T+6,y:L.surf[c]*T-34,w:12,h:16,ph:0,k,senal:true}; L.ents.push(D);
+    V.coli={x:p.x,y:p.y-30,d:D,t:0}; V.coliN++; V.streak=0; V.coliCd=1800; learn('senal'); snd('gate'); addText(p.x-60,p.y-40,'Una señal: vas por buen camino','#9BF0B8'); } }
+function vjColiTick(){ const V=S.vj; if(!V) return; if(V.coliCd>0) V.coliCd--; const C=V.coli; if(!C) return; C.t++; const D=C.d;
+  if(D.dead||C.t>900){ if(D.dead&&!C.said){ C.said=1; saludAdd(2,'seguiste la señal'); } V.coli=null; return; }
+  const tx=Math.min(D.x+4,S.p.x+120), ty=(tx<D.x?S.p.y-24:D.y-16)+Math.sin(C.t*0.15)*4; C.x+=(tx-C.x)*0.035; C.y+=(ty-C.y)*0.05; }
+function drawColi(){ const C=S.vj&&S.vj.coli; if(!C) return; const x=C.x-S.cam, y=C.y, f=Math.sin(S.t*1.6); ctx.save(); ctx.translate(x,y); ctx.scale(C.d.x>C.x?1.7:-1.7,1.7);
+  ctx.fillStyle='rgba(155,240,184,.25)'; ctx.beginPath(); ctx.arc(0,0,9,0,7); ctx.fill();
+  ctx.fillStyle='#1E9A6A'; ctx.beginPath(); ctx.ellipse(0,0,4.2,2.4,-0.2,0,7); ctx.fill(); ctx.fillStyle='#C2185B'; ctx.beginPath(); ctx.arc(2.6,-0.6,1.6,0,7); ctx.fill();
+  ctx.strokeStyle='#2A2018'; ctx.lineWidth=0.7; ctx.beginPath(); ctx.moveTo(3.8,-0.8); ctx.lineTo(8,-0.2); ctx.stroke();
+  ctx.fillStyle='rgba(200,255,230,.75)'; ctx.beginPath(); ctx.ellipse(-0.6,-2.4-f*1.6,1.4,4.2,-0.5+f*0.4,0,7); ctx.fill(); ctx.fillStyle='#1E7A5A'; ctx.beginPath(); ctx.moveTo(-4,0); ctx.lineTo(-7.5,-1.6); ctx.lineTo(-7,1.6); ctx.fill(); ctx.restore(); }
+
+// ---------- 8 · RED DE APOYO (pedir ayuda una vez por mundo)
+function vjRedNames(){ return Object.values(eco.red||{}); }
+function vjAyudaDisp(){ return S.mode==='play'&&S.vj&&!S.vj.ayuda&&vjRedNames().length>0&&!(S.fight&&S.fight.on)&&(salud()<40||(eco.hand===0&&eco.emb===0)); }
+function pedirAyuda(){ if(!vjAyudaDisp()) return; const p=S.p, ns=vjRedNames(), n=ns[Math.floor(Math.random()*ns.length)]; S.vj.ayuda=true; learn('red');
+  eco.hand=Math.min(cap(),eco.hand+3); saludAdd(10,'pediste ayuda a tu red'); logD('Ingreso','Tu red de apoyo te ayudó ('+n+')',3); busy(70,'Hablando con '+n); confetti(p.x+p.w/2,p.y,14); snd('gate');
+  stampAt(p.x+p.w/2,p.y-10,'TU RED TE SOSTIENE',n+' te ayudó'); toast(n+' te ayudó','«Pedir ayuda no es debilidad, es sabiduría.» Las personas que conociste en el camino son tu bastón cuando el terreno se pone difícil. (4.7)'); vjRedBtn(); }
+let vjBtn=null;
+function vjRedBtn(){ try{ if(!vjBtn){ const st=document.getElementById('stage'); if(!st) return; vjBtn=document.createElement('button'); vjBtn.type='button'; vjBtn.id='bAyuda'; vjBtn.className='btn sm gold';
+      vjBtn.style.cssText='position:absolute;left:50%;transform:translateX(-50%);top:62px;z-index:7;box-shadow:0 4px 14px rgba(0,0,0,.35)'; vjBtn.hidden=true; vjBtn.onclick=()=>pedirAyuda(); if(getComputedStyle(st).position==='static') st.style.position='relative'; st.appendChild(vjBtn); }
+    const on=vjAyudaDisp(); if(on){ const ns=vjRedNames(); const t='🤝 Pedir ayuda a '+(ns.length===1?ns[0]:'tu red')+' (H)'; if(vjBtn.textContent!==t) vjBtn.textContent=t; } if(vjBtn.hidden===on) vjBtn.hidden=!on; }catch(e){} }
+addEventListener('keydown',e=>{ if((e.key==='h'||e.key==='H')&&!(e.target&&/INPUT|TEXTAREA|SELECT/.test(e.target.tagName))) pedirAyuda(); });
+
+// ---------- 9 · EL DESCENSO (después del jefe: letreros con lo aprendido, sin enemigos)
+const HOSTIL=['ant','lender','pyr','puma','snake','cobrador','ladron','nido','lanza','cloud','jaguar','globo','parca'];
+function vjDescStart(){ const L=S.L, V=S.vj; V.desc=true; const A=L.arena, C=L.ents.find(e=>e.t==='camp'); if(!C) return; const x0=A?A.x1+2*T:C.x-16*T, x1=C.x-3*T; if(x1-x0<6*T) return;
+  L.ents.forEach(e=>{ if(HOSTIL.includes(e.t)&&e.x>x0-2*T&&e.x<C.x+2*T) e.dead=true; });
+  const li=S.li, dia=(eco.diario||[]).filter(d=>d.w===li&&['Ahorro','Inversión','Ingreso'].includes(d.cat)&&d.v>0&&!/Quincena|Llegaste/.test(d.txt)).sort((a,b)=>b.v-a.v);
+  const lost=Object.entries((S.ws&&S.ws.lost)||{}).sort((a,b)=>b[1]-a[1])[0];
+  const T3=[['Lo que aprendiste',CURR[li].ra],['Tu mejor decisión',dia.length?dia[0].txt+' (+'+dia[0].v+')':'Seguiste subiendo aunque costó: eso también cuenta.'],['Para la próxima montaña',lost&&LOSS_TIP[lost[0]]?LOSS_TIP[lost[0]]:'Repite lo que funcionó y revisa en el campamento lo que no.']];
+  const stp=Math.max(115,(x1-x0)/3), sx0=Math.min(x0+stp/2,x1-stp*2.5); L.vj.signs=T3.map((t,i)=>{ const x=sx0+stp*i, c=Math.floor(x/T); return {x,y:(L.surf[c]>0?L.surf[c]:Math.floor(C.y/T)+1)*T,t:t[0],x2:t[1],i}; });
+  learn('descenso'); toast('El descenso','Bajar también es parte del viaje: lee los tres letreros antes del campamento. «El descenso no es retroceso, es evolución aplicada.» (fase 7)'); }
+function vjWrap(c,txt,w){ const ws=String(txt).split(' '), out=[]; let l=''; ws.forEach(x=>{ const t=l?l+' '+x:x; if(c.measureText(t).width>w&&l){ out.push(l); l=x; } else l=t; }); if(l) out.push(l); return out; }
+function drawSigns(){ const S2=S.L.vj&&S.L.vj.signs; if(!S2) return; const p0=S.p; let near=null, nd=90; if(p0) S2.forEach(g=>{ const d=Math.abs(p0.x+p0.w/2-g.x); if(d<nd){ nd=d; near=g; } }); S2.forEach(g=>{ const x=g.x-S.cam, y=g.y; if(x<-120||x>W+120) return; ctx.save();
+  ctx.font='800 5.6px Figtree, sans-serif'; const lab=g.t.toUpperCase(), bw=Math.max(40,ctx.measureText(lab).width+10); ctx.fillStyle='#5A3A22'; ctx.fillRect(x-1.5,y-30,3,30); ctx.fillStyle='#A0703A'; rr(x-bw/2,y-48,bw,20,2.5); ctx.fill(); ctx.strokeStyle='#5A3A22'; ctx.lineWidth=1; ctx.stroke();
+  ctx.fillStyle='#FFE18A'; ctx.textAlign='center'; ctx.fillText((g.i+1)+' de 3',x,y-40); ctx.fillStyle='#FFF3D8'; ctx.fillText(lab,x,y-32.5);
+  if(g===near){ ctx.font='600 7px Figtree, sans-serif'; const ls=vjWrap(ctx,g.x2,170), bh=ls.length*9+16, by=y-56-bh;
+    ctx.fillStyle='rgba(255,250,236,.96)'; rr(x-92,by,184,bh,8); ctx.fill(); ctx.fillStyle='#8A5A2A'; ctx.font='800 6px Figtree, sans-serif'; ctx.fillText(g.t.toUpperCase(),x,by+9); ctx.fillStyle='#2A2018'; ctx.font='600 7px Figtree, sans-serif'; ls.forEach((l,k)=>ctx.fillText(l,x,by+19+k*9)); }
+  ctx.restore(); ctx.textAlign='left'; }); }
+
+// ---------- tick y dibujo por fotograma
+function viajeTick(p){ const V=S.vj; if(!V||!S.L) return; const L=S.L;
+  L.ents.forEach(e=>{ if(e.t==='npc'&&e.used&&!e.vjRed){ e.vjRed=1; eco.red=eco.red||{}; eco.red[e.k]=NPCS[e.k].n; } });
+  if(L.vj&&L.vj.tent&&!L.vj.tent.used&&!S.busy&&!(S.fight&&S.fight.on)){ const T2=L.vj.tent; if(p.x+p.w>T2.x+18&&p.x<T2.x+44&&Math.abs((p.y+p.h)-T2.y)<30){ vjTentOpen(T2); return; } }
+  vjMirTick(p); vjClimaTick(p); vjColiTick();
+  if(!V.desc&&S.fight&&S.fight.done) vjDescStart();
+  if(p.vjLight>0){ p.vjLight--; if(p.vjLight===39) addText(p.x-30,p.y-26,'Liviano: sin deudas saltas más','#BFF5CF'); if(S.t%4===0) S.parts.push({x:p.x+p.w/2,y:p.y+p.h-2,vx:(Math.random()-.5)*1,vy:-0.4,life:18,col:'rgba(190,255,220,.7)'}); }
+  if(S.t%20===0) vjRedBtn(); }
+function drawViajeWorld(){ const L=S.L; if(!L||!L.vj) return; if(L.vj.mir) drawMir(L.vj.mir); if(L.vj.tent) drawTent(L.vj.tent); drawSigns(); }
+function drawViajeFront(){ drawCargas(); drawColi(); drawClima(); }
+
+// ---------- salud: rachas y golpes (para señales y autoevaluación)
+{ const _sa2=saludAdd; saludAdd=function(d,why){ const s0=(eco&&S.L)?salud():0; _sa2(d,why); try{ if(eco&&S.L&&S.vj){ const ds=salud()-s0; if(ds) vjStreak(ds); } }catch(e){} }; }
+
+// ---------- 10 · CAMPAMENTO: promesa, fogata, viajar ligero y autoevaluación
+{ const _ec=enterCamp; enterCamp=function(){ let pr=null; try{ if(S.vj&&!S.vj.rest&&S.L.vj&&S.L.vj.mir){ saludAdd(-2,'no paraste a descansar'); S.vj.noRest=true; } pr=vjPromesaCamp(); const F=vjLenos(); S.vjF=F; eco.fogata=eco.fogata||[]; eco.fogata[S.li]=F.n; eco.fogataPend=F.n; }catch(e){} S.vjPr=pr; _ec(); }; }
+function vjReal(){ const F=S.vjF||vjLenos(), V=S.vj||{}; const P=eco.promesa, pr=S.vjPr;
+  const meta=pr&&pr.res?(pr.res==='ok'?10:3):P?Math.max(1,Math.round(vjPromesaProg(P)*10)):5;
+  const plan=Math.max(1,10-2*F.malos-(V.noRest?1:0));
+  const impr=Math.max(1,Math.min(10,10-Math.round((V.lost||0)/7)+(V.ayuda?1:0)));
+  return [meta,plan,impr]; }
+function vjCampHTML(){ const li=S.li, F=S.vjF||vjLenos(), pr=S.vjPr, P=eco.promesa, ev=(eco.autoeval||[])[li];
+  const prom=pr&&pr.res?`<div class="fb ${pr.res==='ok'?'ok':''}">${pr.res==='ok'?'<b>¡Cumpliste tu promesa!</b> '+esc(pr.P.txt)+'. +8 de salud y +3 a la alcancía.':'<b>Esta promesa no se cumplió:</b> '+esc(pr.P.txt)+'. Sin castigo: pregúntate qué la frenó y qué ajustarás. En el próximo mundo eliges una nueva.'}${pr.P.porque?'<br><span class="muted">Tu porqué: «'+esc(pr.P.porque)+'»</span>':''}</div>`
+    :P?`<p><b>${esc(P.txt)}</b>${P.porque?' <span class="muted">· «'+esc(P.porque)+'»</span>':''}</p><div style="height:8px;border-radius:4px;background:rgba(255,255,255,.12);overflow:hidden"><div style="height:100%;width:${Math.round(vjPromesaProg(P)*100)}%;background:var(--gold)"></div></div><p class="muted">Vas en ${Math.round(vjPromesaProg(P)*100)} %. Se revisa en cada campamento hasta el mundo ${P.hasta+1}.</p>`
+    :'<p class="muted">Al empezar el próximo mundo eliges una nueva promesa.</p>';
+  const hist=(eco.promesas||[]); const histT=hist.length?`<p class="muted">Promesas cumplidas: <b>${hist.filter(h=>h.ok).length} de ${hist.length}</b>.</p>`:'';
+  const len=(ok,n,d)=>`<div class="item"><span class="n"><b style="color:${ok?'#F2B33D':'#9DB0B8'}">${ok?'🔥':'🪵'} ${n}</b> <span class="muted">${d}</span></span></div>`;
+  const fog=`<div style="display:flex;gap:12px;align-items:center;flex-wrap:wrap">${fogataSVG(F.n)}<div style="flex:1;min-width:200px">${len(F.ahorro,'Ahorro','tu alcancía creció en este mundo')}${len(F.aprender,'Aprendizaje',F.pages+' páginas del Cuaderno · '+Math.max(0,F.nuevos)+' conceptos nuevos')}${len(F.habito,'Buen hábito',F.malos?F.malos+' gasto'+(F.malos===1?'':'s')+' por impulso o antojo':'ningún gasto por impulso')}</div></div>
+    <p class="muted">${F.n===3?'¡Fogata encendida! El próximo mundo empiezas con +6 de salud.':F.n===2?'Buen fuego: el próximo mundo empiezas con +3 de salud.':F.n===1?'El fuego apenas prende: +1 de salud al empezar.':'Sin leños no hay fuego. En el próximo mundo ahorra algo, aprende y evita el antojo.'}${S.vj&&S.vj.noRest?' No paraste en el mirador (−2 de salud): descansar también es parte del plan.':''}</p>`;
+  const ds=eco.debts.map((d,i)=>`<div class="item"><span class="n">⚫ ${esc(d.name)}</span><span class="m">pesa ${d.saldo}</span><button class="btn sm" type="button" data-solt="${i}" ${eco.hand+eco.emb>=d.saldo?'':'disabled'}>Soltar (pagar ${d.saldo})</button></div>`).join('');
+  const lj=(eco.lujos||[]).filter(l=>!l.viaje).length;
+  const lig=vjLigero()?'<p class="muted"><b style="color:#BFF5CF">Viajas ligero:</b> sin deudas ni pasivos saltas un poco más alto.</p>':`${ds}${lj?`<p class="muted">Cargas ${lj} pasivo${lj===1?'':'s'} que pierde${lj===1?'':'n'} valor: véndelo${lj===1?'':'s'} en la pestaña Balance.</p>`:''}<p class="muted">Puedes soltar una deuda con lo que tienes en la mano y en la alcancía.</p>`;
+  const Q=['¿Qué tan clara tuviste tu meta?','¿Qué tan bien seguiste tu plan (sin antojos ni distracciones)?','¿Qué tan bien manejaste los imprevistos?'];
+  const real=vjReal();
+  const aut=ev?`${Q.map((q,i)=>{ const a=ev.yo[i], b=ev.real[i], dlt=a-b; return `<div class="item"><span class="n">${esc(q)}<br><span class="muted">Dijiste <b>${a}</b> · el juego vio <b>${b}</b> · ${Math.abs(dlt)<=1?'te conoces bien':dlt>1?'te viste mejor de lo que jugaste':'lo hiciste mejor de lo que crees'}</span></span></div>`; }).join('')}`
+    :`${Q.map((q,i)=>`<div class="item" style="flex-wrap:wrap"><span class="n" style="min-width:200px">${esc(q)}</span><input type="range" min="1" max="10" value="6" data-ae="${i}" style="flex:1;min-width:140px"><span class="m" id="aeV${i}" style="width:22px;text-align:center">6</span></div>`).join('')}<div class="row" style="margin-top:6px"><button class="btn sm" type="button" id="bAutoEval">Comparar con lo que hice</button></div>`;
+  return `<div class="sec" id="vjSec"><h3>Tu promesa del senderista</h3>${prom}${histT}</div>
+   <div class="sec"><h3>La fogata del campamento</h3>${fog}</div>
+   <div class="sec"><h3>Viajar ligero</h3>${lig}</div>
+   <div class="sec"><h3>Autoevaluación (1 a 10)</h3>${aut}</div>`; }
+{ const _rc=renderCamp; renderCamp=function(msg){ _rc(msg); try{ if((S.campTab||'ruta')!=='ruta') return; const st=box.querySelector('.stats'); if(!st||box.querySelector('#vjSec')) return;
+    const w=document.createElement('div'); w.innerHTML=vjCampHTML(); st.after(...w.children);
+    box.querySelectorAll('[data-solt]').forEach(b=>b.onclick=()=>{ const d=eco.debts[+b.dataset.solt]; if(!d) return; let r=d.saldo; const fh=Math.min(r,eco.hand); eco.hand-=fh; r-=fh; eco.emb-=Math.min(r,eco.emb);
+      eco.debts.splice(+b.dataset.solt,1); try{ scoreAdd(15,'pagaste toda la deuda'); }catch(e){} logD('Gasto','Soltaste carga: pagaste '+d.name,-d.saldo); saludAdd(3,'soltaste una carga'); learn('ligero'); snd('save'); renderCamp(); });
+    box.querySelectorAll('[data-ae]').forEach(r=>r.oninput=()=>{ const v=document.getElementById('aeV'+r.dataset.ae); if(v) v.textContent=r.value; });
+    const ba=document.getElementById('bAutoEval'); if(ba) ba.onclick=()=>{ const yo=[0,1,2].map(i=>+box.querySelector('[data-ae="'+i+'"]').value); eco.autoeval=eco.autoeval||[]; eco.autoeval[S.li]={yo,real:vjReal()}; learn('autoeval'); saludAdd(2,'reflexionaste sobre tu viaje'); snd('gate'); renderCamp(); };
+  }catch(e){ console.warn(e); } }; }
+
+// ---------- diploma: promesas cumplidas
+{ const _dl=dipLearn; dipLearn=function(c,r,Wc,y0,pal){ _dl(c,r,Wc,y0,pal); try{ const H=(eco.promesas||[]); if(!H.length) return; c.save(); c.textAlign='center'; c.font='700 11px Figtree, sans-serif'; c.fillStyle=pal[1]; c.fillText('Promesas del senderista cumplidas: '+H.filter(h=>h.ok).length+' de '+H.length,Wc/2,y0-15); c.restore(); }catch(e){} }; }
+
+// ---------- piloto automático: elige la promesa, para en el mirador y pide ayuda
+{ const _bs=botStep; botStep=function(){ _bs(); try{ if(!BOT.on||S.mode!=='play'||!S.p) return; const p=S.p, M=S.L.vj&&S.L.vj.mir, V=S.vj;
+    if(M&&V&&!V.rest&&Math.abs(p.x+p.w/2-(M.x+24))<20&&p.onGround){ keys.right=false; keys.left=false; keys.jump=false; jumpPressed=false; BOT.stuck=0; BOT.np=0; }
+    if(vjAyudaDisp()) pedirAyuda(); }catch(e){} }; }
+
 /* ================= DIPLOMAS v2: diseño de certificado de expedición (cumbre + sendero + parche) ================= */
 // Tokens por ruta: tinta, acento, acento claro, texto, papel, y la paleta de la ilustración (cielo arriba, cielo abajo, sol, 4 planos de montaña lejos→cerca)
 const DIP_ART=[
