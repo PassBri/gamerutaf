@@ -3120,12 +3120,13 @@ function update(){ try{ botStep(); }catch(e){}
     }
     else if(e.t==='ant'){
       e.vy=Math.min(e.vy+0.5,8); const ovx=e.vx; if(moveX(e)) e.vx=-ovx; moveY(e);
-      if(e.chase&&e.onGround){ const ddx=(p.x+p.w/2)-(e.x+9); if(S.t%24===0&&Math.abs(ddx)>14) e.vx=Math.sign(ddx)*Math.abs(e.vx); if(Math.abs(ddx)<70&&Math.abs(ddx)>10&&S.t%55===(e.x|0)%55) e.vy=-5.5; if(Math.abs(ddx)>700) e.dead=true; }
+      antTrip(e,p); if(e.dead) continue;
+      if(e.chase&&!e.home&&e.onGround){ const ddx=(p.x+p.w/2)-(e.x+9); if(S.t%24===0&&Math.abs(ddx)>14) e.vx=Math.sign(ddx)*Math.abs(e.vx); if(Math.abs(ddx)<70&&Math.abs(ddx)>10&&S.t%55===(e.x|0)%55) e.vy=-5.5; if(Math.abs(ddx)>700) e.dead=true; }
       if(e.onGround){ const ahead=e.vx>0?Math.floor((e.x+e.w+1)/T):Math.floor((e.x-1)/T); const below=Math.floor((e.y+e.h+2)/T); if(!solid(ahead,below)&&!oneway(ahead,below)) e.vx=-e.vx; }
       if(e.y>L.rows*T+40) e.dead=true;
       if(overlap(p,e)){
-        if(p.vy>0 && prevBottom<=e.y+8){ e.dead=true; p.vy=-7; eco.hand++; eco.stats.stomps++; stampAt(e.x+9,e.y-6,'GASTO EVITADO','gasto hormiga'); addText(e.x-30,e.y-8,'+1: evitaste '+ANT_N[ANT_K[antKind(e)]],'#BFF5CF'); snd('stomp'); burst(e.x+9,e.y+6,'#C08A55',8); }
-        else { if(hurt(2,ANT_N[ANT_K[antKind(e)]],'hormigas')) logD('Pérdida','Gasto hormiga: '+ANT_N[ANT_K[antKind(e)]],-2); }
+        if(p.vy>0 && prevBottom<=e.y+8){ e.dead=true; p.vy=-7; eco.hand++; eco.stats.stomps++; if(e.stole){ ganar(1); if(S.hormigas) S.hormigas.recuperadas++; addText(e.x-40,e.y-20,'¡Recuperaste tu moneda!','#BFF5CF'); } stampAt(e.x+9,e.y-6,'GASTO EVITADO','gasto hormiga'); addText(e.x-30,e.y-8,'+1: evitaste '+ANT_N[ANT_K[antKind(e)]],'#BFF5CF'); snd('stomp'); burst(e.x+9,e.y+6,'#C08A55',8); }
+        else if(!e.stole&&!e.home&&!antTouch(e,p)&&eco.hand<=0){ if(hurt(2,ANT_N[ANT_K[antKind(e)]],'hormigas')) logD('Pérdida','Gasto hormiga: '+ANT_N[ANT_K[antKind(e)]],-2); }
         learn('ant');
       }
     }
@@ -8682,6 +8683,51 @@ function billSprite(den,faded){ const key=den+(faded?'_f':''); if(BSPR[key]) ret
 
 // ---------- estilo papel en la página: fibra como imagen CSS y clase en el cuerpo
 try{ const R=document.documentElement.style; R.setProperty('--fib','url('+PFIB.toDataURL()+')'); R.setProperty('--fibd','url('+PFIBD.toDataURL()+')'); document.body.classList.toggle('papel',papelOn()); }catch(e){}
+
+/* ================= LAS CULONAS ARRIERAS: cargan gastos hormiga a sus nidos =================
+   Como las hormigas arrieras de verdad, cada culona lleva su carga en la espalda (un tinto, una gaseosa, una empanada…)
+   y la deja en su nido, que se va llenando. Si te tocan, se llevan una moneda: atrápala antes de que llegue. */
+const ANT_P={cafe:2000,gaseosa:3000,empanada:2500,papas:2500,chicle:1000,domicilio:8000,moneda:1000};
+const ANT_PL={cafe:['tinto','tintos'],gaseosa:['gaseosa','gaseosas'],empanada:['empanada','empanadas'],papas:['paquete','paquetes'],chicle:['chicle','chicles'],domicilio:['domicilio','domicilios'],moneda:['moneda robada','monedas robadas']};
+function antCarry(e){ return e.stole?'moneda':ANT_K[antKind(e)]; }
+function antNest(e){ if(e.src&&!e.src.dead) return e.src; let best=null, bd=700; for(const q of S.L.ents){ if(q.t==='nido'&&!q.dead){ const d=Math.abs(q.x-e.x); if(d<bd){ bd=d; best=q; } } } return best; }
+function antGoHome(e){ e.home=true; e.chase=0; e.homeT=0; e.src=antNest(e); const N=e.src; e.vx=(N?Math.sign(N.x+N.w/2-(e.x+9)):(Math.random()<.5?-1:1))*Math.max(1,Math.abs(e.vx)*1.15); }
+function antDeliver(e,N){ e.dead=true; const k=antCarry(e), H=S.hormigas||(S.hormigas={items:{},pesos:0,robadas:0,recuperadas:0});
+  H.items[k]=(H.items[k]||0)+1; if(k!=='moneda') H.pesos+=ANT_P[k];
+  if(N){ N.pile=N.pile||[]; N.pile.push(k); N.pesos=(N.pesos||0)+ANT_P[k]; if(k==='moneda') N.coins=(N.coins||0)+1; burst(N.x+N.w/2,N.y+6,'#C08A55',5);
+    if(Math.abs(N.x-S.cam-W/2)<W/2+40) addText(N.x-20,N.y-30,k==='moneda'?'Tu moneda llegó al nido':'+'+fmtP(ANT_P[k])+' en '+ANT_PL[k][0]+' al nido','#FFE1A8'); }
+  else if(k==='moneda') addText(e.x-30,e.y-14,'La hormiga se perdió con tu moneda','#FFC7BF'); }
+function antTrip(e,p){ e.trip=(e.trip||0)+1;
+  if(!e.home&&e.chase&&e.trip>480) antGoHome(e);
+  if(e.home){ e.homeT++; const N=(e.src&&!e.src.dead)?e.src:null;
+    if(N){ const dx=N.x+N.w/2-(e.x+9); if(e.onGround&&Math.abs(dx)>6) e.vx=Math.sign(dx)*Math.max(1,Math.abs(e.vx)); if(Math.abs(dx)<14&&Math.abs((e.y+e.h)-(N.y+N.h))<30) antDeliver(e,N); }
+    if(!e.dead&&e.homeT>(N?700:320)) antDeliver(e,N); } }
+function antTouch(e,p){ if(e.stole||e.home) return false; if(eco.hand>0&&p.inv<=0&&!S.busy){ eco.hand--; e.stole=true; antGoHome(e); p.inv=50; S.hormigas=S.hormigas||{items:{},pesos:0,robadas:0,recuperadas:0}; S.hormigas.robadas++;
+    saludAdd(-1,'una hormiga se llevó una moneda'); snd('bad'); addText(p.x-60,p.y-30,'¡Una culona se llevó '+fmtP(PESOS)+'! Atrápala antes de que llegue al nido','#FFC7BF'); logD('Pérdida','Una hormiga se llevó una moneda',-1); learn('ant'); return true; }
+  return false; }
+// el nido muestra su pila y lo que se ha ido
+{ const _dn=drawNido; drawNido=function(e,x,y){ _dn(e,x,y); const pile=e.pile||[]; if(!pile.length) return; const fy=y+e.h, cx=x+e.w/2;
+  for(let i=0;i<Math.min(pile.length,15);i++){ const k=pile[i], px=cx+((i%5)-2)*6.4+(Math.floor(i/5)%2)*3, py=fy-e.h*.62-Math.floor(i/5)*5.6;
+    ctx.save(); ctx.translate(px,py); ctx.scale(.5,.5); if(k==='moneda'){ if(typeof coinPaper==='function') coinPaper(0,0,6,'#D9A84A','canon',.3); } else antIcon(k,0,0,.35+i*.4); ctx.restore(); }
+  const t='Aquí se fueron '+fmtP(e.pesos||0); ctx.save(); ctx.font='800 6.5px Figtree, sans-serif'; const tw=ctx.measureText(t).width+10, ty=y-24-Math.min(3,Math.floor(pile.length/5))*5;
+  ctx.fillStyle='rgba(28,16,6,.28)'; ctx.fillRect(cx-tw/2+1.2,ty-7.6,tw,11); ctx.fillStyle='#F7EFDC'; ctx.fillRect(cx-tw/2,ty-9,tw,11); ctx.fillStyle='rgba(217,164,65,.55)'; ctx.fillRect(cx-6,ty-11,12,4);
+  ctx.fillStyle='#8A1F12'; ctx.textAlign='center'; ctx.fillText(t,cx,ty-1.6); ctx.restore(); ctx.textAlign='left'; }; }
+// al destruir el nido, la pila sale volando y recuperas tus monedas robadas
+{ const _nh=nidoHit; nidoHit=function(e){ const was=e.dead; _nh(e); if(!was&&e.dead){ const pile=e.pile||[], c=e.coins||0;
+    const cols={cafe:'#F4ECD8',gaseosa:'#C9283C',empanada:'#E0A84A',papas:'#F2C230',chicle:'#E07AA0',domicilio:'#6B2A1A',moneda:'#D9A84A'}; pile.forEach((k,i)=>{ if(i<20) S.parts.push({x:e.x+e.w/2,y:e.y+4,vx:(Math.random()-.5)*5,vy:-2-Math.random()*4,life:60,col:cols[k]||'#C08A55',conf:true,rot:Math.random()*6}); });
+    if(c>0){ ganar(c); const H=S.hormigas||(S.hormigas={items:{},pesos:0,robadas:0,recuperadas:0}); H.recuperadas+=c; addText(e.x-40,e.y-40,'Recuperaste '+c+' moneda'+(c===1?'':'s')+' robada'+(c===1?'':'s'),'#BFF5CF'); }
+    if(pile.length) addText(e.x-50,e.y-52,'Cortaste el hábito: ya no se acumulan más '+fmtP(e.pesos||0),'#FFE1A8'); } }; }
+// el carguío en la espalda (en lugar del icono flotando)
+{ const _ai=antIcon; let inAnt=false; const _da2=drawAnt; drawAnt=function(e,x,y){ inAnt=e; try{ _da2(e,x,y); } finally{ inAnt=false; } };
+  antIcon=function(k,x,y,a){ if(!inAnt) return _ai(k,x,y,a); const e=inAnt, dir=e.vx>0?1:-1, bob=Math.sin((e.gph||0)*2)*.8, bx=e.x-S.cam+9-dir*5, by=e.y+(papelOn()?-3:-1)+bob;
+    ctx.save(); ctx.translate(bx,by); ctx.rotate(dir*.12+Math.sin((e.gph||0))*.06); ctx.scale(.78,.78);
+    if(e.stole){ if(typeof coinPaper==='function') coinPaper(0,0,6,'#D9A84A','canon',S.t*.08); else drop(0,0,1); ctx.restore(); ctx.save(); ctx.font='800 5.5px Figtree, sans-serif'; ctx.textAlign='center'; ctx.fillStyle='#FFE1A8'; ctx.fillText('¡TU MONEDA!',bx,by-11); }
+    else _ai(k,0,0,Math.sin(S.t*.05+e.x*.1)*.5); ctx.restore(); ctx.textAlign='left'; }; }
+{ const _sl4=startLevel; startLevel=function(li){ _sl4(li); S.hormigas={items:{},pesos:0,robadas:0,recuperadas:0}; }; }
+// resumen del campamento
+function hormigaCampHTML(){ const H=S.hormigas; if(!H||(!H.pesos&&!H.robadas)) return ''; const parts=Object.entries(H.items).filter(([k])=>k!=='moneda').map(([k,n])=>n+' '+(n===1?ANT_PL[k][0]:ANT_PL[k][1]));
+  return `<div class="sec"><h3>Gastos hormiga de este mundo</h3><p>Las culonas cargaron a sus nidos ${parts.length?parts.join(', '):'nada'}: <b>${fmtP(H.pesos)}</b> en gastos pequeños.${H.robadas?` Te robaron ${H.robadas} moneda${H.robadas===1?'':'s'} y recuperaste ${H.recuperadas}.`:''}</p><p class="muted">Uno por uno parecen poquito; juntos son plata de verdad. Si fuera todos los días, al mes serían unos ${fmtP(H.pesos*15)}.</p></div>`; }
+{ const _vc=vjCampHTML; vjCampHTML=function(){ return hormigaCampHTML()+_vc(); }; }
 
 /* ================= DIPLOMAS v2: diseño de certificado de expedición (cumbre + sendero + parche) ================= */
 // Tokens por ruta: tinta, acento, acento claro, texto, papel, y la paleta de la ilustración (cielo arriba, cielo abajo, sol, 4 planos de montaña lejos→cerca)
