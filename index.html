@@ -582,6 +582,12 @@ body.papel .ov.tov::before{opacity:.25}
 body.papel .t-banner{border-radius:2px!important;border:8px solid #F7F0DE!important;box-shadow:0 3px 0 #D6C6A2,0 22px 40px rgba(0,0,0,.55)!important;transform:rotate(-.5deg)}
 body.papel .t-banner::before{content:"";position:absolute;z-index:2;top:-12px;left:6%;width:90px;height:24px;transform:rotate(-8deg);background:rgba(217,164,65,.6)}
 body.papel .t-banner figcaption+*{}
+.t-banner canvas.t-paper{display:none}
+@media (min-width:901px){ body.papel .t-banner{height:clamp(150px,15vw,220px)} }
+@media (max-width:900px){ body.papel .t-banner{height:150px} }
+body.papel .t-banner canvas.t-paper{display:block;position:absolute;inset:0;width:100%;height:100%}
+body.papel .t-banner img{visibility:hidden}
+body.papel .t-banner::after{background:linear-gradient(180deg,rgba(255,240,210,0) 70%,rgba(60,40,20,.12))}
 body.papel .t-title{background:none!important;-webkit-text-fill-color:#F6E7C4!important;color:#F6E7C4!important;text-shadow:0 2px 0 #8A5A2A,0 4px 0 #5A3A1A,0 10px 20px rgba(0,0,0,.5)}
 body.papel .t-lead{color:#E6D8BC!important}
 body.papel .t-hero .eyebrow{color:#E8B64A!important}
@@ -4783,9 +4789,9 @@ function titleScreen(){
     </div></div>
     <div class="t-act">${sv?`<button class="btn gold" id="bCont" type="button">Continuar en el mundo ${sv.li+1}</button><button class="btn alt" id="bNew" type="button">Empezar de nuevo</button>`:`<button class="btn gold" id="bNew" type="button">Empezar la ruta ▸</button>`}</div>
    </section></div>`);
-  ov.classList.add('tov'); box.classList.add('tbox'); ov.scrollTop=0;
+  ov.classList.add('tov'); box.classList.add('tbox'); ov.scrollTop=0; try{ requestAnimationFrame(()=>titlePaper()); }catch(e){}
   box.querySelectorAll('[data-g]').forEach(gr=>gr.querySelectorAll('[data-v]').forEach(b=>b.onclick=()=>{
-    const g=gr.dataset.g, v=b.dataset.v; if(g==='color') color=v; if(g==='skin') skin=+v; if(g==='head') head=v; if(g==='diff') diff=v; if(g==='ruta') ruta=v; if(g==='region') setRegion(v);
+    const g=gr.dataset.g, v=b.dataset.v; if(g==='color') color=v; if(g==='skin') skin=+v; if(g==='head') head=v; if(g==='diff') diff=v; if(g==='ruta') ruta=v; if(g==='region'){ setRegion(v); try{ titlePaper(); }catch(e){} }
     gr.querySelectorAll('[data-v]').forEach(x=>x.setAttribute('aria-pressed',x===b)); }));
   // vista previa animada del senderista con lo que eligió
   const pc=document.getElementById('tPrev'); if(pc){ const pg=pc.getContext('2d'); let ph=0; const tick=()=>{ if(!document.body.contains(pc)||ov.hidden) return; ph+=0.12;
@@ -6029,7 +6035,7 @@ function scrPanel(anchor){
   p.style.left=Math.max(12,Math.min(innerWidth-pw-12,r.right-pw))+'px'; const top=r.bottom+8; p.style.top=(top+p.offsetHeight>innerHeight-8?Math.max(8,r.top-p.offsetHeight-8):top)+'px';
   document.getElementById('bScr').setAttribute('aria-expanded','true'); scrSync();
   p.querySelector('#scrFs').onclick=()=>{ p.remove(); fsToggle(); };
-  p.querySelectorAll('[data-mundo]').forEach(b=>b.onclick=()=>{ SCR.mundo=b.dataset.mundo; p.querySelectorAll('[data-mundo]').forEach(x=>x.setAttribute('aria-pressed',String(x===b))); PAPBG=null; scrApply(); }); p.querySelectorAll('[data-est]').forEach(b=>b.onclick=()=>{ SCR.est=b.dataset.est; p.querySelectorAll('[data-est]').forEach(x=>x.setAttribute('aria-pressed',String(x===b))); scrApply(); });
+  p.querySelectorAll('[data-mundo]').forEach(b=>b.onclick=()=>{ SCR.mundo=b.dataset.mundo; p.querySelectorAll('[data-mundo]').forEach(x=>x.setAttribute('aria-pressed',String(x===b))); PAPBG=null; scrApply(); try{ titlePaper(); }catch(e){} }); p.querySelectorAll('[data-est]').forEach(b=>b.onclick=()=>{ SCR.est=b.dataset.est; p.querySelectorAll('[data-est]').forEach(x=>x.setAttribute('aria-pressed',String(x===b))); scrApply(); });
   p.querySelectorAll('[data-cal]').forEach(b=>b.onclick=()=>{ p.querySelectorAll('[data-cal]').forEach(x=>x.setAttribute('aria-pressed',String(x===b))); qualitySet(b.dataset.cal); });
   p.querySelectorAll('[data-tam]').forEach(b=>b.onclick=()=>{ SCR.tam=b.dataset.tam; p.querySelectorAll('[data-tam]').forEach(x=>x.setAttribute('aria-pressed',String(x===b))); scrApply(); });
   setTimeout(()=>{ const out=e=>{ if(!p.isConnected){ document.removeEventListener('pointerdown',out,true); return; } if(!p.contains(e.target)&&!e.target.closest('#bScr,#fsStyle')){ p.remove(); document.getElementById('bScr').setAttribute('aria-expanded','false'); document.removeEventListener('pointerdown',out,true); } }; document.addEventListener('pointerdown',out,true); },0);
@@ -9120,6 +9126,66 @@ function postLand(g,Pc,W2,H2){ let c=POSTLAND[Pc.id]; if(!c){ const L=LUGARES_CO
     else { g.fillStyle='rgba(15,20,18,.9)'; g.beginPath(); g.ellipse(W2*.5,H2*.64,12,26,0,0,7); g.fill(); g.beginPath(); g.arc(W2*.5,H2*.38,7,0,7); g.fill(); g.beginPath(); g.ellipse(W2*.5,H2*.33,34,7,0,0,7); g.fill(); g.beginPath(); g.ellipse(W2*.5,H2*.29,12,9,0,Math.PI,0); g.fill(); g.fillStyle='#F2C230'; for(let i=0;i<3;i++){ g.save(); g.translate(W2*(.25+i*.06),H2*.85); g.rotate(-.3+i*.3); g.fillStyle='#fff'; g.fillRect(-5,-7,10,14); g.fillStyle=i===1?'#C9475B':'#1E1A18'; g.fillRect(-2,-3,4,4); g.restore(); } }
     return; }
   return _pa(g,id,W2,H2); }; }
+
+/* ================= PORTADA DE PAPEL: la imagen de arriba como un libro pop-up =================
+   En el estilo papel, el cartel de la portada se arma en capas de cartón que se levantan al abrir:
+   cielo de amanecer, sol de papel, cordilleras, la montaña con su ciudadela en la cima, el camino dorado,
+   el senderista y la frase en una nota pegada con cinta. Se mueve un poco con el puntero (paralaje). */
+function titlePaper(){ const fig=document.querySelector('.t-banner'); if(!fig||!papelOn()) return; let cv2=fig.querySelector('canvas.t-paper'); if(!cv2){ cv2=document.createElement('canvas'); cv2.className='t-paper'; cv2.setAttribute('aria-hidden','true'); fig.appendChild(cv2); }
+  const dpr=Math.min(2,window.devicePixelRatio||1); let Wb=0,Hb=0,LY=null,t0=performance.now(),mx=0,my=0,raf=0;
+  const build=()=>{ Wb=fig.clientWidth; Hb=fig.clientHeight; if(!Wb||!Hb) return; cv2.width=Math.round(Wb*dpr); cv2.height=Math.round(Hb*dpr); LY=tpLayers(Wb,Hb,dpr); };
+  build(); fig.onpointermove=e=>{ const r=fig.getBoundingClientRect(); mx=(e.clientX-r.left)/r.width-.5; my=(e.clientY-r.top)/r.height-.5; }; fig.onpointerleave=()=>{ mx=0; my=0; };
+  let cmx=0,cmy=0; const ro=()=>{ if(Math.abs(fig.clientWidth-Wb)>2) build(); };
+  const frame=now=>{ if(!document.body.contains(cv2)||ov.hidden||!papelOn()){ cancelAnimationFrame(raf); return; } ro(); if(!LY){ raf=requestAnimationFrame(frame); return; }
+    const g=cv2.getContext('2d'), t=(now-t0)/1000; cmx+=(mx-cmx)*.06; cmy+=(my-cmy)*.06; g.setTransform(1,0,0,1,0,0); g.clearRect(0,0,cv2.width,cv2.height);
+    LY.forEach((L,i)=>{ const k=reduced?1:Math.max(0,Math.min(1,(t-.08*i)/.7)), e=k<1?1-Math.pow(1-k,3)+Math.sin(k*Math.PI)*.1:1, rise=(1-e)*cv2.height*.7;
+      const px=-cmx*L.f*30*dpr, py=-cmy*L.f*8*dpr; g.save(); g.globalAlpha=Math.min(1,k*3);
+      if(L.sway){ const sw=reduced?0:Math.sin(t*.9+i)*L.sway; g.translate(px+sw*dpr,py+rise); } else g.translate(px,py+rise);
+      if(L.spin&&!reduced){ g.translate(L.cx*dpr,L.cy*dpr); g.rotate(t*.05); g.translate(-L.cx*dpr,-L.cy*dpr); }
+      g.drawImage(L.c,L.x||0,L.y||0); g.restore(); });
+    raf=requestAnimationFrame(frame); };
+  cancelAnimationFrame(cv2._raf||0); raf=requestAnimationFrame(frame); cv2._raf=raf; }
+function tpLayers(W2,H2,dpr){ const mk=(w,h)=>{ const c=pmk(w*dpr,h*dpr), g=c.getContext('2d'); g.scale(dpr,dpr); return [c,g]; }, out=[], co=REGION==='colombia';
+  const fib=(g,a)=>{ g.save(); g.globalCompositeOperation='multiply'; g.globalAlpha=a; g.fillStyle=g.createPattern(PFIB,'repeat'); g.fillRect(0,0,W2,H2); g.restore(); };
+  // 0 · cielo de amanecer
+  { const [c,g]=mk(W2,H2); const s=g.createLinearGradient(0,0,0,H2); s.addColorStop(0,'#8FB4CC'); s.addColorStop(.55,'#E9C99A'); s.addColorStop(1,'#F2B886'); g.fillStyle=s; g.fillRect(0,0,W2,H2); fib(g,.5); out.push({c,f:0}); }
+  // 1 · sol de papel (gira despacio)
+  { const [c,g]=mk(W2,H2), cx=W2*.5-Math.min(W2*.3,H2*1.7)*.9, cy=H2*.3, r=H2*.13; g.save(); g.translate(cx,cy); for(let i=0;i<16;i++){ g.rotate(Math.PI/8); ppaper(g,[[0,-r*1.15],[r*.18,-r*1.75],[-r*.18,-r*1.75]],i%2?'#F2C230':'#F4B53A',2,{sa:.2,th:.8}); } g.restore(); ppaper(g,pblob(cx,cy,r,28,9,1),'#F4B53A',3,{th:1.2}); out.push({c,f:.05,spin:1,cx,cy}); }
+  // 2 · cordillera lejana con nieve
+  { const [c,g]=mk(W2,H2); ppaper(g,pridge(-20,W2+20,H2*.62,H2*.2,W2/40,2,H2,0),'#A9BCC8',4,{sa:.25,th:1}); for(let i=0;i<6;i++){ const x=W2*(.06+i*.18), y=H2*.44+pj(i,3)*H2*.08; ppaper(g,[[x-H2*.09,y+H2*.08],[x,y],[x+H2*.1,y+H2*.08],[x+H2*.03,y+H2*.06],[x,y+H2*.075],[x-H2*.04,y+H2*.055]],'#F7F4EA',2,{sa:.15,th:.8}); } const hz=g.createLinearGradient(0,H2*.45,0,H2); hz.addColorStop(0,'rgba(244,236,216,0)'); hz.addColorStop(1,'rgba(244,236,216,.5)'); g.fillStyle=hz; g.fillRect(0,0,W2,H2); out.push({c,f:.12}); }
+  // 3 · montañas medias
+  { const [c,g]=mk(W2,H2); ppaper(g,pridge(-20,W2+20,H2*.74,H2*.16,W2/34,5,H2,0),'#7E9C7E',5,{th:1.2}); if(co){ ppaper(g,[[0,H2*.86],[W2*.2,H2*.84],[W2*.2,H2],[0,H2]],'#4FA8C8',3,{sa:.2}); } out.push({c,f:.22}); }
+  // 4 · la gran montaña con la ciudadela en la cima
+  { const [c,g]=mk(W2,H2), cx=W2*.5, top=H2*.2, MW=Math.min(W2,H2*5.6); ppaper(g,[[cx-MW*.3,H2],[cx-MW*.12,H2*.5],[cx-MW*.05,top+H2*.08],[cx,top+H2*.04],[cx+MW*.06,top+H2*.1],[cx+MW*.14,H2*.52],[cx+MW*.32,H2]],'#6E8A5E',6,{th:1.6});
+    ppaper(g,[[cx-MW*.05,top+H2*.08],[cx,top+H2*.04],[cx+MW*.06,top+H2*.1],[cx+MW*.035,top+H2*.16],[cx+MW*.012,top+H2*.12],[cx-MW*.01,top+H2*.17],[cx-MW*.035,top+H2*.13]],'#8A8A7E',3,{th:1});
+    // ciudadela: torres de papel con techos y banderas
+    const u=H2*.012, tw=[[-9,7,10,'#E9DFC8'],[-3,10,16,'#F2E8D2'],[3,8,13,'#E9DFC8'],[8,6,9,'#DCCFB2'],[-12,5,7,'#DCCFB2']];
+    tw.forEach(([dx,w,h,col],i)=>{ const x=cx+dx*u*1.6, b=top+H2*.08; ppaper(g,[[x-w*u/2,b],[x+w*u/2,b],[x+w*u/2,b-h*u],[x-w*u/2,b-h*u]],col,2,{th:.6}); ppaper(g,[[x-w*u/2-u*.6,b-h*u],[x+w*u/2+u*.6,b-h*u],[x,b-h*u-w*u*.8]],i%2?'#A8482B':'#B8572F',2,{th:.6}); g.fillStyle='rgba(255,210,120,.9)'; for(let k=0;k<2;k++) g.fillRect(x-u*.8+k*u*1.2,b-h*u*.6,u*.7,u*1.2);
+      if(i===1){ g.strokeStyle='#5A3A22'; g.lineWidth=u*.4; g.beginPath(); g.moveTo(x,b-h*u-w*u*.8); g.lineTo(x,b-h*u-w*u*.8-u*5); g.stroke(); ppaper(g,[[x,b-h*u-w*u*.8-u*5],[x+u*4,b-h*u-w*u*.8-u*4],[x,b-h*u-w*u*.8-u*3]],'#F2C230',1,{rim:false}); } });
+    const gl=g.createRadialGradient(cx,top+H2*.04,2,cx,top+H2*.04,H2*.25); gl.addColorStop(0,'rgba(255,214,140,.45)'); gl.addColorStop(1,'rgba(255,214,140,0)'); g.fillStyle=gl; g.fillRect(cx-H2*.3,top-H2*.2,H2*.6,H2*.5);
+    // camino dorado que sube en zigzag
+    g.lineCap='round'; g.lineJoin='round'; const path=[[cx-MW*.2,H2*1.02],[cx-MW*.04,H2*.86],[cx-MW*.1,H2*.74],[cx+MW*.05,H2*.62],[cx-MW*.03,H2*.5],[cx+MW*.03,H2*.4],[cx,top+H2*.1]];
+    const stroke=(col,w)=>{ g.strokeStyle=col; g.lineWidth=w; g.beginPath(); path.forEach(([x,y],i)=>i?g.lineTo(x,y):g.moveTo(x,y)); g.stroke(); };
+    stroke('rgba(60,40,20,.25)',H2*.05); stroke('#D9A23A',H2*.04); stroke('#F2C230',H2*.026); g.setLineDash([u*1.2,u*1.6]); stroke('rgba(255,248,220,.8)',u*.5); g.setLineDash([]);
+    out.push({c,f:.34}); }
+  // 5 · colinas del frente con frailejones (o palmas en la versión Colombia) y el senderista
+  { const [c,g]=mk(W2,H2); ppaper(g,[[-10,H2],[-10,H2*.78],[W2*.14,H2*.72],[W2*.3,H2*.86],[W2*.36,H2]],'#4F7A3F',6,{th:1.4}); ppaper(g,[[W2*.62,H2],[W2*.7,H2*.84],[W2*.86,H2*.7],[W2+10,H2*.76],[W2+10,H2]],'#557F43',6,{th:1.4});
+    for(let i=0;i<4;i++) pFrailejon(g,W2*(.025+i*.045)+pj(i,7)*12,H2*(.86+(i%2)*.05),H2*(.09+pj(i,2)*.07),i);
+    if(W2>H2*4){ for(let i=0;i<4;i++) pHouse(g,W2*.2+i*H2*.17,H2*(.83-(i%2)*.02),H2*.15,H2*.1,['#F6EFE2','#F2E8D2'][i%2],'#A8482B',i); pChurch(g,W2*.2+H2*.78,H2*.83,{ch:'blanca',tw:1},H2*.0036); }
+    if(co){ for(let i=0;i<3;i++) pPalm(g,W2*(.74+i*.08),H2*(.84-(i%2)*.04),H2*(.34+pj(i,5)*.08),i); } else { for(let i=0;i<4;i++) pTree(g,W2*(.72+i*.07),H2*(.86-(i%2)*.04),H2*(.3+pj(i,4)*.08),i%2?'pino':'ceiba',i,['#2F5A2A','#3D6B31','#4F7D3F']); }
+    // el senderista subiendo por el camino
+    const keep=ctx; try{ ctx=g; g.save(); g.translate(W2*.5-W2*.07,H2*.86); g.scale(H2*.0042*1.0,H2*.0042); hikerBody(false,.4,COLORS[1],{phase:.9,spd:.5,lean:.12,skin:1,head:'gorra',mood:'happy',role:1}); g.restore(); }catch(e){} finally{ ctx=keep; }
+    out.push({c,f:.55}); }
+  // 6 · nubes colgadas de un hilo
+  { const narrow=W2<H2*3.2; for(let i=0;i<(narrow?2:3);i++){ const w=H2*(narrow?.38:.5+i*.12), x=narrow?W2*[.02,.78][i]:W2*[.14,.33,.84][i]-(i===1?w:0), y=H2*[.2,.12,.18][i], [c,g]=mk(W2,H2); g.strokeStyle='rgba(60,40,20,.35)'; g.lineWidth=1; g.beginPath(); g.moveTo(x+w*.5,0); g.lineTo(x+w*.5,y-w*.12); g.stroke(); const pts=[]; for(let j=0;j<=20;j++){ const tt=j/20; pts.push([x+tt*w,y-Math.abs(Math.sin(tt*Math.PI*3))*w*.12-Math.sin(tt*Math.PI)*w*.1]); } pts.push([x+w,y+4],[x,y+4]); ppaper(g,pts,'#FBF8EF',3,{sa:.2,th:1}); out.push({c,f:.4+i*.1,sway:3+i}); } }
+  // 7 · la frase en una nota de papel con cinta
+  if(W2>520){ const [c,g]=mk(W2,H2), nw=Math.min(W2*.26,330), nh=H2*.62, nx=W2-nw-H2*.12, ny=H2*.16; g.save(); g.translate(nx+nw/2,ny+nh/2); g.rotate(.02); g.translate(-nw/2,-nh/2);
+    g.fillStyle='rgba(30,18,6,.28)'; g.fillRect(4,6,nw,nh); g.fillStyle='#FBF6EA'; g.fillRect(0,0,nw,nh); g.globalCompositeOperation='multiply'; g.globalAlpha=.5; g.fillStyle=g.createPattern(PFIB,'repeat'); g.fillRect(0,0,nw,nh); g.globalAlpha=1; g.globalCompositeOperation='source-over';
+    g.fillStyle='rgba(217,164,65,.6)'; g.save(); g.translate(nw/2,0); g.rotate(-.06); g.fillRect(-nw*.18,-8,nw*.36,16); g.restore();
+    const fs=Math.max(11,Math.min(19,nh*.17)); g.fillStyle='#2B2119'; g.font=`400 ${fs}px "Young Serif", Georgia, serif`; g.textBaseline='top';
+    const words='“No se trata solo de ganar dinero, sino de construir la vida que quieres.”'.split(' '); let line='', yy=nh*.12; const lines=[]; for(const w of words){ const tl=line?line+' '+w:w; if(g.measureText(tl).width>nw*.84){ lines.push(line); line=w; } else line=tl; } lines.push(line);
+    const lh=fs*1.22; yy=Math.max(nh*.08,(nh-lines.length*lh-fs*1.4)/2); lines.forEach(l=>{ g.fillText(l,nw*.08,yy); yy+=lh; }); g.fillStyle='#A8322B'; g.font=`800 ${Math.max(9,fs*.55)}px Figtree, sans-serif`; g.fillText('RUTA A LA CIMA',nw*.08,yy+fs*.35); g.restore(); out.push({c,f:.15}); }
+  return out; }
 
 /* ================= DIPLOMAS v2: diseño de certificado de expedición (cumbre + sendero + parche) ================= */
 // Tokens por ruta: tinta, acento, acento claro, texto, papel, y la paleta de la ilustración (cielo arriba, cielo abajo, sol, 4 planos de montaña lejos→cerca)
