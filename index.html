@@ -1857,8 +1857,8 @@ function showCuaderno(){
   openOv(`<div class="eyebrow">Cuaderno de ruta</div><h2>Conceptos que descubriste</h2><p class="muted">${keys.length?'Cada idea aparece cuando la vives en la montaña. Aquí puedes repasarlas todas.':'Todavía no descubres conceptos. Empieza a subir y aparecerán aquí.'}</p><div class="nblist">${keys.slice().reverse().map(k=>`<div><span>${esc(TIPS[k].g)}</span><b>${esc(TIPS[k].t)}</b><p>${esc(TIPS[k].x)}</p></div>`).join('')}</div><div class="row"><button class="btn" id="bCuX" type="button">${wasPlay?'Seguir jugando':'Cerrar'}</button></div>`);
   document.getElementById('bCuX').onclick=()=>{ if(wasPlay){ S.mode='pause'; togglePause(); } else if(S.mode==='pause'){ S.mode='play'; togglePause(); } else closeOv(); };
 }
-function dust(x,y,n){ if(reduced) n=Math.min(n,2); for(let i=0;i<n;i++) S.parts.push({x:x+(Math.random()-.5)*8,y:y-2,vx:(Math.random()-.5)*1.4,vy:-Math.random()*0.9,life:22+rnd(12),col:'rgba(235,225,205,.75)',r:2+Math.random()*2,dust:true}); }
-function burst(x,y,col,n=8){ if(reduced) n=3; for(let i=0;i<n;i++) S.parts.push({x,y,vx:(Math.random()-.5)*3,vy:-Math.random()*3,life:30+rnd(20),col}); }
+function dust(x,y,n){ if(reduced) n=Math.min(n,2); const pap=(typeof papelOn==='function')&&papelOn(); for(let i=0;i<n;i++) S.parts.push(pap?{x:x+(Math.random()-.5)*8,y:y-2,vx:(Math.random()-.5)*1.6,vy:-Math.random()*1.4,life:24+rnd(12),col:['#EFE4CB','#D9C9A8','#F7F1E2'][i%3],conf:true,rot:Math.random()*6}:{x:x+(Math.random()-.5)*8,y:y-2,vx:(Math.random()-.5)*1.4,vy:-Math.random()*0.9,life:22+rnd(12),col:'rgba(235,225,205,.75)',r:2+Math.random()*2,dust:true}); }
+function burst(x,y,col,n=8){ if(reduced) n=3; const pap=(typeof papelOn==='function')&&papelOn(); for(let i=0;i<n;i++) S.parts.push(pap?{x,y,vx:(Math.random()-.5)*3.4,vy:-Math.random()*3.4,life:34+rnd(20),col:i%3?col:'#F7F1E2',conf:true,rot:Math.random()*6}:{x,y,vx:(Math.random()-.5)*3,vy:-Math.random()*3,life:30+rnd(20),col}); }
 
 function hurt(n,why,cat){
   const p=S.p;
@@ -3657,7 +3657,7 @@ function drawTiles(th){
   const gpat=groundPattern(th); try{ gpat.setTransform(new DOMMatrix([1,0,0,1,-Math.round(S.cam)%96,0])); }catch(e){}
   for(let r=r0;r<=r1;r++) for(let c=c0;c<=c1;c++){
     const t=L.g[r][c]; if(t===' ') continue;
-    const x=Math.round(c*T-S.cam), y=r*T;
+    const x=Math.round(c*T-S.cam), y=r*T+PCOL(c);
     if(t==='#'){
       const depth=Math.max(0,r-(L.surf[c]<0?r:L.surf[c]));
       ctx.fillStyle=gpat; ctx.fillRect(x-0.5,y-0.5,T+1,T+1);
@@ -3929,6 +3929,7 @@ const PROP_SHADE=new Set(['emb','bank','camp','curso','tienda','negocio','lote',
 function drawEnts(only){ const L=S.L; if(S.lowQ) return drawEnts0(only);
   for(const e of L.ents){ if(e.dead||(only&&!only.includes(e.t))) continue; const x=e.x-S.cam; if(x+(e.w||0)<-80||x>W+80) continue;
     if(PROP_SHADE.has(e.t)){ const w=e.w||24, h=e.h||24, pad=e.t==='cloud'?70:34, pk=(e.t==='cloud'||e.t==='ant')?1:popK(e.x+w/2); if(pk<.03) continue; const fy=e.y+h; if(pk!==1){ ctx.save(); ctx.translate(0,fy*(1-pk)); ctx.scale(1,pk); } shaded(x-pad,e.y-pad-24,w+pad*2,h+pad*2+24,()=>drawEnts0([e.t],e),{lit:.12,dark:.22,cheap:1}); if(pk!==1) ctx.restore(); }
+    else if(e.t==='drop'&&papelOn()){ const k=popK(e.x+6); if(k<.05) continue; ctx.save(); ctx.translate(x+6,0); ctx.scale(k,1); ctx.translate(-(x+6),(1-Math.min(1,k))*-30); drawEnts0([e.t],e); ctx.restore(); }
     else drawEnts0([e.t],e); } }
 function drawEnts0(only,one){
   const L=S.L;
@@ -4572,6 +4573,7 @@ function draw(){
   S.parts.forEach(q=>{ ctx.globalAlpha=Math.min(1,q.life/20); ctx.fillStyle=q.col; if(q.conf){ ctx.save(); ctx.translate(q.x-S.cam,q.y); ctx.rotate(q.rot+=0.2); ctx.fillRect(-2,-1,4,2.4); ctx.restore(); } else if(q.dust){ ctx.beginPath(); ctx.arc(q.x-S.cam,q.y,q.r*(1.4-q.life/40),0,7); ctx.fill(); } else ctx.fillRect(q.x-S.cam,q.y,3,3); }); ctx.globalAlpha=1;
   ctx.font='700 8.5px Figtree, sans-serif'; ctx.textAlign='center';
   S.texts.forEach(q=>{ const age=(q.max||90)-q.life, a=Math.min(1,q.life/22,age/6)*0.92; const tw=ctx.measureText(q.txt).width+12, x=Math.max(tw/2+4,Math.min(W-tw/2-4,q.x-S.cam)), y=q.y+(age<6?(6-age)*0.8:0);
+    if(papelOn()){ const ink=mix(q.col,'#2A1A10',.62), rot=((q.x*7)%5-2.5)*.006, pop=age<8?1-Math.sin(age/8*Math.PI)*.25*(1-age/8):1; ctx.save(); ctx.translate(x,y-2.5); ctx.rotate(rot); ctx.scale(1,pop); ctx.globalAlpha=a; ctx.fillStyle='rgba(28,16,6,.25)'; ctx.fillRect(-tw/2+1.2,-5.2,tw,13); ctx.fillStyle='#F7EFDC'; ctx.beginPath(); ctx.moveTo(-tw/2,-6.5); ctx.lineTo(tw/2,-6.5); ctx.lineTo(tw/2-1,6.5); ctx.lineTo(-tw/2+1,6.5); ctx.closePath(); ctx.fill(); ctx.fillStyle='rgba(217,164,65,.55)'; ctx.fillRect(-7,-9,14,4.5); ctx.fillStyle=q.col; ctx.fillRect(-tw/2,-6.5,2.4,13); ctx.fillStyle=ink; ctx.fillText(q.txt,2,2.5); ctx.restore(); return; }
     ctx.globalAlpha=a*0.85; ctx.fillStyle='rgba(10,18,24,.62)'; rr(x-tw/2,y-9,tw,13,6.5); ctx.fill(); ctx.globalAlpha=a; ctx.fillStyle=q.col; ctx.beginPath(); ctx.arc(x-tw/2+5,y-2.5,1.8,0,7); ctx.fill(); ctx.fillText(q.txt,x+2,y); });
   ctx.globalAlpha=1; ctx.textAlign='left';
   ctx.restore();
@@ -8285,6 +8287,7 @@ function drawPapelBg(th){ if(!PAPBG||PAPBG.li!==S.li) PAPBG=papelBuild(S.li);
   // nubes de papel colgadas de hilos
   for(let i=0;i<5;i++){ const c=PAPBG.clouds[i%2], cw=c.width/PPR*.6, x=((i*300-S.cam*.06+S.t*.04)%(W+cw+200)+W+cw+200)%(W+cw+200)-cw-100, y=34+(i%3)*24+Math.sin(S.t*.02+i)*2+climb*.06;
     ctx.strokeStyle='rgba(80,60,40,.35)'; ctx.lineWidth=.5; ctx.beginPath(); ctx.moveTo(x+cw*.3,0); ctx.lineTo(x+cw*.3,y); ctx.moveTo(x+cw*.7,0); ctx.lineTo(x+cw*.7,y); ctx.stroke(); ctx.drawImage(c,x,y-c.height/PPR*.36,cw,c.height/PPR*.6); }
+  try{ drawOrigami(); }catch(e){}
   // capas: el libro se despliega al entrar al mundo (cada capa sube con un rebote)
   const intro=S.papT!=null?Math.max(0,S.papT):0;
   PAPBG.layers.forEach((Ly,i)=>{ const P=Ly.P, off=((S.cam*Ly.f)%P+P)%P, dy=climb*Ly.f*.5, k=intro>0?Math.max(0,Math.min(1,(60-intro-i*8)/30)):1, e=k<1?1-Math.pow(1-k,3)+Math.sin(k*Math.PI)*.08:1, rise=(1-e)*H*.6;
@@ -8303,13 +8306,27 @@ function papelCapture(fn,o){ if(!papelOn()||S.lowQ||S.mode==='title'){ fn(); ret
 function PCAPFIB(g){ if(!g.__fib) g.__fib=g.createPattern(PFIBD,'repeat'); return g.__fib; }
 // bordes de papel del terreno: filo iluminado arriba y a la izquierda, sombra proyectada a la derecha sobre el fondo
 function drawPapelEdges(){ if(!papelOn()||!S.L) return; const c0=Math.floor(S.cam/T)-1, c1=Math.ceil((S.cam+W)/T)+1, r0=Math.max(0,Math.floor(S.camY/T)-1), r1=Math.min(S.L.rows-1,Math.ceil((S.camY+H)/T)+1);
+  const th=THEMES[LV[S.li].theme]||{}, snow=th.deco==='nieve'||th.top==='nieve', gA=snow?'#F4F6F2':mix(th.grass||'#5E8A3C','#FFF4D8',.12), gB=snow?'#DCE4E6':mix(th.grass||'#5E8A3C','#1B2A1A',.2);
   const top=[], sideL=[], sideR=[];
-  for(let c=c0;c<=c1;c++) for(let r=r0;r<=r1;r++){ const sv=solid(c,r), ow=!sv&&oneway(c,r); if(!sv&&!ow) continue; const x=c*T-S.cam, y=r*T;
-    if(!solid(c,r-1)&&!oneway(c,r-1)) top.push(x,y); if(sv&&!solid(c+1,r)) sideR.push(x+T,y); if(sv&&!solid(c-1,r)) sideL.push(x,y); }
+  for(let c=c0;c<=c1;c++){ const oy=PCOL(c); for(let r=r0;r<=r1;r++){ const sv=solid(c,r), ow=!sv&&oneway(c,r); if(!sv&&!ow) continue; const x=c*T-S.cam, y=r*T+oy;
+    if(!solid(c,r-1)&&!oneway(c,r-1)) top.push(x,y,c,sv?1:0); if(sv&&!solid(c+1,r)) sideR.push(x+T,y); if(sv&&!solid(c-1,r)) sideL.push(x,y); } }
   ctx.save(); ctx.fillStyle='rgba(28,16,6,.22)'; for(let i=0;i<sideR.length;i+=2){ ctx.fillRect(sideR[i],sideR[i+1]+2,2.2,T); ctx.fillRect(sideR[i]+2.2,sideR[i+1]+3,1.4,T); }
-  ctx.fillStyle='rgba(255,247,230,.85)'; for(let i=0;i<top.length;i+=2) ctx.fillRect(top[i],top[i+1]-.9,T,1.1); for(let i=0;i<sideL.length;i+=2) ctx.fillRect(sideL[i]-.9,sideL[i+1],1.1,T);
-  ctx.fillStyle='rgba(28,16,6,.18)'; for(let i=0;i<top.length;i+=2) ctx.fillRect(top[i],top[i+1]+.4,T,.8);
+  ctx.fillStyle='rgba(255,247,230,.85)'; for(let i=0;i<top.length;i+=4) ctx.fillRect(top[i],top[i+1]-.9,T,1.1); for(let i=0;i<sideL.length;i+=2) ctx.fillRect(sideL[i]-.9,sideL[i+1],1.1,T);
+  ctx.fillStyle='rgba(28,16,6,.18)'; for(let i=0;i<top.length;i+=4) ctx.fillRect(top[i],top[i+1]+.4,T,.8);
+  if(!S.lowQ){ const wind=Math.sin(S.t*.03)*.8; for(let i=0;i<top.length;i+=4){ if(!top[i+3]) continue; const x=top[i], y=top[i+1], c=top[i+2];
+    for(let k=0;k<5;k++){ const h=2.4+((c*7+k*13)%5)*.7, bx=x+1+k*4.6+((c+k)%2)*.8, lean=wind*(h/5); ctx.fillStyle=k%2?gA:gB; ctx.beginPath(); ctx.moveTo(bx-1.5,y+.2); ctx.lineTo(bx+lean,y-h); ctx.lineTo(bx+1.5,y+.2); ctx.fill(); } } }
   ctx.restore(); }
+
+// ---------- más pop-up: el camino se despliega, flecos de papel, pájaros de origami, sellos con confeti
+function PCOL(c){ if(!papelOn()||reduced) return 0; const sx=c*T+T/2-S.cam; const k=Math.max(0,Math.min(1,(W+10-sx)/90)); if(k>=1) return 0; const e=1-Math.pow(1-k,3)+Math.sin(k*Math.PI)*.1; return Math.round((1-e)*T*4); }
+{ const _st=stampAt; stampAt=function(x,y,txt,sub){ _st(x,y,txt,sub); try{ if(papelOn()) confetti(x,y,14); }catch(e){} }; }
+function drawOrigami(){ const climb=Math.max(0,(S.L.rows*T-H)-S.camY);
+  for(let i=0;i<3;i++){ const bx=((i*270+S.t*(.3+i*.06)-S.cam*.05)%(W+160)+W+160)%(W+160)-80, by=70+i*24+Math.sin(S.t*.012+i)*8+climb*.06, f=Math.sin(S.t*.12+i*2), sc=S.li>=5&&S.li<=7?1.4:1;
+    ctx.save(); ctx.translate(bx,by); ctx.scale(sc,sc);
+    ctx.fillStyle='rgba(28,16,6,.18)'; ctx.beginPath(); ctx.moveTo(-6,8); ctx.lineTo(6,8); ctx.lineTo(0,10); ctx.fill();
+    ctx.fillStyle='#F4EEDF'; ctx.beginPath(); ctx.moveTo(-7,0); ctx.lineTo(7,0); ctx.lineTo(9,-2); ctx.lineTo(0,2.2); ctx.closePath(); ctx.fill();
+    ctx.fillStyle='#E2D8C2'; ctx.beginPath(); ctx.moveTo(-2,0); ctx.lineTo(2,0); ctx.lineTo(-4,-7*f); ctx.closePath(); ctx.fill();
+    ctx.fillStyle='#CFC3A8'; ctx.beginPath(); ctx.moveTo(-1,.5); ctx.lineTo(3,.5); ctx.lineTo(1,5*f+1); ctx.closePath(); ctx.fill(); ctx.restore(); } }
 // ---------- pop-up: cada pieza del decorado se levanta desde su bisagra al entrar en la vista
 function popK(wx){ if(!papelOn()) return 1; const sx=wx-S.cam; const k=Math.max(0,Math.min(1,(W+30-sx)/130,(sx+70)/110)); if(reduced) return k>0?1:0; const e=1-Math.pow(1-k,3); return e+Math.sin(e*Math.PI)*.12; }
 // ---------- pliegues del acordeón y paso de página
