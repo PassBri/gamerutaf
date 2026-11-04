@@ -3020,7 +3020,7 @@ function update(){ try{ botStep(); }catch(e){}
   if(p.onGround && Math.abs(p.vx)>0.3) p.walk+=gaitStep(p.vx,3.3);
   if(p.inv>0) p.inv--; if(p.flash>0) p.flash--;
   { const iv=Math.round(120+180*saludF()); if(eco&&salud()>0&&salud()<70&&S.t-(S.saludT||0)>300&&S.t%iv===0){ eco.salud=Math.min(70,salud()+1); S.saludUp=12; } } // recuperación suave si no te golpean
-  try{ skelTick(p); arenaRecarga(p); hoyoTick(p); caidaTick(p); caidaUpdate(); viajeTick(p); papelTick(p); }catch(e){}
+  try{ skelTick(p); arenaRecarga(p); hoyoTick(p); caidaTick(p); caidaUpdate(); viajeTick(p); papelTick(p); plataTick(p); }catch(e){}
   if(salud()<=0&&!S.busy&&!p.caught){ muerteStart(); return; }
   if(atkPressed){ atkPressed=false; if(!(p.atkCd>0)&&!S.busy&&!p.caught){ p.atk=16; p.atkCd=26; p.swing=(p.swing||0)+1; p.atkHit=0; snd('drop'); if(!eco.seenNo){ eco.seenNo=1; learn('decirno'); } } }
   if(p.atkCd>0) p.atkCd--; if(p.atk>0){ p.atk--; if(p.atk<=12&&p.atk>=5) defendHit(p); }
@@ -4568,7 +4568,7 @@ function draw(){
   ctx.save();
   const sh=S.shake&&!reduced?S.shake:0;
   ctx.translate(sh?(Math.random()-.5)*sh:0, -Math.round(S.camY)+(sh?(Math.random()-.5)*sh:0));
-  drawDeco(th); drawArenaBack(); try{ drawHoyos(); drawViajeWorld(); }catch(e){} S.plabels=[]; drawPlats(th); drawTiles(th); try{ drawPapelEdges(); }catch(e){} drawArenaFloor(); { const by=S.L.rows*T; if(by<S.camY+H){ ctx.fillStyle=th.earth; ctx.fillRect(0,by,W,S.camY+H-by+2); ctx.fillStyle='rgba(0,0,0,.18)'; ctx.fillRect(0,by,W,S.camY+H-by+2); } } drawEnts(); drawArenaFront(); drawPlatLabels(); drawHiker(); drawPigFx(); drawWorldHazards(); drawBusy(); try{ drawMedBag(); drawInflHud(); drawRecargas(); drawHoyoHud(); drawViajeFront(); }catch(e){} drawFront();
+  drawDeco(th); drawArenaBack(); try{ drawHoyos(); drawViajeWorld(); }catch(e){} S.plabels=[]; drawPlats(th); drawTiles(th); try{ drawPapelEdges(); }catch(e){} drawArenaFloor(); { const by=S.L.rows*T; if(by<S.camY+H){ ctx.fillStyle=th.earth; ctx.fillRect(0,by,W,S.camY+H-by+2); ctx.fillStyle='rgba(0,0,0,.18)'; ctx.fillRect(0,by,W,S.camY+H-by+2); } } drawEnts(); drawArenaFront(); drawPlatLabels(); drawHiker(); drawPigFx(); drawWorldHazards(); drawBusy(); try{ drawMedBag(); drawInflHud(); drawRecargas(); drawHoyoHud(); drawViajeFront(); drawPlata(); }catch(e){} drawFront();
   S.pops.forEach(q=>{ const k=1-q.life/14; ctx.globalAlpha=1-k; ctx.save(); ctx.globalCompositeOperation='lighter'; drop(q.x-S.cam,q.y-k*10,1+k*0.8,'#8EE0FF'); ctx.restore(); }); ctx.globalAlpha=1;
   S.parts.forEach(q=>{ ctx.globalAlpha=Math.min(1,q.life/20); ctx.fillStyle=q.col; if(q.conf){ ctx.save(); ctx.translate(q.x-S.cam,q.y); ctx.rotate(q.rot+=0.2); ctx.fillRect(-2,-1,4,2.4); ctx.restore(); } else if(q.dust){ ctx.beginPath(); ctx.arc(q.x-S.cam,q.y,q.r*(1.4-q.life/40),0,7); ctx.fill(); } else ctx.fillRect(q.x-S.cam,q.y,3,3); }); ctx.globalAlpha=1;
   ctx.font='700 8.5px Figtree, sans-serif'; ctx.textAlign='center';
@@ -4591,7 +4591,7 @@ function draw(){
   // viñeta suave
   const VIG=[.62,.42,.3,.3,.38,.28,.22,.2][S.li]||.25; const vg=ctx.createRadialGradient(W/2,H*.55,H*(S.li===0?.3:.42),W/2,H/2,W*0.66); vg.addColorStop(0,'rgba(0,0,0,0)'); vg.addColorStop(1,'rgba(4,6,10,'+VIG+')'); ctx.fillStyle=vg; ctx.fillRect(0,0,W,H); drawGrain();
   { const hv=W<640, sv=[W,H]; if(hv){ ctx.save(); const sc=W/580; ctx.scale(sc,sc); H=Math.round(H/sc); W=580; }
-    try{ drawEventFx(); if(fightActive()) drawFightHud(); else { drawHud(); drawScore(); } drawPowerHud(); try{ drawSkelHud(); drawBotBadge(); }catch(e){} if(!fightActive()){ drawSaludHud(); drawVerdeHud(); } drawParcaHud(); drawQCard(); drawDisasterHud(); drawGuides(); try{ drawPagina(); }catch(e){} } finally { if(hv){ W=sv[0]; H=sv[1]; ctx.restore(); } } }
+    try{ drawEventFx(); if(fightActive()) drawFightHud(); else { drawHud(); drawScore(); } drawPowerHud(); try{ drawSkelHud(); drawBotBadge(); }catch(e){} if(!fightActive()){ drawSaludHud(); drawVerdeHud(); } drawParcaHud(); drawQCard(); drawDisasterHud(); drawGuides(); try{ drawPagina(); drawBilletera(); }catch(e){} } finally { if(hv){ W=sv[0]; H=sv[1]; ctx.restore(); } } }
   drawMuerteFx(); syncTip();
   if(S.coach>0&&S.mode==='play'){ const a=Math.min(1,S.coach/40); ctx.globalAlpha=a; const t1=isTouch()?'Usa los botones de abajo o toca donde quieres ir':'Flechas ← → para caminar · Espacio para saltar', t2=isTouch()?'Toca arriba del senderista para saltar':'También puedes hacer clic donde quieres ir (clic arriba de él = saltar)';
     ctx.font='800 13px Figtree, sans-serif'; const w1=Math.max(ctx.measureText(t1).width,ctx.measureText(t2).width)+28; ctx.fillStyle='rgba(10,20,26,.82)'; rr(W/2-w1/2,H/2-70,w1,48,12); ctx.fill(); ctx.strokeStyle='#F2B33D'; ctx.lineWidth=1.5; rr(W/2-w1/2,H/2-70,w1,48,12); ctx.stroke();
@@ -7826,7 +7826,7 @@ skelBody=function(air,w,o,split){
 const BOT={on:false,stuck:0,lastX:0,hold:0,dir:1,back:0,log:[]};
 function botStep(){ if(!BOT.on||!S.p||!S.L) return; const p=S.p;
   // ventanas que piden decidir: el bot elige la primera opción (la más prudente)
-  if(!ov.hidden){ const b=box.querySelector('.mopt,[data-m="fondo"],[data-c="0"]'); if(b&&(S.mode==='caso'||S.mode==='mama')){ b.click(); return; } }
+  if(!ov.hidden){ const b=box.querySelector('#bfOk,.mopt,[data-m="fondo"],[data-c="0"]'); if(b&&(S.mode==='caso'||S.mode==='mama')){ b.click(); return; } }
   if(S.mode!=='play') return;
   keys.left=false; keys.right=true; keys.down=false;
   if(S.fight&&S.fight.on&&S.fight.e&&!S.fight.e.dead){ const B=S.fight.e, dx=(B.x+B.w/2)-(p.x+p.w/2), ad=Math.abs(dx); keys.right=false;
@@ -7860,7 +7860,7 @@ function botOverlay(){ if(!BOT.on) return; const m=S.mode; BOT.ovT++;
   const click=id=>{ const b=document.getElementById(id); if(b&&!b.disabled&&b.offsetParent!==null){ b.click(); return true; } return false; };
   if(m==='muerte'){ if(click('bRevive')) BOT.ovT=0; return; }
   { const pr=box.querySelector('[data-pr]'); if(pr&&!ov.hidden&&BOT.ovT>4){ pr.click(); BOT.ovT=0; return; } }
-  if(m==='caso'||m==='mama'){ const b=box.querySelector('.mopt,[data-m="fondo"],[data-c="0"]'); if(b&&BOT.ovT>3){ b.click(); BOT.ovT=0; } return; }
+  if(m==='caso'||m==='mama'){ const ok=document.getElementById('bfOk'); if(ok&&BOT.ovT>3){ ok.click(); BOT.ovT=0; return; } const b=box.querySelector('.mopt,[data-m="fondo"],[data-c="0"]'); if(b&&BOT.ovT>3){ b.click(); BOT.ovT=0; } return; }
   if(m==='camp'&&BOT.ovT>8){ BOT.ovT=0; const li=S.li; if(li+1<LV.length){ try{ save(li+1); }catch(e){} showMap(li+1,{from:li}); } else BOT.on=false; return; }
   if(BOT.ovT>4&&(click('bMapGo')||click('bGo'))){ BOT.ovT=0; return; }
   if(m==='play'&&!ov.hidden&&BOT.ovT>6){ const b=box.querySelector('button.primary,button'); if(b){ b.click(); BOT.ovT=0; } } }
@@ -8365,6 +8365,177 @@ Object.assign(TIPS,{culona:{t:'La hormiga culona',g:'Santander',x:'Las hormigas 
   ctx.restore();
   antIcon(ANT_K[antKind(e)],x+9,y-11+Math.sin(S.t*0.08+e.x)*1.5,S.t*0.07+e.x*0.1); }; }
 function papelTick(p){ if(!papelOn()||!S.L) return; if(!(eco.seen||{}).culona&&S.L.ents.some(e=>e.t==='ant'&&!e.dead&&Math.abs(e.x-p.x)<170)) learn('culona'); }
+
+/* ================= PLATA DE PAPEL: pesos, sencillo, dólares y otras monedas, billete viejo y billete falso =================
+   Billetes y monedas inspirados en los reales (denominación, color y estilo) pero con dibujo propio de Santander y la palabra RUTA:
+   no son réplicas. En el juego cada moneda vale $1.000 pesos. */
+const PESOS=1000;
+function fmtP(v){ return '$'+String(Math.round(v)).replace(/\B(?=(\d{3})+(?!\d))/g,'.'); }
+const BILL={billete:{v:2,d:'2.000',c:'#6E93B8',m:'culona'}, b5:{v:5,d:'5.000',c:'#9A6A48',m:'canon'}, b10:{v:10,d:'10.000',c:'#C25E62',m:'iglesia'}, falso:{v:0,d:'20.000',c:'#E08A3A',m:'frailejon'}};
+const SENC={m50:{v:50,c:'#C9CED2',m:'oso',n:'oso de anteojos'},m100:{v:100,c:'#D9B45A',m:'frailejon',n:'frailejón'},m200:{v:200,c:'#C9CED2',m:'guacamaya',n:'guacamaya'},m500:{v:500,c:'#D9B45A',m:'rana',n:'rana'}};
+const FX={usd:{n:'dólar',pl:'dólares',s:'US$1',c:'#86A07E',base:4},eur:{n:'euro',pl:'euros',s:'€1',c:'#7D9BD0',base:4.6},brl:{n:'real',pl:'reales',s:'R$1',c:'#5FAAA4',base:.8},pen:{n:'sol',pl:'soles',s:'S/1',c:'#CFA650',base:1.15}};
+const COMERCIO=[19,20,28,29,30,31];
+Object.assign(VALOR_V,{b5:5,b10:10}); Object.assign(VALOR_N,{billete:'billete de $2.000',b5:'billete de $5.000',b10:'billete de $10.000'}); Object.assign(VALOR_C,{b5:'#E8D2B8',b10:'#F2C9C4'});
+Object.assign(TIPS,{
+ pesos:{t:'Cada moneda vale $1.000',g:'Plata de papel',x:'En el juego cada moneda vale $1.000 pesos. Un billete de $2.000 vale 2 monedas y uno de $5.000 vale 5. Los billetes del juego están inspirados en los colombianos, pero con dibujos de Santander: no son copias.'},
+ sencillo:{t:'El sencillo suma',g:'Plata de papel',x:'Las moneditas de $50, $100, $200 y $500 parecen no valer nada, pero juntas hacen $1.000. Lo mismo pasa al revés: los gastos pequeños, juntos, se comen la quincena.'},
+ dolar:{t:'El dólar y la tasa de cambio',g:'Plata de papel',x:'Un dólar no siempre vale los mismos pesos: la tasa de cambio sube y baja cada día. Si recibes dólares (por exportar o por una remesa), lo que te dan en pesos depende del día en que cambies.'},
+ cambio:{t:'La casa de cambio',g:'Plata de papel',x:'La casa de cambio te compra barato y te vende caro: la diferencia es su ganancia. Antes de cambiar, compara precios y no cambies de afán.'},
+ fxmundo:{t:'Monedas del mundo',g:'Plata de papel',x:'Cada país tiene su moneda: euro, real, sol, dólar. Para saber cuánto vale algo, conviértelo a pesos con la tasa del día: 3 soles no es lo mismo que 3 euros.'},
+ viejo:{t:'El billete viejo',g:'Inflación',x:'La plata guardada debajo del colchón pierde valor: con la inflación, el mismo billete compra cada vez menos. Por eso conviene ahorrar donde la plata crezca, como un CDT.'},
+ falso:{t:'El billete falso',g:'Plata de papel',x:'Antes de recibir un billete: tócalo (el papel tiene relieve), míralo a contraluz (marca de agua e hilo de seguridad) y gíralo (la tinta cambia de color). Un billete falso es papel sin valor.'},
+ mojado:{t:'Billetes mojados y rotos',g:'Plata de papel',x:'El efectivo se moja, se rompe y se pierde. Guárdalo protegido y, si se daña, el banco puede cambiarlo. En una cuenta o en el banco tu plata está más segura.'}});
+
+// ---------- dibujo: billete de papel con marco, guilloche, motivo de Santander y la palabra RUTA
+function motivo(m,x,y,s,col){ ctx.save(); ctx.translate(x,y); ctx.scale(s,s); ctx.fillStyle=col; ctx.strokeStyle=col; ctx.lineWidth=.7;
+  if(m==='culona'){ ctx.beginPath(); ctx.ellipse(-2.4,0,2.6,2,0,0,7); ctx.fill(); ctx.beginPath(); ctx.arc(.8,-.3,1,0,7); ctx.arc(2.6,-.8,1.2,0,7); ctx.fill(); ctx.beginPath(); ctx.moveTo(3.2,-1.8); ctx.lineTo(4.4,-3.4); ctx.stroke(); }
+  else if(m==='canon'){ ctx.beginPath(); ctx.moveTo(-4.5,2.5); ctx.lineTo(-2.4,-2.6); ctx.lineTo(-.6,1); ctx.lineTo(.6,1); ctx.lineTo(2.4,-2.8); ctx.lineTo(4.5,2.5); ctx.fill(); }
+  else if(m==='iglesia'){ ctx.fillRect(-3,-1,6,3.6); ctx.beginPath(); ctx.moveTo(-3.6,-1); ctx.lineTo(0,-3); ctx.lineTo(3.6,-1); ctx.fill(); ctx.fillRect(1.6,-5,1.4,4); }
+  else if(m==='frailejon'){ ctx.fillRect(-.5,0,1,3); for(let i=0;i<7;i++){ const a=-Math.PI/2+(i/6-.5)*2.6; ctx.beginPath(); ctx.moveTo(0,0); ctx.lineTo(Math.cos(a)*3.4,Math.sin(a)*3.4); ctx.stroke(); } }
+  else if(m==='oso'){ ctx.beginPath(); ctx.arc(0,0,2.6,0,7); ctx.arc(-2,-2.2,1,0,7); ctx.arc(2,-2.2,1,0,7); ctx.fill(); }
+  else if(m==='guacamaya'){ ctx.beginPath(); ctx.ellipse(0,0,1.6,2.8,.5,0,7); ctx.fill(); ctx.beginPath(); ctx.moveTo(1,1.6); ctx.lineTo(3.2,4.4); ctx.lineTo(.2,2.4); ctx.fill(); }
+  else if(m==='rana'){ ctx.beginPath(); ctx.ellipse(0,.6,2.8,1.9,0,0,7); ctx.fill(); ctx.beginPath(); ctx.arc(-1.4,-1.2,.9,0,7); ctx.arc(1.4,-1.2,.9,0,7); ctx.fill(); }
+  else if(m==='arco'){ ctx.beginPath(); ctx.arc(0,1.5,3,Math.PI,0); ctx.lineTo(3,2.5); ctx.lineTo(-3,2.5); ctx.closePath(); ctx.stroke(); }
+  else if(m==='estrella'){ for(let i=0;i<5;i++){ const a=i/5*Math.PI*2-Math.PI/2; ctx.beginPath(); ctx.arc(Math.cos(a)*2.6,Math.sin(a)*2.6,.6,0,7); ctx.fill(); } }
+  ctx.restore(); }
+function billPaper(x,y,col,den,mot,o={}){ const t=o.t??S.t, w=(o.w||20), h=w*.5, fl=o.still?0:Math.sin(t*.12+(o.ph||0))*1.6, rot=o.rot??(o.still?0:Math.sin(t*.06+(o.ph||0))*.16);
+  ctx.save(); ctx.translate(x,y); ctx.rotate(rot); if(o.sx!=null) ctx.scale(o.sx,1); if(o.a!=null) ctx.globalAlpha=o.a;
+  const pts=[[-w/2,-h/2],[0,-h/2+fl*.2],[w/2,-h/2+fl*.45],[w/2,h/2+fl*.45],[0,h/2+fl*.2],[-w/2,h/2]];
+  const path=()=>{ ctx.beginPath(); pts.forEach(([a,b],i)=>i?ctx.lineTo(a,b):ctx.moveTo(a,b)); ctx.closePath(); };
+  ctx.fillStyle='rgba(28,16,6,.28)'; ctx.save(); ctx.translate(1.2,1.6); path(); ctx.fill(); ctx.restore();
+  path(); ctx.fillStyle=o.faded?mix(col,'#D8D0C0',.55):mix(col,'#F4EEE0',.42); ctx.fill();
+  ctx.save(); path(); ctx.clip();
+  ctx.fillStyle=o.faded?mix(col,'#B8B0A0',.5):col; ctx.fillRect(-w/2,-h/2+fl*.2,w*.34,h+1); // franja de color
+  ctx.strokeStyle='rgba(255,255,255,.28)'; ctx.lineWidth=.35; for(let i=0;i<5;i++){ ctx.beginPath(); for(let k=0;k<=12;k++){ const xx=-w/2+k*w/12, yy=-h/2+2+i*1.6+Math.sin(k*1.1+i)*.7; k?ctx.lineTo(xx,yy):ctx.moveTo(xx,yy); } ctx.stroke(); }
+  ctx.globalCompositeOperation='multiply'; ctx.globalAlpha=(o.a??1)*.35; if(typeof PFIBD!=='undefined'){ ctx.fillStyle=PCAPFIB(ctx); ctx.fillRect(-w/2,-h/2-2,w,h+4); } ctx.globalAlpha=o.a??1; ctx.globalCompositeOperation='source-over';
+  ctx.restore();
+  ctx.strokeStyle=mix(col,'#2A1A10',.45); ctx.lineWidth=.45; ctx.strokeRect(-w/2+1.2,-h/2+1.2+fl*.15,w-2.4,h-2.4);
+  motivo(mot,-w/2+w*.17,fl*.1,w/26,'rgba(255,248,232,.9)');
+  ctx.fillStyle=mix(col,'#2A1A10',.6); ctx.textAlign='right'; ctx.font=`800 ${w*.24}px Figtree, sans-serif`; ctx.fillText(den,w/2-1.6,h/2-1.6+fl*.4); ctx.font=`800 ${w*.11}px Figtree, sans-serif`; ctx.fillText('RUTA',w/2-1.6,-h/2+3.4+fl*.4); ctx.textAlign='left';
+  path(); ctx.strokeStyle='rgba(255,250,236,.55)'; ctx.lineWidth=.5; ctx.stroke();
+  ctx.restore(); }
+// moneda de papel metalizado que gira mostrando el canto
+function coinPaper(x,y,r,col,mot,t){ const c=Math.cos(t), sx=Math.max(.12,Math.abs(c)), edge=(1-sx)*r*.45;
+  ctx.save(); ctx.translate(x,y); ctx.fillStyle='rgba(28,16,6,.25)'; ctx.beginPath(); ctx.ellipse(1,r+1.6,r*.8*sx+1,1.2,0,0,7); ctx.fill();
+  ctx.fillStyle=mix(col,'#3A2A10',.45); ctx.beginPath(); ctx.ellipse(edge*Math.sign(c||1),0,r*sx,r,0,0,7); ctx.fill();
+  ctx.fillStyle=col; ctx.beginPath(); ctx.ellipse(0,0,r*sx,r,0,0,7); ctx.fill();
+  const g=ctx.createLinearGradient(-r,-r,r,r); g.addColorStop(0,'rgba(255,255,240,.7)'); g.addColorStop(.4,'rgba(255,255,255,0)'); g.addColorStop(.6,'rgba(255,255,255,.35)'); g.addColorStop(1,'rgba(40,30,10,.25)'); ctx.fillStyle=g; ctx.beginPath(); ctx.ellipse(0,0,r*sx,r,0,0,7); ctx.fill();
+  ctx.strokeStyle=mix(col,'#3A2A10',.5); ctx.lineWidth=.5; ctx.beginPath(); ctx.ellipse(0,0,r*.78*sx,r*.78,0,0,7); ctx.stroke();
+  if(sx>.45){ ctx.save(); ctx.scale(sx,1); motivo(mot,0,0,r/5.2,mix(col,'#3A2A10',.55)); ctx.restore(); }
+  ctx.strokeStyle='rgba(255,250,236,.6)'; ctx.lineWidth=.5; ctx.beginPath(); ctx.ellipse(-.3,-.3,r*sx,r,0,Math.PI*1.05,Math.PI*1.75); ctx.stroke(); ctx.restore(); }
+{ const _val=valuable; valuable=function(k,x,y,s=1,t=0){ if(!papelOn()) return _val(k,x,y,s,t);
+  if(BILL[k]) return billPaper(x,y,BILL[k].c,BILL[k].d,BILL[k].m,{t,ph:x*.1,w:20*s});
+  if(k==='moneda'||!k) return coinPaper(x,y,7*s,'#D9A84A','canon',t*.05);
+  return _val(k,x,y,s,t); }; }
+
+// ---------- reparto en cada mundo: sencillo, billetes grandes, divisas, casa de cambio, billete viejo y billete falso
+function plataFlat(L,frac){ for(let c=Math.floor(L.w*frac);c<L.w-6;c++){ const s=L.surf[c]; if(s==null||s<2) continue; if([0,1,2].every(d=>L.surf[c+d]===s)&&!(L.hoyos||[]).some(H=>c+3>H.c-2&&c<H.c+H.WD+2)) return c; } return -1; }
+{ const _bl5=buildLevel; buildLevel=function(li){ const L=_bl5(li); try{ L.plata=[];
+    const drops=L.ents.filter(e=>e.t==='drop'&&!e.fall);
+    drops.forEach((e,i)=>{ const h=pj(i,li+3);
+      if(e.k==='moneda'&&h<.28){ e.dead=true; const ks=Object.keys(SENC); L.plata.push({t:'senc',k:ks[Math.floor(pj(i,li+5)*4)],x:e.x,y:e.y+2,w:12,h:12,ph:i}); }
+      else if(e.k==='billete'&&h<.18) e.k='b5'; else if(e.k==='lingote'&&h<.12&&li>=8) e.k='b10'; });
+    L.ents=L.ents.filter(e=>!e.dead);
+    const J=L.ents.find(e=>e.t==='jefeM'), xmax=J?J.x-30*T:L.w*T*.8;
+    if(COMERCIO.includes(li)){ const ks=li===30?['usd','eur','brl','pen','usd','eur','pen','brl']:['usd','usd','usd','usd','usd','usd'];
+      ks.forEach((k,i)=>{ const c=Math.floor(L.w*(.12+i*.07)), s=L.surf[c]; if(s>1&&c*T<xmax) L.plata.push({t:'fx',k,x:c*T+6,y:s*T-30-(i%2)*14,w:14,h:12,ph:i}); });
+      const cc=plataFlat(L,.52); if(cc>0&&cc*T<xmax) L.plata.push({t:'cambio',x:cc*T,y:L.surf[cc]*T,w:3*T,h:2*T});
+      if(li===30){ const cf=plataFlat(L,.66); if(cf>0&&cf*T<xmax) L.plata.push({t:'cafe',x:cf*T,y:L.surf[cf]*T,w:2*T,h:2*T}); } }
+    if(li>=9){ const c=plataFlat(L,.41); if(c>0&&c*T<xmax) L.plata.push({t:'viejo',x:c*T+12,y:L.surf[c]*T-26,w:20,h:12}); }
+    if(li>=2&&li%2===0){ const c=plataFlat(L,.33); if(c>0&&c*T<xmax) L.plata.push({t:'falso',x:c*T+12,y:L.surf[c]*T-24,w:20,h:12}); }
+  }catch(e){ L.plata=L.plata||[]; } return L; }; }
+// tasa del día: sube y baja cada quincena (5 s)
+function tasa(k){ const q=Math.floor((S.t||0)/300), b=FX[k].base; return b*(1+.14*Math.sin(q*.9+S.li*1.3+k.length)+.06*Math.sin(q*2.3+k.charCodeAt(0))); }
+const compra=k=>tasa(k)*.88, venta=k=>tasa(k)*1.12;
+const f1=v=>(Math.round(v*10)/10).toLocaleString('es-CO');
+
+// ---------- actualización
+function plataTick(p){ const L=S.L; if(!L||!L.plata) return; eco.fx=eco.fx||{}; eco.sencillo=eco.sencillo||0;
+  if(!(eco.seen||{}).pesos&&S.li===0&&S.t>240) learn('pesos');
+  for(const it of L.plata){ if(it.dead) continue; const hit=overlap(p,it);
+    if(it.t==='senc'&&hit){ it.dead=true; const C=SENC[it.k]; eco.sencillo+=C.v; snd('drop'); burst(it.x+6,it.y+6,C.c,5); learn('sencillo');
+      addText(it.x-20,it.y-10,'+'+fmtP(C.v)+' de sencillo · llevas '+fmtP(eco.sencillo),'#E8E0C8');
+      if(eco.sencillo>=PESOS){ eco.sencillo-=PESOS; ganar(1); stampAt(p.x+p.w/2,p.y-10,'¡EL SENCILLO SUMA!','juntaste $1.000'); } }
+    else if(it.t==='fx'&&hit){ it.dead=true; eco.fx[it.k]=(eco.fx[it.k]||0)+1; snd('drop'); burst(it.x+6,it.y+6,FX[it.k].c,6); learn(it.k==='usd'?'dolar':'fxmundo');
+      addText(it.x-30,it.y-10,'+1 '+FX[it.k].n+' · hoy vale '+fmtP(compra(it.k)*PESOS)+' en la casa de cambio','#DDE8D2'); }
+    else if(it.t==='viejo'){ const v=viejoVal(); if(hit){ it.dead=true; learn('viejo'); if(v>0) ganar(v); snd(v>2?'drop':'bad'); addText(it.x-40,it.y-14,v>0?'Billete viejo: hoy solo vale +'+v+' (al empezar el mundo valía 8)':'El billete viejo ya no vale nada','#FFE1A8'); toast('El billete viejo','Lo encontraste debajo de un colchón. Mientras más esperaste, menos valía: la inflación se come la plata quieta.'); } }
+    else if(it.t==='falso'&&hit&&!S.busy&&S.mode==='play'){ it.dead=true; falsoOpen(); return; }
+    else if((it.t==='cambio'||it.t==='cafe')&&!S.busy&&S.mode==='play'){ const near=p.x+p.w>it.x+8&&p.x<it.x+it.w-8&&Math.abs((p.y+p.h)-it.y)<20;
+      if(near&&!it.inside){ it.inside=true; if(it.t==='cambio'&&Object.values(eco.fx).some(v=>v>0)){ cambioOpen(); return; } if(it.t==='cafe'&&!it.used){ it.used=true; cafeOpen(); return; } if(it.t==='cambio') addText(it.x-20,it.y-60,'Casa de cambio: trae dólares u otras monedas','#E8E0C8'); }
+      if(!near) it.inside=false; } }
+  // billetes mojados con el aguacero
+  if(S.vj&&S.vj.clima==='lluvia'&&!S.vj.mojMsg&&eco.hand>=5){ S.vj.mojMsg=1; learn('mojado'); addText(p.x-60,p.y-36,'¡Se te mojan los billetes! El efectivo se daña; en el banco está seguro','#9FD3FF'); }
+  // pérdidas grandes: los billetes salen volando como hojas
+  if(S.lastHand!=null&&eco.hand<S.lastHand-2&&papelOn()){ const n=Math.min(10,S.lastHand-eco.hand); for(let i=0;i<n;i++) S.hojas.push({x:p.x+p.w/2,y:p.y+8,vx:(Math.random()-.5)*4,vy:-2-Math.random()*3,rot:Math.random()*6,vr:(Math.random()-.5)*.2,life:110,k:i%3?'billete':'b5'}); }
+  if(S.lastHand!==eco.hand){ S.walletT=170; S.walletTo=eco.hand; } S.lastHand=eco.hand;
+  S.hojas=(S.hojas||[]).filter(h=>{ h.vy=Math.min(h.vy+.08,1.4); h.vx+=Math.sin(S.t*.15+h.rot)*.12; h.x+=h.vx; h.y+=h.vy; h.rot+=h.vr; return --h.life>0; });
+  if(S.walletT>0) S.walletT--; }
+function viejoVal(){ return Math.max(0,8-Math.floor((S.t||0)/600)); }
+{ const _sl3=startLevel; startLevel=function(li){ _sl3(li); S.hojas=[]; S.lastHand=null; S.walletT=0; }; }
+
+// ---------- billete falso: toque, mire y gire
+function billCanvas(w,h,col,den,mot,luz){ const c=document.createElement('canvas'); c.width=w*2; c.height=h*2; c.style.width=w+'px'; c.style.height=h+'px'; c.style.maxWidth='100%'; const g=c.getContext('2d'); const prev=ctx; ctx=g; try{ g.scale(2*w/40,2*w/40); billPaper(20,10.5,col,den,mot,{still:true,w:36,t:0});
+    if(luz){ g.globalCompositeOperation='screen'; const lg=g.createRadialGradient(20,10,2,20,10,24); lg.addColorStop(0,'rgba(255,250,220,.95)'); lg.addColorStop(1,'rgba(255,240,200,.35)'); g.fillStyle=lg; g.fillRect(2,1,36,19); g.globalCompositeOperation='source-over';
+      g.setLineDash([1,1]); g.strokeStyle='#C0392B'; g.lineWidth=.5; g.beginPath(); g.ellipse(10,10,4.5,5.5,0,0,7); g.stroke(); g.beginPath(); g.moveTo(24,2); g.lineTo(24,19); g.stroke(); g.setLineDash([]);
+      g.fillStyle='#C0392B'; g.font='800 2.6px Figtree, sans-serif'; g.fillText('sin marca de agua',4,18.6); g.fillText('sin hilo',25,6); } } finally{ ctx=prev; } return c; }
+function falsoOpen(){ learn('falso'); S.mode='caso'; const B=BILL.falso;
+  openOv(`<div class="eyebrow">Plata de papel · billete de ${fmtP(20000)}</div><h2>Te pagan con un billete</h2><p>Alguien te paga con este billete nuevecito y te afana: «¡rápido, que me voy!». ¿Qué haces?</p><div id="bfCv" style="display:flex;justify-content:center;margin:8px 0"></div>
+   <div class="mopts"><button class="mopt" type="button" data-bf="1"><b>Toco, miro a contraluz y lo giro</b><span>Revisar no toma ni diez segundos.</span></button><button class="mopt" type="button" data-bf="0"><b>Lo guardo rápido</b><span>Se ve bien y la persona tiene afán.</span></button></div>`);
+  const host=document.getElementById('bfCv'); if(host) host.appendChild(billCanvas(260,136,B.c,B.d,B.m,false));
+  box.querySelectorAll('[data-bf]').forEach(b=>b.onclick=()=>{ const p=S.p;
+    if(b.dataset.bf==='1'){ if(host){ host.innerHTML=''; host.appendChild(billCanvas(260,136,B.c,B.d,B.m,true)); }
+      box.querySelector('.mopts').outerHTML=`<p class="fb ok"><b>¡Era falso!</b> A contraluz no tiene marca de agua ni hilo de seguridad, el papel es liso y la tinta no cambia de color al girarlo. Lo rechazas.</p><div class="row"><button class="btn primary" type="button" id="bfOk">Seguir</button></div>`;
+      document.getElementById('bfOk').onclick=()=>{ closeOv(); S.mode='play'; saludAdd(3,'revisaste el billete'); stampAt(p.x+p.w/2,p.y-10,'¡FALSO!','toque, mire y gire'); logD('Ahorro','Rechazaste un billete falso',0); }; }
+    else { closeOv(); S.mode='play'; saludAdd(-2,'recibiste un billete falso'); addText(p.x-60,p.y-30,'Era falso: papel sin valor. Toque, mire y gire','#FFC7BF'); logD('Pérdida','Recibiste un billete falso de $20.000',0); toast('Era un billete falso','La próxima vez: tócalo (relieve), míralo a contraluz (marca de agua e hilo) y gíralo (la tinta cambia de color).'); } }); }
+
+// ---------- casa de cambio
+function cambioOpen(){ learn('cambio'); S.mode='caso'; const hold=Object.entries(eco.fx).filter(([k,v])=>v>0);
+  const rows=hold.map(([k,v])=>`<div class="item"><span class="n"><b>${v} ${v===1?FX[k].n:FX[k].pl}</b><br><span class="muted">Te compran a ${fmtP(compra(k)*PESOS)} · te venden a ${fmtP(venta(k)*PESOS)}</span></span><span class="m">${fmtP(v*compra(k)*PESOS)}</span></div>`).join('');
+  const tot=hold.reduce((a,[k,v])=>a+v*compra(k),0), mon=Math.floor(tot);
+  openOv(`<div class="eyebrow">Casa de cambio · tasa del día</div><h2>Cambiar a pesos</h2><p>La tasa cambia cada quincena. La casa te <b>compra</b> barato y te <b>vende</b> caro: esa diferencia es su ganancia.</p>${rows}
+   <p>Hoy recibirías <b>${fmtP(tot*PESOS)}</b> (${mon} moneda${mon===1?'':'s'}).</p>
+   <div class="mopts"><button class="mopt" type="button" data-cb="1"><b>Cambiar todo hoy</b><span>Recibes ${mon} moneda${mon===1?'':'s'} ahora.</span></button><button class="mopt" type="button" data-cb="0"><b>Esperar otra quincena</b><span>Puede subir… o bajar.</span></button></div>`);
+  box.querySelectorAll('[data-cb]').forEach(b=>b.onclick=()=>{ closeOv(); S.mode='play'; const p=S.p;
+    if(b.dataset.cb==='1'){ eco.fx={}; if(mon>0) ganar(mon); const resto=tot-mon; eco.sencillo=(eco.sencillo||0)+Math.round(resto*PESOS); logD('Ingreso','Cambiaste divisas a pesos',mon); stampAt(p.x+p.w/2,p.y-10,'CAMBIO HECHO','+'+fmtP(tot*PESOS)); }
+    else addText(p.x-50,p.y-30,'Esperas: vuelve a la casa de cambio en otra quincena','#E8E0C8'); }); }
+// ---------- ¿cuál paga más por tu café?
+function cafeOpen(){ learn('fxmundo'); S.mode='caso'; const offers=[['eur',2],['pen',7],['brl',10]].map(([k,n])=>({k,n,v:n*compra(k)})).sort(()=>Math.random()-.5), best=offers.reduce((a,b)=>b.v>a.v?b:a);
+  openOv(`<div class="eyebrow">Puerto del comercio justo · tasa del día</div><h2>¿Quién paga más por tu café?</h2><p>Vendes un bulto de café de Santander. Tres compradores de otros países te ofrecen:</p>
+   <div class="mopts">${offers.map((o,i)=>`<button class="mopt" type="button" data-cf="${i}"><b>${o.n} ${FX[o.k].pl}</b><span>1 ${FX[o.k].n} = ${fmtP(compra(o.k)*PESOS)} hoy</span></button>`).join('')}</div>`);
+  box.querySelectorAll('[data-cf]').forEach(b=>b.onclick=()=>{ const o=offers[+b.dataset.cf], ok=o===best, p=S.p; closeOv(); S.mode='play'; const mon=Math.floor(o.v); ganar(mon); logD('Ingreso','Vendiste café por '+o.n+' '+FX[o.k].pl,mon);
+    if(ok){ saludAdd(3,'convertiste bien a pesos'); stampAt(p.x+p.w/2,p.y-10,'¡BUEN NEGOCIO!',o.n+' '+FX[o.k].pl+' = '+fmtP(o.v*PESOS)); }
+    else addText(p.x-80,p.y-30,'Recibiste '+fmtP(o.v*PESOS)+'; la mejor era '+best.n+' '+FX[best.k].pl+' = '+fmtP(best.v*PESOS),'#FFE1A8'); }); }
+
+// ---------- dibujo en el mundo
+function drawPlata(){ const L=S.L; if(!L||!L.plata) return;
+  for(const it of L.plata){ if(it.dead) continue; const x=it.x-S.cam; if(x<-80||x>W+80) continue; const k=popK(it.x), bob=Math.sin(S.t*.08+(it.ph||0))*2;
+    if(it.t==='senc'){ const C=SENC[it.k]; ctx.save(); ctx.translate(x+6,it.y+6+bob); ctx.scale(k,1); coinPaper(0,0,4.6,C.c,C.m,S.t*.06+(it.ph||0)); ctx.restore(); }
+    else if(it.t==='fx'){ const F=FX[it.k]; ctx.save(); ctx.translate(x+7,it.y+6+bob); ctx.scale(k,1); billPaper(0,0,F.c,F.s,it.k==='eur'?'arco':it.k==='usd'?'estrella':it.k==='brl'?'guacamaya':'canon',{t:S.t,ph:it.ph,w:20}); ctx.restore(); }
+    else if(it.t==='viejo'){ const v=viejoVal(), s=.55+.45*v/8; ctx.save(); ctx.translate(x+10,it.y+6+bob); ctx.scale(k*s,s); billPaper(0,0,'#8A7A5A','10.000','iglesia',{t:S.t,faded:true,w:22,a:.55+.45*v/8}); ctx.restore();
+      ctx.save(); ctx.font='800 5.5px Figtree, sans-serif'; ctx.textAlign='center'; ctx.fillStyle='rgba(60,40,20,.85)'; ctx.fillText(v>0?'vale '+v:'ya no vale',x+10,it.y-6); ctx.restore(); }
+    else if(it.t==='falso'){ ctx.save(); ctx.translate(x+10,it.y+6+bob); ctx.scale(k,1); billPaper(0,0,BILL.falso.c,BILL.falso.d,BILL.falso.m,{t:S.t,w:22}); ctx.globalCompositeOperation='lighter'; ctx.fillStyle='rgba(255,240,180,'+(.12+.1*Math.sin(S.t*.2))+')'; ctx.fillRect(-11,-6,22,12); ctx.restore(); }
+    else if(it.t==='cambio') drawCasaCambio(it,x,k);
+    else if(it.t==='cafe') drawCafe(it,x,k); }
+  // billetes que vuelan como hojas
+  for(const h of (S.hojas||[])) billPaper(h.x-S.cam,h.y,BILL[h.k].c,BILL[h.k].d,BILL[h.k].m,{rot:h.rot,w:16,a:Math.min(1,h.life/30),t:S.t});
+}
+function drawCasaCambio(it,x,k){ const y=it.y; ctx.save(); ctx.translate(x+it.w/2,y); ctx.scale(1,k); ctx.translate(-(x+it.w/2),-y);
+  ctx.fillStyle='rgba(28,16,6,.28)'; ctx.fillRect(x+3,y-42,it.w,44);
+  ctx.fillStyle='#E9DCC0'; ctx.fillRect(x,y-44,it.w,44); ctx.fillStyle='#2E5B7A'; ctx.fillRect(x-3,y-52,it.w+6,10); ctx.fillStyle='#F2C230'; ctx.font='800 6px Figtree, sans-serif'; ctx.textAlign='center'; ctx.fillText('CASA DE CAMBIO',x+it.w/2,y-45);
+  ctx.fillStyle='#22313A'; ctx.fillRect(x+6,y-38,it.w-12,22); ctx.fillStyle='#E8F1E0'; ctx.font='700 4.6px "IBM Plex Mono", monospace'; ctx.textAlign='left';
+  ctx.fillText('     COMPRA  VENTA',x+8,y-32); const ks=S.li===30?['usd','eur']:['usd']; ks.forEach((k2,i)=>{ ctx.fillText(k2.toUpperCase()+'  '+f1(compra(k2)*PESOS/1000).padStart(4)+'k  '+f1(venta(k2)*PESOS/1000).padStart(4)+'k',x+8,y-26+i*6); });
+  ctx.fillStyle='#6B4428'; ctx.fillRect(x+it.w/2-6,y-14,12,14); ctx.textAlign='left'; ctx.restore(); }
+function drawCafe(it,x,k){ const y=it.y; ctx.save(); ctx.translate(x+it.w/2,y); ctx.scale(1,k); ctx.translate(-(x+it.w/2),-y);
+  ctx.fillStyle='rgba(28,16,6,.28)'; ctx.fillRect(x+3,y-26,it.w,28); ctx.fillStyle='#A0703A'; ctx.fillRect(x,y-28,it.w,28); ctx.fillStyle='#C9A676'; for(let i=0;i<3;i++){ ctx.beginPath(); ctx.ellipse(x+10+i*14,y-32,7,6,0,0,7); ctx.fill(); }
+  ctx.fillStyle='#F4ECD8'; ctx.font='800 5.5px Figtree, sans-serif'; ctx.textAlign='center'; ctx.fillText(it.used?'VENDIDO':'CAFÉ DE SANTANDER',x+it.w/2,y-14); ctx.textAlign='left'; ctx.restore(); }
+// ---------- billetera de cuero que se abre cuando cambia tu plata
+function drawBilletera(){ if(!papelOn()||!S.L||S.mode!=='play'||!(S.walletT>0)) return; const a=Math.min(1,S.walletT/24), open=Math.min(1,(170-S.walletT)/14), x=10, y=88;
+  ctx.save(); ctx.globalAlpha=a; ctx.fillStyle='rgba(28,16,6,.3)'; ctx.fillRect(x+2,y+3,70,30);
+  const n=Math.min(6,Math.ceil(eco.hand/5)); for(let i=0;i<n;i++){ const b=eco.hand-i*5>=10?'b10':eco.hand-i*5>=5?'b5':'billete'; billPaper(x+26+i*5,y+6-open*8+i*.5,BILL[b].c,BILL[b].d,BILL[b].m,{still:true,rot:-.2+i*.08,w:22}); }
+  ctx.fillStyle='#6E4228'; ctx.fillRect(x,y+4,70,28); ctx.fillStyle='#8A5634'; ctx.fillRect(x,y+4,70,6); ctx.strokeStyle='rgba(255,230,190,.5)'; ctx.setLineDash([1.5,1.2]); ctx.lineWidth=.6; ctx.strokeRect(x+2.5,y+6.5,65,23); ctx.setLineDash([]);
+  ctx.fillStyle='#F4ECD8'; ctx.font='800 9px Figtree, sans-serif'; ctx.textAlign='center'; ctx.fillText(fmtP(eco.hand*PESOS),x+35,y+25);
+  const fx=Object.entries(eco.fx||{}).filter(([k,v])=>v>0); ctx.font='700 5.5px Figtree, sans-serif'; ctx.fillStyle='#FFE1A8'; if(fx.length) ctx.fillText(fx.map(([k,v])=>v+' '+FX[k].s.replace('1','')).join(' · '),x+35,y+40); if(eco.sencillo) { ctx.fillStyle='#E8E0C8'; ctx.fillText('sencillo '+fmtP(eco.sencillo),x+35,y+(fx.length?47:40)); }
+  ctx.restore(); ctx.textAlign='left'; }
 
 /* ================= DIPLOMAS v2: diseño de certificado de expedición (cumbre + sendero + parche) ================= */
 // Tokens por ruta: tinta, acento, acento claro, texto, papel, y la paleta de la ilustración (cielo arriba, cielo abajo, sol, 4 planos de montaña lejos→cerca)
