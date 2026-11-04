@@ -4777,6 +4777,7 @@ function titleScreen(){
     </div>
     </div><div class="t-col">
     <div class="t-step"><span class="t-n">3</span><h3>Tu partida</h3></div>
+    <label class="lb">Viaje por</label><div class="modes t-modes" data-g="region">${[['santander','Santander','32 lugares de Santander: el Chicamocha, Barichara, Santurbán, Girón…'],['colombia','Colombia','Los 32 departamentos: mar Caribe, selva, llanos, nevados y desiertos']].map(([k,n,d])=>`<button type="button" class="mode" data-v="${k}" aria-pressed="${REGION===k}"><b>${n}</b><span>${d}</span></button>`).join('')}</div>
     <label class="lb">Tipo de ruta</label><div class="row seg" data-g="ruta"><button type="button" class="btn sm alt" data-v="variada" aria-pressed="${ruta==='variada'}">Variada: cambia en cada partida</button><button type="button" class="btn sm alt" data-v="fija" aria-pressed="${ruta==='fija'}">Fija: igual para todos</button></div>
     <label class="lb">Dificultad</label><div class="modes t-modes" data-g="diff">${Object.entries(DIFF).map(([k,d])=>`<button type="button" class="mode" data-v="${k}" aria-pressed="${k===diff}"><b>${d.n}</b><span>${d.d}</span></button>`).join('')}</div>
     </div></div>
@@ -4784,7 +4785,7 @@ function titleScreen(){
    </section></div>`);
   ov.classList.add('tov'); box.classList.add('tbox'); ov.scrollTop=0;
   box.querySelectorAll('[data-g]').forEach(gr=>gr.querySelectorAll('[data-v]').forEach(b=>b.onclick=()=>{
-    const g=gr.dataset.g, v=b.dataset.v; if(g==='color') color=v; if(g==='skin') skin=+v; if(g==='head') head=v; if(g==='diff') diff=v; if(g==='ruta') ruta=v;
+    const g=gr.dataset.g, v=b.dataset.v; if(g==='color') color=v; if(g==='skin') skin=+v; if(g==='head') head=v; if(g==='diff') diff=v; if(g==='ruta') ruta=v; if(g==='region') setRegion(v);
     gr.querySelectorAll('[data-v]').forEach(x=>x.setAttribute('aria-pressed',x===b)); }));
   // vista previa animada del senderista con lo que eligió
   const pc=document.getElementById('tPrev'); if(pc){ const pg=pc.getContext('2d'); let ph=0; const tick=()=>{ if(!document.body.contains(pc)||ov.hidden) return; ph+=0.12;
@@ -4793,10 +4794,10 @@ function titleScreen(){
       const sv2=ctx; try{ ctx=pg; pg.translate(120,214); pg.scale(3.6,3.6); hikerBody(false,Math.sin(ph),color,{phase:ph,spd:0.55,lean:0.06,gear:(sv&&sv.eco.gear)||null,skin,head,mood:'happy',blink:(Math.floor(ph*8)%90)<3,role:1}); }catch(e){ pc.style.display='none'; } finally{ ctx=sv2; }
       requestAnimationFrame(tick); }; requestAnimationFrame(tick); }
   const pf=()=>profRead();
-  document.getElementById('bNew').onclick=()=>{ const f=pf(); eco=newEco(f.name,color,Object.assign({skin,head,diff,ruta},f)); eco.clase=f.clase||null; claseImg(eco.clase); preTest(); };
+  document.getElementById('bNew').onclick=()=>{ const f=pf(); eco=newEco(f.name,color,Object.assign({skin,head,diff,ruta},f)); eco.clase=f.clase||null; eco.region=REGION; claseImg(eco.clase); preTest(); };
   document.getElementById('bRank').onclick=()=>showRanking(titleScreen);
   box.querySelectorAll('[data-go]').forEach(b=>b.onclick=()=>{ const nm=document.getElementById('nm'); if(nm&&!nm.value.trim()){ nm.scrollIntoView({block:'center',behavior:'smooth'}); nm.focus({preventScroll:true}); return; } document.getElementById(b.dataset.go).click(); });
-  if(sv) document.getElementById('bCont').onclick=()=>{ eco=sv.eco; Object.assign(eco,pf(),{color,skin,head,diff,ruta}); showMap(sv.li,{reveal:true}); };
+  if(sv) document.getElementById('bCont').onclick=()=>{ eco=sv.eco; Object.assign(eco,pf(),{color,skin,head,diff,ruta,region:REGION}); showMap(sv.li,{reveal:true}); };
 }
 function preTest(){
   openOv(`<div class="eyebrow">Antes de subir</div><h2>¿Cuánto sabes hoy?</h2>
@@ -8321,7 +8322,7 @@ function pLandmark0(g,L,P0,Hh,th,base,mid){ const P=P0, x0=mid-P/2; g.translate(
 function papelBuild(li){ const th=THEMES[LV[li].theme]||{}, L=LUGARES[li]||{k:'pueblo'}, Hh=H*PPR, out={li,layers:[]};
   const M=th.m||['#8fb2c4','#7c9f7a','#93ad6b'], far=pmix(M[0],'#d8d2c0',.18), mid=pmix(M[1],'#d8d2c0',.14), near=pmix(M[2],'#d8d2c0',.1);
   const mkL=(f,P,fn,blur)=>{ const c=pmk(P,Hh), g=c.getContext('2d'); if(blur) g.filter=`blur(${blur}px)`; fn(g,P); out.layers.push({c,f,P:P/PPR}); };
-  mkL(.05,1280*PPR,(g,P)=>{ ppaper(g,pridge(0,P,Hh*.42,70*PPR,10*PPR,1,Hh,P),far,6,{sa:.25,th:2}); for(let i=0;i<4;i++){ const x=(i+.5)*P/4, y=Hh*.42-70*PPR*(Math.sin((x/P)*Math.PI*2+1)*.5+Math.sin((x/P)*Math.PI*4+1.7)*.28+Math.sin((x/P)*Math.PI*10+.3)*.12); if(L.k==='paramo'||L.alto||li===7||li===14||li===15) ppaper(g,[[x-30,y+30],[x,y],[x+34,y+28],[x+12,y+20],[x,y+30],[x-14,y+20]],'#f6f3ea',2,{sa:.15}); }
+  mkL(.05,1280*PPR,(g,P)=>{ ppaper(g,pridge(0,P,Hh*.42,70*PPR,10*PPR,1,Hh,P),far,6,{sa:.25,th:2}); for(let i=0;i<4;i++){ const x=(i+.5)*P/4, y=Hh*.42-70*PPR*(Math.sin((x/P)*Math.PI*2+1)*.5+Math.sin((x/P)*Math.PI*4+1.7)*.28+Math.sin((x/P)*Math.PI*10+.3)*.12); if(L.k==='paramo'||L.alto||(L.snowFar!=null?!!L.snowFar:(li===7||li===14||li===15))) ppaper(g,[[x-30,y+30],[x,y],[x+34,y+28],[x+12,y+20],[x,y+30],[x-14,y+20]],'#f6f3ea',2,{sa:.15}); }
     const hz=g.createLinearGradient(0,Hh*.3,0,Hh*.75); hz.addColorStop(0,'rgba(240,236,224,0)'); hz.addColorStop(1,'rgba(240,236,224,.55)'); g.fillStyle=hz; g.fillRect(0,0,P,Hh); },1.6);
   mkL(.12,1100*PPR,(g,P)=>{ ppaper(g,pridge(0,P,Hh*.55,50*PPR,9*PPR,4,Hh,P),mid,6,{sa:.3,th:2}); const hz=g.createLinearGradient(0,Hh*.45,0,Hh*.85); hz.addColorStop(0,'rgba(240,236,224,0)'); hz.addColorStop(1,'rgba(240,236,224,.4)'); g.fillStyle=hz; g.fillRect(0,0,P,Hh); },.9);
   mkL(.22,1400*PPR,(g,P)=>{ pLandmark(g,L,P,Hh,th); if(L.n) pSign(g,P/2-300*PPR,Hh*.62,L.n.toUpperCase(),PPR*.5); });
@@ -8392,7 +8393,7 @@ function drawPagina(){ if(!papelOn()||S.papT==null) return; if(S.papT>0) S.papT-
   ctx.font='12px Gloock, Georgia, serif'; const t1='Mundo '+(S.li+1)+' · '+LV[S.li].name, t2=L&&L.n?L.n:''; ctx.font='800 7px Figtree, sans-serif'; const tw=Math.max(200,ctx.measureText(t2.toUpperCase()).width+40);
   ctx.shadowColor='rgba(30,16,6,.35)'; ctx.shadowBlur=6; ctx.shadowOffsetY=3; ctx.fillStyle='#f7efdc'; ctx.beginPath(); ctx.moveTo(-tw/2,-20); ctx.lineTo(tw/2,-20); ctx.lineTo(tw/2,18); ctx.lineTo(0,24); ctx.lineTo(-tw/2,18); ctx.closePath(); ctx.fill(); ctx.shadowColor='transparent';
   ctx.fillStyle=ctx.createPattern(PFIBD,'repeat'); ctx.globalAlpha=a*.25; ctx.fill(); ctx.globalAlpha=a; ctx.fillStyle='#2b2119'; ctx.textAlign='center'; ctx.font='13px Gloock, Georgia, serif'; ctx.fillText(t1,0,-3);
-  if(t2){ ctx.font='800 7px Figtree, sans-serif'; ctx.fillStyle='#a8322b'; ctx.fillText(t2.toUpperCase()+' · SANTANDER',0,11); } ctx.restore(); ctx.textAlign='left'; }
+  if(t2){ ctx.font='800 7px Figtree, sans-serif'; ctx.fillStyle='#a8322b'; ctx.fillText(t2.toUpperCase()+' · '+RGN().toUpperCase(),0,11); } ctx.restore(); ctx.textAlign='left'; }
 { const _slP=startLevel; startLevel=function(li){ _slP(li); try{ if(papelOn()){ S.papT=60; S.papBan=220; PAPBG=null; } }catch(e){} }; }
 // ---------- hormigas culonas santandereanas
 Object.assign(TIPS,{culona:{t:'La hormiga culona',g:'Santander',x:'Las hormigas culonas son una tradición santandereana: las reinas salen con alas en abril y mayo y se comen tostadas. Aquí representan los gastos hormiga: una sola parece pequeñita, pero un nido entero se come tu quincena.'}});
@@ -8794,18 +8795,18 @@ function postArt(g,id,W2,H2){ const sky={Sitios:['#9FC3D6','#E9DFC4'],Sabores:['
   g.globalCompositeOperation='multiply'; g.globalAlpha=.4; g.fillStyle=g.createPattern(PFIB,'repeat'); g.fillRect(0,0,W2,H2); g.globalAlpha=1; g.globalCompositeOperation='source-over'; }
 function postalCanvas(P,w){ const c=document.createElement('canvas'); c.width=600; c.height=380; c.style.width=w+'px'; c.style.maxWidth='100%'; c.style.height='auto'; const g=c.getContext('2d');
   g.fillStyle='#FBF6EA'; g.fillRect(0,0,600,380); g.save(); g.beginPath(); g.rect(16,16,568,300); g.clip(); g.translate(16,16); g.scale(568/300,300/180); postArt(g,P.id,300,180); g.restore();
-  g.fillStyle='#2B2119'; g.font='400 26px "Young Serif", Georgia, serif'; g.fillText(P.t,20,352); g.fillStyle='#A8322B'; g.font='800 13px Figtree, sans-serif'; g.textAlign='right'; g.fillText(P.k.toUpperCase()+' · SANTANDER',582,352); g.textAlign='left';
+  g.fillStyle='#2B2119'; g.font='400 26px "Young Serif", Georgia, serif'; g.fillText(P.t,20,352); g.fillStyle='#A8322B'; g.font='800 13px Figtree, sans-serif'; g.textAlign='right'; g.fillText(P.k.toUpperCase()+' · '+RGN().toUpperCase(),582,352); g.textAlign='left';
   g.strokeStyle='#D2C3A2'; g.lineWidth=2; g.strokeRect(8,8,584,364); return c; }
 // ---------- las postales en el mundo
-{ const _bl6=buildLevel; buildLevel=function(li){ const L=_bl6(li); try{ L.postal=null; const P=POSTALES.find(p=>p.w===li); if(P){ const J=L.ents.find(e=>e.t==='jefeM'), xmax=J?J.x-30*T:L.w*T*.8; for(let c=Math.floor(L.w*.71);c<L.w-6;c++){ const s=L.surf[c]; if(s>2&&L.surf[c+1]===s&&c*T<xmax){ L.postal={P,x:c*T+4,y:s*T-58,w:18,h:14}; break; } } } }catch(e){} return L; }; }
+{ const _bl6=buildLevel; buildLevel=function(li){ const L=_bl6(li); try{ L.postal=null; const P=POSTALES.find(p=>p.w===li&&!p.amb); if(P){ const J=L.ents.find(e=>e.t==='jefeM'), xmax=J?J.x-30*T:L.w*T*.8; for(let c=Math.floor(L.w*.71);c<L.w-6;c++){ const s=L.surf[c]; if(s>2&&L.surf[c+1]===s&&c*T<xmax){ L.postal={P,x:c*T+4,y:s*T-58,w:18,h:14}; break; } } } }catch(e){} return L; }; }
 function culturaTick(p){ const L=S.L; if(!L) return; const Q=L.postal;
   if(Q&&!Q.got&&overlap(p,Q)&&S.mode==='play'&&!S.busy){ Q.got=true; postalOpen(Q.P); return; }
   // apariciones de leyendas en el fondo
-  const P=POSTALES.find(q=>q.w===S.li&&q.k==='Leyendas'); if(P){ const f=p.x/(L.w*T); if(!S.aparT&&f>.42&&f<.6){ S.aparT=420; S.aparP=P; addText(p.x-70,p.y-36,'¿Viste eso? Dicen que es '+P.t.replace(/^(El|La) /,m=>m.toLowerCase()),'#E8E0F8'); } }
+  const P=POSTALES.find(q=>q.w===S.li&&q.k==='Leyendas'); if(P){ const f=p.x/(L.w*T); if(!S.aparT&&f>.42&&f<.6){ S.aparT=420; S.aparP=P; if(P.amb){ eco.postales=eco.postales||{}; if(!eco.postales[P.id]){ eco.postales[P.id]=1; toast('Leyenda para tu álbum · '+P.t,P.x); } } addText(p.x-70,p.y-36,'¿Viste eso? Dicen que es '+P.t.replace(/^(El|La) /,m=>m.toLowerCase()),'#E8E0F8'); } }
   if(S.aparT>0) S.aparT--; }
 function postalOpen(P){ eco.postales=eco.postales||{}; const nueva=!eco.postales[P.id]; eco.postales[P.id]=1; learn('album'); S.mode='caso'; snd('gate');
-  const n=Object.keys(eco.postales).length;
-  openOv(`<div class="eyebrow">Postal de Santander · ${P.k}</div><h2>${pesc(P.t)}</h2><div id="pcCv" style="display:flex;justify-content:center;margin:6px 0 10px"></div><p>${pesc(P.x)}</p><p class="muted">${nueva?'Nueva postal para tu álbum':'Ya la tenías'}: llevas ${n} de ${POSTALES.length}.</p><div class="mopts"><button class="mopt" type="button" id="bPostal"><b>Guardar en el álbum</b><span>La verás en el campamento.</span></button></div>`);
+  const n=POSTALES.filter(q=>eco.postales[q.id]).length;
+  openOv(`<div class="eyebrow">Postal de ${RGN()} · ${P.k}</div><h2>${pesc(P.t)}</h2><div id="pcCv" style="display:flex;justify-content:center;margin:6px 0 10px"></div><p>${pesc(P.x)}</p><p class="muted">${nueva?'Nueva postal para tu álbum':'Ya la tenías'}: llevas ${n} de ${POSTALES.length}.</p><div class="mopts"><button class="mopt" type="button" id="bPostal"><b>Guardar en el álbum</b><span>La verás en el campamento.</span></button></div>`);
   const h=document.getElementById('pcCv'); if(h) h.appendChild(postalCanvas(P,340));
   document.getElementById('bPostal').onclick=()=>{ closeOv(); S.mode='play'; saludAdd(1,'conociste tu región'); const p=S.p; stampAt(p.x+p.w/2,p.y-10,'¡POSTAL!',P.t.toLowerCase()); }; }
 function drawPostal(){ const Q=S.L&&S.L.postal; if(!Q||Q.got) return; const x=Q.x-S.cam; if(x<-40||x>W+40) return; const k=popK(Q.x), bob=Math.sin(S.t*.07)*2.5, sp=Math.cos(S.t*.05);
@@ -8820,8 +8821,8 @@ function drawAparicion(){ if(!(S.aparT>0)||!S.aparP) return; const a=Math.min(1,
   if(!S.aparC||S.aparC.id!==id){ const c=document.createElement('canvas'); c.width=150; c.height=90; const g=c.getContext('2d'); g.scale(.5,.5); postArt(g,id,300,180); S.aparC={id,c}; }
   ctx.globalAlpha=a*.85; ctx.beginPath(); ctx.ellipse(x,y,60,40,0,0,7); ctx.clip(); ctx.drawImage(S.aparC.c,x-75,y-45,150,90); ctx.restore(); }
 // álbum en el campamento
-function albumHTML(){ const got=eco.postales||{}, n=Object.keys(got).length; if(!n) return `<div class="sec"><h3>Álbum de Santander · 0 de ${POSTALES.length}</h3><p class="muted">En cada mundo hay una postal escondida: sitios, sabores, cultura guane y leyendas. Búscala alta, cerca del final del camino.</p></div>`;
-  return `<div class="sec"><h3>Álbum de Santander · ${n} de ${POSTALES.length}</h3><div style="display:flex;flex-wrap:wrap;gap:6px">${POSTALES.map(P=>got[P.id]?`<span style="background:#FBF6EA;color:#2B2119;border-radius:2px;padding:4px 8px;font:700 12px var(--f-body);box-shadow:0 2px 0 #D2C3A2">${pesc(P.t)}</span>`:'').join('')}</div><p class="muted" style="margin-top:6px">${POSTALES.find(P=>P.w===S.li&&!got[P.id])?'La postal de este mundo se te escapó: búscala si repites el mundo.':'Sigue subiendo: cada mundo guarda otra.'}</p></div>`; }
+function albumHTML(){ const got=eco.postales||{}, n=POSTALES.filter(q=>got[q.id]).length; if(!n) return `<div class="sec"><h3>Álbum de ${RGN()} · 0 de ${POSTALES.length}</h3><p class="muted">En cada mundo hay una postal escondida: ${REGION==='colombia'?'sitios, fiestas, pueblos y sabores de cada departamento; las leyendas se guardan solas cuando las ves':'sitios, sabores, cultura guane y leyendas'}. Búscala alta, cerca del final del camino.</p></div>`;
+  return `<div class="sec"><h3>Álbum de ${RGN()} · ${n} de ${POSTALES.length}</h3><div style="display:flex;flex-wrap:wrap;gap:6px">${POSTALES.map(P=>got[P.id]?`<span style="background:#FBF6EA;color:#2B2119;border-radius:2px;padding:4px 8px;font:700 12px var(--f-body);box-shadow:0 2px 0 #D2C3A2">${pesc(P.t)}</span>`:'').join('')}</div><p class="muted" style="margin-top:6px">${POSTALES.find(P=>P.w===S.li&&!got[P.id])?'La postal de este mundo se te escapó: búscala si repites el mundo.':'Sigue subiendo: cada mundo guarda otra.'}</p></div>`; }
 { const _vc2=vjCampHTML; vjCampHTML=function(){ return _vc2()+albumHTML(); }; }
 
 /* ================= PERSONAJES POP-UP: rostros de papel recortado, cuerpos más proporcionados =================
@@ -8903,6 +8904,222 @@ function popFolds(x0,y0,x1,y1,col){ ctx.save(); ctx.lineCap='round'; ctx.strokeS
 // mano con pulgar (en lugar del óvalo)
 function popHand(x,y,ang,skin){ const sd=mix(skin,'#000000',.2); ctx.fillStyle=sd; ctx.beginPath(); ctx.ellipse(x-.2,y+.2,1.85,2.15,ang,0,7); ctx.fill(); ctx.fillStyle=skin; ctx.beginPath(); ctx.ellipse(x,y,1.7,2,ang,0,7); ctx.fill();
   ctx.beginPath(); ctx.ellipse(x+Math.cos(ang)*1.5,y-Math.sin(ang)*1.5-.4,.7,1.1,ang-.6,0,7); ctx.fill(); ctx.strokeStyle=sd; ctx.lineWidth=.25; ctx.beginPath(); ctx.moveTo(x-.8,y+.6); ctx.lineTo(x+.8,y+.6); ctx.stroke(); }
+
+/* ================= RUTA COLOMBIA: los 32 departamentos, mundo por mundo =================
+   Versión alterna del viaje: cada mundo es un departamento cuyo paisaje concuerda con el terreno del mundo.
+   Se elige en la portada ("Santander" o "Colombia"); el juego, la economía y las lecciones son los mismos.
+   Las piezas de paisaje nuevas (mar Caribe, selva, llanos, desierto, Pacífico, eje cafetero…) se arman con las
+   mismas herramientas de papel: ppaper, pblob, pridge, pTree, pHouse. */
+const LUGARES_SAN=LUGARES.map(o=>Object.assign({},o)), POSTALES_SAN=POSTALES.slice();
+const LUGARES_CO=[
+ {n:'Valle del Cauca · Cali',k:'valle'},
+ {n:'Caldas · Manizales',k:'cafetero',ex:'ruiz',snowFar:1},
+ {n:'Antioquia · Guatapé',k:'penol'},
+ {n:'Putumayo · Valle de Sibundoy',k:'altiplano'},
+ {n:'Risaralda · Otún Quimbaya',k:'niebla'},
+ {n:'Tolima · Nevado del Tolima',k:'cono',snowFar:1},
+ {n:'Norte de Santander · Los Estoraques',k:'estoraques'},
+ {n:'Cundinamarca · Sumapaz',k:'paramo',escarcha:1,snowFar:1},
+ {n:'Magdalena · Tayrona',k:'caribe',ex:'tayrona'},
+ {n:'La Guajira · Manaure',k:'desierto',ex:'salinas'},
+ {n:'Huila · Tatacoa',k:'desierto',ex:'tatacoa'},
+ {n:'Meta · Caño Cristales',k:'llanos',ex:'cristales'},
+ {n:'Quindío · Valle de Cocora',k:'cafetero',ex:'cocora'},
+ {n:'Cauca · Silvia y el Puracé',k:'paramo',volc:1},
+ {n:'Boyacá · El Cocuy',k:'nevado',snowFar:1},
+ {n:'Caquetá · Chiribiquete',k:'selva',ex:'tepuy'},
+ {n:'Bolívar · Cartagena',k:'caribe',ex:'murallas'},
+ {n:'Nariño · Volcán Galeras',k:'volcan'},
+ {n:'Santander · Chicamocha',k:'canon',seco:1,panachi:1},
+ {n:'Chocó · Pacífico',k:'pacifico'},
+ {n:'Córdoba · Tuchín',k:'pueblo',wall:'#f2e6cc',roof:'#9a6a3a',ch:'blanca',tw:1,ex:'vueltiao'},
+ {n:'Cesar · Valledupar',k:'llanos',ex:'vallenato',seco:1},
+ {n:'Guaviare · La Lindosa',k:'selva',ex:'lindosa'},
+ {n:'Guainía · Mavecure',k:'selva',ex:'mavecure'},
+ {n:'Arauca · el llano',k:'llanos',ex:'joropo'},
+ {n:'Sucre · Golfo de Morrosquillo',k:'caribe',ex:'golfo'},
+ {n:'Vaupés · Mitú',k:'selva',ex:'raudal'},
+ {n:'Amazonas · Leticia',k:'selva',ex:'amazonas'},
+ {n:'Casanare · los hatos',k:'llanos',ex:'hato'},
+ {n:'Vichada · El Tuparro',k:'llanos',ex:'tuparro'},
+ {n:'San Andrés · mar de siete colores',k:'caribe',ex:'islas'},
+ {n:'Atlántico · Barranquilla',k:'carnaval'}];
+const POSTALES_CO=[
+ {w:0,id:'co_salsa',k:'Cultura',land:1,t:'Cali y la salsa',x:'En el valle del río Cauca crecen los cañaduzales y al fondo se ven los Farallones de Cali. Cali es famosa por su salsa: bailar bien pide práctica, igual que manejar la plata.'},
+ {w:1,id:'co_manizales',k:'Sitios',land:1,t:'Manizales y el Nevado del Ruiz',x:'Manizales está construida sobre laderas empinadas, con vista al Nevado del Ruiz y en medio del Paisaje Cultural Cafetero. Construir en una montaña exige planear bien.'},
+ {w:2,id:'co_penol',k:'Sitios',land:1,t:'La Piedra del Peñol',x:'En Guatapé, Antioquia, una roca gigante con una escalera de más de 700 escalones mira sobre un embalse lleno de islas. Se sube escalón por escalón, como se construye un ahorro.'},
+ {w:2,id:'sombreron',k:'Leyendas',amb:1,t:'El Sombrerón',x:'Dicen en Antioquia que el Sombrerón, con su enorme sombrero, persigue a los que pasan la noche en apuestas y parrandas. Las apuestas prometen plata rápida y casi siempre se la llevan.'},
+ {w:3,id:'co_sibundoy',k:'Cultura',land:1,t:'El Valle de Sibundoy',x:'Un valle alto y verde del Putumayo donde viven los pueblos kamëntšá e inga, conocidos por sus tallas en madera, sus tejidos y su Carnaval del Perdón. Perdonar y volver a empezar también cuenta.'},
+ {w:4,id:'co_otun',k:'Sitios',land:1,t:'El bosque de niebla del Otún',x:'Cerca de Pereira, el Santuario Otún Quimbaya protege un bosque de niebla con monos aulladores y muchas aves. Lo que se cuida hoy sigue dando mañana.'},
+ {w:4,id:'patasola',k:'Leyendas',amb:1,t:'La Patasola',x:'Dicen que en el monte una figura de una sola pierna aleja a los caminantes del sendero. Las ofertas fáciles también te sacan del camino: no te desvíes de tu ruta.'},
+ {w:5,id:'co_ibague',k:'Cultura',land:1,t:'Ibagué, capital musical',x:'Ibagué es conocida como la Capital Musical de Colombia, y desde el Tolima se ve el Nevado del Tolima. El bambuco y el sanjuanero suenan en sus fiestas.'},
+ {w:6,id:'estoraques',k:'Sitios',t:'Los Estoraques',x:'Columnas de roca talladas por el agua y el viento durante miles de años, en La Playa de Belén, Norte de Santander. Lo que se forma lento dura mucho.'},
+ {w:7,id:'co_sumapaz',k:'Sitios',land:1,t:'El páramo de Sumapaz',x:'Al sur de Bogotá, en Cundinamarca, está Sumapaz, considerado el páramo más grande del mundo. Sus frailejones guardan agua para millones de personas: un ahorro natural.'},
+ {w:8,id:'co_tayrona',k:'Sitios',land:1,t:'Tayrona y la Sierra Nevada',x:'En el Parque Tayrona la selva llega hasta el mar, y detrás se levanta la Sierra Nevada de Santa Marta, la montaña costera más alta del mundo, hogar de los pueblos kogui, arhuaco, wiwa y kankuamo.'},
+ {w:9,id:'co_manaure',k:'Cultura',land:1,t:'Las salinas de Manaure',x:'En La Guajira se saca sal del mar en piscinas que el sol evapora. Los wayuu tejen mochilas famosas en el mundo. Paciencia y trabajo convierten el agua en sal.'},
+ {w:10,id:'co_tatacoa',k:'Sitios',land:1,t:'El desierto de la Tatacoa',x:'Un bosque seco del Huila con cárcavas rojas y grises, cerca de Villavieja. Su cielo despejado es famoso para mirar estrellas. En el Huila también está San Agustín, con estatuas de piedra muy antiguas.'},
+ {w:10,id:'mohan',k:'Leyendas',amb:1,t:'El Mohán',x:'Dicen que el Mohán vive en los ríos del Tolima y el Huila, toca el tiple y enreda a quien se le acerca ofreciéndole oro del fondo del agua. Lo que suena demasiado bueno para ser cierto, casi siempre es una trampa.'},
+ {w:11,id:'co_cristales',k:'Sitios',land:1,t:'Caño Cristales',x:'En la Serranía de La Macarena, en el Meta, un río se pinta de rojo, amarillo y verde por una planta acuática, sobre todo en la segunda mitad del año. Se visita con guía y con reglas para protegerlo.'},
+ {w:12,id:'co_cocora',k:'Sitios',land:1,t:'El Valle de Cocora',x:'En el Quindío crece la palma de cera, el árbol nacional de Colombia, que supera los 50 metros. Una palma tarda décadas en crecer: lo grande toma tiempo.'},
+ {w:12,id:'madremonte',k:'Leyendas',amb:1,t:'La Madremonte',x:'La tradición dice que la Madremonte, cubierta de hojas y musgo, protege el bosque y castiga a quien lo daña. Cuidar la naturaleza es cuidar la riqueza de todos.'},
+ {w:13,id:'co_silvia',k:'Cultura',land:1,t:'Silvia y el pueblo misak',x:'En Silvia, Cauca, el pueblo misak llega al mercado con sus ruanas azules y faldas negras. Cerca está el volcán Puracé, y en el Cauca está Popayán, la Ciudad Blanca.'},
+ {w:14,id:'co_cocuy',k:'Sitios',land:1,t:'La Sierra Nevada de El Cocuy',x:'En Boyacá, El Cocuy tiene picos nevados, lagunas y frailejones. Sus glaciares se están reduciendo: lo que no se cuida se pierde.'},
+ {w:15,id:'co_chiribiquete',k:'Sitios',land:1,t:'Chiribiquete',x:'Entre el Caquetá y el Guaviare, la Serranía de Chiribiquete tiene tepuyes (montañas de cima plana en medio de la selva) y miles de pinturas rupestres. Es Patrimonio de la Humanidad: no todo valor se puede comprar.'},
+ {w:16,id:'co_cartagena',k:'Sitios',land:1,t:'Las murallas de Cartagena',x:'Se construyeron para defender la ciudad de piratas y ataques. Hoy su ciudad amurallada es Patrimonio de la Humanidad. Una buena muralla es como un fondo de emergencia.'},
+ {w:17,id:'co_pasto',k:'Cultura',land:1,t:'El Carnaval de Negros y Blancos',x:'En Pasto, Nariño, cada enero el carnaval llena las calles de carrozas gigantes hechas a mano. Es Patrimonio de la Humanidad. Desde la ciudad se ve el volcán Galeras.'},
+ {w:18,id:'co_chicamocha',k:'Sitios',land:1,t:'El cañón del Chicamocha',x:'En Santander el río Chicamocha talló un cañón enorme que cruza el teleférico de Panachi. Y en abril y mayo se recogen las hormigas culonas para tostarlas.'},
+ {w:19,id:'co_ballenas',k:'Sitios',land:1,t:'Las ballenas del Pacífico',x:'Entre julio y octubre llegan ballenas jorobadas a las costas del Chocó, como Bahía Solano y Nuquí, a tener sus crías. El Chocó es una de las regiones más lluviosas del planeta.'},
+ {w:19,id:'tunda',k:'Leyendas',amb:1,t:'La Tunda',x:'En el Pacífico se cuenta que la Tunda toma la forma de alguien querido para llevarse a la gente a la selva. Hoy pasa algo parecido: estafadores que se hacen pasar por un familiar para pedir plata. Verifica siempre.'},
+ {w:20,id:'co_vueltiao',k:'Cultura',land:1,t:'El sombrero vueltiao',x:'Lo tejen artesanos zenúes con caña flecha, sobre todo en Tuchín, Córdoba. Es símbolo cultural de Colombia. Entre más vueltas tiene, más trabajo lleva y más vale.'},
+ {w:21,id:'co_vallenato',k:'Cultura',land:1,t:'Valledupar y el vallenato',x:'El vallenato, con acordeón, caja y guacharaca, es Patrimonio de la Humanidad. En Valledupar, Cesar, se celebra el Festival de la Leyenda Vallenata.'},
+ {w:22,id:'co_lindosa',k:'Cultura',land:1,t:'Las pinturas de La Lindosa',x:'Cerca de San José del Guaviare hay rocas con pinturas rupestres muy antiguas de animales y personas. Son un tesoro de todos: se miran sin tocar.'},
+ {w:23,id:'co_mavecure',k:'Sitios',land:1,t:'Los cerros de Mavecure',x:'En el Guainía, tres enormes cerros de roca se levantan junto al río Inírida. Son sagrados para los pueblos de la zona, y cerca crece la flor de Inírida.'},
+ {w:24,id:'co_joropo',k:'Cultura',land:1,t:'El joropo',x:'Con arpa, cuatro y maracas, el joropo es la música y el baile del llano, en Arauca y en los Llanos de Colombia y Venezuela. El zapateo lleva su ritmo, como un buen presupuesto.'},
+ {w:25,id:'co_morrosquillo',k:'Sitios',land:1,t:'El Golfo de Morrosquillo',x:'Tolú y Coveñas, en Sucre, tienen playas tranquilas y manglares. El manglar protege la costa y es criadero de peces: una inversión de la naturaleza.'},
+ {w:26,id:'co_vaupes',k:'Cultura',land:1,t:'Los ríos del Vaupés',x:'Mitú está junto al río Vaupés. Allí viven muchos pueblos indígenas que se mueven en canoa entre raudales y comunidades. En la selva, saber leer el río es saber vivir.'},
+ {w:27,id:'co_leticia',k:'Sitios',land:1,t:'Leticia y el río Amazonas',x:'En Leticia se juntan Colombia, Brasil y Perú. En el río viven delfines rosados y en los lagos crece la victoria regia, de hojas gigantes. La selva amazónica produce lluvia para muchos países.'},
+ {w:28,id:'co_llanero',k:'Cultura',land:1,t:'La vida llanera',x:'En los hatos del Casanare los llaneros arrean el ganado a caballo y le cantan tonadas de vaquería para calmarlo. Garzas y chigüiros acompañan el paisaje.'},
+ {w:28,id:'silbon',k:'Leyendas',amb:1,t:'El Silbón',x:'En el llano dicen que si el silbido del Silbón suena cerca, él está lejos, y si suena lejos, está cerca. Con las deudas pasa igual: la que parece lejana puede estar encima.'},
+ {w:29,id:'co_tuparro',k:'Sitios',land:1,t:'El Tuparro y el Orinoco',x:'El Parque Nacional El Tuparro, en el Vichada, tiene sabanas, grandes rocas y raudales junto al río Orinoco. Puerto Carreño mira a Venezuela al otro lado del río.'},
+ {w:30,id:'co_sanandres',k:'Sitios',land:1,t:'El mar de siete colores',x:'En San Andrés, Providencia y Santa Catalina el mar se ve en muchos tonos de azul. Su pueblo raizal habla creole, inglés y español. Es la Reserva de Biosfera Seaflower.'},
+ {w:31,id:'co_carnaval',k:'Cultura',land:1,t:'El Carnaval de Barranquilla',x:'Es Patrimonio de la Humanidad: marimondas, congos, cumbia y comparsas llenan la ciudad antes del Miércoles de Ceniza. Barranquilla está donde el río Magdalena llega al mar.'}];
+let REGION='santander'; try{ REGION=localStorage.getItem('rf-region')||'santander'; }catch(e){}
+const RGN=()=>REGION==='colombia'?'Colombia':'Santander';
+function setRegion(r){ r=r==='colombia'?'colombia':'santander'; REGION=r; try{ localStorage.setItem('rf-region',r); }catch(e){}
+  const src=r==='colombia'?LUGARES_CO:LUGARES_SAN; LUGARES.splice(0,LUGARES.length,...src.map(o=>Object.assign({snowFar:r==='colombia'?0:undefined},o)));
+  POSTALES.splice(0,POSTALES.length,...(r==='colombia'?POSTALES_CO:POSTALES_SAN));
+  LV.forEach((l,i)=>{ l.lugar=LUGARES[i]&&LUGARES[i].n||null; }); try{ PAPBG=null; }catch(e){}
+  try{ TIPS.album.t='El Álbum de '+RGN(); TIPS.album.g=RGN(); }catch(e){} }
+setRegion(REGION);
+{ const _slR=startLevel; startLevel=function(li){ if(eco&&eco.region&&eco.region!==REGION) setRegion(eco.region); _slR(li); }; }
+
+// ---------- piezas sueltas
+function pPalm(g,x,base,h,seed,col){ const lean=(pj(seed,3)-.5)*.5, tx=x+lean*h*.5, ty=base-h; g.strokeStyle='#8a6a44'; g.lineWidth=5; g.lineCap='round'; g.beginPath(); g.moveTo(x,base); g.quadraticCurveTo(x+lean*h*.1,base-h*.5,tx,ty); g.stroke(); g.strokeStyle='rgba(60,40,20,.4)'; g.lineWidth=1; for(let k=1;k<8;k++){ const t=k/8, px=x+(tx-x)*t*t, py=base-h*t; g.beginPath(); g.moveTo(px-3,py); g.lineTo(px+3,py); g.stroke(); }
+  for(let i=0;i<7;i++){ const a=-Math.PI*.95+i*Math.PI*.95/6+(pj(i,seed)-.5)*.2, L=h*(.38+pj(i,seed+1)*.12), ex=tx+Math.cos(a)*L, ey=ty+Math.sin(a)*L*.6+L*.25; ppaper(g,[[tx,ty],[tx+Math.cos(a-.25)*L*.5,ty+Math.sin(a-.25)*L*.4],[ex,ey],[tx+Math.cos(a+.25)*L*.5,ty+Math.sin(a+.25)*L*.4+4]],col||(i%2?'#3f8a3a':'#4f9a44'),2,{rim:false,th:.5}); } }
+function pMoriche(g,x,base,h,seed){ g.strokeStyle='#7a6a5a'; g.lineWidth=4; g.beginPath(); g.moveTo(x,base); g.lineTo(x,base-h); g.stroke(); const cx=x, cy=base-h; for(let i=0;i<11;i++){ const a=-Math.PI+i*Math.PI/10, L=h*.32; ppaper(g,[[cx,cy],[cx+Math.cos(a-.12)*L,cy+Math.sin(a-.12)*L*.8],[cx+Math.cos(a+.12)*L,cy+Math.sin(a+.12)*L*.8]],i%2?'#4a7a3a':'#5a8a44',1,{rim:false,th:.4}); } ppaper(g,pblob(cx,cy+6,8,10,seed,1),'#8a6a3a',1,{rim:false}); }
+function pWax(g,x,base,h,seed){ g.strokeStyle='#d9d2c0'; g.lineWidth=4; g.beginPath(); g.moveTo(x,base); g.lineTo(x+(pj(seed,2)-.5)*10,base-h); g.stroke(); g.strokeStyle='rgba(120,110,90,.5)'; g.lineWidth=1; for(let k=1;k<12;k++){ g.beginPath(); g.moveTo(x-2,base-h*k/12); g.lineTo(x+2,base-h*k/12); g.stroke(); } const tx=x+(pj(seed,2)-.5)*10, ty=base-h; for(let i=0;i<6;i++){ const a=-Math.PI*.9+i*Math.PI*.8/5, L=h*.16; ppaper(g,[[tx,ty],[tx+Math.cos(a)*L,ty+Math.sin(a)*L*.7+L*.3],[tx+Math.cos(a+.2)*L*.6,ty+Math.sin(a+.2)*L*.5]],'#4f7d3f',1,{rim:false,th:.4}); } }
+function pCactus(g,x,base,h){ ppaper(g,[[x-5,base],[x+5,base],[x+5,base-h],[x-5,base-h]],'#5e8a4a',2,{rim:false}); ppaper(g,[[x+5,base-h*.55],[x+16,base-h*.55],[x+16,base-h*.85],[x+11,base-h*.85],[x+11,base-h*.62],[x+5,base-h*.62]],'#5e8a4a',1,{rim:false}); ppaper(g,[[x-5,base-h*.4],[x-15,base-h*.4],[x-15,base-h*.7],[x-10,base-h*.7],[x-10,base-h*.47],[x-5,base-h*.47]],'#4e7a3e',1,{rim:false}); }
+function pSea(g,P,y,cols){ cols.forEach((c,i)=>ppaper(g,[[0,y+i*9*PPR],[P,y-4+i*9*PPR],[P,Hh_],[0,Hh_]],c,2,{rim:false,sa:.15})); g.strokeStyle='rgba(255,255,255,.55)'; g.lineWidth=2; for(let i=0;i<18;i++){ const yy=y+6+(i%4)*12*PPR; g.beginPath(); g.moveTo(i*P/18,yy); g.quadraticCurveTo(i*P/18+20,yy-4,i*P/18+40,yy); g.stroke(); } }
+let Hh_=720;
+function pFlamingo(g,x,y,s){ g.fillStyle='#f28aa0'; g.beginPath(); g.ellipse(x,y,9*s,5*s,-.2,0,7); g.fill(); g.strokeStyle='#f28aa0'; g.lineWidth=2*s; g.beginPath(); g.moveTo(x+6*s,y-2*s); g.quadraticCurveTo(x+12*s,y-14*s,x+8*s,y-20*s); g.stroke(); g.fillStyle='#2a1a10'; g.beginPath(); g.moveTo(x+8*s,y-20*s); g.lineTo(x+13*s,y-18*s); g.lineTo(x+9*s,y-17*s); g.fill(); g.strokeStyle='#d96a80'; g.lineWidth=1*s; g.beginPath(); g.moveTo(x,y+4*s); g.lineTo(x,y+20*s); g.moveTo(x+2*s,y+4*s); g.lineTo(x+5*s,y+12*s); g.lineTo(x+2*s,y+20*s); g.stroke(); }
+function pCow(g,x,y,s,col){ g.fillStyle=col||'#f4ecd8'; g.beginPath(); g.ellipse(x,y,12*s,6*s,0,0,7); g.fill(); g.beginPath(); g.ellipse(x+13*s,y-4*s,4*s,3*s,.3,0,7); g.fill(); for(const lx of [-8,-4,5,9]) g.fillRect(x+lx*s,y+4*s,2*s,9*s); g.strokeStyle='#d9cfb8'; g.lineWidth=1*s; g.beginPath(); g.moveTo(x+12*s,y-7*s); g.lineTo(x+10*s,y-10*s); g.moveTo(x+15*s,y-7*s); g.lineTo(x+17*s,y-10*s); g.stroke(); }
+function pHeron(g,x,y,s){ g.fillStyle='#fbf8ef'; g.beginPath(); g.ellipse(x,y,6*s,3.5*s,-.3,0,7); g.fill(); g.strokeStyle='#fbf8ef'; g.lineWidth=1.6*s; g.beginPath(); g.moveTo(x+4*s,y-2*s); g.quadraticCurveTo(x+9*s,y-9*s,x+6*s,y-13*s); g.stroke(); g.strokeStyle='#e0a030'; g.lineWidth=1*s; g.beginPath(); g.moveTo(x+6*s,y-13*s); g.lineTo(x+11*s,y-12*s); g.stroke(); g.strokeStyle='#3a3a3a'; g.beginPath(); g.moveTo(x,y+3*s); g.lineTo(x,y+12*s); g.stroke(); }
+function pHatV(g,x,y,s){ g.fillStyle='#f4ecd8'; g.beginPath(); g.ellipse(x,y,22*s,6*s,0,0,7); g.fill(); g.strokeStyle='#2a1a10'; g.lineWidth=1.4*s; for(let r=1;r<4;r++){ g.beginPath(); g.ellipse(x,y,22*s*r/4+3*s,6*s*r/4+1*s,0,0,7); g.stroke(); } g.fillStyle='#f4ecd8'; g.beginPath(); g.moveTo(x-9*s,y-1*s); g.quadraticCurveTo(x-9*s,y-14*s,x,y-14*s); g.quadraticCurveTo(x+9*s,y-14*s,x+9*s,y-1*s); g.fill(); g.strokeStyle='#2a1a10'; for(let r=0;r<4;r++){ g.beginPath(); g.moveTo(x-9*s+r,y-3*s-r*3*s); g.lineTo(x+9*s-r,y-3*s-r*3*s); g.stroke(); } }
+// ---------- paisajes nuevos (dentro del lienzo de la capa de lugares)
+function pLandmarkCO(g,L,P,Hh,th,base,mid,hillC,town){ Hh_=Hh; const R=PPR;
+  if(L.k==='paramo'&&L.volc){ ppaper(g,[[mid+60*R,base-20*R],[mid+190*R,base-200*R],[mid+230*R,base-206*R],[mid+360*R,base-20*R]],'#7a7068',6,{th:2}); ppaper(g,[[mid+170*R,base-176*R],[mid+190*R,base-200*R],[mid+230*R,base-206*R],[mid+252*R,base-176*R],[mid+220*R,base-186*R]],'#f4f2ea',2); g.fillStyle='rgba(230,230,225,.6)'; for(let i=0;i<3;i++){ g.beginPath(); g.ellipse(mid+214*R+i*14*R,base-(224+i*20)*R,(14+i*8)*R,8*R,0,0,7); g.fill(); } return false; }
+  if(L.k==='pueblo'&&L.ex==='vueltiao'){ const x0=mid+330*R; ppaper(g,[[x0-130,base],[x0+130,base],[x0+130,base-70],[x0-130,base-70]],'#e8dcc0',3); ppaper(g,[[x0-150,base-70],[x0+150,base-70],[x0+130,base-96],[x0-130,base-96]],'#b8956a',3); for(let i=0;i<3;i++) pHatV(g,x0-80+i*80,base-30,1.5); for(let i=0;i<5;i++) pPalm(g,mid-440*R+i*30*R,base,(90+pj(i,4)*30)*R,i); return false; }
+  if(L.k==='valle'){ ppaper(g,pridge(0,P,base-230*R,90*R,10*R,3,Hh,P),'#3e5a6e',6,{th:2}); ppaper(g,pridge(0,P,base-140*R,50*R,10*R,7,Hh,P),'#557a62',5,{th:2});
+    for(let r=0;r<6;r++) ppaper(g,[[0,base-60*R+r*12*R],[P,base-64*R+r*12*R],[P,base-54*R+r*12*R],[0,base-50*R+r*12*R]],r%2?'#6f9a3c':'#8ab84a',2,{rim:false,sa:.12});
+    g.strokeStyle='rgba(60,90,30,.5)'; g.lineWidth=1.4; for(let i=0;i<120;i++){ const x=i*P/120, y=base-58*R+(i%6)*12*R; g.beginPath(); g.moveTo(x,y); g.lineTo(x+3,y-12); g.stroke(); }
+    for(let i=0;i<6;i++) pTree(g,i*P/6+60,base,(80+pj(i,3)*30)*R,'ceiba',i,['#3f7a42','#4f8a4a','#6f9a4c']);
+    ppaper(g,[[mid+280*R,base],[mid+300*R,base],[mid+296*R,base-150*R],[mid+284*R,base-150*R]],'#a8604a',3); g.fillStyle='rgba(200,200,200,.5)'; for(let i=0;i<4;i++){ g.beginPath(); g.ellipse(mid+300*R+i*16*R,base-(166+i*16)*R,(10+i*5)*R,6*R,0,0,7); g.fill(); }
+    town(mid-200*R,4,1); return true; }
+  if(L.k==='cafetero'){
+    if(L.ex==='ruiz'){ ppaper(g,[[mid-260*R,base-80*R],[mid-110*R,base-250*R],[mid-60*R,base-256*R],[mid+90*R,base-80*R]],'#8a8a90',6,{th:2}); ppaper(g,[[mid-140*R,base-218*R],[mid-110*R,base-250*R],[mid-60*R,base-256*R],[mid-26*R,base-218*R],[mid-70*R,base-226*R]],'#f8f8f2',2); }
+    for(let l=0;l<3;l++) ppaper(g,pridge(0,P,base-(120-l*40)*R,(50-l*12)*R,10*R,l*5+1,Hh,P),[pmix(hillC,'#2f6a3a',.3),hillC,pmix(hillC,'#a8c070',.3)][l],6-l,{th:2});
+    for(let r=0;r<5;r++) for(let i=0;i<30;i++){ const x=i*P/30+(r%2)*14, y=base-(70-r*14)*R+Math.sin(i*.7+r)*6; ppaper(g,pblob(x,y,7,8,i+r,.75),r%2?'#2f6a3a':'#3a7a40',1,{rim:false,th:.3}); if(i%3===0){ g.fillStyle='#c0392b'; g.beginPath(); g.arc(x+2,y+1,1.6,0,7); g.fill(); } }
+    if(L.ex==='cocora'){ for(let i=0;i<9;i++) pWax(g,mid-380*R+i*95*R+pj(i,5)*30,base-(i%3)*10*R,(200+pj(i,6)*90)*R,i); for(let i=0;i<3;i++) pHouse(g,mid+200*R+i*56*R,base,48,34,['#f6efe2','#fbf4e4','#f2ead8'][i],'#a8482b',i); g.fillStyle=['#2e7bc4','#c9475b','#3f9a5a'][1]; }
+    else { const cols=['#c9475b','#2e7bc4','#f2c230','#3f9a5a','#e07a2a']; for(let i=0;i<6;i++){ const x=mid-260*R+i*70*R; pHouse(g,x,base-(i%2)*6*R,58,40,'#f6efe2','#9a4428',i); g.fillStyle=cols[i%5]; g.fillRect(x+8,base-(i%2)*6*R-26,10,22); g.fillRect(x+30,base-(i%2)*6*R-30,18,8); g.fillStyle='#6e4a2a'; g.fillRect(x+26,base-(i%2)*6*R-22,26,3); } pChurch(g,mid+260*R,base,{ch:'domo',tw:1},R*1.05); }
+    return true; }
+  if(L.k==='penol'){ ppaper(g,pridge(0,P,base-90*R,40*R,12*R,5,Hh,P),hillC,6,{th:2}); ppaper(g,[[0,base-50*R],[P,base-54*R],[P,Hh],[0,Hh]],'#4f8fb0',4,{sa:.2});
+    for(let i=0;i<7;i++) ppaper(g,pblob(i*P/7+40,base-30*R+(i%2)*10*R,(30+pj(i,2)*30)*R,16,i,.32),'#4f8a4a',3);
+    const rx=mid+40*R; ppaper(g,[[rx-90*R,base-40*R],[rx-100*R,base-170*R],[rx-60*R,base-250*R],[rx,base-266*R],[rx+56*R,base-246*R],[rx+90*R,base-170*R],[rx+80*R,base-40*R]],'#8a8a86',7,{th:2});
+    ppaper(g,[[rx+20*R,base-40*R],[rx+30*R,base-250*R],[rx+56*R,base-246*R],[rx+90*R,base-170*R],[rx+80*R,base-40*R]],'#6e6e6a',3,{rim:false});
+    g.strokeStyle='#f4ecd8'; g.lineWidth=2.4; g.beginPath(); let yy=base-50*R, xx=rx+6*R; g.moveTo(xx,yy); for(let k=0;k<12;k++){ xx+=(k%2?-14:14)*R*.6; yy-=17*R; g.lineTo(xx,yy); } g.stroke();
+    g.strokeStyle='rgba(40,40,40,.35)'; g.lineWidth=2; g.beginPath(); g.moveTo(rx+14*R,base-262*R); g.quadraticCurveTo(rx+24*R,base-150*R,rx+18*R,base-40*R); g.stroke();
+    const cols=['#c9475b','#2e7bc4','#f2c230','#3f9a5a']; for(let i=0;i<4;i++){ const x=mid-360*R+i*52*R; pHouse(g,x,base-46*R,46,34,'#fbf4e4','#9a4428',i); g.fillStyle=cols[i]; g.fillRect(x,base-46*R-8,46,8); }
+    return true; }
+  if(L.k==='cono'){ ppaper(g,pridge(0,P,base-100*R,40*R,12*R,4,Hh,P),pmix(hillC,'#8a9a7a',.3),6,{th:2}); ppaper(g,[[mid-300*R,base-60*R],[mid-30*R,base-290*R],[mid+30*R,base-292*R],[mid+300*R,base-60*R]],'#7a7a80',6,{th:2}); ppaper(g,[[mid-90*R,base-240*R],[mid-30*R,base-290*R],[mid+30*R,base-292*R],[mid+92*R,base-240*R],[mid+40*R,base-252*R],[mid,base-238*R],[mid-40*R,base-254*R]],'#fbfaf4',3);
+    ppaper(g,pridge(0,P,base-40*R,24*R,12*R,8,Hh,P),hillC,5,{th:2}); town(mid-60*R,6,1); return true; }
+  if(L.k==='estoraques'){ ppaper(g,pridge(0,P,base-70*R,30*R,12*R,3,Hh,P),'#c9a676',6,{th:2}); for(let i=0;i<9;i++){ const x=mid-380*R+i*95*R, h=(120+pj(i,3)*120)*R; ppaper(g,[[x-30,base],[x-24,base-h],[x-10,base-h-20],[x+8,base-h-12],[x+24,base-h+8],[x+32,base]],i%2?'#d9b48a':'#c99a6a',5,{th:1.4}); g.strokeStyle='rgba(90,60,30,.35)'; g.lineWidth=1.4; for(let k=0;k<6;k++){ g.beginPath(); g.moveTo(x-24,base-h*k/6); g.lineTo(x+26,base-h*k/6+4); g.stroke(); } } for(let i=0;i<5;i++) pCactus(g,mid-300*R+i*150*R,base,(30+pj(i,4)*20)*R); return true; }
+  if(L.k==='caribe'){ const ex=L.ex;
+    if(ex==='tayrona'){ ppaper(g,pridge(0,P,base-250*R,80*R,12*R,2,Hh,P),'#5a7a8a',6,{th:2}); for(let i=0;i<3;i++){ const x=mid-200*R+i*200*R, y=base-300*R+pj(i,3)*30*R; ppaper(g,[[x-70*R,y+60*R],[x,y],[x+80*R,y+60*R],[x+30*R,y+46*R],[x,y+56*R],[x-30*R,y+44*R]],'#f8f8f2',2); } ppaper(g,pridge(0,P,base-120*R,50*R,10*R,6,Hh,P),'#2f6a3a',5,{th:2}); }
+    if(ex==='murallas'||ex==='golfo'||ex==='islas') ppaper(g,pridge(0,P,base-60*R,14*R,12*R,4,Hh,P),ex==='murallas'?'#7a9a6a':'#6f9a5a',5,{th:2});
+    const sea=ex==='islas'?['#1f6fa8','#2e90c0','#4fb8d0','#7fd8d8','#b8eee6']:ex==='golfo'?['#3f8fa8','#5fb0c0','#8fd0d0']:['#2f86b0','#4fa8c8','#7fd0d8'];
+    pSea(g,P,base-(ex==='murallas'?90:60)*R,sea);
+    ppaper(g,[[0,base-8*R],[P,base-12*R],[P,Hh],[0,Hh]],'#ecd9a6',3,{sa:.15});
+    if(ex==='murallas'){ const x0=mid-400*R, x1=mid+400*R, top=base-70*R; ppaper(g,[[x0,base],[x1,base],[x1,top],[x0,top]],'#c9a676',5,{th:1.6}); for(let x=x0;x<x1;x+=26*R) ppaper(g,[[x,top],[x+14*R,top],[x+14*R,top-10*R],[x,top-10*R]],'#c9a676',2,{rim:false});
+      g.strokeStyle='rgba(90,60,30,.3)'; g.lineWidth=1; for(let y=top+12;y<base;y+=14) { g.beginPath(); g.moveTo(x0,y); g.lineTo(x1,y); g.stroke(); }
+      for(let i=0;i<3;i++){ const x=x0+120*R+i*280*R; ppaper(g,[[x-14*R,top],[x+14*R,top],[x+14*R,top-40*R],[x-14*R,top-40*R]],'#d9b98a',3); ppaper(g,pblob(x,top-44*R,15*R,14,i,.7),'#b8956a',2); }
+      const cols=['#f2c230','#e07a2a','#4fa0c0','#c9475b','#f4a8b8','#3f9a5a']; for(let i=0;i<6;i++){ const x=x0+40*R+i*120*R, h=(60+pj(i,2)*30)*R; ppaper(g,[[x,top],[x+90*R,top],[x+90*R,top-h],[x,top-h]],cols[i],3); ppaper(g,[[x-4,top-h],[x+90*R+4,top-h],[x+90*R-6,top-h-12*R],[x+6,top-h-12*R]],'#a8482b',2); ppaper(g,[[x+10*R,top-h*.5],[x+70*R,top-h*.5],[x+70*R,top-h*.5+6*R],[x+10*R,top-h*.5+6*R]],'#6e4a2a',2,{rim:false}); g.fillStyle='#e05a8a'; for(let k=0;k<6;k++){ g.beginPath(); g.arc(x+14*R+k*10*R,top-h*.5-2*R,3*R,0,7); g.fill(); } }
+      pChurch(g,mid+60*R,top-60*R,{ch:'domo',tw:1},R*1.1); return true; }
+    if(ex==='tayrona'){ for(let i=0;i<7;i++) ppaper(g,pblob(mid-300*R+i*90*R,base-10*R,(20+pj(i,2)*24)*R,16,i,.8),i%2?'#8a8278':'#a09a90',4); }
+    if(ex==='golfo'){ for(let i=0;i<8;i++){ const x=mid-420*R+i*40*R; g.strokeStyle='#5a3a22'; g.lineWidth=2; for(let k=0;k<4;k++){ g.beginPath(); g.moveTo(x-8+k*6,base-6*R); g.quadraticCurveTo(x-4+k*6,base-26*R,x+2,base-34*R); g.stroke(); } ppaper(g,pblob(x,base-44*R,20*R,14,i,.6),'#2f6a3a',2,{rim:false}); } for(let i=0;i<2;i++){ const x=mid+150*R+i*160*R, y=base-40*R; ppaper(g,[[x-40,y],[x+40,y],[x+30,y+12],[x-30,y+12]],i?'#c9475b':'#2e7bc4',2); } }
+    if(ex==='islas'){ ppaper(g,pblob(mid+180*R,base-56*R,70*R,20,4,.25),'#ecd9a6',3); for(let i=0;i<3;i++) pPalm(g,mid+150*R+i*30*R,base-58*R,(60+i*10)*R,i+3); ppaper(g,[[mid-200*R,base-60*R],[mid-140*R,base-60*R],[mid-150*R,base-50*R],[mid-190*R,base-50*R]],'#fbf8ef',2); ppaper(g,[[mid-172*R,base-62*R],[mid-172*R,base-120*R],[mid-140*R,base-66*R]],'#fbf8ef',2); }
+    for(let i=0;i<6;i++) pPalm(g,mid-460*R+i*170*R+(ex==='islas'?40*R:0),base-4*R,(110+pj(i,6)*40)*R,i);
+    return true; }
+  if(L.k==='carnaval'){ ppaper(g,[[0,base-30*R],[P,base-34*R],[P,Hh],[0,Hh]],'#8a9a8a',4,{sa:.2}); g.strokeStyle='rgba(255,255,255,.4)'; g.lineWidth=2; for(let i=0;i<10;i++){ g.beginPath(); g.moveTo(i*P/10,base-24*R); g.lineTo(i*P/10+40,base-24*R); g.stroke(); }
+    for(let i=0;i<12;i++){ const w=(30+pj(i,2)*30)*R, h=(50+pj(i,3)*90)*R, x=i*P/12; ppaper(g,[[x,base-36*R],[x+w,base-36*R],[x+w,base-36*R-h],[x,base-36*R-h]],pmix('#f4ecd8','#e8c8a0',pj(i,4)),4,{th:1.4}); g.fillStyle='rgba(70,100,130,.5)'; for(let r=10;r<h-10;r+=16) for(let c=6;c<w-6;c+=12) g.fillRect(x+c,base-36*R-h+r,6,8); }
+    const cols=['#c9283c','#f2c230','#2e7bc4','#3f9a5a','#e07a2a'];
+    for(let s=0;s<3;s++){ g.strokeStyle='#6e4a2a'; g.lineWidth=1.2; g.beginPath(); const y0=base-(150-s*36)*R; g.moveTo(0,y0); for(let x=0;x<=P;x+=60) g.quadraticCurveTo(x+30,y0+20,x+60,y0); g.stroke(); for(let x=0;x<P;x+=20){ const yy=y0+Math.sin((x%60)/60*Math.PI)*12; ppaper(g,[[x,yy],[x+14,yy],[x+7,yy+16]],cols[(x/20+s)%5],1,{rim:false,th:.3}); } }
+    for(let i=0;i<5;i++){ const x=mid-200*R+i*100*R, y=base-36*R; ppaper(g,[[x-26,y],[x+26,y],[x+10,y-40],[x-10,y-40]],cols[i],3,{th:.8}); ppaper(g,pblob(x,y-48,9,12,i,1.1),'#8a5a3a',2,{rim:false}); ppaper(g,[[x-14,y-56],[x+14,y-56],[x+8,y-72],[x-8,y-72]],cols[(i+2)%5],2,{rim:false}); }
+    return true; }
+  if(L.k==='desierto'){ const ex=L.ex;
+    if(ex==='salinas'){ ppaper(g,[[0,base-60*R],[P,base-64*R],[P,Hh],[0,Hh]],'#4fa8c8',3,{sa:.2}); for(let r=0;r<2;r++) for(let i=0;i<10;i++) ppaper(g,[[i*P/10+6,base-(46-r*18)*R],[i*P/10+P/10-6,base-(46-r*18)*R],[i*P/10+P/10-10,base-(32-r*18)*R],[i*P/10+10,base-(32-r*18)*R]],pmix('#fbf8f2','#f4c8d0',pj(i,r)*.6),2,{rim:false,sa:.15});
+      for(let i=0;i<6;i++) pFlamingo(g,mid-300*R+i*50*R+pj(i,3)*20,base-28*R,1.4*R/2); ppaper(g,[[mid+220*R,base-6*R],[mid+340*R,base-6*R],[mid+340*R,base-60*R],[mid+220*R,base-60*R]],'#d9c29a',3); ppaper(g,[[mid+200*R,base-60*R],[mid+360*R,base-60*R],[mid+350*R,base-72*R],[mid+210*R,base-72*R]],'#b8956a',3);
+      for(let i=0;i<3;i++) pCactus(g,mid+400*R+i*40*R,base,(40+i*10)*R); return true; }
+    if(ex==='tatacoa'){ for(let l=0;l<3;l++){ const pts=[[0,Hh]]; for(let i=0;i<=40;i++){ const x=i*P/40, y=base-(150-l*44)*R+(i%2?-1:1)*(18+pj(i,l)*30)*R; pts.push([x,y]); } pts.push([P,Hh]); ppaper(g,pts,['#c9643a','#b8502e','#d9864a'][l],6-l,{th:2}); g.strokeStyle='rgba(80,30,10,.3)'; g.lineWidth=1.4; for(let i=0;i<40;i++){ const x=i*P/40; g.beginPath(); g.moveTo(x,base-(140-l*44)*R); g.lineTo(x+4,base-(90-l*44)*R); g.stroke(); } }
+      ppaper(g,pridge(0,P,base-30*R,10*R,12*R,7,Hh,P),'#9a9088',3,{th:1.4}); ppaper(g,[[mid+200*R,base-30*R],[mid+260*R,base-30*R],[mid+260*R,base-70*R],[mid+200*R,base-70*R]],'#f4f2ea',3); ppaper(g,pblob(mid+230*R,base-70*R,30*R,18,2,.8),'#fbfaf4',3); g.fillStyle='#3a3a3a'; g.fillRect(mid+226*R,base-98*R,8*R,24*R);
+      for(let i=0;i<5;i++) pCactus(g,mid-360*R+i*120*R,base-24*R,(30+pj(i,4)*16)*R); return true; } }
+  if(L.k==='selva'){ const ex=L.ex;
+    if(ex==='tepuy'){ for(let i=0;i<3;i++){ const x=mid-300*R+i*260*R, w=(160+pj(i,2)*60)*R, h=(220+pj(i,3)*60)*R; ppaper(g,[[x,base],[x+12*R,base-h],[x+w-10*R,base-h-6*R],[x+w,base]],['#7a5a44','#8a6a50','#6e503c'][i],6,{th:2}); ppaper(g,[[x+10*R,base-h],[x+w-10*R,base-h-6*R],[x+w-14*R,base-h+10*R],[x+14*R,base-h+12*R]],'#4f7d3f',2); g.strokeStyle='rgba(40,20,10,.3)'; g.lineWidth=1.6; for(let k=0;k<8;k++){ g.beginPath(); g.moveTo(x+20*R+k*w/9,base-h+14*R); g.lineTo(x+16*R+k*w/9,base-40*R); g.stroke(); } g.fillStyle='rgba(168,50,43,.7)'; for(let k=0;k<6;k++){ g.fillRect(x+24*R+k*16*R,base-h*.55+(k%2)*8*R,4*R,8*R); } }
+      g.fillStyle='rgba(240,240,236,.55)'; for(let i=0;i<4;i++){ g.beginPath(); g.ellipse(i*P/4+120*R,base-110*R,120*R,18*R,0,0,7); g.fill(); } }
+    if(ex==='mavecure'){ for(let i=0;i<3;i++){ const x=mid-200*R+i*170*R, h=(200+[60,0,30][i])*R, w=(130+i*10)*R; ppaper(g,[[x-w/2,base-40*R],[x-w/2+10*R,base-h*.6],[x-w*.2,base-h],[x+w*.2,base-h],[x+w/2-10*R,base-h*.6],[x+w/2,base-40*R]],['#4a4a48','#3e3e3c','#55524e'][i],7,{th:2}); g.strokeStyle='rgba(255,255,255,.12)'; g.lineWidth=3; g.beginPath(); g.moveTo(x-w*.1,base-h+10); g.quadraticCurveTo(x-w*.3,base-h*.6,x-w*.36,base-50*R); g.stroke(); } }
+    ppaper(g,pridge(0,P,base-60*R,30*R,10*R,ex==='tepuy'?9:5,Hh,P),'#2f5a2a',6,{th:2});
+    const nT=ex==='amazonas'||ex==='raudal'||ex==='mavecure'?9:14; for(let i=0;i<nT;i++) pTree(g,i*P/nT+pj(i,3)*30,base-20*R,(100+pj(i,4)*80)*R,'ceiba',i,['#1f4a24','#2f5a2a','#3d6b31','#2a5a30']);
+    if(ex==='lindosa'){ const x0=mid-260*R, x1=mid+260*R; ppaper(g,[[x0,base],[x0+10*R,base-150*R],[x0+120*R,base-170*R],[x1-80*R,base-160*R],[x1,base-130*R],[x1,base]],'#c9a27a',6,{th:2}); g.strokeStyle='#a8322b'; g.fillStyle='#a8322b'; g.lineWidth=2.4; g.lineCap='round';
+      for(let i=0;i<7;i++){ const x=x0+60*R+i*66*R, y=base-110*R+(i%2)*30*R; if(i%3===0){ g.beginPath(); g.ellipse(x,y,16*R,8*R,0,0,7); g.stroke(); for(const lx of [-10,-4,4,10]){ g.beginPath(); g.moveTo(x+lx*R,y+6*R); g.lineTo(x+lx*R,y+18*R); g.stroke(); } g.beginPath(); g.moveTo(x+16*R,y); g.lineTo(x+24*R,y-8*R); g.stroke(); } else if(i%3===1){ g.beginPath(); g.arc(x,y-14*R,4*R,0,7); g.fill(); g.beginPath(); g.moveTo(x,y-10*R); g.lineTo(x,y+8*R); g.moveTo(x-10*R,y-4*R); g.lineTo(x+10*R,y-4*R); g.moveTo(x,y+8*R); g.lineTo(x-7*R,y+18*R); g.moveTo(x,y+8*R); g.lineTo(x+7*R,y+18*R); g.stroke(); } else { g.beginPath(); for(let t=0;t<Math.PI*4;t+=.3){ const rr=t*2*R; g.lineTo(x+Math.cos(t)*rr,y+Math.sin(t)*rr); } g.stroke(); } } return true; }
+    const riv=ex==='mavecure'?'#2a2a26':'#a8804a'; ppaper(g,[[0,base-26*R],[P,base-30*R],[P,Hh],[0,Hh]],riv,4,{sa:.2}); g.strokeStyle='rgba(255,255,255,.3)'; g.lineWidth=2; for(let i=0;i<14;i++){ g.beginPath(); g.moveTo(i*P/14,base-16*R); g.lineTo(i*P/14+36,base-16*R); g.stroke(); }
+    if(ex==='amazonas'){ for(let i=0;i<8;i++){ const x=mid-380*R+i*44*R, y=base-10*R+(i%2)*8*R; ppaper(g,pblob(x,y,16*R,18,i,.3),'#4f8a3a',2,{rim:false}); g.strokeStyle='#8a3a2a'; g.lineWidth=1.4; g.beginPath(); g.ellipse(x,y,16*R,4.8*R,0,0,7); g.stroke(); } g.fillStyle='#f0a0b0'; for(let i=0;i<2;i++){ const x=mid+40*R+i*90*R; g.beginPath(); g.ellipse(x,base-14*R,18*R,6*R,-.3,Math.PI,0); g.fill(); }
+      for(let i=0;i<3;i++){ const x=mid+200*R+i*80*R; g.strokeStyle='#5a3a22'; g.lineWidth=2; for(const lx of [-20,0,20]){ g.beginPath(); g.moveTo(x+lx,base); g.lineTo(x+lx,base-40*R); g.stroke(); } ppaper(g,[[x-30,base-40*R],[x+30,base-40*R],[x+30,base-70*R],[x-30,base-70*R]],'#c9a676',3); ppaper(g,[[x-40,base-70*R],[x+40,base-70*R],[x,base-100*R]],'#b8956a',3); } }
+    if(ex==='raudal'||ex==='mavecure'){ g.fillStyle='rgba(255,255,255,.7)'; for(let i=0;i<12;i++){ g.beginPath(); g.ellipse(mid-200*R+i*36*R,base-16*R+(i%3)*6,10*R,3*R,0,0,7); g.fill(); } for(let i=0;i<4;i++) ppaper(g,pblob(mid-180*R+i*120*R,base-18*R,14*R,12,i,.6),'#3a3a38',3); const x=mid+220*R; ppaper(g,[[x-50,base-22*R],[x+50,base-22*R],[x+40,base-14*R],[x-40,base-14*R]],'#6e4a2a',2); ppaper(g,pblob(x-10,base-30*R,6,10,1,1.2),'#2a1a10',1,{rim:false});
+      if(ex==='mavecure'){ g.fillStyle='#d9283c'; for(let i=0;i<10;i++){ g.beginPath(); g.arc(mid-380*R+i*20*R,base-34*R-(i%2)*6,3,0,7); g.fill(); } } }
+    if(ex==='tepuy'||!ex){ g.fillStyle='rgba(240,240,236,.4)'; for(let i=0;i<3;i++){ g.beginPath(); g.ellipse(i*P/3+200*R,base-60*R,140*R,14*R,0,0,7); g.fill(); } }
+    return true; }
+  if(L.k==='llanos'){ const ex=L.ex, dry=!!L.seco;
+    if(ex==='cristales'){ ppaper(g,pridge(0,P,base-150*R,60*R,10*R,3,Hh,P),'#4a6e5a',6,{th:2}); ppaper(g,pridge(0,P,base-90*R,30*R,10*R,7,Hh,P),'#5f8a4a',5,{th:2}); }
+    if(ex==='vallenato'){ ppaper(g,pridge(0,P,base-210*R,70*R,12*R,2,Hh,P),'#6a7a8a',6,{th:2}); for(let i=0;i<2;i++){ const x=mid-120*R+i*240*R, y=base-270*R; ppaper(g,[[x-60*R,y+50*R],[x,y],[x+70*R,y+50*R],[x+20*R,y+40*R],[x-20*R,y+42*R]],'#f8f8f2',2); } }
+    ppaper(g,pridge(0,P,base-40*R,8*R,12*R,5,Hh,P),dry?'#c9b46a':'#8ab85a',6,{th:2}); ppaper(g,pridge(0,P,base-20*R,6*R,12*R,9,Hh,P),dry?'#b8a05a':'#6f9a44',4,{th:2});
+    if(ex==='cristales'){ ppaper(g,[[0,base-18*R],[P,base-22*R],[P,base+10*R],[0,base+14*R]],'#4f98b0',3,{sa:.2}); const cols=['#c9283c','#f2c230','#3f9a5a','#8a2a6a']; for(let i=0;i<26;i++){ ppaper(g,pblob(i*P/26+10,base-6*R+(i%3)*4,(10+pj(i,2)*10)*R,12,i,.35),cols[i%4],1,{rim:false,th:.3}); } for(let i=0;i<6;i++) ppaper(g,pblob(i*P/6+60,base-10*R,12*R,12,i,.6),'#b8a890',3); }
+    if(ex==='tuparro'){ ppaper(g,[[0,base-26*R],[P,base-30*R],[P,base+12*R],[0,base+12*R]],'#6a8a9a',3,{sa:.2}); for(let i=0;i<5;i++) ppaper(g,pblob(mid-300*R+i*150*R,base-40*R,(40+pj(i,3)*40)*R,18,i,.6),i%2?'#8a7a6a':'#9a8a78',5); }
+    const nP=ex==='cristales'?4:ex==='vallenato'?5:9; for(let i=0;i<nP;i++){ const x=i*P/nP+pj(i,4)*60; if(dry) pTree(g,x,base-20*R,(70+pj(i,5)*30)*R,'ceiba',i,['#7a8a4a','#8a9a5a']); else pMoriche(g,x,base-20*R,(110+pj(i,5)*50)*R,i); }
+    if(ex==='hato'||ex==='joropo'||!ex){ for(let i=0;i<6;i++) pCow(g,mid-300*R+i*70*R,base-14*R+(i%2)*6,1.2*R/2,i%3?'#f4ecd8':'#8a5a3a'); for(let i=0;i<5;i++) pHeron(g,mid+180*R+i*40*R,base-30*R-(i%2)*8,1.4*R/2); }
+    if(ex==='hato'){ g.strokeStyle='#6e4a2a'; g.lineWidth=2; for(let i=0;i<10;i++){ const x=mid+100*R+i*30*R; g.beginPath(); g.moveTo(x,base); g.lineTo(x,base-30*R); g.stroke(); } g.beginPath(); g.moveTo(mid+100*R,base-12*R); g.lineTo(mid+370*R,base-12*R); g.moveTo(mid+100*R,base-24*R); g.lineTo(mid+370*R,base-24*R); g.stroke();
+      const x=mid-120*R, y=base-26*R; g.fillStyle='#3a2a20'; g.beginPath(); g.ellipse(x,y,22,10,0,0,7); g.fill(); g.beginPath(); g.ellipse(x+22,y-10,7,5,-.6,0,7); g.fill(); for(const lx of [-14,-6,8,16]) g.fillRect(x+lx,y+6,3,18); g.beginPath(); g.ellipse(x-2,y-20,6,9,0,0,7); g.fill(); g.beginPath(); g.arc(x-2,y-32,5,0,7); g.fill(); g.beginPath(); g.ellipse(x-2,y-35,12,3,0,0,7); g.fill(); }
+    if(ex==='joropo'||ex==='vallenato'){ const x=mid+40*R; ppaper(g,[[x-90,base-4*R],[x+90,base-4*R],[x+90,base-20*R],[x-90,base-20*R]],'#8a6a44',3);
+      if(ex==='joropo'){ g.strokeStyle='#6e4a2a'; g.lineWidth=3; g.beginPath(); g.moveTo(x-70,base-20*R); g.quadraticCurveTo(x-80,base-90*R,x-30,base-110*R); g.lineTo(x-40,base-20*R); g.stroke(); g.strokeStyle='rgba(240,230,210,.7)'; g.lineWidth=.8; for(let k=0;k<6;k++){ g.beginPath(); g.moveTo(x-66+k*4,base-24*R); g.lineTo(x-58+k*4,base-(90-k*6)*R); g.stroke(); }
+        ppaper(g,[[x+10,base-20*R],[x+70,base-20*R],[x+40,base-70*R]],'#fbf8ef',3); ppaper(g,pblob(x+40,base-78*R,6*R,10,1,1.2),'#8a5a3a',1,{rim:false}); g.fillStyle='#2a1a10'; g.fillRect(x+80,base-70*R,10,50*R); g.beginPath(); g.arc(x+85,base-76*R,6*R,0,7); g.fill(); g.beginPath(); g.ellipse(x+85,base-80*R,14*R,3*R,0,0,7); g.fill(); }
+      else { ppaper(g,[[x-40,base-40*R],[x+40,base-40*R],[x+40,base-80*R],[x-40,base-80*R]],'#c9283c',3); g.fillStyle='#f4ecd8'; for(let k=0;k<6;k++) g.fillRect(x-32+k*12,base-76*R,6,32*R); ppaper(g,[[x-40,base-40*R],[x-60,base-36*R],[x-60,base-84*R],[x-40,base-80*R]],'#2a1a10',2,{rim:false}); ppaper(g,[[x+40,base-40*R],[x+60,base-36*R],[x+60,base-84*R],[x+40,base-80*R]],'#2a1a10',2,{rim:false}); town(mid-300*R,4,.9); } }
+    return true; }
+  if(L.k==='pacifico'){ ppaper(g,pridge(0,P,base-170*R,70*R,10*R,3,Hh,P),'#2f5a3a',6,{th:2}); for(let i=0;i<10;i++) pTree(g,i*P/10+30,base-50*R,(110+pj(i,4)*60)*R,'ceiba',i,['#1f4a24','#2f5a2a','#3d6b31']);
+    pSea(g,P,base-46*R,['#5a8a8a','#6f9a98','#8ab0aa']); for(let i=0;i<10;i++){ const x=i*P/10+20; g.strokeStyle='#4a3020'; g.lineWidth=2; for(let k=0;k<4;k++){ g.beginPath(); g.moveTo(x-10+k*7,base); g.quadraticCurveTo(x-6+k*7,base-24*R,x,base-34*R); g.stroke(); } ppaper(g,pblob(x,base-44*R,22*R,14,i,.55),'#2f6a3a',2,{rim:false}); }
+    const cols=['#2e7bc4','#3f9a5a','#e07a2a','#c9475b']; for(let i=0;i<4;i++){ const x=mid-200*R+i*80*R; g.strokeStyle='#5a3a22'; g.lineWidth=2; for(const lx of [-20,0,20]){ g.beginPath(); g.moveTo(x+lx,base); g.lineTo(x+lx,base-40*R); g.stroke(); } ppaper(g,[[x-30,base-40*R],[x+30,base-40*R],[x+30,base-74*R],[x-30,base-74*R]],cols[i],3); ppaper(g,[[x-38,base-74*R],[x+38,base-74*R],[x,base-100*R]],'#9aa3aa',3); }
+    const wx=mid+300*R, wy=base-36*R; ppaper(g,[[wx-6,wy],[wx+6,wy],[wx+4,wy-26],[wx+26,wy-44],[wx+6,wy-34],[wx,wy-40],[wx-6,wy-34],[wx-26,wy-44],[wx-4,wy-26]],'#3a4a52',3); g.fillStyle='rgba(255,255,255,.7)'; g.beginPath(); g.ellipse(wx,wy+2,18,4,0,0,7); g.fill();
+    g.strokeStyle='rgba(220,230,240,.35)'; g.lineWidth=1.2; for(let i=0;i<80;i++){ const x=pj(i,7)*P, y=pj(i,8)*base; g.beginPath(); g.moveTo(x,y); g.lineTo(x-6,y+18); g.stroke(); }
+    return true; }
+  return false; }
+{ const _plm=pLandmark0; pLandmark0=function(g,L,P0,Hh,th,base,mid){ if(REGION==='colombia'||['valle','cafetero','penol','cono','estoraques','caribe','carnaval','desierto','selva','llanos','pacifico'].includes(L.k)||L.volc||L.ex==='vueltiao'){
+    const hillC=pmix((th.m||[])[1]||'#6C9A55','#efe4cb',.15); g.save(); const x0=mid-P0/2; g.translate(x0,0); const P=P0, m=P/2;
+    const town=(cx,n,sc)=>{ for(let i=0;i<n;i++){ const w=(34+pj(i,cx)*22)*PPR*sc, h=(22+pj(i,cx+1)*12)*PPR*sc, x=cx-n*22*PPR*sc+i*44*PPR*sc+pj(i,cx+2)*8; pHouse(g,x,base-(i%3)*6*PPR,w,h,pmix(L.wall||'#f2ead8','#d9c8a8',pj(i,4)*.3),pmix(L.roof||'#a8482b','#7a2a18',pj(i,5)*.3),i); } };
+    let done=false; try{ done=pLandmarkCO(g,L,P,Hh,th,base,m,hillC,town); } finally{ g.restore(); } if(done) return; }
+  return _plm(g,L,P0,Hh,th,base,mid); }; }
+// la cordillera nevada del fondo solo donde hay nieve de verdad
+// (se parcha en papelBuild: L.snowFar decide en la versión Colombia)
+// ---------- postales: dibujo con el paisaje del lugar y leyendas nuevas
+const POSTLAND={};
+function postLand(g,Pc,W2,H2){ let c=POSTLAND[Pc.id]; if(!c){ const L=LUGARES_CO[Pc.w], th=THEMES[LV[Pc.w].theme]||{}, Hh=H*PPR, P=1400*PPR; const big=pmk(P,Hh), bg=big.getContext('2d'); const sk=bg.createLinearGradient(0,0,0,Hh); sk.addColorStop(0,pmix((th.sky||['#9FC3D6'])[0],'#e8e2cc',.25)); sk.addColorStop(1,pmix((th.sky||['#9FC3D6','#E9DFC4'])[1]||'#E9DFC4','#efe4cb',.35)); bg.fillStyle=sk; bg.fillRect(0,0,P,Hh);
+    const keep=REGION; REGION='colombia'; try{ pLandmark(bg,L,P,Hh,th); }catch(e){} finally{ REGION=keep; }
+    const sh=Hh*.6+20*PPR, sw=sh/0.6; c=pmk(600,360); const cg=c.getContext('2d'); cg.drawImage(big,P/2-sw/2,0,sw,sh,0,0,600,360); POSTLAND[Pc.id]=c; }
+  g.drawImage(c,0,0,W2,H2); }
+{ const _pa=postArt; postArt=function(g,id,W2,H2){ const Pc=POSTALES.find(p=>p.id===id)||POSTALES_CO.find(p=>p.id===id);
+  if(Pc&&Pc.land){ postLand(g,Pc,W2,H2); g.globalCompositeOperation='multiply'; g.globalAlpha=.35; g.fillStyle=g.createPattern(PFIB,'repeat'); g.fillRect(0,0,W2,H2); g.globalAlpha=1; g.globalCompositeOperation='source-over'; return; }
+  if(id==='sombreron'||id==='tunda'||id==='silbon'){ const gr=g.createLinearGradient(0,0,0,H2); gr.addColorStop(0,'#2E3A52'); gr.addColorStop(1,'#6A7A8A'); g.fillStyle=gr; g.fillRect(0,0,W2,H2); g.fillStyle='#F4F0E0'; g.beginPath(); g.arc(W2*.82,H2*.2,14,0,7); g.fill();
+    if(id==='silbon'){ ppaper(g,pridge(0,W2,H2*.82,6,12,3,H2,W2),'#3a4a3a',2,{th:.6}); for(let i=0;i<4;i++) pMoriche(g,W2*(.1+i*.27),H2*.84,H2*.4,i); g.fillStyle='rgba(15,20,18,.85)'; g.beginPath(); g.ellipse(W2*.5,H2*.6,7,26,0,0,7); g.fill(); g.beginPath(); g.arc(W2*.5,H2*.3,6,0,7); g.fill(); g.beginPath(); g.ellipse(W2*.5,H2*.27,16,3,0,0,7); g.fill(); g.strokeStyle='rgba(240,240,220,.5)'; g.lineWidth=1.2; for(let i=0;i<3;i++){ g.beginPath(); g.arc(W2*.56,H2*.32,8+i*7,-.6,.4); g.stroke(); } }
+    else if(id==='tunda'){ for(let i=0;i<5;i++) pTree(g,W2*(.08+i*.22),H2,H2*.85,'ceiba',i,['#1E3A2A','#2A4A34']); g.fillStyle='rgba(244,240,230,.5)'; g.beginPath(); g.moveTo(W2*.5,H2*.32); g.quadraticCurveTo(W2*.42,H2*.6,W2*.4,H2*.9); g.lineTo(W2*.6,H2*.9); g.quadraticCurveTo(W2*.58,H2*.6,W2*.5,H2*.32); g.fill(); g.beginPath(); g.arc(W2*.5,H2*.28,8,0,7); g.fill(); g.strokeStyle='rgba(15,20,18,.6)'; g.lineWidth=1; g.beginPath(); g.arc(W2*.5,H2*.28,10,0,7); g.stroke(); }
+    else { g.fillStyle='rgba(15,20,18,.9)'; g.beginPath(); g.ellipse(W2*.5,H2*.64,12,26,0,0,7); g.fill(); g.beginPath(); g.arc(W2*.5,H2*.38,7,0,7); g.fill(); g.beginPath(); g.ellipse(W2*.5,H2*.33,34,7,0,0,7); g.fill(); g.beginPath(); g.ellipse(W2*.5,H2*.29,12,9,0,Math.PI,0); g.fill(); g.fillStyle='#F2C230'; for(let i=0;i<3;i++){ g.save(); g.translate(W2*(.25+i*.06),H2*.85); g.rotate(-.3+i*.3); g.fillStyle='#fff'; g.fillRect(-5,-7,10,14); g.fillStyle=i===1?'#C9475B':'#1E1A18'; g.fillRect(-2,-3,4,4); g.restore(); } }
+    return; }
+  return _pa(g,id,W2,H2); }; }
 
 /* ================= DIPLOMAS v2: diseño de certificado de expedición (cumbre + sendero + parche) ================= */
 // Tokens por ruta: tinta, acento, acento claro, texto, papel, y la paleta de la ilustración (cielo arriba, cielo abajo, sol, 4 planos de montaña lejos→cerca)
