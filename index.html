@@ -4509,7 +4509,7 @@ function showMap(li,opts={}){
   ov.hidden=true;
   const bar=document.getElementById('mapBar'); bar.hidden=false;
   const L=LV[li];
-  bar.innerHTML='<img src="art/m'+(li+1)+'.jpg" alt="" style="width:96px;height:64px;object-fit:cover;border-radius:10px;flex:none" onerror="this.remove()"><div class="txt"><div class="eyebrow">Mundo '+(li+1)+' de '+LV.length+' · '+esc(L.role)+'</div><b>'+esc(L.name)+'</b> <span class="muted">· '+esc(L.step)+'</span></div><button class="btn" type="button" id="bMapGo">'+(opts.reveal&&li===0?'Empezar en El Valle':'Ir al mundo '+(li+1))+'</button>';
+  bar.innerHTML='<img src="'+lugarImg(li)+'" alt="" style="width:96px;height:64px;object-fit:cover;border-radius:4px;flex:none;box-shadow:0 2px 0 #C9B48E" onerror="this.remove()"><div class="txt"><div class="eyebrow">Mundo '+(li+1)+' de '+LV.length+' · '+esc(L.role)+'</div><b>'+esc(L.name)+'</b> <span class="muted">· '+esc(L.step)+'</span></div><button class="btn" type="button" id="bMapGo">'+(opts.reveal&&li===0?'Empezar en El Valle':'Ir al mundo '+(li+1))+'</button>';
   document.getElementById('bMapGo').onclick=()=>{ bar.hidden=true; levelIntro(li); };
   try{ document.getElementById('bMapGo').focus({preventScroll:true}); }catch(e){}
 }
@@ -4876,7 +4876,7 @@ function levelIntro(li){
   document.getElementById('mapBar').hidden=true;
   S.mode='intro'; S.li=li; S.L=buildLevel(li); S.cam=0; S.t=0; S.p=newHiker(); S.camY=Math.max(0,S.p.y-H*0.58); S.parts=[];S.texts=[];S.rain=[];S.loose=[];S.pops=[];S.pulse=0;S.banner=0;S.shake=0;S.hudPop=0;S.amb=null;S.rocks=[];S.fees=[];S.falling=[];S.toast=null;
   const L=LV[li], c=costo();
-  openOv(`<img class="hero" src="art/m${li+1}.jpg" alt="" style="height:200px;object-position:center 30%" onerror="this.remove()"><div class="eyebrow">Mundo ${li+1} de ${LV.length} · ${esc(L.role)} · ${esc(Dif().n)}</div>
+  openOv(`<img class="hero" src="${lugarImg(li)}" alt="${esc(LV[li].lugar||LV[li].name)}" style="height:200px;object-position:center 55%" onerror="this.remove()"><div class="eyebrow">Mundo ${li+1} de ${LV.length} · ${esc(L.role)} · ${esc(Dif().n)}</div>
   <h2>${esc(L.name)}</h2>
   <div class="fb" style="border-left:4px solid #C9475B;margin:0 0 4px"><b>Cuaderno de Ruta:</b> ${esc(PRIN[li])}</div>
   <div class="icards">
@@ -5934,7 +5934,7 @@ function buildMaterial(){
     <div class="usec"><h4><span class="k">3</span>Ideas clave</h4><div class="ukeys">${u.claves.map(k=>`<div class="ukey"><b>${esc(k[0])}</b><span>${esc(k[1])}</span></div>`).join('')}</div></div>
     <div class="usec"><h4><span class="k">4</span>Vocabulario · toca cada tarjeta</h4><div class="uvoc">${u.vocab.map(v=>`<button type="button" class="vcard" aria-pressed="false"><span class="in"><span class="f"><b>${esc(v[0])}</b><small>Toca para ver</small></span><span class="b">${esc(v[1])}</span></span></button>`).join('')}</div></div>
     <div class="usec"><h4><span class="k">5</span>La clase paso a paso · ${u.pasos.reduce((a,p)=>a+p[0],0)} min</h4><ol class="usteps">${u.pasos.map((p,j)=>`<li${MAT[i+'-'+j]?' class="ok"':''}><input type="checkbox" id="st${i}-${j}" data-k="${i}-${j}" data-min="${p[0]}′"${MAT[i+'-'+j]?' checked':''} aria-label="Marcar ${esc(p[1])} como hecho"><label for="st${i}-${j}"><b>${esc(p[1])} · ${p[0]} min</b><span>${esc(p[2])}</span></label></li>`).join('')}</ol></div>
-    <div class="usec"><h4><span class="k">6</span>En el juego</h4><div class="ujuego"><img src="art/m${u.w[0]}.jpg" alt="" onerror="this.remove()"><div><div class="meta" style="margin:0">${u.w.map(w=>`<span class="chip">${esc(wname(w))}</span>`).join('')}</div><p>${esc(u.juego)}</p><button class="mbtn" type="button" data-go>Ir al juego ↑</button></div></div></div>
+    <div class="usec"><h4><span class="k">6</span>En el juego</h4><div class="ujuego"><img src="${lugarImg(u.w[0]-1)}" alt="" onerror="this.remove()"><div><div class="meta" style="margin:0">${u.w.map(w=>`<span class="chip">${esc(wname(w))}</span>`).join('')}</div><p>${esc(u.juego)}</p><button class="mbtn" type="button" data-go>Ir al juego ↑</button></div></div></div>
     <div class="usec uact"><h4><span class="k">7</span>Actividad práctica</h4><div class="ucard"><b style="font:400 18px var(--f-display)">${esc(u.act.t)}</b><div class="lbl" style="margin-top:6px">Materiales</div><p>${esc(u.act.mat)}</p><ol>${u.act.pasos.map(x=>`<li>${esc(x)}</li>`).join('')}</ol><div class="lbl">Producto</div><p>${esc(u.act.prod)}</p></div></div>
     <div class="usec"><h4><span class="k">8</span>Mini quiz de salida · pruébalo tú o proyéctalo</h4>${u.quiz.map((q,j)=>`<div class="uq" data-a="${q[2]}"><p>${j+1}. ${esc(q[0])}</p><div class="os">${q[1].map((o,k)=>`<button type="button" data-o="${k}">${'abc'[k]}) ${esc(o)}</button>`).join('')}</div><div class="why" hidden>${esc(q[3])}</div></div>`).join('')}</div>
     <div class="ugrid2">
@@ -9330,6 +9330,27 @@ DECO2.piedra=(d,warm)=>{ const k=d.k, c1=mix('#D9B47A',warm,.2), c2='#B8905A';
   if(k%3===0){ for(let r=0;r<3;r++) for(let i=0;i<3-r;i++){ ctx.fillStyle=(i+r)%2?c1:mix(c1,'#FFFFFF',.12); ctx.fillRect(-14+i*10+r*5,-8-r*8,9,7.4); ctx.strokeStyle=c2; ctx.lineWidth=.6; ctx.strokeRect(-14+i*10+r*5,-8-r*8,9,7.4); } }
   else if(k%3===1){ ctx.fillStyle=c1; ctx.beginPath(); ctx.moveTo(-6,0); ctx.lineTo(-6,-20); ctx.quadraticCurveTo(0,-28,6,-20); ctx.lineTo(6,0); ctx.fill(); ctx.strokeStyle=c2; ctx.lineWidth=.7; ctx.beginPath(); ctx.arc(0,-14,3.4,0,7); ctx.moveTo(-4,-6); ctx.lineTo(4,-6); ctx.stroke(); ctx.fillStyle=mix(c1,'#000000',.15); ctx.fillRect(-9,-2,18,2); }
   else { ctx.fillStyle=mix(c1,'#000000',.08); ctx.beginPath(); ctx.ellipse(0,-3,12,4,0,0,7); ctx.fill(); ctx.fillStyle=c1; ctx.beginPath(); ctx.ellipse(-8,-4,5,3.4,0,0,7); ctx.ellipse(5,-5,6,4,0,0,7); ctx.fill(); ctx.strokeStyle='#6E4A2A'; ctx.lineWidth=1.2; ctx.beginPath(); ctx.moveTo(12,-2); ctx.lineTo(17,-12); ctx.stroke(); ctx.fillStyle='#8A8A8A'; ctx.fillRect(15,-14,4,3); } };
+
+/* ================= ILUSTRACIÓN DE PAPEL DE CADA LUGAR + ALTURAS REALES =================
+   La imagen de cada mundo (inicio y barra del mapa) se dibuja con el paisaje de papel de su municipio o
+   departamento, según la región elegida. Las alturas del mapa y del medidor son las reales (m s. n. m.). */
+const LUGIMG={};
+function lugarImg(li){ const key=REGION+':'+li; if(LUGIMG[key]) return LUGIMG[key];
+  const B=papelBuild(li), th=THEMES[LV[li].theme]||{}, Hh=H*PPR, VW=720*PPR, Y0=Math.max(0,Hh*.6-205*PPR), VH=Math.min(Hh-Y0,VW/2.6), OW=960, OH=Math.round(OW*VH/VW), c=pmk(OW,OH), g=c.getContext('2d');
+  const sky=th.sky||['#8FB4CC','#F2D6A8'], sg=g.createLinearGradient(0,0,0,OH); sg.addColorStop(0,pmix(sky[0],'#e8e2cc',.2)); sg.addColorStop(1,pmix(sky[1]||sky[0],'#efe4cb',.3)); g.fillStyle=sg; g.fillRect(0,0,OW,OH);
+  if(B.sun) g.drawImage(B.sun,OW*.74,OH*.06,OH*.3,OH*.3);
+  (B.clouds||[]).forEach((cl,i)=>g.drawImage(cl,OW*(.08+i*.42),OH*(.06+i*.05),cl.width*OW/VW,cl.height*OW/VW));
+  B.layers.forEach(Ly=>{ const src=Ly.c, sx=Math.max(0,(src.width-VW)/2); g.drawImage(src,sx,Y0,Math.min(VW,src.width),VH,0,0,OW,OH); });
+  g.save(); g.globalCompositeOperation='multiply'; g.globalAlpha=.35; g.fillStyle=g.createPattern(PFIB,'repeat'); g.fillRect(0,0,OW,OH); g.restore();
+  let url=''; try{ url=c.toDataURL('image/jpeg',.86); }catch(e){} LUGIMG[key]=url; return url; }
+// alturas reales del lugar donde empieza cada mundo (el último valor es la cumbre final de la ruta)
+const ALT_BASE=[ALT,ALT2,ALT3,ALT4].map(a=>a.slice());
+const ALT_REG={
+ santander:[[925,1000,1600,3200,1700,3350,2850,3900,4200],[480,1336,1500,1117,1100,3500,4000,3800,4000],[959,1500,1600,75,500,300,1500,1000,1000],[777,1150,700,1290,1400,1230,75,959,1000]],
+ colombia:[[1000,1400,1900,2650,2400,3300,1450,4000,5215],[0,0,440,300,2100,3015,4500,4200,5321],[0,2527,1600,43,100,168,175,100,700],[0,350,180,300,125,50,96,18,18]]};
+function aplicarAlturas(r){ const A=ALT_REG[r]; [ALT,ALT2,ALT3,ALT4].forEach((arr,k)=>{ const v=A?A[k]:ALT_BASE[k]; arr.splice(0,arr.length,...v); }); try{ MAPBG2=null; }catch(e){} }
+{ const _sr2=setRegion; setRegion=function(r){ _sr2(r); aplicarAlturas(REGION); }; }
+aplicarAlturas(REGION);
 
 /* ================= DIPLOMAS v2: diseño de certificado de expedición (cumbre + sendero + parche) ================= */
 // Tokens por ruta: tinta, acento, acento claro, texto, papel, y la paleta de la ilustración (cielo arriba, cielo abajo, sol, 4 planos de montaña lejos→cerca)
