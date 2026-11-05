@@ -4481,7 +4481,7 @@ function drawMap(){
     ctx.globalAlpha=a; ctx.font='700 11px Figtree, system-ui, sans-serif';
     const left=x<320; let lx=left?x-14:x+14, ly=y-5, sy=y+7, sty=y+19; ctx.textAlign=left?'right':'left';
     if(off){ if(i===7&&ru<2){ lx=x-16; ctx.textAlign='right'; } else if(i%2===0){ lx=x; ctx.textAlign='center'; ly=y-36; sy=y-25; sty=y+21; } else if(y+42>H){ lx=x; ctx.textAlign='center'; ly=y-60; sy=y-49; sty=y-14; } else { lx=x; ctx.textAlign='center'; ly=y+24; sy=y+35; sty=y-14; } }
-    const label=LV[i+off].name, sub=ru>=2?(LV[i+off].tag||''):off?fmtM(ALTR(ru)[i])+' m':LV[i].role;
+    const label=LV[i+off].corto||LV[i+off].name, sub=ru>=2?(LV[i+off].tag||''):off?fmtM(ALTR(ru)[i])+' m':LV[i].role;
     if(off&&ctx.textAlign==='center'){ ctx.font='700 11px Figtree, system-ui, sans-serif'; const hw=Math.max(ctx.measureText(label).width,40)/2+10; lx=Math.max(hw,Math.min(W-hw,lx)); }
     if(off){ ctx.font='700 11px Figtree, system-ui, sans-serif'; const bw=Math.max(ctx.measureText(label).width,40)+12, bx=ctx.textAlign==='center'?lx-bw/2:ctx.textAlign==='right'?lx-bw+6:lx-6; ctx.fillStyle='rgba(10,20,26,.55)'; rr(bx,ly-10,bw,25,6); ctx.fill(); }
     ctx.font='700 11px Figtree, system-ui, sans-serif'; ctx.fillStyle='rgba(0,0,0,.55)'; ctx.fillText(label,lx+1,ly+1); ctx.fillStyle=cur?'#FFE18A':'#FFFFFF'; ctx.fillText(label,lx,ly);
@@ -4509,7 +4509,7 @@ function showMap(li,opts={}){
   ov.hidden=true;
   const bar=document.getElementById('mapBar'); bar.hidden=false;
   const L=LV[li];
-  bar.innerHTML='<img src="art/m'+(li+1)+'.jpg" alt="" style="width:96px;height:64px;object-fit:cover;border-radius:10px;flex:none" onerror="this.remove()"><div class="txt"><div class="eyebrow">Mundo '+(li+1)+' de 16 · '+esc(L.role)+'</div><b>'+esc(L.name)+'</b> <span class="muted">· '+esc(L.step)+'</span></div><button class="btn" type="button" id="bMapGo">'+(opts.reveal&&li===0?'Empezar en El Valle':'Ir al mundo '+(li+1))+'</button>';
+  bar.innerHTML='<img src="art/m'+(li+1)+'.jpg" alt="" style="width:96px;height:64px;object-fit:cover;border-radius:10px;flex:none" onerror="this.remove()"><div class="txt"><div class="eyebrow">Mundo '+(li+1)+' de '+LV.length+' · '+esc(L.role)+'</div><b>'+esc(L.name)+'</b> <span class="muted">· '+esc(L.step)+'</span></div><button class="btn" type="button" id="bMapGo">'+(opts.reveal&&li===0?'Empezar en El Valle':'Ir al mundo '+(li+1))+'</button>';
   document.getElementById('bMapGo').onclick=()=>{ bar.hidden=true; levelIntro(li); };
   try{ document.getElementById('bMapGo').focus({preventScroll:true}); }catch(e){}
 }
@@ -4876,7 +4876,7 @@ function levelIntro(li){
   document.getElementById('mapBar').hidden=true;
   S.mode='intro'; S.li=li; S.L=buildLevel(li); S.cam=0; S.t=0; S.p=newHiker(); S.camY=Math.max(0,S.p.y-H*0.58); S.parts=[];S.texts=[];S.rain=[];S.loose=[];S.pops=[];S.pulse=0;S.banner=0;S.shake=0;S.hudPop=0;S.amb=null;S.rocks=[];S.fees=[];S.falling=[];S.toast=null;
   const L=LV[li], c=costo();
-  openOv(`<img class="hero" src="art/m${li+1}.jpg" alt="" style="height:200px;object-position:center 30%" onerror="this.remove()"><div class="eyebrow">Mundo ${li+1} de 16 · ${esc(L.role)} · ${esc(Dif().n)}</div>
+  openOv(`<img class="hero" src="art/m${li+1}.jpg" alt="" style="height:200px;object-position:center 30%" onerror="this.remove()"><div class="eyebrow">Mundo ${li+1} de ${LV.length} · ${esc(L.role)} · ${esc(Dif().n)}</div>
   <h2>${esc(L.name)}</h2>
   <div class="fb" style="border-left:4px solid #C9475B;margin:0 0 4px"><b>Cuaderno de Ruta:</b> ${esc(PRIN[li])}</div>
   <div class="icards">
@@ -6485,20 +6485,29 @@ function buildMapBg2(){ const cv2=document.createElement('canvas'); cv2.width=W*
   c.fillStyle='#9AA6B8'; c.beginPath(); c.moveTo(470,250); c.lineTo(520,104); c.lineTo(534,104); c.lineTo(586,246); c.closePath(); c.fill(); c.fillStyle='#F6FAFE'; c.beginPath(); c.moveTo(500,158); c.lineTo(520,104); c.lineTo(534,104); c.lineTo(556,160); c.lineTo(540,150); c.lineTo(528,162); c.lineTo(514,150); c.closePath(); c.fill(); // nevado
   c.fillStyle='#6E7A8E'; c.beginPath(); c.moveTo(540,210); for(const [x,y] of [[560,120],[574,140],[592,70],[606,52],[620,80],[632,60],[646,120],[660,210]]) c.lineTo(x,y); c.closePath(); c.fill();
   c.fillStyle='#F2F8FF'; c.beginPath(); c.moveTo(592,70); c.lineTo(606,52); c.lineTo(620,80); c.lineTo(612,96); c.lineTo(600,88); c.closePath(); c.fill(); c.beginPath(); c.moveTo(626,70); c.lineTo(632,60); c.lineTo(640,84); c.closePath(); c.fill();
+  if(REGION!=='santander'){
   // mar a la izquierda (costa y salinas)
   g=c.createLinearGradient(0,318,0,H); g.addColorStop(0,'#4AA0C8'); g.addColorStop(1,'#1E6088'); c.fillStyle=g; c.fillRect(0,318,120,H-318);
   c.strokeStyle='rgba(255,255,255,.5)'; c.lineWidth=.8; for(let y=322;y<H;y+=6){ c.beginPath(); for(let x=0;x<=120;x+=5) c.lineTo(x,y+Math.sin(x*.2+y)*1.2); c.stroke(); }
   c.fillStyle='#F4ECD8'; c.beginPath(); c.moveTo(14,330); c.lineTo(19,316); c.lineTo(20,330); c.closePath(); c.fill(); c.fillStyle='#6A4A2A'; c.fillRect(11,330,12,2);
+  } else { // Santander: el río Chicamocha al fondo del cañón, con sus paredes de roca
+    c.fillStyle='#A8643A'; c.beginPath(); c.moveTo(0,250); c.lineTo(30,236); c.lineTo(70,248); c.lineTo(110,232); c.lineTo(160,250); c.lineTo(160,H); c.lineTo(0,H); c.closePath(); c.fill(); c.strokeStyle='rgba(80,40,20,.35)'; c.lineWidth=.8; for(let y=256;y<330;y+=9){ c.beginPath(); c.moveTo(0,y); c.lineTo(160,y+3); c.stroke(); }
+    g=c.createLinearGradient(0,320,0,H); g.addColorStop(0,'#7A9A7A'); g.addColorStop(1,'#4A6A5A'); c.fillStyle=g; c.fillRect(0,322,160,H-322); c.strokeStyle='rgba(255,255,255,.35)'; c.lineWidth=.8; for(let y=326;y<H;y+=7){ c.beginPath(); for(let x=0;x<=160;x+=5) c.lineTo(x,y+Math.sin(x*.2+y)*1); c.stroke(); } }
   // suelo de cada escenario
-  const COL=['#E6CE96','#F2EEE6','#D49A5E','#5E9A5E','#2E6A3A','#8A9460','#E8EEF6','#C6D2E2'], EARTH=['#B8945A','#C9C0B0','#A86A3A','#5A6A3A','#3A4A2A','#5A5A40','#9AA6B4','#7A8698'];
+  const COL=[REGION==='santander'?'#D9C08A':'#E6CE96',REGION==='santander'?'#E2C48A':'#F2EEE6','#D49A5E','#5E9A5E','#2E6A3A','#8A9460','#E8EEF6','#C6D2E2'], EARTH=['#B8945A',REGION==='santander'?'#B8864A':'#C9C0B0','#A86A3A','#5A6A3A','#3A4A2A','#5A5A40','#9AA6B4','#7A8698'];
   for(let i=0;i<8;i++){ const x0=i*80, x1=x0+80; c.fillStyle=EARTH[i]; c.beginPath(); c.moveTo(x0,H); for(let x=x0;x<=x1;x+=2) c.lineTo(x,gy(x)); c.lineTo(x1,H); c.closePath(); c.fill();
     c.fillStyle=COL[i]; c.beginPath(); for(let x=x0;x<=x1;x+=2) c.lineTo(x,gy(x)-1); for(let x=x1;x>=x0;x-=2) c.lineTo(x,gy(x)+7); c.closePath(); c.fill(); }
+  if(REGION!=='santander'){
   // costa: palmeras
   [[48,0],[66,1]].forEach(([x])=>{ const y=gy(x); c.strokeStyle='#6A4A2A'; c.lineWidth=1.8; c.beginPath(); c.moveTo(x,y); c.quadraticCurveTo(x+3,y-12,x+1,y-22); c.stroke(); c.fillStyle='#2E7A3A'; for(let j=0;j<6;j++){ c.save(); c.translate(x+1,y-22); c.rotate(-2.8+j*0.55); c.beginPath(); c.ellipse(6,0,7,1.8,0,0,7); c.fill(); c.restore(); } });
   // salinas: piscinas de sal rosadas y blancas, montículos de sal y flamencos
   for(let k=0;k<4;k++){ const x=88+k*17, y=gy(x)+3; c.fillStyle=k%2?'rgba(240,160,180,.9)':'rgba(250,250,250,.95)'; c.fillRect(x,y,14,4); c.strokeStyle='rgba(140,120,110,.6)'; c.lineWidth=.5; c.strokeRect(x,y,14,4); }
   [[100,0],[128,1],[146,0]].forEach(([x])=>{ const y=gy(x); c.fillStyle='#FFFFFF'; c.beginPath(); c.moveTo(x-6,y); c.lineTo(x,y-7); c.lineTo(x+6,y); c.closePath(); c.fill(); c.fillStyle='rgba(160,170,190,.5)'; c.beginPath(); c.moveTo(x,y-7); c.lineTo(x+6,y); c.lineTo(x+2,y); c.closePath(); c.fill(); });
   [[114],[136]].forEach(([x])=>{ const y=gy(x)-2; c.strokeStyle='#E07A8A'; c.lineWidth=.6; c.beginPath(); c.moveTo(x,y+2); c.lineTo(x,y-5); c.stroke(); c.fillStyle='#F29AAA'; c.beginPath(); c.ellipse(x+1,y-6,2.6,1.6,0,0,7); c.fill(); c.strokeStyle='#F29AAA'; c.lineWidth=.8; c.beginPath(); c.moveTo(x+3,y-6); c.quadraticCurveTo(x+5,y-10,x+4,y-12); c.stroke(); });
+  } else {
+    [[40],[70]].forEach(([x])=>{ const y=gy(x); c.strokeStyle='#4E7A3A'; c.lineWidth=2.2; c.beginPath(); c.moveTo(x,y); c.lineTo(x,y-11); c.moveTo(x-3,y-4); c.lineTo(x-3,y-8); c.moveTo(x+3,y-5); c.lineTo(x+3,y-9); c.stroke(); });
+    for(let k=0;k<4;k++){ const x=90+k*16, y=gy(x); c.fillStyle=k%2?'#D9B47A':'#C99A5A'; c.fillRect(x,y-6,10,6); c.fillRect(x+3,y-11,8,5); c.strokeStyle='rgba(120,80,40,.6)'; c.lineWidth=.5; c.strokeRect(x,y-6,10,6); }
+    [[118],[146]].forEach(([x])=>{ const y=gy(x); c.fillStyle='#F6F1E6'; c.fillRect(x-5,y-8,10,8); c.fillStyle='#B4502F'; c.beginPath(); c.moveTo(x-6,y-8); c.lineTo(x,y-12); c.lineTo(x+6,y-8); c.fill(); }); }
   // desierto: dunas y cactus
   c.strokeStyle='rgba(140,90,40,.45)'; c.lineWidth=.8; for(let k=0;k<4;k++){ c.beginPath(); for(let x=162;x<=238;x+=3) c.lineTo(x,gy(x)+3+k*4+Math.sin(x*0.12+k)*1.5); c.stroke(); }
   [[172],[196],[230]].forEach(([x])=>{ const y=gy(x); c.strokeStyle='#4E7A3A'; c.lineWidth=2.2; c.beginPath(); c.moveTo(x,y); c.lineTo(x,y-11); c.moveTo(x-3,y-4); c.lineTo(x-3,y-8); c.moveTo(x+3,y-5); c.lineTo(x+3,y-9); c.stroke(); });
@@ -8190,7 +8199,7 @@ const LUGARES=[ // cada mundo en un lugar de Santander cuya geografía concuerda
  {n:'Parque El Gallineral',k:'niebla',ex:'barbas'},                                                    // El Bosque Andino
  {n:'Páramo de Santurbán',k:'paramo'},                                                                  // El Páramo
  {n:'Nevado del Cocuy desde Capitanejo',k:'nevado'},                                                    // El Nevado: la sierra nevada vista desde Santander
- {n:'Serranía de los Yariguíes',k:'serrania'},                                                          // La Gran Cordillera
+ {n:'Páramo de Guantiva–La Rusia',k:'paramo',escarcha:1},                                                          // La Gran Cordillera
  {n:'Bucaramanga',k:'ciudad',sitio:1},
  {n:null,k:'volcan'},
  {n:'Los Santos',k:'pueblo',wall:'#ebe0c8',roof:'#9a4428',ch:'piedra',tw:1,ex:'grietas'},
@@ -8396,7 +8405,7 @@ function drawPagina(){ if(!papelOn()||S.papT==null) return; if(S.papT>0) S.papT-
     const gr=ctx.createLinearGradient(W-w-24,0,W-w+16,0); gr.addColorStop(0,'rgba(0,0,0,0)'); gr.addColorStop(.6,'rgba(0,0,0,.28)'); gr.addColorStop(1,'rgba(255,255,255,.25)'); ctx.fillStyle=gr; ctx.fillRect(W-w-24,0,40,H); ctx.restore(); }
   const L=LUGARES[S.li]; const bt=S.papBan||0; if(bt<=0) return; S.papBan--; const e=Math.min(1,(220-bt)/24), drop=(1-(1-Math.pow(1-e,3)+Math.sin(e*Math.PI)*.15))*60, a=Math.min(1,bt/20);
   ctx.save(); ctx.globalAlpha=a; ctx.translate(W/2,52-drop); ctx.rotate(Math.sin(S.t*.05)*.015); ctx.strokeStyle='rgba(80,60,40,.6)'; ctx.lineWidth=.6; ctx.beginPath(); ctx.moveTo(-90,-60); ctx.lineTo(-90,-18); ctx.moveTo(90,-60); ctx.lineTo(90,-18); ctx.stroke();
-  ctx.font='12px Gloock, Georgia, serif'; const t1='Mundo '+(S.li+1)+' · '+LV[S.li].name, t2=L&&L.n?L.n:''; ctx.font='800 7px Figtree, sans-serif'; const tw=Math.max(200,ctx.measureText(t2.toUpperCase()).width+40);
+  ctx.font='12px Gloock, Georgia, serif'; const t1='Mundo '+(S.li+1)+' · '+LV[S.li].name, t2=L&&L.n?L.n:''; ctx.font='13px Gloock, Georgia, serif'; const tw1=ctx.measureText(t1).width+30; ctx.font='800 7px Figtree, sans-serif'; const tw=Math.max(200,tw1,ctx.measureText(t2.toUpperCase()+' · '+RGN().toUpperCase()).width+40);
   ctx.shadowColor='rgba(30,16,6,.35)'; ctx.shadowBlur=6; ctx.shadowOffsetY=3; ctx.fillStyle='#f7efdc'; ctx.beginPath(); ctx.moveTo(-tw/2,-20); ctx.lineTo(tw/2,-20); ctx.lineTo(tw/2,18); ctx.lineTo(0,24); ctx.lineTo(-tw/2,18); ctx.closePath(); ctx.fill(); ctx.shadowColor='transparent';
   ctx.fillStyle=ctx.createPattern(PFIBD,'repeat'); ctx.globalAlpha=a*.25; ctx.fill(); ctx.globalAlpha=a; ctx.fillStyle='#2b2119'; ctx.textAlign='center'; ctx.font='13px Gloock, Georgia, serif'; ctx.fillText(t1,0,-3);
   if(t2){ ctx.font='800 7px Figtree, sans-serif'; ctx.fillStyle='#a8322b'; ctx.fillText(t2.toUpperCase()+' · '+RGN().toUpperCase(),0,11); } ctx.restore(); ctx.textAlign='left'; }
@@ -8751,7 +8760,7 @@ const POSTALES=[
  {w:12,id:'gallineral',k:'Sitios',t:'El Parque El Gallineral',x:'En San Gil, árboles gigantes cubiertos de barbas de viejo (un musgo que cuelga) junto al río Fonce. Un bosque viejo se cuida para que lo disfruten los que vienen.'},
  {w:13,id:'santurban',k:'Sitios',t:'El agua del páramo de Santurbán',x:'Los frailejones guardan el agua de la niebla y la sueltan poco a poco. De este páramo sale buena parte del agua de Bucaramanga: es un ahorro natural.'},
  {w:14,id:'estoraques',k:'Sitios',t:'Los Estoraques',x:'Columnas de roca talladas por el agua y el viento durante miles de años, en La Playa de Belén. Quedan en Norte de Santander, vecino de Santander: lo que se forma lento dura mucho.'},
- {w:15,id:'nitro',k:'Sitios',t:'La Cueva del Nitro',x:'En Zapatoca, cerca de la serranía de los Yariguíes, una cueva de salones y estalactitas que se formaron gota a gota durante siglos. Así crece el interés compuesto.'},
+ {w:15,id:'guantiva',k:'Sitios',t:'El páramo de Guantiva–La Rusia',x:'Entre Santander y Boyacá, por encima de Charalá y Onzaga, este páramo de frailejones y lagunas amanece con escarcha. Guarda el agua que baja a los pueblos: un ahorro que trabaja para todos.'},
  {w:18,id:'sismico',k:'Cultura',t:'El nido sísmico de Bucaramanga',x:'Bajo la Mesa de los Santos hay un punto donde tiembla mucho, casi siempre muy hondo y suave. Por eso en Santander conviene construir bien y tener un fondo de emergencia.'},
  {w:19,id:'llorona',k:'Leyendas',t:'La Llorona',x:'La leyenda cuenta de una mujer que llora de noche junto a los ríos buscando lo que perdió. Lo que se pierde por descuido cuesta mucho recuperarlo: protege lo que tienes.'},
  {w:22,id:'patasola',k:'Leyendas',t:'La Patasola',x:'Dicen que en el monte una figura de una sola pierna aleja a los caminantes del sendero. Las ofertas fáciles también te sacan del camino: no te desvíes de tu ruta.'},
@@ -8919,58 +8928,58 @@ function popHand(x,y,ang,skin){ const sd=mix(skin,'#000000',.2); ctx.fillStyle=s
 const LUGARES_SAN=LUGARES.map(o=>Object.assign({},o)), POSTALES_SAN=POSTALES.slice();
 const LUGARES_CO=[
  {n:'Valle del Cauca · Cali',k:'valle'},
- {n:'Caldas · Manizales',k:'cafetero',ex:'ruiz',snowFar:1},
+ {n:'Risaralda · Paisaje Cafetero',k:'cafetero'},
  {n:'Antioquia · Guatapé',k:'penol'},
- {n:'Putumayo · Valle de Sibundoy',k:'altiplano'},
- {n:'Risaralda · Otún Quimbaya',k:'niebla'},
- {n:'Tolima · Nevado del Tolima',k:'cono',snowFar:1},
+ {n:'Cundinamarca · Zipaquirá',k:'altiplano'},
+ {n:'Quindío · Valle de Cocora',k:'cafetero',ex:'cocora'},
+ {n:'Cauca · Puracé',k:'paramo',volc:1},
  {n:'Norte de Santander · Los Estoraques',k:'estoraques'},
- {n:'Cundinamarca · Sumapaz',k:'paramo',escarcha:1,snowFar:1},
- {n:'Magdalena · Tayrona',k:'caribe',ex:'tayrona'},
+ {n:'Tolima · Nevado del Tolima',k:'cono',snowFar:1},
+ {n:'Sucre · Golfo de Morrosquillo',k:'caribe',ex:'golfo'},
  {n:'La Guajira · Manaure',k:'desierto',ex:'salinas'},
  {n:'Huila · Tatacoa',k:'desierto',ex:'tatacoa'},
  {n:'Meta · Caño Cristales',k:'llanos',ex:'cristales'},
- {n:'Quindío · Valle de Cocora',k:'cafetero',ex:'cocora'},
- {n:'Cauca · Silvia y el Puracé',k:'paramo',volc:1},
- {n:'Boyacá · El Cocuy',k:'nevado',snowFar:1},
- {n:'Caquetá · Chiribiquete',k:'selva',ex:'tepuy'},
+ {n:'Putumayo · Valle de Sibundoy',k:'niebla'},
+ {n:'Boyacá · Lago de Tota',k:'paramo',snowFar:1},
+ {n:'Magdalena · Sierra Nevada',k:'nevado',snowFar:1},
+ {n:'Caldas · Los Nevados',k:'cono',snowFar:1},
  {n:'Bolívar · Cartagena',k:'caribe',ex:'murallas'},
  {n:'Nariño · Volcán Galeras',k:'volcan'},
- {n:'Santander · Chicamocha',k:'canon',seco:1,panachi:1},
+ {n:'Santander · Mesa de los Santos',k:'canon',seco:1,panachi:1},
  {n:'Chocó · Pacífico',k:'pacifico'},
  {n:'Córdoba · Tuchín',k:'pueblo',wall:'#f2e6cc',roof:'#9a6a3a',ch:'blanca',tw:1,ex:'vueltiao'},
  {n:'Cesar · Valledupar',k:'llanos',ex:'vallenato',seco:1},
  {n:'Guaviare · La Lindosa',k:'selva',ex:'lindosa'},
  {n:'Guainía · Mavecure',k:'selva',ex:'mavecure'},
- {n:'Arauca · el llano',k:'llanos',ex:'joropo'},
- {n:'Sucre · Golfo de Morrosquillo',k:'caribe',ex:'golfo'},
- {n:'Vaupés · Mitú',k:'selva',ex:'raudal'},
- {n:'Amazonas · Leticia',k:'selva',ex:'amazonas'},
+ {n:'San Andrés y Providencia',k:'caribe',ex:'islas'},
  {n:'Casanare · los hatos',k:'llanos',ex:'hato'},
+ {n:'Vaupés · Mitú',k:'selva',ex:'raudal'},
+ {n:'Caquetá · Chiribiquete',k:'selva',ex:'tepuy'},
+ {n:'Arauca · el llano',k:'llanos',ex:'joropo'},
  {n:'Vichada · El Tuparro',k:'llanos',ex:'tuparro'},
- {n:'San Andrés · mar de siete colores',k:'caribe',ex:'islas'},
+ {n:'Amazonas · Leticia',k:'selva',ex:'amazonas'},
  {n:'Atlántico · Barranquilla',k:'carnaval'}];
 const POSTALES_CO=[
  {w:0,id:'co_salsa',k:'Cultura',land:1,t:'Cali y la salsa',x:'En el valle del río Cauca crecen los cañaduzales y al fondo se ven los Farallones de Cali. Cali es famosa por su salsa: bailar bien pide práctica, igual que manejar la plata.'},
- {w:1,id:'co_manizales',k:'Sitios',land:1,t:'Manizales y el Nevado del Ruiz',x:'Manizales está construida sobre laderas empinadas, con vista al Nevado del Ruiz y en medio del Paisaje Cultural Cafetero. Construir en una montaña exige planear bien.'},
+ {w:15,id:'co_manizales',k:'Sitios',land:1,t:'Los Nevados y Manizales',x:'En Caldas, el Parque Nacional Los Nevados tiene glaciares, como los del Nevado del Ruiz, que se ven desde Manizales. Sus glaciares se están reduciendo: lo que no se cuida se pierde.'},
  {w:2,id:'co_penol',k:'Sitios',land:1,t:'La Piedra del Peñol',x:'En Guatapé, Antioquia, una roca gigante con una escalera de más de 700 escalones mira sobre un embalse lleno de islas. Se sube escalón por escalón, como se construye un ahorro.'},
  {w:2,id:'sombreron',k:'Leyendas',amb:1,t:'El Sombrerón',x:'Dicen en Antioquia que el Sombrerón, con su enorme sombrero, persigue a los que pasan la noche en apuestas y parrandas. Las apuestas prometen plata rápida y casi siempre se la llevan.'},
- {w:3,id:'co_sibundoy',k:'Cultura',land:1,t:'El Valle de Sibundoy',x:'Un valle alto y verde del Putumayo donde viven los pueblos kamëntšá e inga, conocidos por sus tallas en madera, sus tejidos y su Carnaval del Perdón. Perdonar y volver a empezar también cuenta.'},
- {w:4,id:'co_otun',k:'Sitios',land:1,t:'El bosque de niebla del Otún',x:'Cerca de Pereira, el Santuario Otún Quimbaya protege un bosque de niebla con monos aulladores y muchas aves. Lo que se cuida hoy sigue dando mañana.'},
+ {w:12,id:'co_sibundoy',k:'Cultura',land:1,t:'El Valle de Sibundoy',x:'Un valle alto y verde del Putumayo donde viven los pueblos kamëntšá e inga, conocidos por sus tallas en madera, sus tejidos y su Carnaval del Perdón. Perdonar y volver a empezar también cuenta.'},
+ {w:1,id:'co_otun',k:'Sitios',land:1,t:'El Paisaje Cultural Cafetero',x:'Risaralda, Caldas, Quindío y el norte del Valle forman el Paisaje Cultural Cafetero, Patrimonio de la Humanidad: fincas en laderas, casas de bahareque y café de montaña. Cada cosecha se cuida grano a grano, como el ahorro.'},
  {w:4,id:'patasola',k:'Leyendas',amb:1,t:'La Patasola',x:'Dicen que en el monte una figura de una sola pierna aleja a los caminantes del sendero. Las ofertas fáciles también te sacan del camino: no te desvíes de tu ruta.'},
- {w:5,id:'co_ibague',k:'Cultura',land:1,t:'Ibagué, capital musical',x:'Ibagué es conocida como la Capital Musical de Colombia, y desde el Tolima se ve el Nevado del Tolima. El bambuco y el sanjuanero suenan en sus fiestas.'},
+ {w:7,id:'co_ibague',k:'Cultura',land:1,t:'Ibagué, capital musical',x:'Ibagué es conocida como la Capital Musical de Colombia, y desde el Tolima se ve el Nevado del Tolima. El bambuco y el sanjuanero suenan en sus fiestas.'},
  {w:6,id:'estoraques',k:'Sitios',t:'Los Estoraques',x:'Columnas de roca talladas por el agua y el viento durante miles de años, en La Playa de Belén, Norte de Santander. Lo que se forma lento dura mucho.'},
- {w:7,id:'co_sumapaz',k:'Sitios',land:1,t:'El páramo de Sumapaz',x:'Al sur de Bogotá, en Cundinamarca, está Sumapaz, considerado el páramo más grande del mundo. Sus frailejones guardan agua para millones de personas: un ahorro natural.'},
- {w:8,id:'co_tayrona',k:'Sitios',land:1,t:'Tayrona y la Sierra Nevada',x:'En el Parque Tayrona la selva llega hasta el mar, y detrás se levanta la Sierra Nevada de Santa Marta, la montaña costera más alta del mundo, hogar de los pueblos kogui, arhuaco, wiwa y kankuamo.'},
+ {w:3,id:'co_sumapaz',k:'Sitios',land:1,t:'La Catedral de Sal de Zipaquirá',x:'En Zipaquirá, Cundinamarca, una mina de sal se convirtió en una catedral tallada bajo tierra. Al sur del departamento está Sumapaz, considerado el páramo más grande del mundo.'},
+ {w:14,id:'co_tayrona',k:'Sitios',land:1,t:'La Sierra Nevada de Santa Marta',x:'En el Magdalena, la Sierra Nevada es la montaña costera más alta del mundo: tiene picos nevados a pocos kilómetros del mar Caribe. Es hogar de los pueblos kogui, arhuaco, wiwa y kankuamo.'},
  {w:9,id:'co_manaure',k:'Cultura',land:1,t:'Las salinas de Manaure',x:'En La Guajira se saca sal del mar en piscinas que el sol evapora. Los wayuu tejen mochilas famosas en el mundo. Paciencia y trabajo convierten el agua en sal.'},
  {w:10,id:'co_tatacoa',k:'Sitios',land:1,t:'El desierto de la Tatacoa',x:'Un bosque seco del Huila con cárcavas rojas y grises, cerca de Villavieja. Su cielo despejado es famoso para mirar estrellas. En el Huila también está San Agustín, con estatuas de piedra muy antiguas.'},
  {w:10,id:'mohan',k:'Leyendas',amb:1,t:'El Mohán',x:'Dicen que el Mohán vive en los ríos del Tolima y el Huila, toca el tiple y enreda a quien se le acerca ofreciéndole oro del fondo del agua. Lo que suena demasiado bueno para ser cierto, casi siempre es una trampa.'},
  {w:11,id:'co_cristales',k:'Sitios',land:1,t:'Caño Cristales',x:'En la Serranía de La Macarena, en el Meta, un río se pinta de rojo, amarillo y verde por una planta acuática, sobre todo en la segunda mitad del año. Se visita con guía y con reglas para protegerlo.'},
- {w:12,id:'co_cocora',k:'Sitios',land:1,t:'El Valle de Cocora',x:'En el Quindío crece la palma de cera, el árbol nacional de Colombia, que supera los 50 metros. Una palma tarda décadas en crecer: lo grande toma tiempo.'},
+ {w:4,id:'co_cocora',k:'Sitios',land:1,t:'El Valle de Cocora',x:'En el Quindío crece la palma de cera, el árbol nacional de Colombia, que supera los 50 metros. Una palma tarda décadas en crecer: lo grande toma tiempo.'},
  {w:12,id:'madremonte',k:'Leyendas',amb:1,t:'La Madremonte',x:'La tradición dice que la Madremonte, cubierta de hojas y musgo, protege el bosque y castiga a quien lo daña. Cuidar la naturaleza es cuidar la riqueza de todos.'},
- {w:13,id:'co_silvia',k:'Cultura',land:1,t:'Silvia y el pueblo misak',x:'En Silvia, Cauca, el pueblo misak llega al mercado con sus ruanas azules y faldas negras. Cerca está el volcán Puracé, y en el Cauca está Popayán, la Ciudad Blanca.'},
- {w:14,id:'co_cocuy',k:'Sitios',land:1,t:'La Sierra Nevada de El Cocuy',x:'En Boyacá, El Cocuy tiene picos nevados, lagunas y frailejones. Sus glaciares se están reduciendo: lo que no se cuida se pierde.'},
- {w:15,id:'co_chiribiquete',k:'Sitios',land:1,t:'Chiribiquete',x:'Entre el Caquetá y el Guaviare, la Serranía de Chiribiquete tiene tepuyes (montañas de cima plana en medio de la selva) y miles de pinturas rupestres. Es Patrimonio de la Humanidad: no todo valor se puede comprar.'},
+ {w:5,id:'co_silvia',k:'Cultura',land:1,t:'El Puracé y el pueblo misak',x:'En el Cauca, el volcán Puracé se levanta entre páramos de frailejones. Cerca, en Silvia, el pueblo misak llega al mercado con sus ruanas azules, y Popayán es la Ciudad Blanca.'},
+ {w:13,id:'co_cocuy',k:'Sitios',land:1,t:'El Lago de Tota',x:'En Boyacá, rodeado de páramos y cultivos de cebolla, está el Lago de Tota, el lago natural más grande de Colombia. El páramo llena el lago gota a gota: así crece lo que no se gasta.'},
+ {w:27,id:'co_chiribiquete',k:'Sitios',land:1,t:'Chiribiquete',x:'Entre el Caquetá y el Guaviare, la Serranía de Chiribiquete tiene tepuyes (montañas de cima plana en medio de la selva) y miles de pinturas rupestres. Es Patrimonio de la Humanidad: no todo valor se puede comprar.'},
  {w:16,id:'co_cartagena',k:'Sitios',land:1,t:'Las murallas de Cartagena',x:'Se construyeron para defender la ciudad de piratas y ataques. Hoy su ciudad amurallada es Patrimonio de la Humanidad. Una buena muralla es como un fondo de emergencia.'},
  {w:17,id:'co_pasto',k:'Cultura',land:1,t:'El Carnaval de Negros y Blancos',x:'En Pasto, Nariño, cada enero el carnaval llena las calles de carrozas gigantes hechas a mano. Es Patrimonio de la Humanidad. Desde la ciudad se ve el volcán Galeras.'},
  {w:18,id:'co_chicamocha',k:'Sitios',land:1,t:'El cañón del Chicamocha',x:'En Santander el río Chicamocha talló un cañón enorme que cruza el teleférico de Panachi. Y en abril y mayo se recogen las hormigas culonas para tostarlas.'},
@@ -8980,14 +8989,14 @@ const POSTALES_CO=[
  {w:21,id:'co_vallenato',k:'Cultura',land:1,t:'Valledupar y el vallenato',x:'El vallenato, con acordeón, caja y guacharaca, es Patrimonio de la Humanidad. En Valledupar, Cesar, se celebra el Festival de la Leyenda Vallenata.'},
  {w:22,id:'co_lindosa',k:'Cultura',land:1,t:'Las pinturas de La Lindosa',x:'Cerca de San José del Guaviare hay rocas con pinturas rupestres muy antiguas de animales y personas. Son un tesoro de todos: se miran sin tocar.'},
  {w:23,id:'co_mavecure',k:'Sitios',land:1,t:'Los cerros de Mavecure',x:'En el Guainía, tres enormes cerros de roca se levantan junto al río Inírida. Son sagrados para los pueblos de la zona, y cerca crece la flor de Inírida.'},
- {w:24,id:'co_joropo',k:'Cultura',land:1,t:'El joropo',x:'Con arpa, cuatro y maracas, el joropo es la música y el baile del llano, en Arauca y en los Llanos de Colombia y Venezuela. El zapateo lleva su ritmo, como un buen presupuesto.'},
- {w:25,id:'co_morrosquillo',k:'Sitios',land:1,t:'El Golfo de Morrosquillo',x:'Tolú y Coveñas, en Sucre, tienen playas tranquilas y manglares. El manglar protege la costa y es criadero de peces: una inversión de la naturaleza.'},
+ {w:28,id:'co_joropo',k:'Cultura',land:1,t:'El joropo',x:'Con arpa, cuatro y maracas, el joropo es la música y el baile del llano, en Arauca y en los Llanos de Colombia y Venezuela. El zapateo lleva su ritmo, como un buen presupuesto.'},
+ {w:8,id:'co_morrosquillo',k:'Sitios',land:1,t:'El Golfo de Morrosquillo',x:'Tolú y Coveñas, en Sucre, tienen playas tranquilas y manglares. El manglar protege la costa y es criadero de peces: una inversión de la naturaleza.'},
  {w:26,id:'co_vaupes',k:'Cultura',land:1,t:'Los ríos del Vaupés',x:'Mitú está junto al río Vaupés. Allí viven muchos pueblos indígenas que se mueven en canoa entre raudales y comunidades. En la selva, saber leer el río es saber vivir.'},
- {w:27,id:'co_leticia',k:'Sitios',land:1,t:'Leticia y el río Amazonas',x:'En Leticia se juntan Colombia, Brasil y Perú. En el río viven delfines rosados y en los lagos crece la victoria regia, de hojas gigantes. La selva amazónica produce lluvia para muchos países.'},
- {w:28,id:'co_llanero',k:'Cultura',land:1,t:'La vida llanera',x:'En los hatos del Casanare los llaneros arrean el ganado a caballo y le cantan tonadas de vaquería para calmarlo. Garzas y chigüiros acompañan el paisaje.'},
- {w:28,id:'silbon',k:'Leyendas',amb:1,t:'El Silbón',x:'En el llano dicen que si el silbido del Silbón suena cerca, él está lejos, y si suena lejos, está cerca. Con las deudas pasa igual: la que parece lejana puede estar encima.'},
+ {w:30,id:'co_leticia',k:'Sitios',land:1,t:'Leticia, puerto del Amazonas',x:'En Leticia se juntan Colombia, Brasil y Perú, y por el río llegan y salen productos de los tres países. En el río viven delfines rosados y en los lagos crece la victoria regia.'},
+ {w:25,id:'co_llanero',k:'Cultura',land:1,t:'La vida llanera',x:'En los hatos del Casanare los llaneros arrean el ganado a caballo y le cantan tonadas de vaquería para calmarlo. Garzas y chigüiros acompañan el paisaje.'},
+ {w:25,id:'silbon',k:'Leyendas',amb:1,t:'El Silbón',x:'En el llano dicen que si el silbido del Silbón suena cerca, él está lejos, y si suena lejos, está cerca. Con las deudas pasa igual: la que parece lejana puede estar encima.'},
  {w:29,id:'co_tuparro',k:'Sitios',land:1,t:'El Tuparro y el Orinoco',x:'El Parque Nacional El Tuparro, en el Vichada, tiene sabanas, grandes rocas y raudales junto al río Orinoco. Puerto Carreño mira a Venezuela al otro lado del río.'},
- {w:30,id:'co_sanandres',k:'Sitios',land:1,t:'El mar de siete colores',x:'En San Andrés, Providencia y Santa Catalina el mar se ve en muchos tonos de azul. Su pueblo raizal habla creole, inglés y español. Es la Reserva de Biosfera Seaflower.'},
+ {w:24,id:'co_sanandres',k:'Sitios',land:1,t:'El mar de siete colores',x:'En San Andrés, Providencia y Santa Catalina el mar se ve en muchos tonos de azul. Después del huracán Iota, en 2020, Providencia se reconstruyó con el trabajo de su gente raizal.'},
  {w:31,id:'co_carnaval',k:'Cultura',land:1,t:'El Carnaval de Barranquilla',x:'Es Patrimonio de la Humanidad: marimondas, congos, cumbia y comparsas llenan la ciudad antes del Miércoles de Ceniza. Barranquilla está donde el río Magdalena llega al mar.'}];
 let REGION='santander'; try{ REGION=localStorage.getItem('rf-region')||'santander'; }catch(e){}
 const RGN=()=>REGION==='colombia'?'Colombia':'Santander';
@@ -9240,6 +9249,87 @@ function tpLayers(W2,H2,dpr){ const mk=()=>{ const c=pmk(W2*dpr,H2*dpr), g=c.get
   // 9 · el pliegue del libro en el centro
   { const [c,g]=mk(); const gr=g.createLinearGradient(cx-W2*.03,0,cx+W2*.03,0); gr.addColorStop(0,'rgba(40,25,10,0)'); gr.addColorStop(.48,'rgba(40,25,10,.1)'); gr.addColorStop(.5,'rgba(255,245,225,.12)'); gr.addColorStop(.52,'rgba(40,25,10,.06)'); gr.addColorStop(1,'rgba(40,25,10,0)'); g.fillStyle=gr; g.fillRect(cx-W2*.03,0,W2*.06,H2); out.push({c,f:0}); }
   return out; }
+
+
+/* ================= CADA MUNDO CONCUERDA CON SU LUGAR =================
+   Según la región elegida, el mundo toma el nombre, el texto de inicio, la meta y la decoración de su municipio
+   o departamento (sin salinas en Barichara ni mar en el Chicamocha). La lección financiera es la misma. */
+const LV_BASE=LV.map(L=>({name:L.name,bioma:L.bioma,lesson:L.lesson,tag:L.tag,corto:undefined})), TH_KEYS=['deco','mar','grass','earth','edge','sky','bgSnow','top','m','stone'];
+const TH_BASE=LV.map(L=>{ const t=THEMES[L.theme], o={}; TH_KEYS.forEach(k=>o[k]=t[k]); return o; });
+const PIEL={
+ santander:{
+  0:{pre:'Estás en <b>Floridablanca</b>, tierra de obleas, al pie de la montaña.'},
+  1:{pre:'Estás en <b>Piedecuesta</b>, entre cafetales y caña.'},
+  2:{pre:'Desde la <b>Mesa de los Santos</b> se ve todo el cañón del Chicamocha.'},
+  3:{pre:'En <b>Berlín</b>, el altiplano frío de Tona, se arma el primer campamento.'},
+  4:{pre:'En <b>Charalá</b>, el bosque de niebla de Virolín cubre el camino.'},
+  5:{pre:'En <b>Vetas</b>, pueblo minero de alta montaña, empieza el páramo.'},
+  6:{pre:'En el <b>Cerro La Judía</b>, sobre Bucaramanga, está tu cumbre personal.'},
+  7:{pre:'El <b>páramo del Almorzadero</b> es el más frío de Santander.'},
+  8:{name:'Las Playas del Chicamocha',corto:'Río Chicamocha',bioma:'Playa de río',lesson:'Empieza <b>La Expedición</b>: una segunda travesía desde el fondo del cañón hasta las cumbres. En las <b>playas del río Chicamocha</b> hay arena, cactus y <b>pantanos</b> en las orillas: como una deuda en mora, te frenan y te hunden. Aquí abundan el gota a gota, los créditos fáciles y las culebras. Usa la <b>bola de nieve</b> o la <b>avalancha</b> (Guía 3) y llega al campamento <b>sin deudas</b>.',th:{mar:0,deco:'cactus',grass:'#D9C08A',sky:['#5A8AC0','#F2D6A8']}},
+  9:{name:'Las Canteras de Barichara',corto:'Barichara',bioma:'Canteras de piedra',lesson:'En <b>Barichara</b> todo está hecho de <b>piedra amarilla</b>: los canteros la sacan, la tallan y la venden, y por su trabajo pagan impuestos. Busca la <b>oficina de impuestos</b> del pueblo y <b>declara tu renta</b>: pagar a tiempo cuesta menos que una multa. Cuidado con las grietas de la roca y el sol.',meta:'de Barichara',th:{mar:0,deco:'piedra',grass:'#E2C48A',earth:'#C99A5A',edge:'#8A6A3A',stone:'#D9B98A',sky:['#4F86C0','#F6DCB0'],m:['#D9B48A','#B8956A','#9A7A50']}},
+  10:{name:'El Cañón Seco',bioma:'Cañón seco',lesson:'En <b>Aratoca</b> el cañón es seco y caliente: es la época de escasez, con menos ingresos, precios más altos y sequía. Quien guardó en la época buena, resiste la mala (Guía 5). Cruza cactus, grietas y culebras, y llega con una <b>reserva grande en la alcancía</b>.'},
+  11:{pre:'En <b>San Gil</b> baja el río Fonce.'},
+  12:{pre:'En el <b>Parque El Gallineral</b> los árboles tienen barbas de musgo.'},
+  13:{pre:'Estás en el <b>páramo de Santurbán</b>.'},
+  14:{pre:'Desde <b>Capitanejo</b> se sube hacia la Sierra Nevada de El Cocuy.'},
+  15:{name:'La Gran Cordillera',lesson:'En el <b>páramo de Guantiva–La Rusia</b>, entre Santander y Boyacá, se juntan las cumbres de la Cordillera Oriental. Aquí se decide qué dejas: un <b>legado</b> es enseñar, ayudar con presupuesto y dejar tus cuentas en orden. Escarcha, viento y el costo de vida más alto. Llega con ingreso pasivo que cubra tu costo de vida y un patrimonio grande, y supera la <b>Prueba del Gran Mentor</b>.',th:{deco:'frailejon'}},
+  16:{pre:'Esto es un simulacro en <b>Bucaramanga</b>: ¿qué pasaría si…?'},
+  18:{pre:'Bajo <b>Los Santos</b> está el nido sísmico: por eso conviene prepararse.'},
+  19:{pre:'En <b>Puerto Wilches</b>, a orillas del Magdalena, el río a veces se crece.'},
+  24:{pre:'En <b>Girón</b>, el pueblito colonial, se empieza a reconstruir.'},
+  25:{pre:'En <b>Guane</b>, el pueblo de piedra, se reúnen las familias.'},
+  26:{pre:'El <b>Río de Oro</b> baja por el área de Bucaramanga.'},
+  27:{pre:'En <b>Charalá</b> se siembran árboles nativos.'},
+  28:{pre:'En <b>Curití</b> el fique se teje y se aprovecha todo.'},
+  29:{pre:'El <b>Socorro</b>, cuna de los Comuneros, se organiza en comunidad.'},
+  30:{pre:'<b>Barrancabermeja</b> es el puerto de Santander sobre el Magdalena.'},
+  31:{pre:'<b>Bucaramanga</b>, la Ciudad de los Parques, vuelve a florecer.'}},
+ colombia:{
+  0:{pre:'Estás en el <b>Valle del Cauca</b>, entre guaduales y cañaduzales.'},
+  1:{pre:'Estás en <b>Risaralda</b>, en el Paisaje Cultural Cafetero.'},
+  2:{pre:'Desde la <b>Piedra del Peñol</b>, en Antioquia, se ve todo el embalse.'},
+  3:{pre:'En el altiplano de <b>Cundinamarca</b>, entre pinos y eucaliptos, se arma el primer campamento.'},
+  4:{pre:'En el <b>Quindío</b>, la niebla cubre el Valle de Cocora y sus palmas de cera.'},
+  5:{pre:'En el <b>Cauca</b>, junto al volcán Puracé, empieza el páramo.'},
+  6:{pre:'Entre las columnas de <b>Los Estoraques</b>, en Norte de Santander, está tu cumbre personal.'},
+  7:{pre:'En el <b>Tolima</b> subes hacia el Nevado del Tolima.'},
+  8:{name:'La Costa',bioma:'Playa y manglar',lesson:'Empieza <b>La Expedición</b>: una segunda travesía desde el mar hasta los glaciares. En el <b>Golfo de Morrosquillo</b>, en Sucre, hay playa y <b>manglar</b>, el pantano del mar: como una deuda en mora, te frena y te hunde. Aquí abundan el gota a gota, los créditos fáciles y las culebras. Usa la <b>bola de nieve</b> o la <b>avalancha</b> (Guía 3) y llega al campamento <b>sin deudas</b>.'},
+  9:{lesson:'En las <b>salinas de Manaure</b>, en La Guajira, todo brilla, pero el agua se evapora: así se va la plata cuando no planeas los impuestos. Busca la <b>oficina de impuestos</b> de Manaure y <b>declara tu renta</b>: pagar a tiempo cuesta menos que una multa. Cuidado con las grietas de sal y el sol.',meta:'de Manaure'},
+  10:{pre:'Estás en la <b>Tatacoa</b>, el desierto del Huila.'},
+  11:{pre:'En el <b>Meta</b>, el río Caño Cristales se pinta de colores.'},
+  12:{pre:'En el <b>Putumayo</b>, el bosque andino baja hacia la Amazonía.'},
+  13:{pre:'Estás en los páramos de <b>Boyacá</b>, alrededor del Lago de Tota.'},
+  14:{pre:'Subes la <b>Sierra Nevada de Santa Marta</b>, en el Magdalena.'},
+  15:{pre:'Estás en <b>Caldas</b>, entre los glaciares del Parque Los Nevados.'},
+  16:{name:'Cartagena Amurallada',tag:'Murallas y saqueos',lesson:'Empieza <b>El Colapso</b>, un simulacro de crisis. <b>Cartagena</b> levantó murallas porque piratas y ejércitos la sitiaron muchas veces: entonces la plata en el bolsillo se perdía en los saqueos. Hoy pasa igual: la que está en la <b>alcancía</b> (el banco) queda a salvo. Ten un <b>plan de emergencia</b>: documentos, kit y dinero protegido.'},
+  17:{pre:'El <b>Galeras</b>, en Nariño, es un volcán activo y vigilado.'},
+  18:{pre:'Bajo la Mesa de los Santos, en <b>Santander</b>, está el nido sísmico.'},
+  19:{pre:'El <b>Chocó</b> es una de las regiones más lluviosas del planeta.'},
+  20:{name:'La Hiperinflación',lesson:'Simulacro en <b>Tuchín, Córdoba</b>: ¿qué pasaría si cada quincena todo subiera de precio? El efectivo en tu mano se derretiría. Lo que conserva valor son los <b>activos que producen</b>, como el oficio de los artesanos del sombrero vueltiao. Esquiva especuladores y llega con ingresos de activos que cubran tu costo de vida.'},
+  21:{name:'La Gran Sequía',tag:'Sequía',bioma:'Sequía',lesson:'En el <b>Cesar</b> hay temporadas secas en que los ríos bajan y el pasto se quema de sol. El agua limpia vale oro y enfermarse sale carísimo: la salud y el agua son lo primero del presupuesto. Llega con una <b>reserva grande</b> en la alcancía.',th:{deco:'cactus',grass:'#C9B46A',earth:'#9A7A4A',edge:'#6A5030',m:['#C9B48A','#B89A6A','#9A7A50'],sky:['#5A8AC0','#F2D6A0']}},
+  22:{name:'La Selva que se Quema',tag:'Quemas en la selva',lesson:'En el <b>Guaviare</b> la selva y las pinturas de La Lindosa están amenazadas por las quemas para tumbar monte. Sin árboles no hay agua, ni suelo, ni turismo, ni trabajo. <b>Restaurar</b> es una inversión: los negocios verdes y la reforestación generan ingresos. Restaura zonas y llega con una <b>huella verde</b> de 50 o más.'},
+  23:{name:'La Gran Prueba',bioma:'Prueba final',lesson:'Junto a los cerros de <b>Mavecure</b>, en el Guainía, llega la prueba final del simulacro: todas las crisis juntas. Aquí se gana con lo aprendido: dinero protegido, seguros, activos diversificados, salud financiera y <b>comunidad</b>. Supera la <b>Prueba de la Resiliencia</b>.',th:{deco:'rocas'}},
+  24:{name:'Providencia se Reconstruye',tag:'Después del huracán',lesson:'Empieza <b>La Reconstrucción</b>. Después del huracán Iota, en 2020, <b>Providencia</b> quedó destruida y su gente la levantó de nuevo. Reconstruir empieza con un <b>presupuesto</b> y un plan <b>por etapas</b>: primero lo esencial, después lo demás. Cada zona que restauras le devuelve el <b>color</b> al mundo.'},
+  25:{pre:'En los hatos del <b>Casanare</b> las familias llaneras trabajan juntas.'},
+  26:{name:'Los Ríos del Vaupés',lesson:'En el <b>Vaupés</b> los ríos son el camino, la comida y el agua. Cuidarlos es una <b>inversión</b>: el agua limpia baja los gastos de salud y trae pesca, cultivos y turismo. Restaura las orillas y llega con una <b>huella verde</b> de 60 o más.'},
+  27:{pre:'En el <b>Caquetá</b>, a las puertas de Chiribiquete, se siembra para recuperar la selva.'},
+  28:{pre:'En <b>Arauca</b> se repara y se reutiliza antes que comprar nuevo.'},
+  29:{pre:'En el <b>Vichada</b>, junto al Orinoco, la comunidad se organiza.'},
+  30:{name:'El Puerto de Leticia',pre:'<b>Leticia</b>, en el Amazonas, es puerto de tres países.'},
+  31:{pre:'<b>Barranquilla</b>, la ciudad del carnaval, tiene color otra vez.'}}};
+function aplicarPiel(r){ try{ MAPBG2=null; }catch(e){} LV.forEach((L,i)=>{ Object.assign(L,LV_BASE[i]); const t=THEMES[L.theme]; TH_KEYS.forEach(k=>{ if(TH_BASE[i][k]===undefined) delete t[k]; else t[k]=TH_BASE[i][k]; }); });
+  const P=PIEL[r]||{}; for(const i in P){ const o=P[i], L=LV[i]; if(o.name) L.name=o.name; if(o.corto) L.corto=o.corto; if(o.tag) L.tag=o.tag; if(o.bioma) L.bioma=o.bioma; if(o.lesson) L.lesson=o.lesson; if(o.pre) L.lesson=o.pre+' '+L.lesson; if(o.th) Object.assign(THEMES[L.theme],o.th); }
+  try{ PAPBG=null; }catch(e){} }
+const pielMeta=t=>{ const o=(PIEL[REGION]||{})[9]; return o&&o.meta&&typeof t==='string'?t.replace('de las salinas',o.meta):t; };
+{ const _rt=reqText; reqText=function(li){ return pielMeta(_rt(li)); }; const _r9=REQ[9]; if(typeof _r9==='function') REQ[9]=function(){ const v=_r9.apply(this,arguments); if(Array.isArray(v)) v[1]=pielMeta(v[1]); return v; }; }
+{ const _sr=setRegion; setRegion=function(r){ _sr(r); aplicarPiel(REGION); }; }
+aplicarPiel(REGION);
+// piedra amarilla de Barichara: bloques tallados, sillares apilados y una piedra labrada
+DECO2.piedra=(d,warm)=>{ const k=d.k, c1=mix('#D9B47A',warm,.2), c2='#B8905A';
+  if(k%3===0){ for(let r=0;r<3;r++) for(let i=0;i<3-r;i++){ ctx.fillStyle=(i+r)%2?c1:mix(c1,'#FFFFFF',.12); ctx.fillRect(-14+i*10+r*5,-8-r*8,9,7.4); ctx.strokeStyle=c2; ctx.lineWidth=.6; ctx.strokeRect(-14+i*10+r*5,-8-r*8,9,7.4); } }
+  else if(k%3===1){ ctx.fillStyle=c1; ctx.beginPath(); ctx.moveTo(-6,0); ctx.lineTo(-6,-20); ctx.quadraticCurveTo(0,-28,6,-20); ctx.lineTo(6,0); ctx.fill(); ctx.strokeStyle=c2; ctx.lineWidth=.7; ctx.beginPath(); ctx.arc(0,-14,3.4,0,7); ctx.moveTo(-4,-6); ctx.lineTo(4,-6); ctx.stroke(); ctx.fillStyle=mix(c1,'#000000',.15); ctx.fillRect(-9,-2,18,2); }
+  else { ctx.fillStyle=mix(c1,'#000000',.08); ctx.beginPath(); ctx.ellipse(0,-3,12,4,0,0,7); ctx.fill(); ctx.fillStyle=c1; ctx.beginPath(); ctx.ellipse(-8,-4,5,3.4,0,0,7); ctx.ellipse(5,-5,6,4,0,0,7); ctx.fill(); ctx.strokeStyle='#6E4A2A'; ctx.lineWidth=1.2; ctx.beginPath(); ctx.moveTo(12,-2); ctx.lineTo(17,-12); ctx.stroke(); ctx.fillStyle='#8A8A8A'; ctx.fillRect(15,-14,4,3); } };
 
 /* ================= DIPLOMAS v2: diseño de certificado de expedición (cumbre + sendero + parche) ================= */
 // Tokens por ruta: tinta, acento, acento claro, texto, papel, y la paleta de la ilustración (cielo arriba, cielo abajo, sol, 4 planos de montaña lejos→cerca)
