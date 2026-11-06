@@ -9,7 +9,7 @@
 <meta property="og:description" content="Sube del Valle a la Cordillera ganando, ahorrando e invirtiendo. Educación financiera que se juega.">
 <meta property="og:image" content="art/cima.jpg">
 <style>[hidden]{display:none!important}</style>
-<title>Ruta Financiera</title>
+<title>Ruta Financiera · Escapa de la deuda</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Young+Serif&family=Figtree:wght@400;600;700;800&family=IBM+Plex+Mono:wght@600&display=swap">
@@ -466,6 +466,8 @@ body.est-cine .stage::after{content:"";position:absolute;inset:0;pointer-events:
 .t-hero{position:sticky;top:16px;padding:18px 6px;text-align:left}
 .t-seal{width:clamp(96px,14vw,150px);height:auto;display:block;margin:0 0 14px;filter:drop-shadow(0 10px 22px rgba(0,0,0,.55))}
 .t-title{font-family:var(--f-display);font-weight:400;font-size:clamp(40px,5.6vw,66px)!important;line-height:1!important;margin:6px 0 12px!important;letter-spacing:-.01em;background:linear-gradient(180deg,#FFF3D6,#E8B64A);-webkit-background-clip:text;background-clip:text;color:transparent}
+.t-sub{font-family:var(--f-display);font-size:clamp(18px,2vw,24px);color:#F2C230;margin:-6px 0 12px;letter-spacing:.01em}.t-sub b{color:#E8705A;font-weight:400;text-transform:uppercase;letter-spacing:.06em}
+body.papel .t-sub{color:#F6E7C4;text-shadow:0 2px 0 #5A3A1A}
 .t-lead{font-size:clamp(15px,1.5vw,17px);line-height:1.5;color:#CFDBE0!important;max-width:46ch}
 .t-chips{list-style:none;padding:0;margin:14px 0;display:flex;flex-wrap:wrap;gap:8px}
 .t-chips li{font:700 12.5px var(--f-body);padding:6px 11px;border-radius:999px;background:rgba(255,255,255,.06);border:1px solid rgba(242,179,61,.35);color:#F4E6C4}
@@ -3081,7 +3083,7 @@ function update(){ try{ botStep(); }catch(e){}
   if(p.onGround && Math.abs(p.vx)>0.3) p.walk+=gaitStep(p.vx,3.3);
   if(p.inv>0) p.inv--; if(p.flash>0) p.flash--;
   { const iv=Math.round(120+180*saludF()); if(eco&&salud()>0&&salud()<70&&S.t-(S.saludT||0)>300&&S.t%iv===0){ eco.salud=Math.min(70,salud()+1); S.saludUp=12; } } // recuperación suave si no te golpean
-  try{ skelTick(p); arenaRecarga(p); hoyoTick(p); caidaTick(p); caidaUpdate(); viajeTick(p); papelTick(p); plataTick(p); culturaTick(p); }catch(e){}
+  try{ skelTick(p); arenaRecarga(p); hoyoTick(p); caidaTick(p); caidaUpdate(); viajeTick(p); papelTick(p); plataTick(p); culturaTick(p); deudaTick(p); }catch(e){}
   if(salud()<=0&&!S.busy&&!p.caught){ muerteStart(); return; }
   if(atkPressed){ atkPressed=false; if(!(p.atkCd>0)&&!S.busy&&!p.caught){ p.atk=16; p.atkCd=26; p.swing=(p.swing||0)+1; p.atkHit=0; snd('drop'); if(!eco.seenNo){ eco.seenNo=1; learn('decirno'); } } }
   if(p.atkCd>0) p.atkCd--; if(p.atk>0){ p.atk--; if(p.atk<=12&&p.atk>=5) defendHit(p); }
@@ -4620,7 +4622,7 @@ function draw(){
   ctx.save();
   const sh=S.shake&&!reduced?S.shake:0;
   ctx.translate(sh?(Math.random()-.5)*sh:0, -Math.round(S.camY)+(sh?(Math.random()-.5)*sh:0));
-  drawDeco(th); drawArenaBack(); try{ drawHoyos(); drawViajeWorld(); drawPostal(); }catch(e){} S.plabels=[]; drawPlats(th); drawTiles(th); try{ drawPapelEdges(); }catch(e){} drawArenaFloor(); { const by=S.L.rows*T; if(by<S.camY+H){ ctx.fillStyle=th.earth; ctx.fillRect(0,by,W,S.camY+H-by+2); ctx.fillStyle='rgba(0,0,0,.18)'; ctx.fillRect(0,by,W,S.camY+H-by+2); } } drawEnts(); drawArenaFront(); drawPlatLabels(); drawHiker(); drawPigFx(); drawWorldHazards(); drawBusy(); try{ drawMedBag(); drawInflHud(); drawRecargas(); drawHoyoHud(); drawViajeFront(); drawPlata(); }catch(e){} drawFront();
+  drawDeco(th); drawArenaBack(); try{ drawHoyos(); drawViajeWorld(); drawPostal(); }catch(e){} S.plabels=[]; drawPlats(th); drawTiles(th); try{ drawPapelEdges(); }catch(e){} drawArenaFloor(); { const by=S.L.rows*T; if(by<S.camY+H){ ctx.fillStyle=th.earth; ctx.fillRect(0,by,W,S.camY+H-by+2); ctx.fillStyle='rgba(0,0,0,.18)'; ctx.fillRect(0,by,W,S.camY+H-by+2); } } drawEnts(); drawArenaFront(); drawPlatLabels(); drawHiker(); drawPigFx(); drawWorldHazards(); drawBusy(); try{ drawMedBag(); drawInflHud(); drawRecargas(); drawHoyoHud(); drawViajeFront(); drawPlata(); try{ drawDeudaVillana(); }catch(e){} }catch(e){} drawFront();
   S.pops.forEach(q=>{ const k=1-q.life/14; ctx.globalAlpha=1-k; ctx.save(); ctx.globalCompositeOperation='lighter'; drop(q.x-S.cam,q.y-k*10,1+k*0.8,'#8EE0FF'); ctx.restore(); }); ctx.globalAlpha=1;
   S.parts.forEach(q=>{ ctx.globalAlpha=Math.min(1,q.life/20); ctx.fillStyle=q.col; if(q.conf){ ctx.save(); ctx.translate(q.x-S.cam,q.y); ctx.rotate(q.rot+=0.2); ctx.fillRect(-2,-1,4,2.4); ctx.restore(); } else if(q.dust){ ctx.beginPath(); ctx.arc(q.x-S.cam,q.y,q.r*(1.4-q.life/40),0,7); ctx.fill(); } else ctx.fillRect(q.x-S.cam,q.y,3,3); }); ctx.globalAlpha=1;
   ctx.font='700 8.5px Figtree, sans-serif'; ctx.textAlign='center';
@@ -4762,7 +4764,7 @@ function titleScreen(){
    <section class="t-hero">
     ${sello?`<img class="t-seal" src="${sello}" alt="Sello de Ruta a la Cima">`:''}
     <div class="eyebrow">Un juego de educación financiera de Ruta a la Cima</div>
-    <h2 class="t-title">Ruta Financiera</h2>
+    <h2 class="t-title">Ruta Financiera</h2><div class="t-sub">Escapa de <b>la deuda</b></div>
     <p class="t-lead">Sube del Valle a la Cordillera con tu mochila y tus bastones. Gana tu dinero, ahórralo, inviértelo y no te dejes encadenar por las deudas. Cada campamento solo se abre si tus finanzas están listas.</p>
     <ul class="t-chips"><li><b>${nR}</b> rutas</li><li><b>${nR*8}</b> mundos</li><li>Jefes finales</li><li>Diploma por ruta</li><li>Basado en 7 guías</li></ul>
     <div class="t-keys"><span><kbd>←</kbd><kbd>→</kbd> caminar</span><span><kbd>Espacio</kbd> saltar</span><span><kbd>↓</kbd> agacharse</span><span><kbd>X</kbd> decir NO</span><span><kbd>P</kbd> pausa</span></div>
@@ -9351,6 +9353,46 @@ const ALT_REG={
 function aplicarAlturas(r){ const A=ALT_REG[r]; [ALT,ALT2,ALT3,ALT4].forEach((arr,k)=>{ const v=A?A[k]:ALT_BASE[k]; arr.splice(0,arr.length,...v); }); try{ MAPBG2=null; }catch(e){} }
 { const _sr2=setRegion; setRegion=function(r){ _sr2(r); aplicarAlturas(REGION); }; }
 aplicarAlturas(REGION);
+
+/* ================= LA DEUDA: el villano que te persigue por toda la ruta =================
+   Una sombra de papel hecha de recibos y cuotas sin pagar. Aparece cuando debes algo y te sigue a una
+   distancia que se acorta cuanto más debes; crece con la deuda y te habla con las frases que usan los
+   cobros. No quita vidas: es presión visual. Cuando pagas todo, se deshace en papelitos. */
+const DEUDA_FRASES=['¿Y la cuota de este mes?','Los intereses no descansan…','Paga solo el mínimo, tranquilo…','Otra compra a cuotas, ¿sí?','Mientras más esperas, más crezco.','Te presto para pagarme. ¿Qué tal?','No me mires a mí: firmaste tú.','Cada quincena te alcanzo un poquito.'];
+function deudaTotal(){ try{ return (eco.debts||[]).reduce((s,d)=>s+Math.max(0,d.saldo||0),0); }catch(e){ return 0; } }
+function deudaTick(p){ const D=deudaTotal(), V=S.villana||(S.villana={x:p.x-220,y:p.y-30,a:0,t:0,dicho:null,dt:0,prev:D,libre:false});
+  if(D>0){ V.a=Math.min(1,V.a+.02); if(V.a>.6&&!V.tip){ V.tip=1; try{ learn('villana'); }catch(e){} } const dist=Math.max(54,230-D*9), tx=p.x-dist, ty=p.y-22+Math.sin(S.t*.04)*6; V.x+=(tx-V.x)*.035; V.y+=(ty-V.y)*.05; V.t++;
+    if(V.dt>0) V.dt--; else if(V.t%(60*14)===90){ V.dicho=DEUDA_FRASES[(Math.floor(V.t/840)+S.li)%DEUDA_FRASES.length]; V.dt=200; }
+    if(D>V.prev+.5&&V.a>.5){ V.dicho='¡Uy, crecí! Ahora me debes más.'; V.dt=170; } }
+  else { if(V.prev>0&&V.a>.4){ stampAt(p.x+p.w/2,p.y-12,'¡LIBRE!','escapaste de La Deuda'); snd('gate'); for(let i=0;i<26;i++) S.parts.push({x:V.x,y:V.y,vx:(Math.random()-.5)*5,vy:-1-Math.random()*4,life:70,col:i%3?'#EFE6D2':'#3A2440',conf:true,rot:Math.random()*6}); addText(p.x-70,p.y-44,'¡Pagaste todo! La Deuda se deshizo en papelitos.','#BFF5CF'); V.a=0; }
+    V.a=Math.max(0,V.a-.05); }
+  V.prev=D; }
+function drawDeudaVillana(){ const V=S.villana; if(!V||V.a<=.02||!S.p) return; const D=deudaTotal(), s=Math.min(1.7,.85+D*.035), x=V.x-S.cam, y=V.y; if(x<-80||x>W+80) return;
+  const dir=S.p.x>V.x?1:-1, t=S.t, pap=papelOn();
+  ctx.save(); ctx.globalAlpha=V.a*.95; ctx.translate(x,y); ctx.scale(s*dir,s);
+  // cadena de cuotas que arrastra
+  for(let i=0;i<4;i++){ const cx=-16-i*9, cy=10+Math.sin(t*.08+i)*3; ctx.strokeStyle='rgba(40,25,40,.6)'; ctx.lineWidth=.8; ctx.beginPath(); ctx.moveTo(cx+8,cy-2); ctx.lineTo(cx+3,cy); ctx.stroke(); ctx.fillStyle='#EFE6D2'; ctx.save(); ctx.translate(cx,cy); ctx.rotate(Math.sin(t*.06+i)*.3); ctx.fillRect(-3,-2.4,6,4.8); ctx.fillStyle='#8A1F12'; ctx.font='800 4px Figtree, sans-serif'; ctx.textAlign='center'; ctx.fillText('$',0,1.4); ctx.restore(); }
+  // capa: cuerpo de papel oscuro con flecos que ondean
+  const flecos=k=>Math.sin(t*.12+k)*1.6;
+  const body=()=>{ ctx.beginPath(); ctx.moveTo(-9,-22); ctx.quadraticCurveTo(0,-34,9,-22); ctx.quadraticCurveTo(13,-6,12,8); for(let k=0;k<6;k++){ const bx=12-k*4.4; ctx.lineTo(bx-2.2,18+flecos(k)); ctx.lineTo(bx-4.4,10); } ctx.quadraticCurveTo(-14,-6,-9,-22); ctx.closePath(); };
+  if(pap){ ctx.save(); ctx.translate(-.8,1); body(); ctx.fillStyle='rgba(20,10,20,.35)'; ctx.fill(); ctx.restore(); }
+  body(); const gr=ctx.createLinearGradient(0,-30,0,18); gr.addColorStop(0,'#4A2E52'); gr.addColorStop(1,'#2A1830'); ctx.fillStyle=gr; ctx.fill(); if(pap){ ctx.strokeStyle='rgba(255,240,220,.45)'; ctx.lineWidth=.6; ctx.stroke(); }
+  // recibos pegados al cuerpo
+  ctx.save(); body(); ctx.clip(); [[-6,-8,-.3],[3,-2,.25],[-3,6,.1],[6,8,-.2]].forEach(([rx,ry,rt],i)=>{ ctx.save(); ctx.translate(rx,ry); ctx.rotate(rt); ctx.fillStyle=i%2?'#E6DCC4':'#EFE6D2'; ctx.globalAlpha=V.a*.75; ctx.fillRect(-4,-5,8,10); ctx.strokeStyle='rgba(60,40,30,.5)'; ctx.lineWidth=.4; for(let l=0;l<4;l++){ ctx.beginPath(); ctx.moveTo(-3,-3+l*2); ctx.lineTo(3-(l%2)*2,-3+l*2); ctx.stroke(); } ctx.restore(); }); ctx.restore(); ctx.globalAlpha=V.a*.95;
+  // brazo largo que se estira con la factura
+  const reach=Math.min(14,4+D*.6)+Math.sin(t*.07)*2; ctx.strokeStyle='#3A2440'; ctx.lineWidth=2.4; ctx.lineCap='round'; ctx.beginPath(); ctx.moveTo(8,-10); ctx.quadraticCurveTo(14,-14,14+reach,-8); ctx.stroke();
+  ctx.save(); ctx.translate(16+reach,-9); ctx.rotate(-.2+Math.sin(t*.09)*.1); ctx.fillStyle='#FBF6EA'; ctx.fillRect(-1,-4,10,7); ctx.fillStyle='#A8322B'; ctx.font='800 3.3px Figtree, sans-serif'; ctx.fillText('CUOTA',0,-.6); ctx.fillStyle='#2B2119'; ctx.fillRect(0,1,7,.6); ctx.restore();
+  // cara: ojos amarillos y sonrisa de cremallera
+  const bl=(t%240)<6; ctx.fillStyle='#F2C230'; if(bl){ ctx.fillRect(-5,-19,4,.8); ctx.fillRect(2,-19,4,.8); } else { ctx.beginPath(); ctx.ellipse(-3,-19,2,1.5,-.2,0,7); ctx.ellipse(4,-19,2,1.5,.2,0,7); ctx.fill(); ctx.fillStyle='#2A1830'; ctx.beginPath(); ctx.arc(-2.4,-19,.8,0,7); ctx.arc(4.6,-19,.8,0,7); ctx.fill(); }
+  ctx.strokeStyle='#F2C230'; ctx.lineWidth=.6; ctx.beginPath(); ctx.moveTo(-6,-21.6); ctx.lineTo(-1,-20.6); ctx.moveTo(7,-21.6); ctx.lineTo(2,-20.6); ctx.stroke();
+  ctx.beginPath(); ctx.moveTo(-5,-14); ctx.quadraticCurveTo(1,-10,7,-14.5); ctx.stroke(); ctx.lineWidth=.4; for(let k=0;k<6;k++){ const zx=-4+k*2; ctx.beginPath(); ctx.moveTo(zx,-13.4+Math.abs(k-2.5)*.3); ctx.lineTo(zx+1,-12+Math.abs(k-2.5)*.3); ctx.stroke(); }
+  ctx.restore();
+  // nombre y frase
+  ctx.save(); ctx.globalAlpha=V.a; ctx.font='800 6px Figtree, sans-serif'; ctx.textAlign='center'; ctx.fillStyle='rgba(42,24,48,.85)'; const lw=ctx.measureText('LA DEUDA').width+8; ctx.fillRect(x-lw/2,y+20*s,lw,8); ctx.fillStyle='#F2C230'; ctx.fillText('LA DEUDA',x,y+20*s+6);
+  if(V.dicho&&V.dt>0){ ctx.globalAlpha=V.a*Math.min(1,V.dt/20); ctx.font='700 7px Figtree, sans-serif'; const tw=ctx.measureText(V.dicho).width+12, bx=Math.max(4,Math.min(W-tw-4,x-tw/2)), by=y-40*s; ctx.fillStyle='#FBF6EA'; ctx.fillRect(bx,by,tw,13); ctx.beginPath(); ctx.moveTo(x-3,by+13); ctx.lineTo(x+3,by+13); ctx.lineTo(x,by+18); ctx.fill(); ctx.strokeStyle='#3A2440'; ctx.lineWidth=.8; ctx.strokeRect(bx,by,tw,13); ctx.fillStyle='#3A2440'; ctx.fillText(V.dicho,bx+tw/2,by+9.4); }
+  ctx.restore(); ctx.textAlign='left'; }
+{ const _slV=startLevel; startLevel=function(li){ _slV(li); const D=deudaTotal(); S.villana=null; if(D>0&&S.p){ S.villana={x:S.p.x-240,y:S.p.y-30,a:0,t:0,dicho:'Volví. ¿Y lo que me debes?',dt:240,prev:D}; } }; }
+TIPS.villana={t:'La Deuda',g:'Deudas',x:'Mientras debas algo, La Deuda te sigue: entre más debes, más grande se pone y más cerca camina. Cuando pagas todo, se deshace. La forma de escapar es pagar primero las deudas más caras.'};
 
 /* ================= DIPLOMAS v2: diseño de certificado de expedición (cumbre + sendero + parche) ================= */
 // Tokens por ruta: tinta, acento, acento claro, texto, papel, y la paleta de la ilustración (cielo arriba, cielo abajo, sol, 4 planos de montaña lejos→cerca)
