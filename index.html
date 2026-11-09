@@ -601,6 +601,26 @@ body.papel .t-chips li b{color:#A8322B!important}
 /* aparecer como pop-up: se levantan desde la bisagra con un rebote */
 @keyframes papPop{0%{transform:perspective(900px) rotateX(-82deg);opacity:0}55%{opacity:1}72%{transform:perspective(900px) rotateX(9deg)}86%{transform:perspective(900px) rotateX(-3deg)}100%{transform:none}}
 @keyframes papStamp{0%{transform:scale(1.8) rotate(-18deg);opacity:0}60%{transform:scale(.92) rotate(4deg);opacity:1}100%{transform:none}}
+
+@keyframes papRise{0%{transform:perspective(700px) rotateX(-88deg);opacity:0}60%{opacity:1;transform:perspective(700px) rotateX(10deg)}82%{transform:perspective(700px) rotateX(-4deg)}100%{transform:none}}
+@keyframes papUnfold{0%{transform:perspective(900px) rotateY(-80deg);opacity:0}65%{opacity:1;transform:perspective(900px) rotateY(8deg)}100%{transform:none}}
+@keyframes papCrease{0%{opacity:.55}100%{opacity:0}}
+@media (prefers-reduced-motion:no-preference){
+ body.papel .ov:not([hidden]) .box:not(.tbox)::after{content:"";position:absolute;left:0;right:0;top:50%;height:2px;background:linear-gradient(90deg,transparent,rgba(120,90,50,.45),transparent);pointer-events:none;animation:papCrease 1.1s ease-out forwards}
+ body.papel .ov:not([hidden]) .box .hero{transform-origin:50% 100%;animation:papRise .8s cubic-bezier(.2,.8,.2,1) .12s both}
+ body.papel .ov:not([hidden]) .box :is(.icard,.req,.st,.sec,.item,.ukey,.gcard,.hcard,.nblist>div,.expl,.qcard,.tres,.trev li){transform-origin:50% 100%;animation:papRise .6s cubic-bezier(.2,.8,.2,1) both}
+ body.papel .ov:not([hidden]) .box :is(.icard,.st,.item,.ukey,.gcard,.hcard,.trev li):nth-child(2){animation-delay:.08s}
+ body.papel .ov:not([hidden]) .box :is(.icard,.st,.item,.ukey,.gcard,.hcard,.trev li):nth-child(3){animation-delay:.16s}
+ body.papel .ov:not([hidden]) .box :is(.icard,.st,.item,.ukey,.gcard,.hcard,.trev li):nth-child(4){animation-delay:.24s}
+ body.papel .ov:not([hidden]) .box :is(.icard,.st,.item,.ukey,.gcard,.hcard,.trev li):nth-child(n+5){animation-delay:.32s}
+ body.papel .ov:not([hidden]) .box .sec{animation-delay:.2s}
+ body.papel .ov:not([hidden]) .box .opt{transform-origin:0 50%;animation:papUnfold .6s cubic-bezier(.2,.8,.2,1) both}
+ body.papel .ov:not([hidden]) .box .opt:nth-child(2){animation-delay:.08s} body.papel .ov:not([hidden]) .box .opt:nth-child(3){animation-delay:.16s} body.papel .ov:not([hidden]) .box .opt:nth-child(4){animation-delay:.24s}
+ body.papel .mapbar{transform-origin:50% 100%;animation:papRise .7s cubic-bezier(.2,.8,.2,1) both}
+ body.papel .mapbar img{transform-origin:50% 100%;animation:papRise .7s cubic-bezier(.2,.8,.2,1) .15s both}
+ body.papel .tip.new{transform-origin:50% 100%;animation:papRise .55s cubic-bezier(.2,.8,.2,1) both}
+ body.papel .imenu,body.papel .scrp{transform-origin:50% 0;animation:papRise .45s cubic-bezier(.2,.8,.2,1) both}
+}
 @keyframes papSway{0%,100%{transform:rotate(-.6deg)}50%{transform:rotate(.6deg)}}
 @media (prefers-reduced-motion:no-preference){
  body.papel .ov:not([hidden]) .box:not(.tbox),body.papel .t-card,body.papel .t-hero>*,body.papel .scrp,body.papel .tip{transform-origin:50% 100%;animation:papPop .7s cubic-bezier(.2,.8,.2,1) both}
@@ -3686,7 +3706,7 @@ function drawDeco(th){
   for(const d of L.deco){
     const x=d.x-S.cam; if(x<-60||x>W+60) continue;
     const y=d.y, s=d.s; if(y<S.camY-120||y>S.camY+H+20) continue;
-    const pk=popK(d.x); if(pk<.03) continue; ctx.save(); ctx.translate(x,y); ctx.scale(s,s*pk);
+    let pk=popK(d.x); const po=popOpen(d,d.x,false); if(po<=0){ if(pk>.03) popFolded(x-12*s,y,24*s); continue; } pk=Math.min(pk,po); if(pk<.03) continue; ctx.save(); ctx.translate(x,y); ctx.scale(s,s*pk);
     ctx.fillStyle='rgba(0,0,0,.22)'; ctx.beginPath(); ctx.ellipse(2,0,18,3,0,0,7); ctx.fill();
     if(th.deco==='guadua'){ for(let k=0;k<4;k++){ const h=70+(d.k%30)+k*13, bx=-10+k*6; const gg=ctx.createLinearGradient(bx,0,bx+4,0); gg.addColorStop(0,'#4E8A30'); gg.addColorStop(.6,'#7DBB4C'); gg.addColorStop(1,'#A8D46A'); ctx.fillStyle=gg; ctx.fillRect(bx,-h,4,h); ctx.fillStyle='#E9E3B0'; for(let j=12;j<h;j+=15){ ctx.fillRect(bx-.5,-j,5,1.4); } ctx.fillStyle='rgba(40,70,25,.5)'; for(let j=12;j<h;j+=15) ctx.fillRect(bx,-j+1.4,4,1); }
       for(let j=0;j<7;j++){ const a=-1.2+j*.4, lx=4+Math.cos(a)*14, ly=-92-j*3+Math.sin(S.t*.02+j)*1.2; ctx.fillStyle=j%2?'#5F9E38':'#8CC65A'; ctx.save(); ctx.translate(lx,ly); ctx.rotate(a*.6-.4); ctx.beginPath(); ctx.ellipse(0,0,13,3.2,0,0,7); ctx.fill(); ctx.restore(); } }
@@ -3990,9 +4010,12 @@ function piggy(x,y,used,e){
   ctx.fillStyle='rgba(0,0,0,.4)'; rr(x+4,y+47,24,3,1.5); ctx.fill(); ctx.fillStyle=full?'#62C98A':'#F2C85A'; rr(x+4,y+47,24*lv,3,1.5); ctx.fill(); ctx.textAlign='left';
 }
 const PROP_SHADE=new Set(['emb','bank','camp','curso','tienda','negocio','lote','lugar','veh','page','pyr','colchon','slot','trading','prima','job','offer','semilla','btc','card','bill','impulse','fomo','fuga','apuros','paciencia','poder','scroll','dian','restaura','atajo','nido','cloud','rockgen','ant','mama','caso','lender','cobrador','ladron','snake','puma']);
-function drawEnts(only){ const L=S.L; if(S.lowQ) return drawEnts0(only);
+function drawEnts(only){ const L=S.L; if(S.lowQ){ if(!papelOn()) return drawEnts0(only);
+    for(const e of L.ents){ if(e.dead||(only&&!only.includes(e.t))) continue; const x=e.x-S.cam; if(x+(e.w||0)<-80||x>W+80) continue;
+      if(POP_FIJO.has(e.t)){ const w=e.w||24, h=e.h||24, fy=e.y+h, po=popOpen(e,e.x+w/2,w>40); if(po<=0){ popFolded(x,fy,Math.max(14,w)); continue; } if(po<1){ if(!e._puff){ e._puff=1; popPuff(e.x+w/2,fy,w); } ctx.save(); ctx.translate(0,fy*(1-po)); ctx.scale(1,po); drawEnts0([e.t],e); ctx.restore(); continue; } }
+      drawEnts0([e.t],e); } return; }
   for(const e of L.ents){ if(e.dead||(only&&!only.includes(e.t))) continue; const x=e.x-S.cam; if(x+(e.w||0)<-80||x>W+80) continue;
-    if(PROP_SHADE.has(e.t)){ const w=e.w||24, h=e.h||24, pad=e.t==='cloud'?70:34, pk=(e.t==='cloud'||e.t==='ant')?1:popK(e.x+w/2); if(pk<.03) continue; const fy=e.y+h; if(pk!==1){ ctx.save(); ctx.translate(0,fy*(1-pk)); ctx.scale(1,pk); } shaded(x-pad,e.y-pad-24,w+pad*2,h+pad*2+24,()=>drawEnts0([e.t],e),{lit:.12,dark:.22,cheap:1}); if(pk!==1) ctx.restore(); }
+    if(PROP_SHADE.has(e.t)){ const w=e.w||24, h=e.h||24, pad=e.t==='cloud'?70:34, fy=e.y+h; let pk=(e.t==='cloud'||e.t==='ant')?1:popK(e.x+w/2); if(POP_FIJO.has(e.t)){ const po=popOpen(e,e.x+w/2,w>40); if(po<=0){ if(pk>.03) popFolded(x,fy,Math.max(14,w)); continue; } if(po<1&&!e._puff){ e._puff=1; popPuff(e.x+w/2,fy,w); } pk=Math.min(pk,po); } if(pk<.03) continue; if(pk!==1){ ctx.save(); ctx.fillStyle='rgba(30,18,6,'+(.18*(1-Math.min(1,pk)))+')'; ctx.beginPath(); ctx.ellipse(x+w/2+4,fy,w*.6,3+(1-Math.min(1,pk))*4,0,0,7); ctx.fill(); ctx.restore(); ctx.save(); ctx.translate(0,fy*(1-pk)); ctx.scale(1,pk); } shaded(x-pad,e.y-pad-24,w+pad*2,h+pad*2+24,()=>drawEnts0([e.t],e),{lit:.12,dark:.22,cheap:1}); if(pk!==1) ctx.restore(); }
     else if(e.t==='drop'&&papelOn()){ const k=popK(e.x+6); if(k<.05) continue; ctx.save(); ctx.translate(x+6,0); ctx.scale(k,1); ctx.translate(-(x+6),(1-Math.min(1,k))*-30); drawEnts0([e.t],e); ctx.restore(); }
     else drawEnts0([e.t],e); } }
 function drawEnts0(only,one){
@@ -9394,6 +9417,19 @@ function drawDeudaVillana(){ const V=S.villana; if(!V||V.a<=.02||!S.p) return; c
 { const _slV=startLevel; startLevel=function(li){ _slV(li); const D=deudaTotal(); S.villana=null; if(D>0&&S.p){ S.villana={x:S.p.x-240,y:S.p.y-30,a:0,t:0,dicho:'Volví. ¿Y lo que me debes?',dt:240,prev:D}; } }; }
 TIPS.villana={t:'La Deuda',g:'Deudas',x:'Mientras debas algo, La Deuda te sigue: entre más debes, más grande se pone y más cerca camina. Cuando pagas todo, se deshace. La forma de escapar es pagar primero las deudas más caras.'};
 
+
+/* ================= POP-UP AL ACERCARSE =================
+   Las construcciones, avisos, alcancías, campamentos, plantas y adornos del mundo empiezan doblados sobre el
+   suelo, como en un libro cerrado, y se levantan desde su bisagra con rebote cuando el senderista se acerca.
+   Al abrirse sueltan papelitos y una sombra que se estira. Los enemigos no se doblan, para no esconder peligros. */
+const POP_FIJO=new Set(['emb','bank','camp','curso','tienda','negocio','lote','lugar','veh','page','pyr','colchon','slot','trading','prima','job','offer','semilla','btc','card','bill','impulse','fomo','fuga','apuros','paciencia','poder','scroll','dian','restaura','atajo','nido','rockgen','mama','caso']);
+function popOpen(o,wx,big){ if(!papelOn()||!S.p) return 1; if(reduced) return 1;
+  if(o._ps==null){ const d=wx-(S.p.x+S.p.w/2); if(d<(big?260:200)){ o._ps=S.t+Math.max(0,Math.min(18,d/14)); o._pop=0; } else return 0; }
+  const t=(S.t-o._ps)/26; if(t<=0) return 0; if(t>=1) return 1; const c1=1.9, c3=c1+1, u=t-1; return 1+c3*u*u*u+c1*u*u; }
+function popPuff(x,y,w){ for(let i=0;i<7;i++) S.parts.push({x:x+(Math.random()-.5)*w,y:y-2,vx:(Math.random()-.5)*2.2,vy:-1-Math.random()*2.2,life:34,col:i%2?'#F4ECD8':'#D9C8A4',conf:true,rot:Math.random()*6}); }
+// pieza doblada: una pestaña de cartón acostada con su línea de pliegue
+function popFolded(x,fy,w){ ctx.save(); ctx.fillStyle='rgba(30,18,6,.25)'; ctx.fillRect(x+1,fy-1.4,w,3.4); ctx.fillStyle='#EFE4CC'; ctx.fillRect(x,fy-3,w,3.2); ctx.fillStyle='#D2C3A2'; ctx.fillRect(x,fy-1,w,1); ctx.strokeStyle='rgba(120,90,50,.45)'; ctx.lineWidth=.5; ctx.setLineDash([2,2]); ctx.beginPath(); ctx.moveTo(x+2,fy-2.2); ctx.lineTo(x+w-2,fy-2.2); ctx.stroke(); ctx.setLineDash([]); ctx.restore(); }
+
 /* ================= DIPLOMAS v2: diseño de certificado de expedición (cumbre + sendero + parche) ================= */
 // Tokens por ruta: tinta, acento, acento claro, texto, papel, y la paleta de la ilustración (cielo arriba, cielo abajo, sol, 4 planos de montaña lejos→cerca)
 const DIP_ART=[
@@ -9572,4 +9608,5 @@ rkInit();
 titleScreen();
 requestAnimationFrame(loop);
 </script>
-</html>
+
+</body></html>
